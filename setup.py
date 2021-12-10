@@ -15,8 +15,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the LICENSE file for the specific language governing permissions and
 limitations under the License.
 """
-from setuptools import setup, find_packages
 import re
+
+from setuptools import find_packages, setup
 
 with open("src/rpd/__init__.py") as f:
     version = re.search(
@@ -44,7 +45,7 @@ setup(
     project_utls={
         "Documentation": "https://RPD.rtfd.io",
         "Issue Tracker": "https://github.com/RPD-py/RPD/issues",
-        "Pull Request Tracker": "https://github.com/RPD-py/RPD/pulls"
+        "Pull Request Tracker": "https://github.com/RPD-py/RPD/pulls",
     },
     url="https://github.com/RPD-py/RPD",
     license="Apache-2.0",

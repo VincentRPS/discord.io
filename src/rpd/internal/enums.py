@@ -17,10 +17,12 @@ limitations under the License.
 """
 from enum import Enum
 
+
 class GatewayOpcodes(Enum):
-    """Gateway Opcodes 
+    """Gateway Opcodes
     https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes
     """
+
     Dispatch = 0
     Heartbeat = 1
     Identify = 2

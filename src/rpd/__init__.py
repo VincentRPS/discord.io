@@ -17,7 +17,8 @@ __discord__ = "9"
 __path__ = __import__("pkgutil").extend_path(__path__, __name__)
 
 import logging
-from typing import NamedTuple, Literal
+from typing import Literal, NamedTuple
+
 
 class VersionInfo(NamedTuple):
     major: int

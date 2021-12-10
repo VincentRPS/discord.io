@@ -16,17 +16,26 @@ See the LICENSE file for the specific language governing permissions and
 limitations under the License.
 """
 from __future__ import annotations
-import logging
-import asyncio
-from json import dump
 
-from aiohttp import ClientSession, __version__ as aiohttp_version, ClientWebSocketResponse
+import asyncio
+import logging
+from json import dump
 from sys import version_info as python_version
 from typing import Any, Dict
 
-from ...__init__ import __discord__ as version, __version__
+from aiohttp import ClientSession, ClientWebSocketResponse
+from aiohttp import __version__ as aiohttp_version
+
+from ...__init__ import __discord__ as version
+from ...__init__ import __version__
+from ...exceptions import (
+    Forbidden,
+    HTTPException,
+    NotFound,
+    RateLimitError,
+    Unauthorized,
+)
 from ..enums import *
-from ...exceptions import Forbidden, NotFound, HTTPException, Unauthorized, RateLimitError
 
 _LOG = logging.getLogger(__name__)
 
@@ -42,8 +51,8 @@ class HTTPClient:
             "X-RateLimit-Precision": "millisecond",
             "Authorization": f"Bot {self.token}",
             "User-Agent": f"DiscordBot (https://github.com/RPD-py/RPD {__version__}) "
-                          f"Python/{python_version[0]}.{python_version[1]} "
-                          f"aiohttp/{aiohttp_version}"
+            f"Python/{python_version[0]}.{python_version[1]} "
+            f"aiohttp/{aiohttp_version}",
         }
 
     async def connect_to_ws(self, *, compression) -> ClientWebSocketResponse:
@@ -53,31 +62,28 @@ class HTTPClient:
             "max_msg_size": 0,
             "timeout": 40,
             "autoclose": False,
-            "headers": {
-                "User-Agent": self.headers["User-Agent"]
-            },
-            "compress": compression
+            "headers": {"User-Agent": self.headers["User-Agent"]},
+            "compress": compression,
         }
         return await self.session.ws_connect(POST, **ws_info)
 
     async def request(self, url: POST, **kwargs: Any):
         if self.session.closed:
             self.session = ClientSession()
-    
+
         headers: Dict[str, str] = {
-            'User-Agent': self.user_agent,
+            "User-Agent": self.user_agent,
         }
-        
+
         if self.token is not None:
-            headers['Authorization'] = 'Bot ' + self.token
+            headers["Authorization"] = "Bot " + self.token
         # Making sure it's json
-        if 'json' in kwargs:
-            headers['Content-Type'] = 'application/json'
-            kwargs['data'] = dump(kwargs.pop('json'))
-        
+        if "json" in kwargs:
+            headers["Content-Type"] = "application/json"
+            kwargs["data"] = dump(kwargs.pop("json"))
+
         r = await self.session.request(self.url, **kwargs)
         headers = r.headers
-
 
         if r.status == 429:
             raise RateLimitError(r)

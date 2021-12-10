@@ -16,9 +16,12 @@ See the LICENSE file for the specific language governing permissions and
 limitations under the License.
 """
 
+
 class Base(Exception):
     """The Base Exception"""
+
     pass
+
 
 class HTTPException(Base):
     def __init__(self, request, data):
@@ -41,6 +44,7 @@ class Unauthorized(HTTPException):
     def __init__(self, request):
         self.request = request
         Exception.__init__(self, "You are not authorized to view this resource")
+
 
 class RateLimitError(HTTPException):
     """ono D:"""
