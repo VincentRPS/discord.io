@@ -12,6 +12,7 @@ __author__ = "RPS"
 __license__ = "Apache-2.0"
 __copyright__ = "Copyright 2021 RPS"
 __version__ = "0.0.1"
+__discord__ = "9"
 
 __path__ = __import__("pkgutil").extend_path(__path__, __name__)
 

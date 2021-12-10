@@ -7,3 +7,4 @@ sdist/
 .vscode/*
 .vs/*
 .idea/*
+*.js
