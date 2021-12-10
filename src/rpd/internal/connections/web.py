@@ -20,7 +20,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import sys
-from json import dump
+import orjson
 from typing import Any, Dict
 
 import aiohttp
@@ -69,7 +69,7 @@ class HTTPClient:
         }
         return await self.session.ws_connect(POST, **ws_info)
 
-    async def request(self, url: POST, **kwargs: Any):
+    async def request(self, **kwargs: Any):
         if self.session.closed:
             self.session = ClientSession()
 
@@ -82,9 +82,9 @@ class HTTPClient:
         # Making sure it's json
         if "json" in kwargs:
             headers["Content-Type"] = "application/json"
-            kwargs["data"] = dump(kwargs.pop("json"))
+            kwargs["data"] = orjson.dumps(kwargs.pop("json"))
 
-        r = await self.session.request(self.url, **kwargs)
+        r = await self.session.request(POST, **kwargs)
         headers = r.headers
 
         if r.status == 429:
