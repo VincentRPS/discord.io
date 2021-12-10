@@ -20,10 +20,10 @@ from __future__ import annotations
 import asyncio
 import logging
 import sys
-import orjson
 from typing import Any, Dict
 
 import aiohttp
+import orjson
 from aiohttp import ClientSession, ClientWebSocketResponse
 from aiohttp import __version__ as aiohttp_version
 
