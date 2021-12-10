@@ -85,7 +85,7 @@ class HTTPClient:
             kwargs["data"] = orjson.dumps(kwargs.pop("json"))
 
         r = await self.session.request(POST, **kwargs)
-        headers = r.headers
+        kwargs['headers'] = headers
 
         if r.status == 429:
             raise RateLimitError(r)
@@ -102,5 +102,5 @@ class HTTPClient:
         elif r.status >= 300:
             raise HTTPException(r, await r.text())
 
-    async def close_ws(self):
+    async def close_ws(self) -> Any:
         await self.session.close()
