@@ -43,9 +43,10 @@ POST = f"https://discord.com/api/v{version}"
 
 
 class HTTPClient:
-    def __init__(self, loop=asyncio.get_event_loop()):
+    def __init__(self, loop=asyncio.get_event_loop(), token=None):
         self.session = ClientSession()
         self.loop = loop
+        self.token = token
 
         self.headers = {
             "X-RateLimit-Precision": "millisecond",
