@@ -85,7 +85,7 @@ class HTTPClient:
             kwargs["data"] = orjson.dumps(kwargs.pop("json"))
 
         r = await self.session.request(POST, **kwargs)
-        kwargs['headers'] = headers
+        kwargs["headers"] = headers
 
         if r.status == 429:
             raise RateLimitError(r)

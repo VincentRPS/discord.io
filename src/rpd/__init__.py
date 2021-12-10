@@ -17,8 +17,9 @@ __discord__ = "9"
 import logging
 from typing import Literal, NamedTuple
 
-from .internal import *
 from .exceptions import *
+from .internal import *
+
 
 class VersionInfo(NamedTuple):
     major: int
