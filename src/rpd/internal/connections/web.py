@@ -18,12 +18,12 @@ limitations under the License.
 from __future__ import annotations
 
 import asyncio
-import aiohttp
 import logging
 import sys
 from json import dump
 from typing import Any, Dict
 
+import aiohttp
 from aiohttp import ClientSession, ClientWebSocketResponse
 from aiohttp import __version__ as aiohttp_version
 
@@ -48,8 +48,10 @@ class HTTPClient:
         self.session = ClientSession()
         self.loop = loop
         self.token = token
-        user_agent = 'DiscordBot (https://github.com/RPD-py/RPD {0}) Python/{1[0]}.{1[1]} aiohttp/{2}'
-        self.user_agent: str = user_agent.format(__version__, sys.version_info, aiohttp.__version__)
+        user_agent = "DiscordBot (https://github.com/RPD-py/RPD {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
+        self.user_agent: str = user_agent.format(
+            __version__, sys.version_info, aiohttp.__version__
+        )
         self.headers = {
             "X-RateLimit-Precision": "millisecond",
             "Authorization": f"Bot {self.token}",
