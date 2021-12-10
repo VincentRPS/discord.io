@@ -8,3 +8,5 @@ sdist/
 .vs/*
 .idea/*
 *.js
+__pycache__/
+test.py
