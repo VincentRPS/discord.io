@@ -83,7 +83,7 @@ class HTTPClient:
         if "json" in kwargs:
             headers["Content-Type"] = "application/json"
             kwargs["data"] = orjson.dumps(kwargs.pop("json"))
-    
+
         kwargs["headers"] = headers
         r = await self.session.request(POST, **kwargs)
         headers = r.headers
