@@ -56,7 +56,7 @@ setup(
     description="Asynchronous Discord API Wrapper For Python",
     python_requires=">=3.8",
     classifiers=[
-        "Development Status :: 1 - Planning",
+        "Development Status :: 2 - Pre-Alpha",
         "License :: OSI Approved :: Apache Software License",
         "Intended Audience :: Developers",
         "Natural Language :: English",
