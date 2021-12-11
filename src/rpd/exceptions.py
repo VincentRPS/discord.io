@@ -29,6 +29,9 @@ class HTTPException(Base):
         self.data = data
         super().__init__(data)
 
+class ClientException(Base):
+    """Core Exception For All Client Modules"""
+    pass
 
 class Forbidden(HTTPException):
     pass

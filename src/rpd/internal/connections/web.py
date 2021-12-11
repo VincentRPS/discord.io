@@ -23,9 +23,10 @@ import sys
 from typing import Any, Dict
 
 import aiohttp
-import orjson
+import json
 from aiohttp import ClientSession, ClientWebSocketResponse
 from aiohttp import __version__ as aiohttp_version
+from ...client import Client
 
 from ...__init__ import __discord__ as version
 from ...__init__ import __version__
@@ -37,24 +38,33 @@ from ...exceptions import (
     Unauthorized,
 )
 from ..enums import *
+from typing import Union, Optional
 
 _LOG = logging.getLogger(__name__)
 
 POST = f"https://discord.com/api/v{version}"
 
+async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any], str]:
+    text = await response.text(encoding='utf-8')
+    try:
+        if response.headers['content-type'] == 'application/json':
+            return json.dumps(text)
+    except KeyError:
+        pass
+
+    return text
 
 class HTTPClient:
-    def __init__(self, loop=asyncio.get_event_loop(), token=None):
+    def __init__(self, loop=asyncio.get_event_loop()):
         self.session = ClientSession()
         self.loop = loop
-        self.token = token
         user_agent = "DiscordBot (https://github.com/RPD-py/RPD {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
         self.user_agent: str = user_agent.format(
             __version__, sys.version_info, aiohttp.__version__
         )
         self.headers = {
             "X-RateLimit-Precision": "millisecond",
-            "Authorization": f"Bot {self.token}",
+            "Authorization": f"Bot {Client.start.token}",
         }
 
     async def connect_to_ws(self, *, compression) -> ClientWebSocketResponse:
@@ -82,7 +92,7 @@ class HTTPClient:
         # Making sure it's json
         if "json" in kwargs:
             headers["Content-Type"] = "application/json"
-            kwargs["data"] = orjson.dumps(kwargs.pop("json"))
+            kwargs["data"] = json.dumps(kwargs.pop("json"))
 
         kwargs["headers"] = headers
         r = await self.session.request(POST, **kwargs)
