@@ -17,7 +17,8 @@ limitations under the License.
 """
 import aiohttp
 
+
 # Taken from discord.py
 class DiscordClientWebSocketResponse(aiohttp.ClientWebSocketResponse):
-    async def close(self, *, code: int = 4000, message: bytes = b'') -> bool:
+    async def close(self, *, code: int = 4000, message: bytes = b"") -> bool:
         return await super().close(code=code, message=message)
