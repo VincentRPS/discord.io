@@ -23,7 +23,7 @@ from typing import Any, Callable, Coroutine, TypeVar
 
 import aiohttp
 
-from .._rpd import EventDispatch, HTTPClient, OpcodeDispatch, Response, Route
+from .._rpd import EventDispatch, OpcodeDispatch
 from .exceptions import TokenNotFound
 
 _log = logging.getLogger(__name__)
@@ -79,9 +79,6 @@ class Client:
         _log.info("logging in using static token")
 
         data = await self.http.static_login(token.strip())
-
-    def logout(self) -> Response[None]:
-        return self.request(Route("POST", "/auth/logout"))
 
     def listen(self, event):
         def get_func(func):

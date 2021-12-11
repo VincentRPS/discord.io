@@ -19,19 +19,23 @@ This file contains code from speedcord (https://github.com/TAG-Epic/Speedcord)
 """
 import asyncio
 import logging
+import json
+import sys
 from sys import version_info as python_version
 from urllib.parse import quote as uriquote
 
 import aiohttp
 from aiohttp import ClientSession, ClientWebSocketResponse
 from aiohttp import __version__ as aiohttp_version
+from typing import Dict, Any
 
-from ...rpd.__init__ import __version__ as version
-from ...rpd.exceptions import Forbidden, HTTPException, NotFound, Unauthorized
+from ...rpd.__init__ import __version__
+from ...rpd.exceptions import Forbidden, HTTPException, NotFound, Unauthorized, RateLimitError
 from .gate import DiscordClientWebSocketResponse
 
 __all__ = ("Route", "HTTPClient")
 
+POST = "https://discord.com/api/v9"
 
 class Route:
     def __init__(self, method, route, **parameters):
@@ -70,150 +74,66 @@ class LockManager:
 
 
 class HTTPClient:
-    def __init__(
-        self,
-        token,
-        *,
-        baseuri="https://discord.com/api/v9",
-        loop=asyncio.get_event_loop(),
-    ):
-        self.baseuri = baseuri
-        self.token = token
-        self.loop = loop
+    def __init__(self, loop=asyncio.get_event_loop(), token=None):
         self.session = ClientSession()
-
-        self.ratelimit_locks = {}
-        self.global_lock = asyncio.Event(loop=self.loop)
-
-        # Clear the global lock on start
-        self.global_lock.set()
-
-        self.default_headers = {
+        self.loop = loop
+        self.token = token
+        user_agent = "DiscordBot (https://github.com/RPD-py/RPD {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
+        self.user_agent: str = user_agent.format(
+            __version__, sys.version_info, aiohttp.__version__
+        )
+        self.headers = {
             "X-RateLimit-Precision": "millisecond",
             "Authorization": f"Bot {self.token}",
-            "User-Agent": f"DiscordBot (https://github.com/RPD-py/RPD {version}) "
-            f"Python/{python_version[0]}.{python_version[1]} "
-            f"aiohttp/{aiohttp_version}",
         }
 
-        self.retry_attempts = 3
-
-    async def create_ws(self, url, *, compression) -> ClientWebSocketResponse:
+    async def connect_to_ws(self, *, compression) -> ClientWebSocketResponse:
         if self.session.closed:
             self.session = ClientSession()
-        options = {
+        ws_info = {
             "max_msg_size": 0,
-            "timeout": 60,
+            "timeout": 40,
             "autoclose": False,
-            "headers": {"User-Agent": self.default_headers["User-Agent"]},
+            "headers": {"User-Agent": self.headers["User-Agent"]},
             "compress": compression,
         }
-        return await self.session.ws_connect(url, **options)
+        return await self.session.ws_connect(POST, **ws_info)
 
-    async def request(self, route: Route, **kwargs):
+    async def request(self, **kwargs: Any):
         if self.session.closed:
             self.session = ClientSession()
-        bucket = route.bucket
 
-        for retry_count in range(self.retry_attempts):
-            if not self.global_lock.is_set():
-                self.logger.debug("Sleeping for global rate-limit")
-                await self.global_lock.wait()
+        headers: Dict[str, str] = {
+            "User-Agent": self.user_agent,
+        }
 
-            ratelimit_lock: asyncio.Lock = self.ratelimit_locks.get(bucket, None)
-            if ratelimit_lock is None:
-                self.ratelimit_locks[bucket] = asyncio.Lock()
-                continue
+        if self.token is not None:
+            headers["Authorization"] = "Bot " + self.token
+        # Making sure it's json
+        if "json" in kwargs:
+            headers["Content-Type"] = "application/json"
+            kwargs["data"] = json.dumps(kwargs.pop("json"))
 
-            await ratelimit_lock.acquire()
-            with LockManager(ratelimit_lock) as lockmanager:
-                # Merge default headers with the users headers, could probably use a if to check if is headers set?
-                # Not sure which is optimal for speed
-                kwargs["headers"] = {
-                    **self.default_headers,
-                    **kwargs.get("headers", {}),
-                }
+        kwargs['headers'] = headers
+        r = await self.session.request(**kwargs)
+        headers = r.headers
+        
+        if r.status == 429:
+            raise RateLimitError(r)
 
-                # Format the reason
-                try:
-                    reason = kwargs.pop("reason")
-                except KeyError:
-                    pass
-                else:
-                    if reason:
-                        kwargs["headers"]["X-Audit-Log-Reason"] = uriquote(
-                            reason, safe="/ "
-                        )
-                r = await self.session.request(
-                    route.method, self.baseuri + route.path, **kwargs
-                )
-                headers = r.headers
+        elif r.status == 401:
+            raise Unauthorized(r)
 
-                if r.status == 429:
-                    data = await r.json()
-                    retry_after = data["retry_after"]
-                    if "X-RateLimit-Global" in headers.keys():
-                        # Global rate-limited
-                        self.global_lock.set()
-                        self.logger.warning(
-                            "Global rate-limit reached! Please contact discord support to get this increased. "
-                            "Trying again in %s Request attempt %s"
-                            % (retry_after, retry_count)
-                        )
-                        await asyncio.sleep(retry_after)
-                        self.global_lock.clear()
-                        self.logger.debug(
-                            f"Trying request again. Request attempt: {retry_count}"
-                        )
-                        continue
-                    else:
-                        self.logger.info(
-                            "Ratelimit bucket hit! Bucket: %s. Retrying in %s. Request count %s"
-                            % (bucket, retry_after, retry_count)
-                        )
-                        await asyncio.sleep(retry_after)
-                        self.logger.debug(
-                            f"Trying request again. Request attempt: {retry_count}"
-                        )
-                        continue
-                elif r.status == 401:
-                    raise Unauthorized(r)
-                elif r.status == 403:
-                    raise Forbidden(r, await r.text())
-                elif r.status == 404:
-                    raise NotFound(r)
-                elif r.status >= 300:
-                    raise HTTPException(r, await r.text())
+        elif r.status == 403:
+            raise Forbidden(r, await r.text())
 
-                # Check if we are just on the limit but not passed it
-                remaining = r.headers.get("X-Ratelimit-Remaining")
-                if remaining == "0":
-                    retry_after = float(headers.get("X-RateLimit-Reset-After", "0"))
-                    self.logger.info(
-                        "Rate-limit exceeded! Bucket: %s Retry after: %s"
-                        % (bucket, retry_after)
-                    )
-                    lockmanager.defer()
-                    self.loop.call_later(retry_after, ratelimit_lock.release)
+        elif r.status == 404:
+            raise NotFound(r)
 
-                return r
-
-    async def static_login(self, token: str):
-        self._session = aiohttp.ClientSession(
-            connector=self.connector, ws_response_class=DiscordClientWebSocketResponse
-        )
-        old_token = self.token
-        self.token = token
-
-        try:
-            data = await self.request(Route("GET", "/users/@me"))
-        except HTTPException as exc:
-            self.token = old_token
-            if exc.status == 401:
-                raise HTTPException("Improper token has been passed.") from exc
-            raise
-
-        return data
+        elif r.status >= 300:
+            raise HTTPException(r, await r.text())
+        
+        return r
 
     async def close(self):
         await self.session.close()
