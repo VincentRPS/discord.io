@@ -19,7 +19,6 @@ from typing import Literal, NamedTuple
 
 from .client import *
 from .exceptions import *
-from .internal import *
 
 
 class VersionInfo(NamedTuple):
