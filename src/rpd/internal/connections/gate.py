@@ -54,12 +54,12 @@ class EventDispatch:
         self.event_handlers = {}
 
     def dispatch(self, my_event, *args, **kwargs):
-        """Dispatch's Opcode Events"""
+        """Dispatch's Events"""
         for event in self.event_handlers.get(my_event, []):
             self.loop.create_task(event(*args, **kwargs))
 
     def register(self, my_event, func):
-        """Registers Opcode Events"""
+        """Registers Events"""
         event_handlers = self.event_handlers.get(my_event, [])
         event_handlers.append(func)
         self.event_handlers[my_event] = event_handlers
