@@ -98,15 +98,6 @@ class HTTPClient:
         self.retry_attempts = 3
 
     async def create_ws(self, url, *, compression) -> ClientWebSocketResponse:
-        """
-        Opens a websocket to the specified url.
-        Parameters
-        ----------
-        url: str
-            The URL that the websocket will connect to.
-        compression: int
-            Whether to enable compression.
-        """
         if self.session.closed:
             self.session = ClientSession()
         options = {
@@ -119,15 +110,6 @@ class HTTPClient:
         return await self.session.ws_connect(url, **options)
 
     async def request(self, route: Route, **kwargs):
-        """
-        Sends a request to the Discord API.
-        Parameters
-        ----------
-        route: Route
-            The Discord API route to send a request to.
-        **kwargs: Dict[str, Any]
-            The parameters being passed to asyncio.ClientSession.request
-        """
         if self.session.closed:
             self.session = ClientSession()
         bucket = route.bucket
