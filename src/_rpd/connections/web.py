@@ -18,24 +18,31 @@ limitations under the License.
 This file contains code from speedcord (https://github.com/TAG-Epic/Speedcord)
 """
 import asyncio
-import logging
 import json
+import logging
 import sys
 from sys import version_info as python_version
+from typing import Any, Dict
 from urllib.parse import quote as uriquote
 
 import aiohttp
 from aiohttp import ClientSession, ClientWebSocketResponse
 from aiohttp import __version__ as aiohttp_version
-from typing import Dict, Any
 
 from ...rpd.__init__ import __version__
-from ...rpd.exceptions import Forbidden, HTTPException, NotFound, Unauthorized, RateLimitError
+from ...rpd.exceptions import (
+    Forbidden,
+    HTTPException,
+    NotFound,
+    RateLimitError,
+    Unauthorized,
+)
 from .gate import DiscordClientWebSocketResponse
 
 __all__ = ("Route", "HTTPClient")
 
 POST = "https://discord.com/api/v9"
+
 
 class Route:
     def __init__(self, method, route, **parameters):
@@ -114,10 +121,10 @@ class HTTPClient:
             headers["Content-Type"] = "application/json"
             kwargs["data"] = json.dumps(kwargs.pop("json"))
 
-        kwargs['headers'] = headers
+        kwargs["headers"] = headers
         r = await self.session.request(**kwargs)
         headers = r.headers
-        
+
         if r.status == 429:
             raise RateLimitError(r)
 
@@ -132,7 +139,7 @@ class HTTPClient:
 
         elif r.status >= 300:
             raise HTTPException(r, await r.text())
-        
+
         return r
 
     async def close(self):
