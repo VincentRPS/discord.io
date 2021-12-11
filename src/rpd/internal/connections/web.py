@@ -21,7 +21,7 @@ import asyncio
 import json
 import logging
 import sys
-from typing import Any, Dict, Optional, Union, ClassVar
+from typing import Any, ClassVar, Dict, Optional, Union
 from urllib.parse import quote
 
 import aiohttp
@@ -30,7 +30,7 @@ from aiohttp import __version__ as aiohttp_version
 
 from ...__init__ import __discord__ as version
 from ...__init__ import __version__
-from ...client import Snowflake, SnowflakeList, Client
+from ...client import Client, Snowflake, SnowflakeList
 from ...exceptions import (
     Forbidden,
     HTTPException,
@@ -53,25 +53,32 @@ async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any]
 
     return text
 
+
 class Route:
-    BASE: ClassVar[str] = 'https://discord.com/api/v9'
+    BASE: ClassVar[str] = "https://discord.com/api/v9"
 
     def __init__(self, method: str, path: str, **parameters: Any) -> None:
         self.path: str = path
         self.method: str = method
         url = self.BASE + self.path
         if parameters:
-            url = url.format_map({k: quote(v) if isinstance(v, str) else v for k, v in parameters.items()})
+            url = url.format_map(
+                {
+                    k: quote(v) if isinstance(v, str) else v
+                    for k, v in parameters.items()
+                }
+            )
         self.url: str = url
 
         # major parameters:
-        self.channel_id: Optional[Snowflake] = parameters.get('channel_id')
-        self.guild_id: Optional[Snowflake] = parameters.get('guild_id')
+        self.channel_id: Optional[Snowflake] = parameters.get("channel_id")
+        self.guild_id: Optional[Snowflake] = parameters.get("guild_id")
 
     @property
     def bucket(self) -> str:
         # the bucket is just method + path w/ major parameters
-        return f'{self.channel_id}:{self.guild_id}:{self.path}'
+        return f"{self.channel_id}:{self.guild_id}:{self.path}"
+
 
 class HTTPClient:
     def __init__(self, loop=asyncio.get_event_loop()):
@@ -134,4 +141,3 @@ class HTTPClient:
 
     async def close_ws(self) -> Any:
         await self.session.close()
-
