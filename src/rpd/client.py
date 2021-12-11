@@ -18,12 +18,11 @@ limitations under the License.
 from __future__ import annotations
 
 import logging
+from typing import Any, Callable, Coroutine, TypeVar
 
 from aiohttp.helpers import TOKEN
 
 from .internal.client.core import Command, Send
-
-from typing import Callable, TypeVar, Any, Coroutine
 
 _log = logging.getLogger(__name__)
 
@@ -34,17 +33,18 @@ from typing import List, Union
 Snowflake = Union[str, int]
 SnowflakeList = List[Snowflake]
 
-T = TypeVar('T')
+T = TypeVar("T")
 Coro = Coroutine[Any, Any, T]
 CoroFunc = Callable[..., Coro[Any]]
-CFT = TypeVar('CFT', bound='CoroFunc')
+CFT = TypeVar("CFT", bound="CoroFunc")
+
 
 class Client:
     """Client For Bots"""
 
     def __init__(self):
         pass
-    
+
     async def command(self) -> Callable[[CFT], CFT]:
         """Command Stuff"""
         return Command

@@ -84,24 +84,30 @@ class MaybeUnlock:
             self.lock.release()
 
 class Route:
-    BASE: ClassVar[str] = 'https://discord.com/api/v9'
+    BASE: ClassVar[str] = "https://discord.com/api/v9"
 
     def __init__(self, method: str, path: str, **parameters: Any) -> None:
         self.path: str = path
         self.method: str = method
         url = self.BASE + self.path
         if parameters:
-            url = url.format_map({k: quote(v) if isinstance(v, str) else v for k, v in parameters.items()})
+            url = url.format_map(
+                {
+                    k: quote(v) if isinstance(v, str) else v
+                    for k, v in parameters.items()
+                }
+            )
         self.url: str = url
 
         # major parameters:
-        self.channel_id: Optional[Snowflake] = parameters.get('channel_id')
-        self.guild_id: Optional[Snowflake] = parameters.get('guild_id')
+        self.channel_id: Optional[Snowflake] = parameters.get("channel_id")
+        self.guild_id: Optional[Snowflake] = parameters.get("guild_id")
 
     @property
     def bucket(self) -> str:
         # the bucket is just method + path w/ major parameters
-        return f'{self.channel_id}:{self.guild_id}:{self.path}'
+        return f"{self.channel_id}:{self.guild_id}:{self.path}"
+
 
 class HTTPClient:
     def __init__(self, token, connector: Optional[aiohttp.BaseConnector] = None, loop=asyncio.get_event_loop()):
@@ -250,4 +256,3 @@ class HTTPClient:
 
     def logout(self) -> Response[None]:
         return self.request(Route('POST', '/auth/logout'))
-
