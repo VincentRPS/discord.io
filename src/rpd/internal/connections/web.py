@@ -262,26 +262,3 @@ class HTTPClient:
 
     async def close_ws(self) -> Any:
         await self.session.close()
-
-    # Static Login
-
-    async def static_login(self, token: str):
-        # Necessary to get aiohttp to stop complaining about session creation
-        self.session = aiohttp.ClientSession(
-            connector=self.connector, ws_response_class=DiscordClientWebSocketResponse
-        )
-        old_token = self.token
-        self.token = token
-
-        try:
-            data = await self.request(Route("GET", "/users/@me"))
-        except HTTPException as exc:
-            self.token = old_token
-            if exc.status == 401:
-                raise LoginFailure("Improper token has been passed.") from exc
-            raise
-
-        return data
-
-    def logout(self) -> Response[None]:
-        return self.request(Route("POST", "/auth/logout"))

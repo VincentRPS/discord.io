@@ -19,8 +19,11 @@ from __future__ import annotations
 
 import logging
 from typing import Any, Callable, Coroutine, TypeVar
+from .internal.connections.gate import DiscordClientWebSocketResponse
+from .exceptions import HTTPException, LoginFailure
+from .internal.connections.web import Route, Response
 
-from aiohttp.helpers import TOKEN
+import aiohttp
 
 from .internal.client.core import Command, Send
 
@@ -53,6 +56,34 @@ class Client:
         """Sends Messages For Client"""
         return Send
 
-    async def start(self, token):
-        """The non-callable start stuff"""
+    async def login(self, token: str):
+        # Necessary to get aiohttp to stop complaining about session creation
+        self.session = aiohttp.ClientSession(
+            connector=self.connector, ws_response_class=DiscordClientWebSocketResponse
+        )
+        old_token = self.token
         self.token = token
+
+        try:
+            data = await self.request(Route("GET", "/users/@me"))
+        except HTTPException as exc:
+            self.token = old_token
+            if exc.status == 401:
+                raise LoginFailure("Improper token has been passed.") from exc
+            raise
+
+        return data
+    
+    async def fatal(self, exception):
+        """
+        Raises a fatal exception to the bot.
+        Please do not use this for non-fatal exceptions.
+        """
+        self.fatal_exception = exception
+        await self.close()
+
+    def logout(self) -> Response[None]:
+        return self.request(Route("POST", "/auth/logout"))
+
+    async def listen(self):
+        pass
