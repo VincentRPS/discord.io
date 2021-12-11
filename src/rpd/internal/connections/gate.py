@@ -16,6 +16,7 @@ See the LICENSE file for the specific language governing permissions and
 limitations under the License.
 """
 from asyncio.events import AbstractEventLoop
+
 import aiohttp
 
 
@@ -24,9 +25,11 @@ class DiscordClientWebSocketResponse(aiohttp.ClientWebSocketResponse):
     async def close(self, *, code: int = 4000, message: bytes = b"") -> bool:
         return await super().close(code=code, message=message)
 
+
 # Based Upon Speedcords Impl
 class OpcodeDispatch:
     """Dispatches Opcodes"""
+
     def __init__(self, loop: AbstractEventLoop):
         self.loop = loop
         self.event_handlers = {}
@@ -42,8 +45,10 @@ class OpcodeDispatch:
         event_handlers.append(func)
         self.event_handlers[opcode] = event_handlers
 
+
 class EventDispatch:
     """Dispatches Events"""
+
     def __init__(self, loop: AbstractEventLoop):
         self.loop = loop
         self.event_handlers = {}

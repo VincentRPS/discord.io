@@ -19,13 +19,13 @@ from __future__ import annotations
 
 import logging
 from typing import Any, Callable, Coroutine, TypeVar
-from .internal.connections.gate import DiscordClientWebSocketResponse
-from .exceptions import HTTPException, LoginFailure
-from .internal.connections.web import Route, Response
 
 import aiohttp
 
+from .exceptions import HTTPException, LoginFailure
 from .internal.client.core import Command, Send
+from .internal.connections.gate import DiscordClientWebSocketResponse
+from .internal.connections.web import Response, Route
 
 _log = logging.getLogger(__name__)
 
@@ -73,7 +73,7 @@ class Client:
             raise
 
         return data
-    
+
     async def fatal(self, exception):
         """
         Raises a fatal exception to the bot.
