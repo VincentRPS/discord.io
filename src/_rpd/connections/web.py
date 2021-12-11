@@ -21,7 +21,9 @@ import asyncio
 import logging
 from sys import version_info as python_version
 from urllib.parse import quote as uriquote
+from .gate import DiscordClientWebSocketResponse
 
+import aiohttp
 from aiohttp import ClientSession, ClientWebSocketResponse
 from aiohttp import __version__ as aiohttp_version
 
@@ -195,6 +197,21 @@ class HTTPClient:
                     self.loop.call_later(retry_after, ratelimit_lock.release)
 
                 return r
+
+    async def static_login(self, token: str):
+        self._session = aiohttp.ClientSession(connector=self.connector, ws_response_class=DiscordClientWebSocketResponse)
+        old_token = self.token
+        self.token = token
+
+        try:
+            data = await self.request(Route('GET', '/users/@me'))
+        except HTTPException as exc:
+            self.token = old_token
+            if exc.status == 401:
+                raise HTTPException('Improper token has been passed.') from exc
+            raise
+
+        return data
 
     async def close(self):
         await self.session.close()

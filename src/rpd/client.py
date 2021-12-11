@@ -44,10 +44,11 @@ CFT = TypeVar("CFT", bound="CoroFunc")
 class Client:
     """Client For Bots"""
 
-    def __init__(self):
+    def __init__(self, token=None):
         self.loop = get_event_loop()
         self.opcode_dispatcher = OpcodeDispatch(self.loop)
         self.event_dispatcher = EventDispatch(self.loop)
+        self.token = token
 
     async def command(self) -> Callable[[CFT], CFT]:
         """Command Stuff"""
@@ -57,18 +58,27 @@ class Client:
         """Sends Messages For Client"""
         pass
 
-    def run(self):
-        """Start!"""
-        try:
-            self.loop.run_until_complete(self.start())
-        except KeyboardInterrupt:
-            self.loop.run_until_complete(self.close())
-        if self.fatal_exception is not None:
-            raise self.fatal_exception from None
+    async def login(self, token: str) -> None:
+        """|coro|
+        Logs in the client with the specified credentials.
+        Parameters
+        -----------
+        token: :class:`str`
+            The authentication token. Do not prefix this token with
+            anything as the library will do it for you.
+        Raises
+        ------
+        :exc:`.LoginFailure`
+            The wrong credentials are passed.
+        :exc:`.HTTPException`
+            An unknown HTTP related error occurred,
+            usually when it isn't 200 or the known incorrect credentials
+            passing status code.
+        """
 
-    async def fatal(self, exception):
-        self.fatal_exception = exception
-        await self.close()
+        _log.info('logging in using static token')
+
+        data = await self.http.static_login(token.strip())
 
     def logout(self) -> Response[None]:
         return self.request(Route("POST", "/auth/logout"))
@@ -83,13 +93,3 @@ class Client:
                 raise TypeError("Invalid event type!")
 
         return get_func
-
-    async def start(self):
-        if self.token is None:
-            raise TokenNotFound
-        self.http = HTTPClient(self.token, loop=self.loop)
-
-        await self.connect()
-
-        await self.exit_event.wait()
-        await self.close()
