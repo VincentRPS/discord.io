@@ -22,34 +22,45 @@ import json
 import logging
 import sys
 import weakref
-from typing import Any, Dict, Optional, Union, ClassVar, Coroutine, TypeVar, Iterable, Sequence, Type
+from types import TracebackType
+from typing import (
+    Any,
+    ClassVar,
+    Coroutine,
+    Dict,
+    Iterable,
+    Optional,
+    Sequence,
+    Type,
+    TypeVar,
+    Union,
+)
 from urllib.parse import quote
 
 import aiohttp
 from aiohttp import ClientSession, ClientWebSocketResponse
 from aiohttp import __version__ as aiohttp_version
-from .gate import DiscordClientWebSocketResponse
-from ..file import File
 
 from ...__init__ import __discord__ as version
 from ...__init__ import __version__
 from ...client import Snowflake
 from ...exceptions import (
+    Base,
     Forbidden,
     HTTPException,
+    LoginFailure,
     NotFound,
     RateLimitError,
     Unauthorized,
-    LoginFailure,
-    Base,
 )
 from ..enums import *
-from types import TracebackType
+from ..file import File
+from .gate import DiscordClientWebSocketResponse
 
 _log = logging.getLogger(__name__)
-T = TypeVar('T')
-MU = TypeVar('MU', bound='MaybeUnlock')
-BE = TypeVar('BE', bound=Base)
+T = TypeVar("T")
+MU = TypeVar("MU", bound="MaybeUnlock")
+BE = TypeVar("BE", bound=Base)
 Response = Coroutine[Any, Any, T]
 
 
@@ -62,6 +73,7 @@ async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any]
         pass
 
     return text
+
 
 class MaybeUnlock:
     def __init__(self, lock: asyncio.Lock) -> None:
@@ -82,6 +94,7 @@ class MaybeUnlock:
     ) -> None:
         if self._unlock:
             self.lock.release()
+
 
 class Route:
     BASE: ClassVar[str] = "https://discord.com/api/v9"
@@ -110,7 +123,12 @@ class Route:
 
 
 class HTTPClient:
-    def __init__(self, token, connector: Optional[aiohttp.BaseConnector] = None, loop=asyncio.get_event_loop()):
+    def __init__(
+        self,
+        token,
+        connector: Optional[aiohttp.BaseConnector] = None,
+        loop=asyncio.get_event_loop(),
+    ):
         self.session = ClientSession()
         self.loop = loop
         self.token = token
@@ -160,25 +178,25 @@ class HTTPClient:
 
         # header creation
         headers: Dict[str, str] = {
-            'User-Agent': self.user_agent,
+            "User-Agent": self.user_agent,
         }
 
         if self.token is not None:
-            headers['Authorization'] = 'Bot ' + self.token
+            headers["Authorization"] = "Bot " + self.token
         # some checking if it's a JSON request
-        if 'json' in kwargs:
-            headers['Content-Type'] = 'application/json'
-            kwargs['data'] = json.loads(kwargs.pop('json'))
+        if "json" in kwargs:
+            headers["Content-Type"] = "application/json"
+            kwargs["data"] = json.loads(kwargs.pop("json"))
 
         try:
-            reason = kwargs.pop('reason')
+            reason = kwargs.pop("reason")
         except KeyError:
             pass
         else:
             if reason:
-                headers['X-Audit-Log-Reason'] = quote(reason, safe='/ ')
+                headers["X-Audit-Log-Reason"] = quote(reason, safe="/ ")
 
-        kwargs['headers'] = headers
+        kwargs["headers"] = headers
 
         if not self._global_over.is_set():
             # wait until the global lock is complete
@@ -197,16 +215,22 @@ class HTTPClient:
                     form_data = aiohttp.FormData()
                     for params in form:
                         form_data.add_field(**params)
-                    kwargs['data'] = form_data
+                    kwargs["data"] = form_data
 
                 try:
                     async with self.session.request(method, url, **kwargs) as response:
-                        _log.debug('%s %s with %s has returned %s', method, url, kwargs.get('data'), response.status)
+                        _log.debug(
+                            "%s %s with %s has returned %s",
+                            method,
+                            url,
+                            kwargs.get("data"),
+                            response.status,
+                        )
 
                         data = await json_or_text(response)
 
                         if 300 > response.status >= 200:
-                            _log.debug('%s %s has received %s', method, url, data)
+                            _log.debug("%s %s has received %s", method, url, data)
                             return data
 
                         if response.status in {500, 502, 504}:
@@ -240,22 +264,24 @@ class HTTPClient:
         await self.session.close()
 
     # Static Login
-    
+
     async def static_login(self, token: str):
         # Necessary to get aiohttp to stop complaining about session creation
-        self.session = aiohttp.ClientSession(connector=self.connector, ws_response_class=DiscordClientWebSocketResponse)
+        self.session = aiohttp.ClientSession(
+            connector=self.connector, ws_response_class=DiscordClientWebSocketResponse
+        )
         old_token = self.token
         self.token = token
 
         try:
-            data = await self.request(Route('GET', '/users/@me'))
+            data = await self.request(Route("GET", "/users/@me"))
         except HTTPException as exc:
             self.token = old_token
             if exc.status == 401:
-                raise LoginFailure('Improper token has been passed.') from exc
+                raise LoginFailure("Improper token has been passed.") from exc
             raise
 
         return data
 
     def logout(self) -> Response[None]:
-        return self.request(Route('POST', '/auth/logout'))
+        return self.request(Route("POST", "/auth/logout"))
