@@ -41,10 +41,10 @@ import aiohttp
 from aiohttp import ClientSession, ClientWebSocketResponse
 from aiohttp import __version__ as aiohttp_version
 
-from ...__init__ import __discord__ as version
-from ...__init__ import __version__
-from ...client import Snowflake
-from ...exceptions import (
+from ...rpd.__init__ import __discord__ as version
+from ...rpd.__init__ import __version__
+from ...rpd.client import Snowflake
+from ...rpd.exceptions import (
     Base,
     Forbidden,
     HTTPException,

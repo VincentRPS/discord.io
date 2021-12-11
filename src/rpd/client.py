@@ -23,9 +23,9 @@ from typing import Any, Callable, Coroutine, TypeVar
 import aiohttp
 
 from .exceptions import HTTPException, LoginFailure
-from .._rpd.client.core import Command, Send
-from .._rpd.connections.gate import DiscordClientWebSocketResponse
-from .._rpd.connections.web import Response, Route
+from .._rpd import Command, Send
+from .._rpd import DiscordClientWebSocketResponse
+from .._rpd import Response, Route
 
 _log = logging.getLogger(__name__)
 
