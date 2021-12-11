@@ -21,7 +21,6 @@ import asyncio
 import logging
 from sys import version_info as python_version
 from urllib.parse import quote as uriquote
-from .gate import DiscordClientWebSocketResponse
 
 import aiohttp
 from aiohttp import ClientSession, ClientWebSocketResponse
@@ -29,6 +28,7 @@ from aiohttp import __version__ as aiohttp_version
 
 from ...rpd.__init__ import __version__ as version
 from ...rpd.exceptions import Forbidden, HTTPException, NotFound, Unauthorized
+from .gate import DiscordClientWebSocketResponse
 
 __all__ = ("Route", "HTTPClient")
 
@@ -199,16 +199,18 @@ class HTTPClient:
                 return r
 
     async def static_login(self, token: str):
-        self._session = aiohttp.ClientSession(connector=self.connector, ws_response_class=DiscordClientWebSocketResponse)
+        self._session = aiohttp.ClientSession(
+            connector=self.connector, ws_response_class=DiscordClientWebSocketResponse
+        )
         old_token = self.token
         self.token = token
 
         try:
-            data = await self.request(Route('GET', '/users/@me'))
+            data = await self.request(Route("GET", "/users/@me"))
         except HTTPException as exc:
             self.token = old_token
             if exc.status == 401:
-                raise HTTPException('Improper token has been passed.') from exc
+                raise HTTPException("Improper token has been passed.") from exc
             raise
 
         return data

@@ -76,7 +76,7 @@ class Client:
             passing status code.
         """
 
-        _log.info('logging in using static token')
+        _log.info("logging in using static token")
 
         data = await self.http.static_login(token.strip())
 
