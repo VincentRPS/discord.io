@@ -21,8 +21,9 @@ import logging
 from typing import Any, Callable, Coroutine, TypeVar
 
 import aiohttp
+from asyncio import get_event_loop
 
-from .._rpd import Command, DiscordClientWebSocketResponse, Response, Route, Send
+from .._rpd import Command, Response, Route, Send, OpcodeDispatch, EventDispatch
 from .exceptions import HTTPException, LoginFailure
 
 _log = logging.getLogger(__name__)
@@ -44,7 +45,9 @@ class Client:
     """Client For Bots"""
 
     def __init__(self):
-        pass
+        self.loop = get_event_loop()
+        self.opcode_dispatcher = OpcodeDispatch(self.loop)
+        self.event_dispatcher = EventDispatch(self.loop)
 
     async def command(self) -> Callable[[CFT], CFT]:
         """Command Stuff"""
@@ -54,23 +57,16 @@ class Client:
         """Sends Messages For Client"""
         return Send
 
-    async def login(self, token: str):
-        # Necessary to get aiohttp to stop complaining about session creation
-        self.session = aiohttp.ClientSession(
-            connector=self.connector, ws_response_class=DiscordClientWebSocketResponse
-        )
-        old_token = self.token
-        self.token = token
-
+    def run(self):
+        """
+        Starts the client.
+        """
         try:
-            data = await self.request(Route("GET", "/users/@me"))
-        except HTTPException as exc:
-            self.token = old_token
-            if exc.status == 401:
-                raise LoginFailure("Improper token has been passed.") from exc
-            raise
-
-        return data
+            self.loop.run_until_complete(self.start())
+        except KeyboardInterrupt:
+            self.loop.run_until_complete(self.close())
+        if self.fatal_exception is not None:
+            raise self.fatal_exception from None
 
     async def fatal(self, exception):
         """
@@ -83,5 +79,25 @@ class Client:
     def logout(self) -> Response[None]:
         return self.request(Route("POST", "/auth/logout"))
 
-    async def listen(self):
-        pass
+    def listen(self, event):
+        """
+        Listen to an event or opcode.
+        Parameters
+        ----------
+        event: Union[int, str]
+            An opcode or event name to listen to.
+        Raises
+        ------
+        TypeError
+            Invalid event type was passed.
+        """
+
+        def get_func(func):
+            if isinstance(event, int):
+                self.opcode_dispatcher.register(event, func)
+            elif isinstance(event, str):
+                self.event_dispatcher.register(event, func)
+            else:
+                raise TypeError("Invalid event type!")
+
+        return get_func
