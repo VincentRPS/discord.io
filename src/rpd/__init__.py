@@ -17,6 +17,7 @@ __discord__ = "9"
 import logging
 from typing import Literal, NamedTuple
 
+from .client import *
 from .exceptions import *
 from .internal import *
 

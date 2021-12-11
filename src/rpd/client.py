@@ -21,8 +21,7 @@ import logging
 
 from aiohttp.helpers import TOKEN
 
-from .internal.client.core import Command, Start
-from .internal.connections.web import HTTPClient
+from .internal.client.core import Command, Send
 
 _log = logging.getLogger(__name__)
 
@@ -33,12 +32,16 @@ class Client:
     """Client For Bots"""
 
     def __init__(self):
-        self.http: HTTPClient = HTTPClient(loop=self.loop)
+        pass
 
     @callable
     def command(self) -> Command:
         """Command Stuff"""
         return Command
+
+    def send(self) -> Send:
+        """Sends Messages For Client"""
+        return Send
 
     async def start(self, token):
         """The non-callable start stuff"""

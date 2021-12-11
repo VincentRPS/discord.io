@@ -15,6 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the LICENSE file for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import annotations
 import asyncio
 
 import aiohttp
@@ -22,3 +23,6 @@ import aiohttp
 
 class Command:
     """Base Command Class"""
+
+class Send:
+    """Sends Messages for Client"""
