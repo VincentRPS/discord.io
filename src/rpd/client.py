@@ -23,7 +23,7 @@ from typing import Any, Callable, Coroutine, TypeVar
 
 import aiohttp
 
-from .._rpd import EventDispatch, OpcodeDispatch, Response, Route, HTTPClient
+from .._rpd import EventDispatch, HTTPClient, OpcodeDispatch, Response, Route
 from .exceptions import TokenNotFound
 
 _log = logging.getLogger(__name__)
@@ -83,7 +83,7 @@ class Client:
                 raise TypeError("Invalid event type!")
 
         return get_func
-    
+
     async def start(self):
         if self.token is None:
             raise TokenNotFound
@@ -93,4 +93,3 @@ class Client:
 
         await self.exit_event.wait()
         await self.close()
-
