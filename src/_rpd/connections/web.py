@@ -28,7 +28,7 @@ from aiohttp import __version__ as aiohttp_version
 from ...rpd.__init__ import __version__ as version
 from ...rpd.exceptions import Forbidden, HTTPException, NotFound, Unauthorized
 
-__all__ = ("Route", "HttpClient")
+__all__ = ("Route", "HTTPClient")
 
 
 class Route:
