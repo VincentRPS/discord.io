@@ -235,6 +235,9 @@ class HTTPClient:
                 raise HTTPException(response, data)
 
             raise RuntimeError('Unreachable code in HTTP handling')
+    
+    async def close_ws(self) -> Any:
+        await self.session.close()
 
     # Static Login
     
