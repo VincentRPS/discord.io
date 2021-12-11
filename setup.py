@@ -30,7 +30,6 @@ with open("requirements.txt") as f:
 
 extra_requires = {
     "speed": [
-        "orjson>=3.6.4",
         "aiodns>=1.1",
         "Brotlipy",
         "cchardet",
@@ -55,13 +54,14 @@ setup(
     install_requires=requirements,
     extra_requires=extra_requires,
     description="Asynchronous Discord API Wrapper For Python",
-    python_requires=">=3.9",
+    python_requires=">=3.8",
     classifiers=[
         "Development Status :: 1 - Planning",
         "License :: OSI Approved :: Apache Software License",
         "Intended Audience :: Developers",
         "Natural Language :: English",
         "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: Implementation :: CPython",
