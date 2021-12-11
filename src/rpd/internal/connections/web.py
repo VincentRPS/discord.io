@@ -21,7 +21,8 @@ import asyncio
 import json
 import logging
 import sys
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union, ClassVar
+from urllib.parse import quote
 
 import aiohttp
 from aiohttp import ClientSession, ClientWebSocketResponse
@@ -30,6 +31,7 @@ from aiohttp import __version__ as aiohttp_version
 from ...client import Client
 from ...__init__ import __discord__ as version
 from ...__init__ import __version__
+from ...client import Snowflake, SnowflakeList
 from ...exceptions import (
     Forbidden,
     HTTPException,
@@ -40,8 +42,6 @@ from ...exceptions import (
 from ..enums import *
 
 _LOG = logging.getLogger(__name__)
-
-POST = f"https://discord.com/api/v{version}"
 
 
 async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any], str]:
@@ -54,6 +54,25 @@ async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any]
 
     return text
 
+class Route:
+    BASE: ClassVar[str] = 'https://discord.com/api/v9'
+
+    def __init__(self, method: str, path: str, **parameters: Any) -> None:
+        self.path: str = path
+        self.method: str = method
+        url = self.BASE + self.path
+        if parameters:
+            url = url.format_map({k: quote(v) if isinstance(v, str) else v for k, v in parameters.items()})
+        self.url: str = url
+
+        # major parameters:
+        self.channel_id: Optional[Snowflake] = parameters.get('channel_id')
+        self.guild_id: Optional[Snowflake] = parameters.get('guild_id')
+
+    @property
+    def bucket(self) -> str:
+        # the bucket is just method + path w/ major parameters
+        return f'{self.channel_id}:{self.guild_id}:{self.path}'
 
 class HTTPClient:
     def __init__(self, loop=asyncio.get_event_loop()):
@@ -78,7 +97,7 @@ class HTTPClient:
             "headers": {"User-Agent": self.headers["User-Agent"]},
             "compress": compression,
         }
-        return await self.session.ws_connect(POST, **ws_info)
+        return await self.session.ws_connect(Route, **ws_info)
 
     async def request(self, **kwargs: Any):
         if self.session.closed:
@@ -96,7 +115,7 @@ class HTTPClient:
             kwargs["data"] = json.dumps(kwargs.pop("json"))
 
         kwargs["headers"] = headers
-        r = await self.session.request(POST, **kwargs)
+        r = await self.session.request(Route, **kwargs)
         headers = r.headers
 
         if r.status == 429:
@@ -116,3 +135,4 @@ class HTTPClient:
 
     async def close_ws(self) -> Any:
         await self.session.close()
+

@@ -23,19 +23,29 @@ from aiohttp.helpers import TOKEN
 
 from .internal.client.core import Command, Send
 
+from typing import Callable, TypeVar, Any, Coroutine
+
 _log = logging.getLogger(__name__)
 
 __all__ = ("Client",)
 
+from typing import List, Union
+
+Snowflake = Union[str, int]
+SnowflakeList = List[Snowflake]
+
+T = TypeVar('T')
+Coro = Coroutine[Any, Any, T]
+CoroFunc = Callable[..., Coro[Any]]
+CFT = TypeVar('CFT', bound='CoroFunc')
 
 class Client:
     """Client For Bots"""
 
     def __init__(self):
         pass
-
-    @callable
-    def command(self) -> Command:
+    
+    async def command(self) -> Callable[[CFT], CFT]:
         """Command Stuff"""
         return Command
 
