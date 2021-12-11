@@ -53,7 +53,6 @@ from ...exceptions import (
     RateLimitError,
     Unauthorized,
 )
-from ..enums import *
 from ..file import File
 from .gate import DiscordClientWebSocketResponse
 
