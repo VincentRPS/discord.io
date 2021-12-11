@@ -195,8 +195,6 @@ class HTTPClient:
             if reason:
                 headers["X-Audit-Log-Reason"] = quote(reason, safe="/ ")
 
-        kwargs["headers"] = headers
-
         if not self._global_over.is_set():
             # wait until the global lock is complete
             await self._global_over.wait()
