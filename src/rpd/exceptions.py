@@ -35,6 +35,10 @@ class ClientException(Base):
 
     pass
 
+class LoginFailure(ClientException):
+    """Handles Bot Login Failures"""
+    pass
+
 
 class Forbidden(HTTPException):
     pass

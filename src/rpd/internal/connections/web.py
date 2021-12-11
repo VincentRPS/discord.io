@@ -21,26 +21,36 @@ import asyncio
 import json
 import logging
 import sys
-from typing import Any, Dict, Optional, Union, ClassVar
+import weakref
+from typing import Any, Dict, Optional, Union, ClassVar, Coroutine, TypeVar, Iterable, Sequence, Type
 from urllib.parse import quote
 
 import aiohttp
 from aiohttp import ClientSession, ClientWebSocketResponse
 from aiohttp import __version__ as aiohttp_version
+from .gate import DiscordClientWebSocketResponse
+from ..file import File
 
 from ...__init__ import __discord__ as version
 from ...__init__ import __version__
-from ...client import Snowflake, SnowflakeList, Client
+from ...client import Snowflake
 from ...exceptions import (
     Forbidden,
     HTTPException,
     NotFound,
     RateLimitError,
     Unauthorized,
+    LoginFailure,
+    Base,
 )
 from ..enums import *
+from types import TracebackType
 
-_LOG = logging.getLogger(__name__)
+_log = logging.getLogger(__name__)
+T = TypeVar('T')
+MU = TypeVar('MU', bound='MaybeUnlock')
+BE = TypeVar('BE', bound=Base)
+Response = Coroutine[Any, Any, T]
 
 
 async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any], str]:
@@ -52,6 +62,26 @@ async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any]
         pass
 
     return text
+
+class MaybeUnlock:
+    def __init__(self, lock: asyncio.Lock) -> None:
+        self.lock: asyncio.Lock = lock
+        self._unlock: bool = True
+
+    def __enter__(self: MU) -> MU:
+        return self
+
+    def defer(self) -> None:
+        self._unlock = False
+
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BE]],
+        exc: Optional[BE],
+        traceback: Optional[TracebackType],
+    ) -> None:
+        if self._unlock:
+            self.lock.release()
 
 class Route:
     BASE: ClassVar[str] = 'https://discord.com/api/v9'
@@ -74,17 +104,22 @@ class Route:
         return f'{self.channel_id}:{self.guild_id}:{self.path}'
 
 class HTTPClient:
-    def __init__(self, loop=asyncio.get_event_loop()):
+    def __init__(self, token, connector: Optional[aiohttp.BaseConnector] = None, loop=asyncio.get_event_loop()):
         self.session = ClientSession()
         self.loop = loop
+        self.token = token
+        self.connector = connector
         user_agent = "DiscordBot (https://github.com/RPD-py/RPD {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
         self.user_agent: str = user_agent.format(
             __version__, sys.version_info, aiohttp.__version__
         )
         self.headers = {
             "X-RateLimit-Precision": "millisecond",
-            "Authorization": f"Bot {Client.start.token}",
+            "Authorization": f"Bot {self.token}",
         }
+        self._locks: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
+        self._global_over: asyncio.Event = asyncio.Event()
+        self._global_over.set()
 
     async def connect_to_ws(self, *, compression) -> ClientWebSocketResponse:
         if self.session.closed:
@@ -98,40 +133,121 @@ class HTTPClient:
         }
         return await self.session.ws_connect(Route, **ws_info)
 
-    async def request(self, **kwargs: Any):
-        if self.session.closed:
-            self.session = ClientSession()
+    # Based Off Of discord.py's request
+    async def request(
+        self,
+        route: Route,
+        *,
+        files: Optional[Sequence[File]] = None,
+        form: Optional[Iterable[Dict[str, Any]]] = None,
+        **kwargs: Any,
+    ) -> Any:
+        bucket = route.bucket
+        method = route.method
+        url = route.url
 
+        lock = self._locks.get(bucket)
+        if lock is None:
+            lock = asyncio.Lock()
+            if bucket is not None:
+                self._locks[bucket] = lock
+
+        # header creation
         headers: Dict[str, str] = {
-            "User-Agent": self.user_agent,
+            'User-Agent': self.user_agent,
         }
 
         if self.token is not None:
-            headers["Authorization"] = "Bot " + self.token
-        # Making sure it's json
-        if "json" in kwargs:
-            headers["Content-Type"] = "application/json"
-            kwargs["data"] = json.dumps(kwargs.pop("json"))
+            headers['Authorization'] = 'Bot ' + self.token
+        # some checking if it's a JSON request
+        if 'json' in kwargs:
+            headers['Content-Type'] = 'application/json'
+            kwargs['data'] = json.loads(kwargs.pop('json'))
 
-        kwargs["headers"] = headers
-        r = await self.session.request(Route, **kwargs)
-        headers = r.headers
+        try:
+            reason = kwargs.pop('reason')
+        except KeyError:
+            pass
+        else:
+            if reason:
+                headers['X-Audit-Log-Reason'] = quote(reason, safe='/ ')
 
-        if r.status == 429:
-            raise RateLimitError(r)
+        kwargs['headers'] = headers
 
-        elif r.status == 401:
-            raise Unauthorized(r)
+        if not self._global_over.is_set():
+            # wait until the global lock is complete
+            await self._global_over.wait()
 
-        elif r.status == 403:
-            raise Forbidden(r, await r.text())
+        response: Optional[aiohttp.ClientResponse] = None
+        data: Optional[Union[Dict[str, Any], str]] = None
+        await lock.acquire()
+        with MaybeUnlock(lock) as maybe_lock:
+            for tries in range(5):
+                if files:
+                    for f in files:
+                        f.reset(seek=tries)
 
-        elif r.status == 404:
-            raise NotFound(r)
+                if form:
+                    form_data = aiohttp.FormData()
+                    for params in form:
+                        form_data.add_field(**params)
+                    kwargs['data'] = form_data
 
-        elif r.status >= 300:
-            raise HTTPException(r, await r.text())
+                try:
+                    async with self.session.request(method, url, **kwargs) as response:
+                        _log.debug('%s %s with %s has returned %s', method, url, kwargs.get('data'), response.status)
 
-    async def close_ws(self) -> Any:
-        await self.session.close()
+                        data = await json_or_text(response)
+
+                        if 300 > response.status >= 200:
+                            _log.debug('%s %s has received %s', method, url, data)
+                            return data
+
+                        if response.status in {500, 502, 504}:
+                            await asyncio.sleep(1 + tries * 2)
+                            continue
+
+                        if response.status == 403:
+                            raise Forbidden(response, data)
+                        elif response.status == 404:
+                            raise NotFound(response, data)
+                        elif response.status >= 500:
+                            raise HTTPException(response, data)
+                        else:
+                            raise HTTPException(response, data)
+
+                except OSError as e:
+                    if tries < 4 and e.errno in (54, 10054):
+                        await asyncio.sleep(1 + tries * 2)
+                        continue
+                    raise
+
+            if response is not None:
+                if response.status >= 500:
+                    raise HTTPException(response, data)
+
+                raise HTTPException(response, data)
+
+            raise RuntimeError('Unreachable code in HTTP handling')
+
+    # Static Login
+    
+    async def static_login(self, token: str):
+        # Necessary to get aiohttp to stop complaining about session creation
+        self.session = aiohttp.ClientSession(connector=self.connector, ws_response_class=DiscordClientWebSocketResponse)
+        old_token = self.token
+        self.token = token
+
+        try:
+            data = await self.request(Route('GET', '/users/@me'))
+        except HTTPException as exc:
+            self.token = old_token
+            if exc.status == 401:
+                raise LoginFailure('Improper token has been passed.') from exc
+            raise
+
+        return data
+
+    def logout(self) -> Response[None]:
+        return self.request(Route('POST', '/auth/logout'))
 
