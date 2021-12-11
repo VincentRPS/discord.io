@@ -9,13 +9,16 @@ Asynchronous Discord API Wrapper For Python
 
 __title__ = "RPD"
 __author__ = "RPS"
-__license__ = "MIT"
+__license__ = "Apache-2.0"
 __copyright__ = "Copyright 2021 RPS"
 __version__ = "0.1.0"
 __discord__ = "9"
 
 import logging
 from typing import Literal, NamedTuple
+
+from .client import *
+from .exceptions import *
 
 
 class VersionInfo(NamedTuple):
