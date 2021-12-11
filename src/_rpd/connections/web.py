@@ -79,7 +79,6 @@ class HTTPClient:
         self.token = token
         self.loop = loop
         self.session = ClientSession()
-        self.logger = logging.getLogger("speedcord.http")
 
         self.ratelimit_locks = {}
         self.global_lock = asyncio.Event(loop=self.loop)
