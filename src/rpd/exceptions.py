@@ -60,3 +60,6 @@ class Unauthorized(HTTPException):
 
 class RateLimitError(HTTPException):
     """ono D:"""
+
+class TokenNotFound(HTTPException):
+    """Token Has Not Been Found :("""

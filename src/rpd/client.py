@@ -23,8 +23,8 @@ from typing import Any, Callable, Coroutine, TypeVar
 
 import aiohttp
 
-from .._rpd import Command, EventDispatch, OpcodeDispatch, Response, Route, Send
-from .exceptions import HTTPException, LoginFailure
+from .._rpd import EventDispatch, OpcodeDispatch, Response, Route, HTTPClient
+from .exceptions import TokenNotFound
 
 _log = logging.getLogger(__name__)
 
@@ -51,16 +51,14 @@ class Client:
 
     async def command(self) -> Callable[[CFT], CFT]:
         """Command Stuff"""
-        return Command
+        pass
 
-    def send(self) -> Send:
+    async def send(self):
         """Sends Messages For Client"""
-        return Send
+        pass
 
     def run(self):
-        """
-        Starts the client.
-        """
+        """Start!"""
         try:
             self.loop.run_until_complete(self.start())
         except KeyboardInterrupt:
@@ -69,10 +67,6 @@ class Client:
             raise self.fatal_exception from None
 
     async def fatal(self, exception):
-        """
-        Raises a fatal exception to the bot.
-        Please do not use this for non-fatal exceptions.
-        """
         self.fatal_exception = exception
         await self.close()
 
@@ -80,18 +74,6 @@ class Client:
         return self.request(Route("POST", "/auth/logout"))
 
     def listen(self, event):
-        """
-        Listen to an event or opcode.
-        Parameters
-        ----------
-        event: Union[int, str]
-            An opcode or event name to listen to.
-        Raises
-        ------
-        TypeError
-            Invalid event type was passed.
-        """
-
         def get_func(func):
             if isinstance(event, int):
                 self.opcode_dispatcher.register(event, func)
@@ -101,3 +83,14 @@ class Client:
                 raise TypeError("Invalid event type!")
 
         return get_func
+    
+    async def start(self):
+        if self.token is None:
+            raise TokenNotFound
+        self.http = HTTPClient(self.token, loop=self.loop)
+
+        await self.connect()
+
+        await self.exit_event.wait()
+        await self.close()
+
