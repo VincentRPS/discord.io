@@ -21,7 +21,6 @@ import logging
 from typing import Any, Callable, Coroutine, TypeVar
 
 import aiohttp
-
 from .exceptions import HTTPException, LoginFailure
 from .._rpd import Command, Send
 from .._rpd import DiscordClientWebSocketResponse
