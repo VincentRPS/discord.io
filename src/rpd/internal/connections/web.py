@@ -28,10 +28,9 @@ import aiohttp
 from aiohttp import ClientSession, ClientWebSocketResponse
 from aiohttp import __version__ as aiohttp_version
 
-from ...client import Client
 from ...__init__ import __discord__ as version
 from ...__init__ import __version__
-from ...client import Snowflake, SnowflakeList
+from ...client import Snowflake, SnowflakeList, Client
 from ...exceptions import (
     Forbidden,
     HTTPException,
