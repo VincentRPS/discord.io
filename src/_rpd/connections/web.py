@@ -17,14 +17,16 @@ limitations under the License.
 -----------------
 This file contains code from speedcord (https://github.com/TAG-Epic/Speedcord)
 """
-from aiohttp import ClientSession, __version__ as aiohttp_version, ClientWebSocketResponse
 import asyncio
 import logging
 from sys import version_info as python_version
 from urllib.parse import quote as uriquote
 
+from aiohttp import ClientSession, ClientWebSocketResponse
+from aiohttp import __version__ as aiohttp_version
+
 from ...rpd.__init__ import __version__ as version
-from ...rpd.exceptions import Forbidden, NotFound, HTTPException, Unauthorized
+from ...rpd.exceptions import Forbidden, HTTPException, NotFound, Unauthorized
 
 __all__ = ("Route", "HttpClient")
 
@@ -66,7 +68,13 @@ class LockManager:
 
 
 class HTTPClient:
-    def __init__(self, token, *, baseuri="https://discord.com/api/v9", loop=asyncio.get_event_loop()):
+    def __init__(
+        self,
+        token,
+        *,
+        baseuri="https://discord.com/api/v9",
+        loop=asyncio.get_event_loop(),
+    ):
         self.baseuri = baseuri
         self.token = token
         self.loop = loop
@@ -83,8 +91,8 @@ class HTTPClient:
             "X-RateLimit-Precision": "millisecond",
             "Authorization": f"Bot {self.token}",
             "User-Agent": f"DiscordBot (https://github.com/RPD-py/RPD {version}) "
-                          f"Python/{python_version[0]}.{python_version[1]} "
-                          f"aiohttp/{aiohttp_version}"
+            f"Python/{python_version[0]}.{python_version[1]} "
+            f"aiohttp/{aiohttp_version}",
         }
 
         self.retry_attempts = 3
@@ -105,10 +113,8 @@ class HTTPClient:
             "max_msg_size": 0,
             "timeout": 60,
             "autoclose": False,
-            "headers": {
-                "User-Agent": self.default_headers["User-Agent"]
-            },
-            "compress": compression
+            "headers": {"User-Agent": self.default_headers["User-Agent"]},
+            "compress": compression,
         }
         return await self.session.ws_connect(url, **options)
 
@@ -140,7 +146,10 @@ class HTTPClient:
             with LockManager(ratelimit_lock) as lockmanager:
                 # Merge default headers with the users headers, could probably use a if to check if is headers set?
                 # Not sure which is optimal for speed
-                kwargs["headers"] = {**self.default_headers, **kwargs.get("headers", {})}
+                kwargs["headers"] = {
+                    **self.default_headers,
+                    **kwargs.get("headers", {}),
+                }
 
                 # Format the reason
                 try:
@@ -149,8 +158,12 @@ class HTTPClient:
                     pass
                 else:
                     if reason:
-                        kwargs["headers"]["X-Audit-Log-Reason"] = uriquote(reason, safe="/ ")
-                r = await self.session.request(route.method, self.baseuri + route.path, **kwargs)
+                        kwargs["headers"]["X-Audit-Log-Reason"] = uriquote(
+                            reason, safe="/ "
+                        )
+                r = await self.session.request(
+                    route.method, self.baseuri + route.path, **kwargs
+                )
                 headers = r.headers
 
                 if r.status == 429:
@@ -161,16 +174,24 @@ class HTTPClient:
                         self.global_lock.set()
                         self.logger.warning(
                             "Global rate-limit reached! Please contact discord support to get this increased. "
-                            "Trying again in %s Request attempt %s" % (retry_after, retry_count))
+                            "Trying again in %s Request attempt %s"
+                            % (retry_after, retry_count)
+                        )
                         await asyncio.sleep(retry_after)
                         self.global_lock.clear()
-                        self.logger.debug("Trying request again. Request attempt: %s" % retry_count)
+                        self.logger.debug(
+                            f"Trying request again. Request attempt: {retry_count}"
+                        )
                         continue
                     else:
-                        self.logger.info("Ratelimit bucket hit! Bucket: %s. Retrying in %s. Request count %s" % (
-                            bucket, retry_after, retry_count))
+                        self.logger.info(
+                            "Ratelimit bucket hit! Bucket: %s. Retrying in %s. Request count %s"
+                            % (bucket, retry_after, retry_count)
+                        )
                         await asyncio.sleep(retry_after)
-                        self.logger.debug("Trying request again. Request attempt: %s" % retry_count)
+                        self.logger.debug(
+                            f"Trying request again. Request attempt: {retry_count}"
+                        )
                         continue
                 elif r.status == 401:
                     raise Unauthorized(r)
@@ -182,10 +203,13 @@ class HTTPClient:
                     raise HTTPException(r, await r.text())
 
                 # Check if we are just on the limit but not passed it
-                remaining = r.headers.get('X-Ratelimit-Remaining')
+                remaining = r.headers.get("X-Ratelimit-Remaining")
                 if remaining == "0":
                     retry_after = float(headers.get("X-RateLimit-Reset-After", "0"))
-                    self.logger.info("Rate-limit exceeded! Bucket: %s Retry after: %s" % (bucket, retry_after))
+                    self.logger.info(
+                        "Rate-limit exceeded! Bucket: %s Retry after: %s"
+                        % (bucket, retry_after)
+                    )
                     lockmanager.defer()
                     self.loop.call_later(retry_after, ratelimit_lock.release)
 

@@ -18,12 +18,12 @@ limitations under the License.
 from __future__ import annotations
 
 import logging
+from asyncio import get_event_loop
 from typing import Any, Callable, Coroutine, TypeVar
 
 import aiohttp
-from asyncio import get_event_loop
 
-from .._rpd import Command, Response, Route, Send, OpcodeDispatch, EventDispatch
+from .._rpd import Command, EventDispatch, OpcodeDispatch, Response, Route, Send
 from .exceptions import HTTPException, LoginFailure
 
 _log = logging.getLogger(__name__)
