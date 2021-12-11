@@ -18,18 +18,18 @@ limitations under the License.
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import sys
-from typing import Any, Dict
+from typing import Any, Dict, Optional, Union
 
 import aiohttp
-import json
 from aiohttp import ClientSession, ClientWebSocketResponse
 from aiohttp import __version__ as aiohttp_version
-from ...client import Client
 
 from ...__init__ import __discord__ as version
 from ...__init__ import __version__
+from ...client import Client
 from ...exceptions import (
     Forbidden,
     HTTPException,
@@ -38,21 +38,22 @@ from ...exceptions import (
     Unauthorized,
 )
 from ..enums import *
-from typing import Union, Optional
 
 _LOG = logging.getLogger(__name__)
 
 POST = f"https://discord.com/api/v{version}"
 
+
 async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any], str]:
-    text = await response.text(encoding='utf-8')
+    text = await response.text(encoding="utf-8")
     try:
-        if response.headers['content-type'] == 'application/json':
+        if response.headers["content-type"] == "application/json":
             return json.dumps(text)
     except KeyError:
         pass
 
     return text
+
 
 class HTTPClient:
     def __init__(self, loop=asyncio.get_event_loop()):
