@@ -14,23 +14,17 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the LICENSE file for the specific language governing permissions and
 limitations under the License.
------------------
-This file contains code from speedcord (https://github.com/TAG-Epic/Speedcord)
 """
 import asyncio
 import json
-import logging
 import sys
-from sys import version_info as python_version
 from typing import Any, Dict
-from urllib.parse import quote as uriquote
 
 import aiohttp
 from aiohttp import ClientSession, ClientWebSocketResponse
-from aiohttp import __version__ as aiohttp_version
 
-from ...rpd.__init__ import __version__
-from ...rpd.exceptions import (
+from .. import __version__
+from ..exceptions import (
     Forbidden,
     HTTPException,
     NotFound,

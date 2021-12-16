@@ -23,7 +23,7 @@ from typing import Any, Callable, Coroutine, TypeVar
 
 import aiohttp
 
-from .._rpd import EventDispatch, OpcodeDispatch
+from . import EventDispatch, OpcodeDispatch
 from .exceptions import TokenNotFound
 
 _log = logging.getLogger(__name__)

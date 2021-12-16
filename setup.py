@@ -39,8 +39,7 @@ extra_requires = {
 setup(
     name="RPD",
     version=version,
-    packages=find_packages(where="src"),
-    package_dir={"": "src"},
+    packages=find_packages(),
     project_utls={
         "Documentation": "https://RPD.rtfd.io",
         "Issue Tracker": "https://github.com/RPD-py/RPD/issues",
