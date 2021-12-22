@@ -1,7 +1,7 @@
 """
 Apache-2.0
 
-Copyright 2021 RPS
+Copyright 2021 VincentRPS
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,23 +15,24 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the LICENSE file for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import annotations
+
 import asyncio
-import json
 import sys
 from typing import Any, Dict
 
 import aiohttp
 from aiohttp import ClientSession, ClientWebSocketResponse
 
-from .. import __version__
-from ..exceptions import (
+from rpd import __version__
+from rpd.exceptions import (
     Forbidden,
     HTTPException,
     NotFound,
     RateLimitError,
     Unauthorized,
 )
-from .gate import DiscordClientWebSocketResponse
+from rpd.helpers import _from_json
 
 __all__ = ("Route", "HTTPClient")
 
@@ -113,7 +114,7 @@ class HTTPClient:
         # Making sure it's json
         if "json" in kwargs:
             headers["Content-Type"] = "application/json"
-            kwargs["data"] = json.dumps(kwargs.pop("json"))
+            kwargs["data"] = _from_json(kwargs.pop("json"))
 
         kwargs["headers"] = headers
         r = await self.session.request(**kwargs)

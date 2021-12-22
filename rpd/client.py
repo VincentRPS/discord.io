@@ -1,7 +1,7 @@
 """
 Apache-2.0
 
-Copyright 2021 RPS
+Copyright 2021 VincentRPS
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,18 +19,13 @@ from __future__ import annotations
 
 import logging
 from asyncio import get_event_loop
-from typing import Any, Callable, Coroutine, TypeVar
+from typing import Any, Callable, Coroutine, TypeVar, List, Union
 
-import aiohttp
-
-from . import EventDispatch, OpcodeDispatch
-from .exceptions import TokenNotFound
+from rpd.internal import EventDispatch, OpcodeDispatch
 
 _log = logging.getLogger(__name__)
 
-__all__ = ("Client",)
-
-from typing import List, Union
+__all__ = "Client"
 
 Snowflake = Union[str, int]
 SnowflakeList = List[Snowflake]
@@ -44,23 +39,24 @@ CFT = TypeVar("CFT", bound="CoroFunc")
 class Client:
     """Client For Bots"""
 
-    def __init__(self, token=None):
+    def __init__(self):
         self.loop = get_event_loop()
         self.opcode_dispatcher = OpcodeDispatch(self.loop)
         self.event_dispatcher = EventDispatch(self.loop)
-        self.token = token
 
     async def command(self) -> Callable[[CFT], CFT]:
-        """Command Stuff"""
-        pass
+        """A callable function for commands
 
-    async def send(self):
-        """Sends Messages For Client"""
+        .. versionadded:: 0.1.0
+        """
         pass
 
     async def login(self, token: str) -> None:
         """|coro|
         Logs in the client with the specified credentials.
+
+        .. versionadded:: 0.1.0
+
         Parameters
         -----------
         token: :class:`str`
@@ -75,12 +71,18 @@ class Client:
             usually when it isn't 200 or the known incorrect credentials
             passing status code.
         """
+        self.token = token
 
-        _log.info("logging in using static token")
+        # _log.info("logging in using static token")
 
-        data = await self.http.static_login(token.strip())
+        # data = await self.http.static_login(token.strip())
 
     def listen(self, event):
+        """Listens to a certain OPCode event
+
+        .. versionadded:: 0.1.0
+        """
+
         def get_func(func):
             if isinstance(event, int):
                 self.opcode_dispatcher.register(event, func)

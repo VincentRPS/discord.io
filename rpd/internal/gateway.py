@@ -1,7 +1,7 @@
 """
 Apache-2.0
 
-Copyright 2021 RPS
+Copyright 2021 VincentRPS
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,12 +15,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the LICENSE file for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import annotations
+
 from asyncio.events import AbstractEventLoop
 
 import aiohttp
 
 
-# Taken from discord.py
 class DiscordClientWebSocketResponse(aiohttp.ClientWebSocketResponse):
     async def close(self, *, code: int = 4000, message: bytes = b"") -> bool:
         return await super().close(code=code, message=message)

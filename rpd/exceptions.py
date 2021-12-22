@@ -1,7 +1,7 @@
 """
 Apache-2.0
 
-Copyright 2021 RPS
+Copyright 2021 VincentRPS
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ class Base(Exception):
 
     pass
 
+class DeprecatedError(Base):
+    """Gets raised when something has been deprecated"""
 
 class HTTPException(Base):
     def __init__(self, request, data):

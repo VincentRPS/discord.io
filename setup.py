@@ -19,7 +19,7 @@ import re
 
 from setuptools import find_packages, setup
 
-with open("src/rpd/__init__.py") as f:
+with open("rpd/__init__.py") as f:
     version = re.search(
         r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE
     ).group(1)
@@ -28,8 +28,16 @@ requirements = []
 with open("requirements.txt") as f:
     requirements = f.read().splitlines()
 
+packages = [
+    "rpd",
+    "rpd.internal",
+    "rpd.helpers",
+    "rpd.data",
+]
+
 extra_requires = {
     "speed": [
+        "orjson>=3.6.5",
         "aiodns>=1.1",
         "Brotlipy",
         "cchardet",
@@ -39,7 +47,7 @@ extra_requires = {
 setup(
     name="RPD",
     version=version,
-    packages=find_packages(),
+    packages=packages,
     project_utls={
         "Documentation": "https://RPD.rtfd.io",
         "Issue Tracker": "https://github.com/RPD-py/RPD/issues",
@@ -47,7 +55,7 @@ setup(
     },
     url="https://github.com/RPD-py/RPD",
     license="Apache-2.0",
-    author="RPS",
+    author="VincentRPS",
     long_description=open("README.rst").read(),
     long_description_content_type="text/x-rst",
     install_requires=requirements,
