@@ -22,8 +22,10 @@ class Base(Exception):
 
     pass
 
+
 class DeprecatedError(Base):
     """Gets raised when something has been deprecated"""
+
 
 class HTTPException(Base):
     def __init__(self, request, data):

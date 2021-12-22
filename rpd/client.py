@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import logging
 from asyncio import get_event_loop
-from typing import Any, Callable, Coroutine, TypeVar, List, Union
+from typing import Any, Callable, Coroutine, List, TypeVar, Union
 
 from rpd.internal import EventDispatch, OpcodeDispatch
 

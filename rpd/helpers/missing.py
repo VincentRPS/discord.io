@@ -17,6 +17,7 @@ limitations under the License.
 """
 from typing import Any
 
+
 class _Missing:
     def __eq__(self, other):
         return False
@@ -25,6 +26,7 @@ class _Missing:
         return False
 
     def __repr__(self):
-        return '...'
+        return "..."
+
 
 MISSING: Any = _Missing()
