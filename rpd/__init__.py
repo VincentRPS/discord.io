@@ -11,7 +11,7 @@ __title__ = "RPD"
 __author__ = "RPS"
 __license__ = "Apache-2.0"
 __copyright__ = "Copyright 2021 RPS"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __discord__ = "9"
 
 import logging
