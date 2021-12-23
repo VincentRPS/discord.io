@@ -233,7 +233,7 @@ class HTTPClient:
                                 # Banned by Cloudflare more than likely.
                                 raise HTTPException(response, data)
 
-                            fmt = 'We are being rate limited. Retrying in %.2f seconds. Handled under the bucket "%s"'
+                            fmt = 'Currently being ratelimited. Retrying in %.2f seconds. Handled with the bucket "%s"'
 
                             # sleep a bit
                             retry_after: float = data["retry_after"]
