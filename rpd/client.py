@@ -21,7 +21,7 @@ import asyncio
 import logging
 from typing import Any, Callable, Coroutine, List, Optional, TypeVar, Union
 
-from rpd.internal import EventDispatch, HTTPClient, OpcodeDispatch
+from rpd.internal import HTTPClient
 
 _log = logging.getLogger(__name__)
 

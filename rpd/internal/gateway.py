@@ -23,8 +23,6 @@ import aiohttp
 
 __all__ = [
     "DiscordClientWebSocketResponse",
-    "OpcodeDispatch",
-    "EventDispatch",
 ]
 
 

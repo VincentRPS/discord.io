@@ -20,6 +20,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import weakref
+import sys
 from types import TracebackType
 from typing import (
     TYPE_CHECKING,
@@ -43,7 +44,8 @@ from .gateway import DiscordClientWebSocketResponse
 
 _log = logging.getLogger(__name__)
 
-from .. import helpers
+from ..helpers.whichjson import _from_json, _to_json
+from ..helpers.missing import MISSING
 
 if TYPE_CHECKING:
     from ..data.types.snowflake import Snowflake, SnowflakeList
@@ -60,12 +62,12 @@ __all__ = ("Route", "HTTPClient")
 class Route:
     BASE: ClassVar[str] = "https://discord.com/api/v9"
 
-    def __init__(self, method, route, **parameters):
-        url = self.BASE + self.path
+    def __init__(self, method, path: str, **parameters: Any):
 
         self.method = method
-        self.path = route.format(**parameters)
-
+        self.path: str = path
+        url = self.BASE + self.path
+    
         if parameters:
             url = url.format_map(
                 {
@@ -88,7 +90,7 @@ async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any]
     text = await response.text(encoding="utf-8")
     try:
         if response.headers["content-type"] == "application/json":
-            return helpers._from_json(text)
+            return _from_json(text)
     except KeyError:
         # Thanks Cloudflare
         pass
@@ -124,7 +126,7 @@ class HTTPClient:
         connector: Optional[aiohttp.BaseConnector] = None,
     ):
         self._locks: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
-        self.__session: aiohttp.ClientSession = helpers.MISSING
+        self.__session: aiohttp.ClientSession = MISSING
         self._global_over: asyncio.Event = asyncio.Event()
         self._global_over.set()
         self.loop: asyncio.AbstractEventLoop = (
@@ -182,7 +184,7 @@ class HTTPClient:
         # some checking if it's a JSON request
         if "json" in kwargs:
             headers["Content-Type"] = "application/json"
-            kwargs["data"] = helpers._to_json(kwargs.pop("json"))
+            kwargs["data"] = _to_json(kwargs.pop("json"))
 
         try:
             reason = kwargs.pop("reason")
@@ -249,7 +251,7 @@ class HTTPClient:
                                 self._global_over.clear()
 
                             await asyncio.sleep(retry_after)
-                            _log.debug("Done sleeping for the rate limit. Retrying...")
+                            _log.debug("Done sleeping for the rate limit. Retrying now...")
 
                             # release the global lock now that the
                             # global rate limit has passed
@@ -312,5 +314,5 @@ class HTTPClient:
 
         return data
 
-    async def _client_logout(self) -> Response[None]:
+    def _client_logout(self) -> Response[None]:
         return self.request(Route("POST", "/auth/logout"))

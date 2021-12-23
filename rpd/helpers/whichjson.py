@@ -21,14 +21,19 @@ from typing import Any
 
 try:
     import orjson
+    SPEED: bool = True
+
+except Exception:
+    import json
+    SPEED: bool = False
+
+if SPEED is True:
 
     def _to_json(obj: Any) -> str:  # type: ignore
         return orjson.dumps(obj).decode("utf-8")
 
     _from_json = orjson.loads  # type: ignore
-except (ModuleNotFoundError, UndefinedError):
-    import json
-
+else:
     def _to_json(obj: Any) -> str:
         return json.dumps(obj, separators=(",", ":"), ensure_ascii=True)
 
