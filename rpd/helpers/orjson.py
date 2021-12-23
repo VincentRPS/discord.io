@@ -19,15 +19,16 @@ from __future__ import annotations
 
 from typing import Any
 
-
 try:
     import orjson
+
     def _to_json(obj: Any) -> str:  # type: ignore
         return orjson.dumps(obj).decode("utf-8")
 
     _from_json = orjson.loads  # type: ignore
-except(ModuleNotFoundError, UndefinedError):
+except (ModuleNotFoundError, UndefinedError):
     import json
+
     def _to_json(obj: Any) -> str:
         return json.dumps(obj, separators=(",", ":"), ensure_ascii=True)
 

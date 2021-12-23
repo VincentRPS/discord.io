@@ -19,10 +19,9 @@ from __future__ import annotations
 
 import asyncio
 import sys
-from typing import Any, Dict, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 import aiohttp
-from .gateway import DiscordClientWebSocketResponse
 
 from rpd import __version__
 from rpd.exceptions import (
@@ -32,12 +31,14 @@ from rpd.exceptions import (
     RateLimitError,
     Unauthorized,
 )
+
 from ..helpers.missing import MISSING
 from ..helpers.orjson import _from_json
+from .gateway import DiscordClientWebSocketResponse
 
 if TYPE_CHECKING:
-    from ..data.types.user import User
     from ..data.types.snowflake import Snowflake, SnowflakeList
+    from ..data.types.user import User
 
 __all__ = ("Route", "HTTPClient")
 
@@ -105,7 +106,7 @@ class HTTPClient:
             "User-Agent": self.user_agent,
         }
 
-        if self.token is not None: # Makes sure the token is None
+        if self.token is not None:  # Makes sure the token is None
             headers["Authorization"] = "Bot " + self.token
         # Making sure it's json
         if "json" in kwargs:
@@ -139,10 +140,12 @@ class HTTPClient:
 
     async def login(self, token: str) -> User:
         # Statically logs-into discord
-        self.__session = aiohttp.ClientSession(connector=self.connector, ws_response_class=DiscordClientWebSocketResponse)
+        self.__session = aiohttp.ClientSession(
+            connector=self.connector, ws_response_class=DiscordClientWebSocketResponse
+        )
         self.previous_token = self.token
         self.token = token
-        
+
         try:
             data = await self.request(Route("GET", "users/@me"))
         except HTTPException as HTTPe:
