@@ -120,5 +120,9 @@ class RateLimitError(HTTPException):
     """ono D:"""
 
 
+class ServerError(HTTPException):
+    """Happens when a discord server error happens"""
+
+
 class TokenNotFound(HTTPException):
     """Token Has Not Been Found :("""
