@@ -19,14 +19,24 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import rpd
 import weakref
 from types import TracebackType
-from typing import (TYPE_CHECKING, Any, ClassVar, Coroutine, Dict, Optional,
-                    Type, TypeVar, Union)
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    ClassVar,
+    Coroutine,
+    Dict,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+)
 from urllib.parse import quote as _uriquote
 
 import aiohttp
+
+import rpd
 
 from ..exceptions import *
 from .gateway import DiscordClientWebSocketResponse
@@ -301,6 +311,6 @@ class HTTPClient:
             raise
 
         return data
-    
+
     async def _client_logout(self) -> Response[None]:
         return self.request(Route("POST", "/auth/logout"))
