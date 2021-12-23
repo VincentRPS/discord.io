@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import rpd
 import weakref
 from types import TracebackType
 from typing import (TYPE_CHECKING, Any, ClassVar, Coroutine, Dict, Optional,
@@ -123,7 +124,7 @@ class HTTPClient:
         self.token: Optional[str] = None
         user_agent = "DiscordBot (https://github.com/RPD-py/RPD {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
         self.user_agent: str = user_agent.format(
-            __version__, sys.version_info, aiohttp.__version__
+            rpd.__version__, sys.version_info, aiohttp.__version__
         )
 
     def handle_close(self) -> None:
