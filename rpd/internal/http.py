@@ -56,104 +56,10 @@ class Route:
 
     @property
     def bucket(self):
-        """
-        The Route's bucket identifier.
-        """
         return f"{self.channel_id}:{self.guild_id}:{self.path}"
 
 
 class HTTPClient:
-    def __init__(
-        self,
-        loop=asyncio.get_event_loop(),
-        connector: Optional[aiohttp.BaseConnector] = None,
-        proxy: Optional[str] = None,
-        proxy_auth: Optional[aiohttp.BasicAuth] = None,
-    ):
-        self.__session: aiohttp.ClientSession = MISSING
-        self.loop = loop
-        self.connector = connector
-        self.token: Optional[str] = None
-        self.proxy: Optional[str] = proxy
-        self.proxy_auth: Optional[aiohttp.BasicAuth] = proxy_auth
-        user_agent = "DiscordBot (https://github.com/RPD-py/RPD {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
-        self.user_agent: str = user_agent.format(
-            __version__, sys.version_info, aiohttp.__version__
-        )
-        self.headers = {
-            "X-RateLimit-Precision": "millisecond",
-            "Authorization": f"Bot {self.token}",
-        }
-
-    async def ws_connect(self, url: str, *, compress: int = 0) -> Any:
-        kwargs = {
-            "proxy_auth": self.proxy_auth,
-            "proxy": self.proxy,
-            "max_msg_size": 0,
-            "timeout": 30.0,
-            "autoclose": False,
-            "headers": {
-                "User-Agent": self.user_agent,
-            },
-            "compress": compress,
-        }
-
-        return await self.__session.ws_connect(url, **kwargs)
-
-    async def request(self, route: Route, **kwargs: Any):
-        bucket = route.bucket
-        method = route.method
-
-        headers: Dict[str, str] = {
-            "User-Agent": self.user_agent,
-        }
-
-        if self.token is not None: # Makes sure the token is None
-            headers["Authorization"] = "Bot " + self.token
-        # Making sure it's json
-        if "json" in kwargs:
-            headers["Content-Type"] = "application/json"
-            kwargs["data"] = _from_json(kwargs.pop("json"))
-
-        kwargs["headers"] = headers
-        r = await self.__session.request(**kwargs)
-        headers = r.headers
-
-        if r.status == 429:
-            raise RateLimitError(r)
-
-        elif r.status == 401:
-            raise Unauthorized(r)
-
-        elif r.status == 403:
-            raise Forbidden(r, await r.text())
-
-        elif r.status == 404:
-            raise NotFound(r)
-
-        elif r.status >= 300:
-            raise HTTPException(r, await r.text())
-
-        return r
-
-    # Closes The Session
-    async def close(self):
-        await self.__session.close()
-
-    async def login(self, token: str) -> User:
-        # Statically logs-into discord
-        self.__session = aiohttp.ClientSession(connector=self.connector, ws_response_class=DiscordClientWebSocketResponse)
-        self.previous_token = self.token
-        self.token = token
-        
-        try:
-            data = await self.request(Route("GET", "users/@me"))
-        except HTTPException as HTTPe:
-            self.token = self.previous_token
-            if HTTPe.status == 401:
-                raise LoginFailure(f"Invalid or no Token was passed. {HTTPe}")
-        return data
-
-    def logout(self):
-        # Tells discord to log out
-        return self.request(Route("POST", "/auth/logout"))
+    def __init__(self):
+        pass
+    pass
