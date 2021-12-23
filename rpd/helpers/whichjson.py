@@ -21,10 +21,12 @@ from typing import Any
 
 try:
     import orjson
+
     SPEED: bool = True
 
 except Exception:
     import json
+
     SPEED: bool = False
 
 if SPEED is True:
@@ -34,6 +36,7 @@ if SPEED is True:
 
     _from_json = orjson.loads  # type: ignore
 else:
+
     def _to_json(obj: Any) -> str:
         return json.dumps(obj, separators=(",", ":"), ensure_ascii=True)
 

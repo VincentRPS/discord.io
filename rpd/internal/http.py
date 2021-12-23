@@ -19,8 +19,8 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import weakref
 import sys
+import weakref
 from types import TracebackType
 from typing import (
     TYPE_CHECKING,
@@ -44,8 +44,8 @@ from .gateway import DiscordClientWebSocketResponse
 
 _log = logging.getLogger(__name__)
 
-from ..helpers.whichjson import _from_json, _to_json
 from ..helpers.missing import MISSING
+from ..helpers.whichjson import _from_json, _to_json
 
 if TYPE_CHECKING:
     from ..data.types.snowflake import Snowflake, SnowflakeList
@@ -67,7 +67,7 @@ class Route:
         self.method = method
         self.path: str = path
         url = self.BASE + self.path
-    
+
         if parameters:
             url = url.format_map(
                 {
@@ -251,7 +251,9 @@ class HTTPClient:
                                 self._global_over.clear()
 
                             await asyncio.sleep(retry_after)
-                            _log.debug("Done sleeping for the rate limit. Retrying now...")
+                            _log.debug(
+                                "Done sleeping for the rate limit. Retrying now..."
+                            )
 
                             # release the global lock now that the
                             # global rate limit has passed
