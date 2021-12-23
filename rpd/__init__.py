@@ -1,9 +1,9 @@
 """
 RPD
-~~~~
+~~~
 Asynchronous Discord API Wrapper For Python
 
-:copyright: 2021 RPS
+:copyright: 2021 VincentRPS
 :license: Apache-2.0
 """
 
@@ -17,7 +17,7 @@ __discord__ = "9"
 import logging
 from typing import Literal, NamedTuple
 
-from .client import *
+from .client import Client  # type: ignore
 from .exceptions import *
 from .internal import *
 
@@ -31,7 +31,7 @@ class VersionInfo(NamedTuple):
 
 
 version_info: VersionInfo = VersionInfo(
-    major=0, minor=0, micro=1, releaselevel="candidate", serial=0
+    major=0, minor=2, micro=0, releaselevel="candidate", serial=0
 )
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

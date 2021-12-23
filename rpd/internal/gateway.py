@@ -21,6 +21,11 @@ from asyncio.events import AbstractEventLoop
 
 import aiohttp
 
+__all__ = [
+    "DiscordClientWebSocketResponse",
+    "OpcodeDispatch",
+    "EventDispatch",
+]
 
 class DiscordClientWebSocketResponse(aiohttp.ClientWebSocketResponse):
     async def close(self, *, code: int = 4000, message: bytes = b"") -> bool:

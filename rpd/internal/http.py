@@ -19,10 +19,10 @@ from __future__ import annotations
 
 import asyncio
 import sys
-from typing import Any, Dict
+from typing import Any, Dict, Optional, TYPE_CHECKING
 
 import aiohttp
-from aiohttp import ClientSession, ClientWebSocketResponse
+from .gateway import DiscordClientWebSocketResponse
 
 from rpd import __version__
 from rpd.exceptions import (
@@ -32,7 +32,12 @@ from rpd.exceptions import (
     RateLimitError,
     Unauthorized,
 )
-from rpd.helpers import _from_json
+from ..helpers.missing import MISSING
+from ..helpers.orjson import _from_json
+
+if TYPE_CHECKING:
+    from ..data.types.user import User
+    from ..data.types.snowflake import Snowflake, SnowflakeList
 
 __all__ = ("Route", "HTTPClient")
 
@@ -56,30 +61,20 @@ class Route:
         return f"{self.channel_id}:{self.guild_id}:{self.path}"
 
 
-class LockManager:
-    def __init__(self, lock: asyncio.Lock):
-        self.lock = lock
-        self.unlock = True
-
-    def __enter__(self):
-        return self
-
-    def defer(self):
-        """
-        Stops the lock from being automatically being unlocked when it ends
-        """
-        self.unlock = False
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.unlock:
-            self.lock.release()
-
-
 class HTTPClient:
-    def __init__(self, loop=asyncio.get_event_loop(), token=None):
-        self.session = ClientSession()
+    def __init__(
+        self,
+        loop=asyncio.get_event_loop(),
+        connector: Optional[aiohttp.BaseConnector] = None,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
+    ):
+        self.__session: aiohttp.ClientSession = MISSING
         self.loop = loop
-        self.token = token
+        self.connector = connector
+        self.token: Optional[str] = None
+        self.proxy: Optional[str] = proxy
+        self.proxy_auth: Optional[aiohttp.BasicAuth] = proxy_auth
         user_agent = "DiscordBot (https://github.com/RPD-py/RPD {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
         self.user_agent: str = user_agent.format(
             __version__, sys.version_info, aiohttp.__version__
@@ -89,27 +84,28 @@ class HTTPClient:
             "Authorization": f"Bot {self.token}",
         }
 
-    async def connect_to_ws(self, *, compression) -> ClientWebSocketResponse:
-        if self.session.closed:
-            self.session = ClientSession()
-        ws_info = {
+    async def ws_connect(self, url: str, *, compress: int = 0) -> Any:
+        kwargs = {
+            "proxy_auth": self.proxy_auth,
+            "proxy": self.proxy,
             "max_msg_size": 0,
-            "timeout": 40,
+            "timeout": 30.0,
             "autoclose": False,
-            "headers": {"User-Agent": self.headers["User-Agent"]},
-            "compress": compression,
+            "headers": {
+                "User-Agent": self.user_agent,
+            },
+            "compress": compress,
         }
-        return await self.session.ws_connect(POST, **ws_info)
+
+        return await self.__session.ws_connect(url, **kwargs)
 
     async def request(self, **kwargs: Any):
-        if self.session.closed:
-            self.session = ClientSession()
 
         headers: Dict[str, str] = {
             "User-Agent": self.user_agent,
         }
 
-        if self.token is not None:
+        if self.token is not None: # Makes sure the token is None
             headers["Authorization"] = "Bot " + self.token
         # Making sure it's json
         if "json" in kwargs:
@@ -117,7 +113,7 @@ class HTTPClient:
             kwargs["data"] = _from_json(kwargs.pop("json"))
 
         kwargs["headers"] = headers
-        r = await self.session.request(**kwargs)
+        r = await self.__session.request(**kwargs)
         headers = r.headers
 
         if r.status == 429:
@@ -137,5 +133,24 @@ class HTTPClient:
 
         return r
 
+    # Closes The Session
     async def close(self):
-        await self.session.close()
+        await self.__session.close()
+
+    async def login(self, token: str) -> User:
+        # Statically logs-into discord
+        self.__session = aiohttp.ClientSession(connector=self.connector, ws_response_class=DiscordClientWebSocketResponse)
+        self.previous_token = self.token
+        self.token = token
+        
+        try:
+            data = await self.request(Route("GET", "users/@me"))
+        except HTTPException as HTTPe:
+            self.token = self.previous_token
+            if HTTPe.status == 401:
+                raise LoginFailure(f"Invalid or no Token was passed. {HTTPe}")
+        return data
+
+    def logout(self):
+        # Tells discord to log out
+        return self.request(Route("POST", "/auth/logout"))

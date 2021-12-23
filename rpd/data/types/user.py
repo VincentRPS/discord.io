@@ -15,20 +15,27 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the LICENSE file for the specific language governing permissions and
 limitations under the License.
 """
-from __future__ import annotations
+from .snowflake import Snowflake
+from typing import Literal, Optional, TypedDict
 
-from typing import Any
+
+class PartialUser(TypedDict):
+    id: Snowflake
+    username: str
+    discriminator: str
+    avatar: Optional[str]
 
 
-try:
-    import orjson
-    def _to_json(obj: Any) -> str:  # type: ignore
-        return orjson.dumps(obj).decode("utf-8")
+PremiumType = Literal[0, 1, 2]
 
-    _from_json = orjson.loads  # type: ignore
-except(ModuleNotFoundError, UndefinedError):
-    import json
-    def _to_json(obj: Any) -> str:
-        return json.dumps(obj, separators=(",", ":"), ensure_ascii=True)
 
-    _from_json = json.loads
+class User(PartialUser, total=False):
+    bot: bool
+    system: bool
+    mfa_enabled: bool
+    local: str
+    verified: bool
+    email: Optional[str]
+    flags: int
+    premium_type: PremiumType
+    public_flags: int

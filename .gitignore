@@ -7,6 +7,6 @@ sdist/
 .vscode/*
 .vs/*
 .idea/*
-*.js
+out/*
 __pycache__/
 test.py

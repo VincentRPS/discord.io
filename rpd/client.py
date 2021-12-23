@@ -18,10 +18,10 @@ limitations under the License.
 from __future__ import annotations
 
 import logging
-from asyncio import get_event_loop
-from typing import Any, Callable, Coroutine, List, TypeVar, Union
+import asyncio
+from typing import Any, Callable, Coroutine, List, TypeVar, Union, Optional
 
-from rpd.internal import EventDispatch, OpcodeDispatch
+from rpd.internal import EventDispatch, OpcodeDispatch, HTTPClient
 
 _log = logging.getLogger(__name__)
 
@@ -37,10 +37,14 @@ CFT = TypeVar("CFT", bound="CoroFunc")
 
 
 class Client:
-    """Client For Bots"""
+    """The base Client for RPD interactions
+    
+    .. versionadded:: 2.0
+    """
 
-    def __init__(self):
-        self.loop = get_event_loop()
+    def __init__(self, loop: Optional[asyncio.AbstractEventLoop] = None):
+        self.loop = loop
+        self.http = HTTPClient()
         self.opcode_dispatcher = OpcodeDispatch(self.loop)
         self.event_dispatcher = EventDispatch(self.loop)
 
@@ -51,21 +55,20 @@ class Client:
         """
         pass
 
-    async def login(self, token: str) -> None:
+    async def login(self, token: str):
         """|coro|
         Logs in the client with the specified credentials.
 
-        .. versionadded:: 0.1.0
+        .. versionadded:: 0.3.0
 
         Parameters
         -----------
         token: :class:`str`
-            The authentication token. Do not prefix this token with
-            anything as the library will do it for you.
+            Your bot token.
         Raises
         ------
         :exc:`.LoginFailure`
-            The wrong credentials are passed.
+            The token passed was invalid.
         :exc:`.HTTPException`
             An unknown HTTP related error occurred,
             usually when it isn't 200 or the known incorrect credentials
@@ -73,10 +76,13 @@ class Client:
         """
         self.token = token
 
-        # _log.info("logging in using static token")
+        _log.info("Trying to login with the specified credentials")
 
-        # data = await self.http.static_login(token.strip())
-
+        data = await self.http.login(token.strip())
+        
+    def start(self):
+        """Starts the :class:`Client` instance."""
+        
     def listen(self, event):
         """Listens to a certain OPCode event
 

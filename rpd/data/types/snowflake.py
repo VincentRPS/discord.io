@@ -15,20 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the LICENSE file for the specific language governing permissions and
 limitations under the License.
 """
-from __future__ import annotations
+from typing import List, Union
 
-from typing import Any
-
-
-try:
-    import orjson
-    def _to_json(obj: Any) -> str:  # type: ignore
-        return orjson.dumps(obj).decode("utf-8")
-
-    _from_json = orjson.loads  # type: ignore
-except(ModuleNotFoundError, UndefinedError):
-    import json
-    def _to_json(obj: Any) -> str:
-        return json.dumps(obj, separators=(",", ":"), ensure_ascii=True)
-
-    _from_json = json.loads
+Snowflake = Union[str, int]
+SnowflakeList = List[Snowflake]
