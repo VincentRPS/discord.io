@@ -32,5 +32,5 @@ jobs:
       run: |
           git pull
           git add .
-          git diff-index --quiet HEAD || git commit -m "rps.re"
+          git diff-index --quiet HEAD || git commit -m "Automatic linting of the code"
           git push origin master

@@ -17,11 +17,11 @@ limitations under the License.
 """
 from __future__ import annotations
 
-import logging
 import asyncio
-from typing import Any, Callable, Coroutine, List, TypeVar, Union, Optional
+import logging
+from typing import Any, Callable, Coroutine, List, Optional, TypeVar, Union
 
-from rpd.internal import EventDispatch, OpcodeDispatch, HTTPClient
+from rpd.internal import EventDispatch, HTTPClient, OpcodeDispatch
 
 _log = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ CFT = TypeVar("CFT", bound="CoroFunc")
 
 class Client:
     """The base Client for RPD interactions
-    
+
     .. versionadded:: 2.0
     """
 
@@ -77,10 +77,10 @@ class Client:
         _log.info("Trying to login with the specified credentials")
 
         data = await self.http.login(token.strip())
-        
+
     def start(self):
         """Starts the :class:`Client` instance."""
-        
+
     def listen(self, event):
         """Listens to a certain OPCode event
 

@@ -19,10 +19,9 @@ from __future__ import annotations
 
 import asyncio
 import sys
-from typing import Any, Dict, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 import aiohttp
-from .gateway import DiscordClientWebSocketResponse
 
 from rpd import __version__
 from rpd.exceptions import (
@@ -33,12 +32,14 @@ from rpd.exceptions import (
     Unauthorized,
     LoginFailure,
 )
+
 from ..helpers.missing import MISSING
 from ..helpers.orjson import _from_json
+from .gateway import DiscordClientWebSocketResponse
 
 if TYPE_CHECKING:
-    from ..data.types.user import User
     from ..data.types.snowflake import Snowflake, SnowflakeList
+    from ..data.types.user import User
 
 __all__ = ("Route", "HTTPClient")
 

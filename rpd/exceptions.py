@@ -17,7 +17,7 @@ limitations under the License.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Union, Optional, Dict, Any, List, Tuple
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 if TYPE_CHECKING:
     from aiohttp import ClientResponse, ClientWebSocketResponse
@@ -29,6 +29,7 @@ if TYPE_CHECKING:
     except ModuleNotFoundError:
         _ResponseType = ClientResponse
 
+
 class Base(Exception):
     """The Base Exception"""
 
@@ -38,47 +39,51 @@ class Base(Exception):
 class DeprecatedError(Base):
     """Gets raised when something has been deprecated"""
 
+
 # Mostly inspired by discord.py
-def _flatten_error_dict(d: Dict[str, Any], key: str = '') -> Dict[str, str]:
+def _flatten_error_dict(d: Dict[str, Any], key: str = "") -> Dict[str, str]:
     items: List[Tuple[str, str]] = []
     for k, v in d.items():
-        new_key = key + '.' + k if key else k
+        new_key = key + "." + k if key else k
 
         if isinstance(v, dict):
             try:
-                _errors: List[Dict[str, Any]] = v['_errors']
+                _errors: List[Dict[str, Any]] = v["_errors"]
             except KeyError:
                 items.extend(_flatten_error_dict(v, new_key).items())
             else:
-                items.append((new_key, ' '.join(x.get('message', '') for x in _errors)))
+                items.append((new_key, " ".join(x.get("message", "") for x in _errors)))
         else:
             items.append((new_key, v))
 
     return dict(items)
 
+
 class HTTPException(Base):
-    def __init__(self, response: _ResponseType, message: Optional[Union[str, Dict[str, Any]]]):
+    def __init__(
+        self, response: _ResponseType, message: Optional[Union[str, Dict[str, Any]]]
+    ):
         self.response: _ResponseType = response
         self.status: int = response.status  # type: ignore
         self.code: int
         self.text: str
         if isinstance(message, dict):
-            self.code = message.get('code', 0)
-            base = message.get('message', '')
-            errors = message.get('errors')
+            self.code = message.get("code", 0)
+            base = message.get("message", "")
+            errors = message.get("errors")
             if errors:
                 errors = _flatten_error_dict(errors)
-                helpful = '\n'.join('In %s: %s' % t for t in errors.items())
-                self.text = base + '\n' + helpful
+                helpful = "\n".join("In %s: %s" % t for t in errors.items())
+                self.text = base + "\n" + helpful
             else:
                 self.text = base
         else:
-            self.text = message or ''
+            self.text = message or ""
             self.code = 0
 
-        fmt = '{0.status} {0.reason} (error code: {1})'
+        fmt = "{0.status} {0.reason} (error code: {1})"
         if len(self.text):
-            fmt += ': {2}'
+            fmt += ": {2}"
 
         super().__init__(fmt.format(self.response, self.code, self.text))
 
