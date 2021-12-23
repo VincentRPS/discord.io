@@ -27,10 +27,10 @@ from rpd import __version__
 from rpd.exceptions import (
     Forbidden,
     HTTPException,
+    LoginFailure,
     NotFound,
     RateLimitError,
     Unauthorized,
-    LoginFailure,
 )
 
 from ..helpers.missing import MISSING
@@ -63,4 +63,5 @@ class Route:
 class HTTPClient:
     def __init__(self):
         pass
+
     pass
