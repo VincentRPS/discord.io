@@ -45,8 +45,6 @@ class Client:
     def __init__(self, loop: Optional[asyncio.AbstractEventLoop] = None):
         self.loop = loop
         self.http = HTTPClient()
-        self.opcode_dispatcher = OpcodeDispatch(self.loop)
-        self.event_dispatcher = EventDispatch(self.loop)
 
     async def command(self) -> Callable[[CFT], CFT]:
         """A callable function for commands
@@ -88,13 +86,3 @@ class Client:
 
         .. versionadded:: 0.1.0
         """
-
-        def get_func(func):
-            if isinstance(event, int):
-                self.opcode_dispatcher.register(event, func)
-            elif isinstance(event, str):
-                self.event_dispatcher.register(event, func)
-            else:
-                raise TypeError("Invalid event type!")
-
-        return get_func

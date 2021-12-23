@@ -31,6 +31,7 @@ from rpd.exceptions import (
     NotFound,
     RateLimitError,
     Unauthorized,
+    LoginFailure,
 )
 from ..helpers.missing import MISSING
 from ..helpers.orjson import _from_json
@@ -99,7 +100,9 @@ class HTTPClient:
 
         return await self.__session.ws_connect(url, **kwargs)
 
-    async def request(self, **kwargs: Any):
+    async def request(self, route: Route, **kwargs: Any):
+        bucket = route.bucket
+        method = route.method
 
         headers: Dict[str, str] = {
             "User-Agent": self.user_agent,
