@@ -1,2 +1,2 @@
 include requirements.txt
-include src/rpd/py.typed
+include rpd/py.typed
