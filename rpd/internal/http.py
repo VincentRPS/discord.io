@@ -22,12 +22,7 @@ import logging
 import sys
 import weakref
 from types import TracebackType
-from typing import (
-    ClassVar,
-    Coroutine,
-    Type,
-    TypeVar,
-)
+from typing import ClassVar, Coroutine, Type, TypeVar
 from urllib.parse import quote as _uriquote
 
 import aiohttp

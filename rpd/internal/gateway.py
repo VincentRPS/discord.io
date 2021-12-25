@@ -25,21 +25,27 @@ __all__ = [
     "DiscordClientWebSocketResponse",
 ]
 
+
 class ResumeWebSocket(Exception):
     def __init__(self, resume: bool = True):
         self.resume = resume
         self.op = "RESUME" if resume else "IDENTIFY"
 
+
 class WebSocketConnectionClosed(Exception):
     """Signals WebSocket closure since aiohttp doesn't."""
+
     pass
+
 
 class DiscordClientWebSocketResponse(aiohttp.ClientWebSocketResponse):
     async def close(self, *, code: int = 4000, message: bytes = b"") -> bool:
         return await super().close(code=code, message=message)
-    
+
+
 class KeepSocketAlive(threading.Thread):
     def __init__(self, *args, **kwargs):
-        ws = kwargs.pop('ws', None)
+        ws = kwargs.pop("ws", None)
         self.ws = ws
+
     pass
