@@ -92,7 +92,7 @@ async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any]
         if response.headers["content-type"] == "application/json":
             return _from_json(text)
     except KeyError:
-        # Thanks Cloudflare
+        # Thanks, Cloudflare
         pass
 
     return text
@@ -235,7 +235,7 @@ class HTTPClient:
                                 # Banned by Cloudflare more than likely.
                                 raise HTTPException(response, data)
 
-                            fmt = 'Currently being ratelimited. Retrying in %.2f seconds. Handled with the bucket "%s"'
+                            fmt = 'Currently being ratelimited. Retrying in %.2f seconds. Handled with the bucket "%s"' # type: ignore
 
                             # sleep a bit
                             retry_after: float = data["retry_after"]
@@ -268,7 +268,7 @@ class HTTPClient:
                             await asyncio.sleep(1 + tries * 2)
                             continue
 
-                        # the usual error cases
+                        # Some normal exceptions
                         if response.status == 403:
                             raise Forbidden(response, data)
                         elif response.status == 404:
@@ -287,7 +287,7 @@ class HTTPClient:
                     raise
 
             if response is not None:
-                # We've run out of retries, raise.
+                # We've run out of retries, raise an error
                 if response.status >= 500:
                     raise ServerError(response, data)
 
