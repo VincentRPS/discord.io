@@ -164,6 +164,7 @@ class Client:
         _log.info("Trying to login with the specified credentials")
 
         data = await self.http._client_login(token.strip())
+        # self._connection.user = ClientUser(data=data)
 
     async def logout(self):
         await self.http._client_logout()
@@ -174,7 +175,7 @@ class Client:
         .. versionadded:: 0.3.0
         """
 
-    def start(self, token: str, auto_reconnect: bool = True) -> None:
+    async def start(self, token: str, auto_reconnect: bool = True) -> None:
         """Combines both :meth:`Client.ws_start` and :meth:`Client.login`"""
         await self.login(token)
         # await self.ws_start(reconnect=auto_reconnect)

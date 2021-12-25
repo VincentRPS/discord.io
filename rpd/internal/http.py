@@ -23,15 +23,10 @@ import sys
 import weakref
 from types import TracebackType
 from typing import (
-    TYPE_CHECKING,
-    Any,
     ClassVar,
     Coroutine,
-    Dict,
-    Optional,
     Type,
     TypeVar,
-    Union,
 )
 from urllib.parse import quote as _uriquote
 
