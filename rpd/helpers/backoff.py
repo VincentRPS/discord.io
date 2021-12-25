@@ -24,7 +24,7 @@ T = TypeVar("T", bool, Literal[True], Literal[False])
 
 # TODO; start implementing this.
 class ExponentialBackoff(Generic[T]):
-	"""Implementation of A ExponentialBackoff, algorithm.
-	
-	.. versionadded:: 0.3.0
-	"""
+    """Implementation of A ExponentialBackoff, algorithm.
+
+    .. versionadded:: 0.3.0
+    """

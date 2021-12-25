@@ -19,12 +19,12 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import traceback
 import sys
-from typing import Any, Callable, Coroutine, List, Optional, TypeVar, Union, Dict, Tuple
+import traceback
+from typing import Any, Callable, Coroutine, Dict, List, Optional, Tuple, TypeVar, Union
 
-from rpd.internal import HTTPClient
 from rpd.helpers import MISSING
+from rpd.internal import HTTPClient
 
 _log = logging.getLogger(__name__)
 
@@ -47,19 +47,26 @@ class Client:
 
     def __init__(self, loop: Optional[asyncio.AbstractEventLoop] = None):
         self.loop = loop
-        self._listeners: Dict[str, List[Tuple[asyncio.Future, Callable[..., bool]]]] = {}
+        self._listeners: Dict[
+            str, List[Tuple[asyncio.Future, Callable[..., bool]]]
+        ] = {}
         self.http = HTTPClient()
-        
+
     def on_error(self, e_meth: str, *args: Any, **kwargs: Any) -> None:
         """Handles errors for :class:`Client` default.
-        
+
         .. versionadded:: 0.3.0
         """
         print(f"Handling error in {e_meth}", file=sys.stderr)
         traceback.print_exc()
 
-    async def _run_event(self, coro: Callable[..., Coroutine[Any, Any, Any]], event_name: str, *args: Any,
-                         **kwargs: Any) -> None:
+    async def _run_event(
+        self,
+        coro: Callable[..., Coroutine[Any, Any, Any]],
+        event_name: str,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
         try:
             await coro(*args, **kwargs)
         except asyncio.CancelledError:
@@ -69,29 +76,35 @@ class Client:
                 await self.on_error(event_name, *args, **kwargs)
             except asyncio.CancelledError:
                 pass
-        
-    def _schedule_event(self, coro: Callable[..., Coroutine[Any, Any, Any]], event_name: str, *args: Any, **kwargs: Any) -> asyncio.Task:
+
+    def _schedule_event(
+        self,
+        coro: Callable[..., Coroutine[Any, Any, Any]],
+        event_name: str,
+        *args: Any,
+        **kwargs: Any,
+    ) -> asyncio.Task:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
-        return asyncio.create_task(wrapped, name=f'rpd: {event_name}')
-    
+        return asyncio.create_task(wrapped, name=f"rpd: {event_name}")
+
     def event(self, event: str, *args: Any, **kwargs: Any):
         """Used for dispatching events to `Client.listen`.
-        
+
         .. versionadded:: 0.3.0
         """
         _log.debug(f"Dispatch of {event} is now starting...")
         event_name = f"once_{event}"
 
         listeners = self._listeners.get(event)
-        
+
         if listeners:
             removed = []
-            
+
             for i, (future, condition) in enumerate(listeners):
                 if future.cancelled():
                     removed.append(i)
                     continue
-                    
+
                 try:
                     result = condition(*args)
                 except Exception as E:
@@ -111,16 +124,14 @@ class Client:
             else:
                 for idx in reversed(removed):
                     del listeners[idx]
-                    
+
         try:
             coro = getattr(self, event_name)
         except AttributeError:
             pass
         else:
             self._schedule_event(coro, event_name, *args, **kwargs)
-        
-    
-    
+
     # Might be deprecated until we can implement this.
     async def command(self) -> Callable[[CFT], CFT]:
         """A callable function for commands
@@ -156,7 +167,7 @@ class Client:
 
     def ws_start(self):
         """Starts the WebSocket connection with discord.
-        
+
         .. versionadded:: 0.3.0
         """
 
@@ -166,8 +177,10 @@ class Client:
         .. versionadded:: 0.1.0
         """
         if not asyncio.iscoroutinefunction(coro):
-            raise TypeError("The event registered must be a coroutine function, else Client will not parse it.")
-        
+            raise TypeError(
+                "The event registered must be a coroutine function, else Client will not parse it."
+            )
+
         setattr(self, coro.__name__, coro)
         _log.debug(f"{coro.__name__} has been registered as a event.")
         return coro
