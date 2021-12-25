@@ -164,7 +164,7 @@ class Client:
         _log.info("Trying to login with the specified credentials")
 
         data = await self.http._client_login(token.strip())
-        
+
     async def logout(self):
         await self.http._client_logout()
 
