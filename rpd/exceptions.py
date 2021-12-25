@@ -16,6 +16,7 @@ See the LICENSE file for the specific language governing permissions and
 limitations under the License.
 """
 from __future__ import annotations
+import warnings
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
@@ -29,6 +30,7 @@ if TYPE_CHECKING:
     except ModuleNotFoundError:
         _ResponseType = ClientResponse
 
+warnings.filterwarnings("default", category=DeprecationWarning)
 
 class Base(Exception):
     """The Base Exception"""
@@ -36,8 +38,9 @@ class Base(Exception):
     pass
 
 
-class DeprecatedError(Base):
-    """Gets raised when something has been deprecated"""
+# Used to show something has been deprecated
+def deprecated(version: str):
+    warnings.warn(f"this class/function has been deprecated, and will be removed in version {version}", DeprecationWarning, stacklevel=2)
 
 
 # Mostly inspired by discord.py
