@@ -28,7 +28,6 @@ from urllib.parse import quote as _uriquote
 import aiohttp
 
 import rpd
-
 from rpd.exceptions import *
 from rpd.internal.gateway import DiscordClientWebSocketResponse
 
