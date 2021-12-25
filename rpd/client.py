@@ -165,11 +165,16 @@ class Client:
 
         data = await self.http.login(token.strip())
 
-    def ws_start(self):
+    async def ws_start(self):
         """Starts the WebSocket connection with discord.
 
         .. versionadded:: 0.3.0
         """
+        
+    def start(self, token: str, auto_reconnect: bool = True) -> None:
+        """Combines both :meth:`Client.ws_start` and :meth:`Client.login`"""
+        await self.login(token)
+        # await self.ws_start(reconnect=auto_reconnect)
 
     def listen(self, coro: Coro) -> Coro:
         """Listen to a certain event
