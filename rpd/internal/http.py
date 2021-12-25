@@ -29,8 +29,8 @@ import aiohttp
 
 import rpd
 
-from ..exceptions import *
-from .gateway import DiscordClientWebSocketResponse
+from rpd.exceptions import *
+from rpd.internal.gateway import DiscordClientWebSocketResponse
 
 _log = logging.getLogger(__name__)
 
@@ -171,7 +171,7 @@ class HTTPClient:
 
         if self.token is not None:
             headers["Authorization"] = "Bot " + self.token
-        # some checking if it's a JSON request
+        # checking if it's json
         if "json" in kwargs:
             headers["Content-Type"] = "application/json"
             kwargs["data"] = _to_json(kwargs.pop("json"))
@@ -211,15 +211,12 @@ class HTTPClient:
                         # even errors have text involved in them so this is safe to call
                         data = await json_or_text(response)
 
-                        # check if we have rate limit header information
-                        remaining = response.headers.get("X-Ratelimit-Remaining")
-
                         # the request was successful so just return the text/json
                         if 300 > response.status >= 200:
                             _log.debug("%s %s has received %s", method, url, data)
                             return data
 
-                        # we are being rate limited
+                        # discord has ratelimited this bot.
                         if response.status == 429:
                             if not response.headers.get("Via") or isinstance(data, str):
                                 # Banned by Cloudflare more than likely.
@@ -231,7 +228,7 @@ class HTTPClient:
                             retry_after: float = data["retry_after"]
                             _log.warning(fmt, retry_after, bucket)
 
-                            # check if it's a global rate limit
+                            # checks if it's a global rate limit
                             is_global = data.get("global", False)
                             if is_global:
                                 _log.warning(
@@ -253,7 +250,7 @@ class HTTPClient:
 
                             continue
 
-                        # we've received a 500, 502, or 504, unconditional retry
+                        # we've received a 500, 502, or 504, retry
                         if response.status in {500, 502, 504}:
                             await asyncio.sleep(1 + tries * 2)
                             continue
@@ -277,7 +274,7 @@ class HTTPClient:
                     raise
 
             if response is not None:
-                # We've run out of retries, raise an error
+                # Raise an error when there is no more retries left.
                 if response.status >= 500:
                     raise ServerError(response, data)
 

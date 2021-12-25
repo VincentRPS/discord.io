@@ -94,7 +94,7 @@ class Client:
         .. versionadded:: 0.3.0
         """
         _log.debug(f"Dispatch of {event} is now starting...")
-        event_name = f"once_{event}"
+        event_name = f"on_{event}"
 
         listeners = self._listeners.get(event)
 
