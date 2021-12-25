@@ -170,7 +170,7 @@ class Client:
 
         .. versionadded:: 0.3.0
         """
-        
+
     def start(self, token: str, auto_reconnect: bool = True) -> None:
         """Combines both :meth:`Client.ws_start` and :meth:`Client.login`"""
         await self.login(token)
