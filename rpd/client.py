@@ -23,9 +23,9 @@ import sys
 import traceback
 from typing import Any, Callable, Coroutine, Dict, List, Optional, Tuple, TypeVar, Union
 
+from rpd.exceptions import deprecated
 from rpd.helpers import MISSING
 from rpd.internal import HTTPClient
-from rpd.exceptions import deprecated
 
 _log = logging.getLogger(__name__)
 
@@ -133,7 +133,7 @@ class Client:
         else:
             self._schedule_event(coro, event_name, *args, **kwargs)
 
-    @deprecated(version="0.4.0") # will be expanded in 0.4.0.
+    @deprecated(version="0.4.0")  # will be expanded in 0.4.0.
     async def command(self) -> Callable[[CFT], CFT]:
         """A callable function for commands
 
