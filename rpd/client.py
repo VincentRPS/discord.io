@@ -163,7 +163,7 @@ class Client:
 
         _log.info("Trying to login with the specified credentials")
 
-        data = await self.http.login(token.strip())
+        data = await self.http._client_login(token.strip())
 
     async def ws_start(self):
         """Starts the WebSocket connection with discord.
