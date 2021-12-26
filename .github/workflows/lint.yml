@@ -17,13 +17,15 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flynt black pip install isort[requirements_deprecated_finder]
+        pip install -U flynt black pip install isort[requirements_deprecated_finder] nox
     - name: Isort
       run: isort .
     - name: Black
       run: black ./
     - name: Flynt
       run: flynt ./
+    - name: Nox
+      run: nox -s safety mypy verify-types flake8 codespell check-trailing-whitespaces
     - name: Setup Git
       run: |
           git config user.name "pep8"

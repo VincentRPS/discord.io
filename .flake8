@@ -1,0 +1,29 @@
+[flake8]
+max-line-length = 88
+ignore =
+    D203,
+    # H101: Use TODO(NAME)
+    # H501: Do not use self.__dict__ for string formatting
+    H501,
+    # F403 Unable to detect undefined names
+    F403,
+    # F401 __init__ causes verbose output
+    F401,
+    # C901 Too complex, well no way getting over that
+    C901,
+    # W503: line break before binary operator
+    W503
+exclude =
+    .git,
+    .idea,
+    .vs,
+    .vscode,
+    __pycache__,
+    docs,
+    build,
+    dist,
+    venv,
+    breaking,
+    .github,
+
+max-complexity = 10
