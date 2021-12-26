@@ -54,6 +54,10 @@ mypy(fix, addition, stubbing): <description>
 ```
 used for mypy commits
 ```
+nox(fix, addition, stubbing): <description>
+```
+used for nox commits
+```
 tests(new, fix, typo, breaking, etc): <description>
 ```
 used when changing tests
