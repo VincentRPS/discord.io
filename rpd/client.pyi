@@ -1,7 +1,4 @@
 import asyncio
-from rpd.exceptions import deprecated as deprecated
-from rpd.helpers import MISSING as MISSING
-from rpd.internal import HTTPClient as HTTPClient
 from typing import Any, Callable, Coroutine, List, Optional, TypeVar, Union
 
 Snowflake = Union[str, int]

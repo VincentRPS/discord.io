@@ -1,4 +1,3 @@
-from aiohttp import ClientWebSocketResponse as ClientWebSocketResponse
 from typing import Any, Dict, Optional, Union
 
 class Base(Exception): ...
