@@ -9,6 +9,19 @@ this style follows a simple but straight forward commit syle
 <type>(optional-scope): <description>
 ```
 
+### Displaying extra changes
+
+When desplaying more changes add it to your extendible git description, like so:
+
+Breaking change
+```
+BREAKING CHANGE: <description>
+```
+Closing an issue
+```
+CLOSES: #<issue number>
+```
+
 ### Types
 These are the only currently allowed commit types.
 
@@ -48,16 +61,7 @@ used when changing tests
 ci(optional-scope): <description>
 ```
 for ci/cd changes
-
-### Displaying extra changes
-
-When desplaying more changes add it to your extendible git description, like so:
-
-Breaking change
 ```
-BREAKING CHANGE: <description>
+nit(option-scope): <description>
 ```
-Closing an issue
-```
-CLOSES: #<issue number>
-```
+Nit-picky little changes which makes something just look better
