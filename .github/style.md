@@ -69,3 +69,7 @@ for ci/cd changes
 nit(option-scope): <description>
 ```
 Nit-picky little changes which makes something just look better
+```
+typo(optional-scope): <description>
+```
+used when fixing typos
