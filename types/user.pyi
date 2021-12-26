@@ -1,5 +1,6 @@
-from .snowflake import Snowflake as Snowflake
 from typing import Any, Optional, TypedDict
+
+from .snowflake import Snowflake as Snowflake
 
 class PartialUser(TypedDict):
     id: Snowflake
