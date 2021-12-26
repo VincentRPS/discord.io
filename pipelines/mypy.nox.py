@@ -13,7 +13,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the LICENSE file for the specific language governing permissions and
 # limitations under the License.
-from pipelines import config
 from pipelines import nox
 
 STUBGEN_GENERATE = [

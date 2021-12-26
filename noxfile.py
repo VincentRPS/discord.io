@@ -24,4 +24,4 @@ sys.path.append(os.getcwd())
 
 for pipeline in os.listdir(CI_PATH):
     if pipeline.endswith(".nox.py"):
-        runpy.run_path(os.path.join(CI_PATH, pipline))
+        runpy.run_path(os.path.join(CI_PATH, pipeline))
