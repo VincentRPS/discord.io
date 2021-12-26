@@ -66,7 +66,7 @@ ci(optional-scope): <description>
 ```
 for ci/cd changes
 ```
-nit(option-scope): <description>
+nit(optional-scope): <description>
 ```
 Nit-picky little changes which makes something just look better
 ```
