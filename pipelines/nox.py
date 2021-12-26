@@ -15,8 +15,11 @@
 # limitations under the License.
 from __future__ import annotations
 import nox
+from nox import _options
 
-_options.sessions = ["reformat-code", "flake8", "mypy", "verify-types", "safety"]
+main_dir: str = "rpd"
+
+_options.sessions = ["flake8", "mypy"]
 
 def session(
 		*, only_if: typing.Callable[[], bool] = lambda: True, reuse_venv: bool = False, **kwargs: typing.Any

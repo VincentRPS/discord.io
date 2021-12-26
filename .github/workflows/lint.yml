@@ -1,4 +1,4 @@
-name: Linting
+name: linting
 
 on: [push]
 
@@ -25,7 +25,7 @@ jobs:
     - name: Flynt
       run: flynt ./
     - name: Nox
-      run: nox -s safety mypy verify-types flake8 codespell check-trailing-whitespaces
+      run: nox -s mypy flake8 codespell
     - name: Setup Git
       run: |
           git config user.name "pep8"
