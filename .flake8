@@ -29,6 +29,8 @@ ignore =
     H405,
     # H501: Do not use self.__dict__ for string formatting
     H501
+    # T101: Fix todos
+    T101
 
 exclude =
     .git,
