@@ -16,6 +16,7 @@
 from __future__ import annotations
 import nox
 from nox import _options
+from nox.sessions import Session
 
 main_dir: str = "rpd"
 
