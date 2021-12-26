@@ -2,11 +2,10 @@
 
 An Asynchronous Discord API Wrapper For Python
 
-Installing
-----------
+# Installing
 
 To Install RPD Just run the following command:
 
-.. code:: py 
-
-    pip install RPD
+```py
+pip install RPD
+```
