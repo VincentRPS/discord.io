@@ -1,6 +1,7 @@
-import aiohttp
 import threading
 from typing import Any
+
+import aiohttp
 
 class ResumeWebSocket(Exception):
     resume: Any

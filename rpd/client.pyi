@@ -3,10 +3,10 @@ from typing import Any, Callable, Coroutine, List, Optional, TypeVar, Union
 
 Snowflake = Union[str, int]
 SnowflakeList = List[Snowflake]
-T = TypeVar('T')
+T = TypeVar("T")
 Coro = Coroutine[Any, Any, T]
 CoroFunc = Callable[..., Coro[Any]]
-CFT = TypeVar('CFT', bound='CoroFunc')
+CFT = TypeVar("CFT", bound="CoroFunc")
 
 class Client:
     loop: Any

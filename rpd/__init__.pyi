@@ -1,7 +1,8 @@
+from typing import Literal, NamedTuple
+
+from .client import Client as Client
 from .exceptions import *
 from .internal import *
-from .client import Client as Client
-from typing import Literal, NamedTuple
 
 __discord__: str
 

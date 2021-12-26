@@ -1,6 +1,7 @@
+from typing import Literal, NamedTuple
+
 from .exceptions import *
 from .internal import *
-from typing import Literal, NamedTuple
 
 __discord__: str
 
