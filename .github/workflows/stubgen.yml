@@ -19,7 +19,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install mypy
     - name: Stub Modules
-      run: stubgen rpd -o .
+      run: stubgen --output . --package rpd
     - name: Setup Git
       run: |
           git config user.name "mypy"
