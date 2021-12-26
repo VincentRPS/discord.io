@@ -1,6 +1,6 @@
-RPD
-===
-Asynchronous Discord API Wrapper For Python
+<h1 align="center">RPD</h1>
+
+An Asynchronous Discord API Wrapper For Python
 
 Installing
 ----------
