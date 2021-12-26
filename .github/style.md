@@ -48,3 +48,16 @@ used when changing tests
 ci(optional-scope): <description>
 ```
 for ci/cd changes
+
+### Displaying extra changes
+
+When desplaying more changes add it to your extendible git description, like so:
+
+Breaking change
+```
+BREAKING CHANGE: <description>
+```
+Closing an issue
+```
+CLOSES: #<issue number>
+```
