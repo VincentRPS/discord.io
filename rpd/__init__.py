@@ -8,9 +8,9 @@ Asynchronous Discord API Wrapper For Python
 """
 
 __title__ = "RPD"
-__author__ = "RPS"
+__author__ = "VincentRPS"
 __license__ = "Apache-2.0"
-__copyright__ = "Copyright 2021 RPS"
+__copyright__ = "Copyright 2021 VincentRPS"
 __version__ = "0.2.0"
 __discord__ = "9"
 
