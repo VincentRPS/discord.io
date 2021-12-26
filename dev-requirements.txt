@@ -19,4 +19,3 @@ furo>=2021.11.23
 
 # More dev-like requirements
 nox>=2021.10.1
-mypy>=0.930
