@@ -20,12 +20,13 @@ from typing import Any
 try:
     import orjson
 
-    SPEED: bool = True
-
 except Exception:
     import json
 
     SPEED: bool = False
+
+else:
+    SPEED: bool = True
 
 if SPEED is True:
 
