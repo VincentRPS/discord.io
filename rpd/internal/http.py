@@ -20,22 +20,32 @@ import logging
 import sys
 import weakref
 from types import TracebackType
-from typing import ClassVar, Coroutine, Type, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    ClassVar,
+    Coroutine,
+    Dict,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+)
 from urllib.parse import quote as _uriquote
 
 import aiohttp
 
 import rpd
-from rpd.exceptions import *
+from rpd.exceptions import Forbidden, HTTPException, LoginFailure, NotFound, ServerError
 from rpd.internal.gateway import DiscordClientWebSocketResponse
 
 _log = logging.getLogger(__name__)
 
-from ..helpers.missing import MISSING
-from ..helpers.whichjson import _from_json, _to_json
+from rpd.helpers.missing import MISSING
+from rpd.helpers.whichjson import _from_json, _to_json
 
 if TYPE_CHECKING:
-    from ..data.types.snowflake import Snowflake, SnowflakeList
+    # from ..data.types.snowflake import Snowflake, SnowflakeList
     from ..data.types.user import User
 
     T = TypeVar("T")
@@ -47,7 +57,7 @@ __all__ = ("Route", "HTTPClient")
 
 
 class Route:
-    BASE: ClassVar[str] = "https://discord.com/api/v9"
+    BASE: ClassVar[str] = f"https://discord.com/api/v9"
 
     def __init__(self, method, path: str, **parameters: Any):
 

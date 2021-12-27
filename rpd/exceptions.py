@@ -19,7 +19,7 @@ import warnings
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 if TYPE_CHECKING:
-    from aiohttp import ClientResponse, ClientWebSocketResponse
+    from aiohttp import ClientResponse
 
     try:
         from requests import Response
@@ -40,7 +40,7 @@ class Base(Exception):
 # Used to show something has been deprecated
 def deprecated(version: str, alternative: str = None):
     warning = f"This class/function has been deprecated, and will be removed in version {version}"
-    
+
     if alternative is not None:
         warning += f" you can use {alternative} instead."
 

@@ -14,15 +14,15 @@
 # See the LICENSE file for the specific language governing permissions and
 # limitations under the License.
 
-from typing import runtime_checkable, Protocol
+from typing import Protocol, runtime_checkable
 
 
 @runtime_checkable
 class Snowflake(Protocol):
-	"""ABC that allows for use of the common discord model.
-	
-	.. versionadded:: 0.3.0
-	"""
-	__slots__ = ()
-	id: int
+    """ABC that allows for use of the common discord model.
 
+    .. versionadded:: 0.3.0
+    """
+
+    __slots__ = ()
+    id: int

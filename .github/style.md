@@ -54,6 +54,10 @@ mypy(fix, addition, stubbing): <description>
 ```
 used for mypy commits
 ```
+flake8(optional-scope): <description>
+```
+used for flake8 commits
+```
 tests(new, fix, typo, breaking, etc): <description>
 ```
 used when changing tests
