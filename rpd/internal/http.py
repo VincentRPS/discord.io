@@ -122,7 +122,7 @@ class HTTPClient:
         )
         self.connector = connector
         self.token: Optional[str] = None
-        user_agent = "DiscordBot (https://github.com/RPD-py/RPD {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
+        user_agent: str = "DiscordBot (https://github.com/RPD-py/RPD {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
         self.user_agent: str = user_agent.format(
             rpd.__version__, sys.version_info, aiohttp.__version__
         )
