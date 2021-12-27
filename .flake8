@@ -31,6 +31,8 @@ ignore =
     H501
     # T101: Fix todos
     T101
+    # E402: module level import not at top of file
+    E402
 
 per-file-ignores =
     # imported but unused
