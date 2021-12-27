@@ -15,20 +15,17 @@
 # limitations under the License.
 from __future__ import annotations
 
+import json
 from typing import Any
 
 try:
     import orjson
-
-except Exception:
-    import json
-
-    SPEED: bool = False
-
+except ModuleNotFoundError:
+    SPEED = False
 else:
-    SPEED: bool = True
+    SPEED = True
 
-if SPEED is True:
+if SPEED:
 
     def _to_json(obj: Any) -> str:  # type: ignore
         return orjson.dumps(obj).decode("utf-8")
