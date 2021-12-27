@@ -17,15 +17,13 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -U flynt black pip install isort[requirements_deprecated_finder] -r dev-requirements.txt
+        pip install -U flynt black pip install isort[requirements_deprecated_finder]
     - name: Isort
       run: isort .
     - name: Black
       run: black ./
     - name: Flynt
       run: flynt ./
-    - name: flake8
-      run: flake8 --statistics --show-source --benchmark --tee rpd
     - name: Setup Git
       run: |
           git config user.name "pep8"
