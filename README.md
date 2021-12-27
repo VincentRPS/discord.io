@@ -1,6 +1,6 @@
 <h1 align="center">RPD</h1>
 
-An Asynchronous Discord API Wrapper For Python
+An Synchronous Discord API Wrapper For Python
 
 # Installing
 

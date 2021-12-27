@@ -1,7 +1,7 @@
 """
 RPD
 ~~~
-Asynchronous Discord API Wrapper For Python
+Synchronous Discord API Wrapper For Python
 
 :copyright: 2021 VincentRPS
 :license: Apache-2.0

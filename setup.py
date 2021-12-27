@@ -38,9 +38,6 @@ packages = [
 extra_requires = {
     "speed": [
         "orjson>=3.6.5",
-        "aiodns>=1.1",
-        "Brotlipy",
-        "cchardet",
     ],
 }
 
@@ -60,7 +57,7 @@ setup(
     long_description_content_type="text/x-rst",
     install_requires=requirements,
     extra_requires=extra_requires,
-    description="Asynchronous Discord API Wrapper For Python",
+    description="Synchronous Discord API Wrapper For Python",
     python_requires=">=3.8",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
@@ -72,8 +69,6 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: Implementation :: CPython",
-        "Framework :: AsyncIO",
-        "Framework :: aiohttp",
         "Topic :: Communications :: Chat",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet",

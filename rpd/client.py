@@ -1,18 +1,24 @@
-# Apache-2.0
-#
-# Copyright 2021 VincentRPS
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the LICENSE file for the specific language governing permissions and
-# limitations under the License.
+# MIT License
+
+# Copyright (c) 2021 VincentRPS
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 from __future__ import annotations
 
 import asyncio
@@ -23,7 +29,7 @@ from typing import Any, Callable, Coroutine, Dict, List, Optional, Tuple, TypeVa
 
 from rpd.exceptions import deprecated
 from rpd.helpers import MISSING
-from rpd.internal import HTTPClient
+# from rpd.internal import HTTPClient
 
 _log = logging.getLogger(__name__)
 
@@ -37,7 +43,8 @@ Coro = Coroutine[Any, Any, T]
 CoroFunc = Callable[..., Coro[Any]]
 CFT = TypeVar("CFT", bound="CoroFunc")
 
-
+# Decided to deprecate this until 0.5.0 and not just remove it.
+@deprecated("0.5.0", "ext.handler.Bot")
 class Client:
     """The base Client for RPD interactions
 
@@ -49,7 +56,7 @@ class Client:
         self._listeners: Dict[
             str, List[Tuple[asyncio.Future, Callable[..., bool]]]
         ] = {}
-        self.http = HTTPClient()
+        # self.http = HTTPClient()
 
     def on_error(self, e_meth: str) -> None:
         """Handles errors for :class:`Client` default.
@@ -165,8 +172,8 @@ class Client:
         # data = await self.http._client_login(token.strip())
         # self._connection.user = ClientUser(data=data)
 
-    async def logout(self):
-        await self.http._client_logout()
+    # async def logout(self):
+        # await self.http._client_logout()
 
     async def ws_start(self):
         """Starts the WebSocket connection with discord.
