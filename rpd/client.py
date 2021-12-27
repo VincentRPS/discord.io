@@ -111,7 +111,7 @@ class Client:
                     removed.append(i)
                 else:
                     if result:
-                        if len(args) == 0 or MISSING:
+                        if not args or MISSING:
                             future.set_result(None)
                         elif len(args) == 1:
                             future.set_result(args[0])
