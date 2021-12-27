@@ -20,29 +20,3 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 from __future__ import annotations
-
-import threading
-
-__all__ = [
-    "DiscordClientWebSocketResponse",
-]
-
-
-class ResumeWebSocket(Exception):
-    def __init__(self, resume: bool = True):
-        self.resume = resume
-        self.op = "RESUME" if resume else "IDENTIFY"
-
-
-class WebSocketConnectionClosed(Exception):
-    """Signals WebSocket closure since aiohttp doesn't."""
-
-    pass
-
-
-class KeepSocketAlive(threading.Thread):
-    def __init__(self, *args, **kwargs):
-        ws = kwargs.pop("ws", None)
-        self.ws = ws
-
-    pass
