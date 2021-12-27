@@ -38,9 +38,14 @@ class Base(Exception):
 
 
 # Used to show something has been deprecated
-def deprecated(version: str):
+def deprecated(version: str, alternative: str = None):
+    warning = f"This class/function has been deprecated, and will be removed in version {version}"
+    
+    if alternative is not None:
+        warning += f" you can use {alternative} instead."
+
     warnings.warn(
-        f"this class/function has been deprecated, and will be removed in version {version}",
+        warning,
         DeprecationWarning,
         stacklevel=2,
     )

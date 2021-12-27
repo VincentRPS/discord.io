@@ -51,7 +51,7 @@ class Client:
         ] = {}
         self.http = HTTPClient()
 
-    def on_error(self, e_meth: str, *args: Any, **kwargs: Any) -> None:
+    def on_error(self, e_meth: str) -> None:
         """Handles errors for :class:`Client` default.
 
         .. versionadded:: 0.3.0
