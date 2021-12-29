@@ -16,17 +16,17 @@
 from __future__ import annotations
 
 import warnings
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
+import typing
 
-if TYPE_CHECKING:
-    from aiohttp import ClientResponse
+if typing.TYPE_CHECKING:
+    import aiohttp
 
     try:
-        from requests import Response
+        import requests
 
-        _ResponseType = Union[ClientResponse, Response]
+        _ResponseType = typing.Union[aiohttp.ClientResponse, requests.Response]
     except ModuleNotFoundError:
-        _ResponseType = ClientResponse
+        _ResponseType = aiohttp.ClientResponse
 
 warnings.filterwarnings("default", category=DeprecationWarning)
 
@@ -52,14 +52,14 @@ def deprecated(version: str, alternative: str = None):
 
 
 # Mostly inspired by discord.py
-def _flatten_error_dict(d: Dict[str, Any], key: str = "") -> Dict[str, str]:
-    items: List[Tuple[str, str]] = []
+def _flatten_error_dict(d: typing.Dict[str, typing.Any], key: str = "") -> typing.Dict[str, str]:
+    items: typing.List[typing.Tuple[str, str]] = []
     for k, v in d.items():
         new_key = key + "." + k if key else k
 
         if isinstance(v, dict):
             try:
-                _errors: List[Dict[str, Any]] = v["_errors"]
+                _errors: typing.List[typing.Dict[str, typing.Any]] = v["_errors"]
             except KeyError:
                 items.extend(_flatten_error_dict(v, new_key).items())
             else:
@@ -72,7 +72,7 @@ def _flatten_error_dict(d: Dict[str, Any], key: str = "") -> Dict[str, str]:
 
 class HTTPException(Base):
     def __init__(
-        self, response: _ResponseType, message: Optional[Union[str, Dict[str, Any]]]
+        self, response: _ResponseType, message: typing.Optional[typing.Union[str, typing.Dict[str, typing.Any]]]
     ):
         self.response: _ResponseType = response
         self.status: int = response.status  # type: ignore

@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the LICENSE file for the specific language governing permissions and
 # limitations under the License.
-from typing import List, Union
+import typing
 
-Snowflake = Union[str, int]
-SnowflakeList = List[Snowflake]
+Snowflake = typing.Union[str, int]
+SnowflakeList = typing.List[Snowflake]

@@ -16,7 +16,7 @@
 from __future__ import annotations
 
 import json
-from typing import Any
+import typing
 
 try:
     import orjson
@@ -27,13 +27,13 @@ else:
 
 if SPEED:
 
-    def _to_json(obj: Any) -> str:  # type: ignore
+    def _to_json(obj: typing.Any) -> str:  # type: ignore
         return orjson.dumps(obj).decode("utf-8")
 
     _from_json = orjson.loads  # type: ignore
 else:
 
-    def _to_json(obj: Any) -> str:
+    def _to_json(obj: typing.Any) -> str:
         return json.dumps(obj, separators=(",", ":"), ensure_ascii=True)
 
     _from_json = json.loads

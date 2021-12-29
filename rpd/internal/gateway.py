@@ -21,6 +21,9 @@ import aiohttp
 
 __all__ = [
     "DiscordClientWebSocketResponse",
+    "ResumeWebSocket",
+    "WebSocketConnectionClosed",
+    "KeepSocketAlive",
 ]
 
 
@@ -41,6 +44,7 @@ class DiscordClientWebSocketResponse(aiohttp.ClientWebSocketResponse):
         return await super().close(code=code, message=message)
 
 
+# TODO; Make this work.
 class KeepSocketAlive(threading.Thread):
     def __init__(self, *args, **kwargs):
         ws = kwargs.pop("ws", None)

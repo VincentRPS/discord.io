@@ -19,18 +19,8 @@ import asyncio
 import logging
 import sys
 import weakref
-from types import TracebackType
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    ClassVar,
-    Coroutine,
-    Dict,
-    Optional,
-    Type,
-    TypeVar,
-    Union,
-)
+import types
+import typing
 from urllib.parse import quote as _uriquote
 
 import aiohttp
@@ -38,28 +28,27 @@ import aiohttp
 import rpd
 from rpd.exceptions import Forbidden, HTTPException, LoginFailure, NotFound, ServerError
 from rpd.internal.gateway import DiscordClientWebSocketResponse
-
-_log = logging.getLogger(__name__)
-
 from rpd.helpers.missing import MISSING
 from rpd.helpers.whichjson import _from_json, _to_json
 
-if TYPE_CHECKING:
+_log = logging.getLogger(__name__)
+
+if typing.TYPE_CHECKING:
     # from ..data.types.snowflake import Snowflake, SnowflakeList
     from ..data.types.user import User
 
-    T = TypeVar("T")
-    BE = TypeVar("BE", bound=BaseException)
-    MU = TypeVar("MU", bound="MaybeUnlock")
-    Response = Coroutine[Any, Any, T]
+    T = typing.TypeVar("T")
+    BE = typing.TypeVar("BE", bound=BaseException)
+    MU = typing.TypeVar("MU", bound="MaybeUnlock")
+    Response = typing.Coroutine[typing.Any, typing.Any, T]
 
 __all__ = ("Route", "HTTPClient")
 
 
 class Route:
-    BASE: ClassVar[str] = f"https://discord.com/api/v9"
+    BASE: typing.ClassVar[str] = f"https://discord.com/api/v9"
 
-    def __init__(self, method, path: str, **parameters: Any):
+    def __init__(self, method, path: str, **parameters: typing.Any):
 
         self.method = method
         self.path: str = path
@@ -84,7 +73,7 @@ class Route:
         return f"{self.channel_id}:{self.guild_id}:{self.path}"
 
 
-async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any], str]:
+async def json_or_text(response: aiohttp.ClientResponse) -> typing.Union[typing.Dict[str, typing.Any], str]:
     text = await response.text(encoding="utf-8")
     try:
         if response.headers["content-type"] == "application/json":
@@ -109,9 +98,9 @@ class MaybeUnlock:
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BE]],
-        exc: Optional[BE],
-        traceback: Optional[TracebackType],
+        exc_type: typing.Optional[typing.Type[BE]],
+        exc: typing.Optional[BE],
+        traceback: typing.Optional[types.TracebackType],
     ) -> None:
         if self._unlock:
             self.lock.release()
@@ -120,18 +109,18 @@ class MaybeUnlock:
 class HTTPClient:
     def __init__(
         self,
-        loop: Optional[asyncio.AbstractEventLoop] = None,
-        connector: Optional[aiohttp.BaseConnector] = None,
+        loop: typing.Optional[asyncio.AbstractEventLoop] = None,
+        connector: typing.Optional[aiohttp.BaseConnector] = None,
     ):
         self._locks: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
-        self.__session: aiohttp.ClientSession = MISSING
+        self.__session: aiohttp.ClientSession = MISSING # Gets filled in by HTTPClient._client_login()
         self._global_over: asyncio.Event = asyncio.Event()
         self._global_over.set()
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.get_event_loop() if loop is None else loop
         )
         self.connector = connector
-        self.token: Optional[str] = None
+        self.token: typing.Optional[str] = None
         user_agent: str = "DiscordBot (https://github.com/RPD-py/RPD {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
         self.user_agent: str = user_agent.format(
             rpd.__version__, sys.version_info, aiohttp.__version__
@@ -144,7 +133,7 @@ class HTTPClient:
                 ws_response_class=DiscordClientWebSocketResponse,
             )
 
-    async def ws_connect(self, url: str, *, compress: int = 0) -> Any:
+    async def ws_connect(self, url: str, *, compress: int = 0) -> typing.Any:
         kwargs = {
             "max_msg_size": 0,
             "timeout": 30.0,
@@ -160,8 +149,8 @@ class HTTPClient:
     async def request(
         self,
         route: Route,
-        **kwargs: Any,
-    ) -> Any:
+        **kwargs: typing.Any,
+    ) -> typing.Any:
         bucket = route.bucket
         method = route.method
         url = route.url
@@ -173,7 +162,7 @@ class HTTPClient:
                 self._locks[bucket] = lock
 
         # header creation
-        headers: Dict[str, str] = {
+        headers: typing.Dict[str, str] = {
             "User-Agent": self.user_agent,
         }
 
@@ -198,8 +187,8 @@ class HTTPClient:
             # wait until the global lock is complete
             await self._global_over.wait()
 
-        response: Optional[aiohttp.ClientResponse] = None
-        data: Optional[Union[Dict[str, Any], str]] = None
+        response: typing.Optional[aiohttp.ClientResponse] = None
+        data: typing.Optional[typing.Union[typing.Dict[str, typing.Any], str]] = None
         await lock.acquire()
         with MaybeUnlock(lock) as maybe_lock:
             for tries in range(5):
@@ -316,5 +305,6 @@ class HTTPClient:
 
         return data
 
+    # Handles logging out.
     def _client_logout(self):
         return self.request(Route("POST", "/auth/logout"))

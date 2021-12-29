@@ -19,7 +19,7 @@ import asyncio
 import logging
 import sys
 import traceback
-from typing import Any, Callable, Coroutine, Dict, List, Optional, Tuple, TypeVar, Union
+import typing
 
 from rpd.exceptions import deprecated
 from rpd.helpers import MISSING
@@ -29,13 +29,13 @@ _log = logging.getLogger(__name__)
 
 __all__ = "Client"
 
-Snowflake = Union[str, int]
-SnowflakeList = List[Snowflake]
+Snowflake = typing.Union[str, int]
+SnowflakeList = typing.List[Snowflake]
 
-T = TypeVar("T")
-Coro = Coroutine[Any, Any, T]
-CoroFunc = Callable[..., Coro[Any]]
-CFT = TypeVar("CFT", bound="CoroFunc")
+T = typing.TypeVar("T")
+Coro = typing.Coroutine[typing.Any, typing.Any, T]
+CoroFunc = typing.Callable[..., Coro[typing.Any]]
+CFT = typing.TypeVar("CFT", bound="CoroFunc")
 
 
 class Client:
@@ -44,10 +44,10 @@ class Client:
     .. versionadded:: 2.0
     """
 
-    def __init__(self, loop: Optional[asyncio.AbstractEventLoop] = None):
+    def __init__(self, loop: typing.Optional[asyncio.AbstractEventLoop] = None):
         self.loop = loop
-        self._listeners: Dict[
-            str, List[Tuple[asyncio.Future, Callable[..., bool]]]
+        self._listeners: typing.Dict[
+            str, typing.List[typing.Tuple[asyncio.Future, typing.Callable[..., bool]]]
         ] = {}
         self.http = HTTPClient()
 
@@ -61,10 +61,10 @@ class Client:
 
     async def _run_event(
         self,
-        coro: Callable[..., Coroutine[Any, Any, Any]],
+        coro: typing.Callable[..., typing.Coroutine[typing.Any, typing.Any, typing.Any]],
         event_name: str,
-        *args: Any,
-        **kwargs: Any,
+        *args: typing.Any,
+        **kwargs: typing.Any,
     ) -> None:
         try:
             await coro(*args, **kwargs)
@@ -78,15 +78,15 @@ class Client:
 
     def _schedule_event(
         self,
-        coro: Callable[..., Coroutine[Any, Any, Any]],
+        coro: typing.Callable[..., typing.Coroutine[typing.Any, typing.Any, typing.Any]],
         event_name: str,
-        *args: Any,
-        **kwargs: Any,
+        *args: typing.Any,
+        **kwargs: typing.Any,
     ) -> asyncio.Task:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
         return asyncio.create_task(wrapped, name=f"rpd: {event_name}")
 
-    def event(self, event: str, *args: Any, **kwargs: Any):
+    def event(self, event: str, *args: typing.Any, **kwargs: typing.Any):
         """Used for dispatching events to `Client.listen`.
 
         .. versionadded:: 0.3.0
@@ -132,7 +132,7 @@ class Client:
             self._schedule_event(coro, event_name, *args, **kwargs)
 
     @deprecated(version="0.4.0")  # will be expanded in 0.4.0.
-    async def command(self) -> Callable[[CFT], CFT]:
+    async def command(self) -> typing.Callable[[CFT], CFT]:
         """A callable function for commands
 
         .. versionadded:: 0.1.0
@@ -178,6 +178,9 @@ class Client:
         """Combines both :meth:`Client.ws_start` and :meth:`Client.login`"""
         await self.login(token)
         # await self.ws_start(reconnect=auto_reconnect)
+    
+    def run(self, *args: typing.Any, **kwargs: typing.Any):
+        """A easy blocking call that starts both the WebSocket and HTTP connections"""
 
     def listen(self, coro: Coro) -> Coro:
         """Listen to a certain event

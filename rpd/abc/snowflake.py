@@ -14,11 +14,11 @@
 # See the LICENSE file for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Protocol, runtime_checkable
+import typing
 
 
-@runtime_checkable
-class Snowflake(Protocol):
+@typing.runtime_checkable
+class Snowflake(typing.Protocol):
     """ABC that allows for use of the common discord model.
 
     .. versionadded:: 0.3.0

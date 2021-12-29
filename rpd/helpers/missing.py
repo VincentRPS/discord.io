@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the LICENSE file for the specific language governing permissions and
 # limitations under the License.
-from typing import Any
+import typing
 
 
 class _Missing:
@@ -27,4 +27,4 @@ class _Missing:
         return "..."
 
 
-MISSING: Any = _Missing()
+MISSING: typing.Any = _Missing()

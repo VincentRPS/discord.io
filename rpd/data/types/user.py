@@ -13,19 +13,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the LICENSE file for the specific language governing permissions and
 # limitations under the License.
-from typing import Literal, Optional, TypedDict
+import typing
 
 from .snowflake import Snowflake
 
 
-class PartialUser(TypedDict):
+class PartialUser(typing.TypedDict):
     id: Snowflake
     username: str
     discriminator: str
-    avatar: Optional[str]
+    avatar: typing.Optional[str]
 
 
-PremiumType = Literal[0, 1, 2]
+PremiumType = typing.Literal[0, 1, 2]
 
 
 class User(PartialUser, total=False):
@@ -34,7 +34,7 @@ class User(PartialUser, total=False):
     mfa_enabled: bool
     local: str
     verified: bool
-    email: Optional[str]
+    email: typing.Optional[str] # might be stupid but i don't think this is needed?
     flags: int
     premium_type: PremiumType
     public_flags: int

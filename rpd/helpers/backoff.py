@@ -15,13 +15,13 @@
 # limitations under the License.
 from __future__ import annotations
 
-from typing import Generic, Literal, TypeVar
+import typing
 
-T = TypeVar("T", bool, Literal[True], Literal[False])
+T = typing.TypeVar("T", bool, typing.Literal[True], typing.Literal[False])
 
 
 # TODO; start implementing this.
-class ExponentialBackoff(Generic[T]):
+class ExponentialBackoff(typing.Generic[T]):
     """Implementation of A ExponentialBackoff, algorithm.
 
     .. versionadded:: 0.3.0
