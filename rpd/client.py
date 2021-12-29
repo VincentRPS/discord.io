@@ -20,9 +20,11 @@ import logging
 import sys
 import traceback
 import typing
+from rpd.exceptions import deprecated
 
 from rpd.helpers import MISSING
 from rpd.internal import HTTPClient
+from rpd.boot_text import booting_text
 
 _log = logging.getLogger(__name__)
 
@@ -103,7 +105,7 @@ class Client:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
         return asyncio.create_task(wrapped, name=f"rpd: {event_name}")
 
-    def event(self, event: str, *args: typing.Any, **kwargs: typing.Any):
+    def dispatch(self, event: str, *args: typing.Any, **kwargs: typing.Any):
         """Used for dispatching events to `Client.listen`.
 
         .. versionadded:: 0.3.0
@@ -177,7 +179,7 @@ class Client:
     async def logout(self):
         await self.http._client_logout()
 
-    async def ws_start(self):
+    async def connect(self):
         """Starts the WebSocket connection with discord.
 
         .. versionadded:: 0.3.0
@@ -192,6 +194,11 @@ class Client:
         """A easy blocking call that starts both the WebSocket and HTTP connections"""
 
     def listen(self, coro: Coro) -> Coro:
+        print(booting_text)
+        print("This function has been removed please use Client.event, else events won't work anymore.")
+        print("Tried to register %s", coro)
+
+    def event(self, coro: Coro) -> Coro:
         """Listen to a certain event
 
         .. versionadded:: 0.1.0
