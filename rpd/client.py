@@ -38,7 +38,6 @@ CoroFunc = Callable[..., Coro[Any]]
 CFT = TypeVar("CFT", bound="CoroFunc")
 
 
-@deprecated(version="0.4.0")  # TODO; Start creation of a alternative
 class Client:
     """The base Client for RPD interactions
 
