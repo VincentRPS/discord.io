@@ -128,11 +128,11 @@ class NotFound(HTTPException):
 class Unauthorized(HTTPException):
     def __init__(self, request):
         self.request = request
-        Exception.__init__(self, "You are not authorized to view this resource")
+        self().__init__(self, "You are not authorized to view this resource")
 
 
 class RateLimitError(HTTPException):
-    """ono D:"""
+    """Gets raised when you have been ratelimited by discord."""
 
 
 class ServerError(HTTPException):

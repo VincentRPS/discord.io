@@ -21,7 +21,6 @@ import sys
 import traceback
 import typing
 
-from rpd.exceptions import deprecated
 from rpd.helpers import MISSING
 from rpd.internal import HTTPClient
 
@@ -42,6 +41,19 @@ class Client:
     """The base Client for RPD interactions
 
     .. versionadded:: 2.0
+
+    Attributes
+    ----------
+    loop
+        The Abstract Event Loop Function
+    http
+        The :class:`HTTPClient`
+    ws
+        The :class:`DiscordWebSocket`
+
+    Parameters
+    ----------
+
     """
 
     def __init__(self, loop: typing.Optional[asyncio.AbstractEventLoop] = None):
@@ -50,6 +62,7 @@ class Client:
             str, typing.List[typing.Tuple[asyncio.Future, typing.Callable[..., bool]]]
         ] = {}
         self.http = HTTPClient()
+        # self.ws = DiscordWebSocket()
 
     def on_error(self, e_meth: str) -> None:
         """Handles errors for :class:`Client` default.
