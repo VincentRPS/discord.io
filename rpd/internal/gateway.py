@@ -15,12 +15,12 @@
 # limitations under the License.
 from __future__ import annotations
 
-import threading
-import zlib
-import time
-import logging
-
 import asyncio
+import logging
+import threading
+import time
+import zlib
+
 import aiohttp
 
 _log = logging.getLogger(__name__)
@@ -58,6 +58,7 @@ class KeepSocketAlive(threading.Thread):
 
     pass
 
+
 class GatewayRatelimiter:
     def __init__(self, count=110, per=60.0):
         self.max = count
@@ -77,13 +78,13 @@ class GatewayRatelimiter:
 
         if current > self.window + self.per:
             self.remaining = self.max
-        
+
         if self.remaining == self.max:
             self.window = current
 
         if self.remaining == 0:
             return self.per - (current - self.window)
-        
+
         self.remaining -= 1
         if self.remaining == 0:
             self.window = current
@@ -93,7 +94,10 @@ class GatewayRatelimiter:
         async with self.lock:
             delta = self.get_delay()
             if delta:
-                _log.warning(f"The WebSocket connection has been ratelimited, waiting {delta}")
+                _log.warning(
+                    f"The WebSocket connection has been ratelimited, waiting {delta}"
+                )
+
 
 class DiscordWebSocket:
     """
@@ -108,27 +112,28 @@ class DiscordWebSocket:
 
     .. versionadded:: 0.3.0
     """
-    DISPATCH           = 0
-    HEARTBEAT          = 1
-    IDENTIFY           = 2
-    PRESENCE           = 3
-    VOICE_STATE        = 4
-    VOICE_PING         = 5
-    RESUME             = 6
-    RECONNECT          = 7
-    REQUEST_MEMBERS    = 8
+
+    DISPATCH = 0
+    HEARTBEAT = 1
+    IDENTIFY = 2
+    PRESENCE = 3
+    VOICE_STATE = 4
+    VOICE_PING = 5
+    RESUME = 6
+    RECONNECT = 7
+    REQUEST_MEMBERS = 8
     INVALIDATE_SESSION = 9
-    HELLO              = 10
-    HEARTBEAT_ACK      = 11
-    GUILD_SYNC         = 12
-    
+    HELLO = 10
+    HEARTBEAT_ACK = 11
+    GUILD_SYNC = 12
+
     def __init__(self, socket, *, loop):
         self.socket = socket
         self.loop = loop
 
-        self._dispatch = lambda *args: None # Empty for preventation of crashes
+        self._dispatch = lambda *args: None  # Empty for preventation of crashes
         self._dispatch_listeners = []
-        self._keep_alive = None # Keep alive.
+        self._keep_alive = None  # Keep alive.
         self.thread_id = threading.get_ident()
 
         self.session_id = None
@@ -152,9 +157,18 @@ class DiscordWebSocket:
         pass
 
     @classmethod
-    async def from_client(cls, client, *, initial=False, gateway=None, session=None, sequesnce=None, resume=False):
+    async def from_client(
+        cls,
+        client,
+        *,
+        initial=False,
+        gateway=None,
+        session=None,
+        sequesnce=None,
+        resume=False,
+    ):
         """Creates a WebSocket for :class:`Client` using :meth:`Client.ws_start`
-        
+
         .. versionadded:: 0.3.0
         """
         gateway = gateway or await client.http.get_gateway()
