@@ -61,7 +61,9 @@ class Client:
 
     async def _run_event(
         self,
-        coro: typing.Callable[..., typing.Coroutine[typing.Any, typing.Any, typing.Any]],
+        coro: typing.Callable[
+            ..., typing.Coroutine[typing.Any, typing.Any, typing.Any]
+        ],
         event_name: str,
         *args: typing.Any,
         **kwargs: typing.Any,
@@ -78,7 +80,9 @@ class Client:
 
     def _schedule_event(
         self,
-        coro: typing.Callable[..., typing.Coroutine[typing.Any, typing.Any, typing.Any]],
+        coro: typing.Callable[
+            ..., typing.Coroutine[typing.Any, typing.Any, typing.Any]
+        ],
         event_name: str,
         *args: typing.Any,
         **kwargs: typing.Any,
@@ -170,7 +174,7 @@ class Client:
         """Combines both :meth:`Client.ws_start` and :meth:`Client.login`"""
         await self.login(token)
         # await self.ws_start(reconnect=auto_reconnect)
-    
+
     def run(self, *args: typing.Any, **kwargs: typing.Any):
         """A easy blocking call that starts both the WebSocket and HTTP connections"""
 
