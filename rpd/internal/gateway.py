@@ -177,4 +177,3 @@ class DiscordWebSocket:
 
         # Some attr's needed, taken from Client
         ws.token = client.http.token
-        
