@@ -15,8 +15,8 @@
 # limitations under the License.
 from __future__ import annotations
 
-import warnings
 import typing
+import warnings
 
 if typing.TYPE_CHECKING:
     import aiohttp
@@ -52,7 +52,9 @@ def deprecated(version: str, alternative: str = None):
 
 
 # Mostly inspired by discord.py
-def _flatten_error_dict(d: typing.Dict[str, typing.Any], key: str = "") -> typing.Dict[str, str]:
+def _flatten_error_dict(
+    d: typing.Dict[str, typing.Any], key: str = ""
+) -> typing.Dict[str, str]:
     items: typing.List[typing.Tuple[str, str]] = []
     for k, v in d.items():
         new_key = key + "." + k if key else k
@@ -72,7 +74,9 @@ def _flatten_error_dict(d: typing.Dict[str, typing.Any], key: str = "") -> typin
 
 class HTTPException(Base):
     def __init__(
-        self, response: _ResponseType, message: typing.Optional[typing.Union[str, typing.Dict[str, typing.Any]]]
+        self,
+        response: _ResponseType,
+        message: typing.Optional[typing.Union[str, typing.Dict[str, typing.Any]]],
     ):
         self.response: _ResponseType = response
         self.status: int = response.status  # type: ignore

@@ -18,18 +18,18 @@ from __future__ import annotations
 import asyncio
 import logging
 import sys
-import weakref
 import types
 import typing
+import weakref
 from urllib.parse import quote as _uriquote
 
 import aiohttp
 
 import rpd
 from rpd.exceptions import Forbidden, HTTPException, LoginFailure, NotFound, ServerError
-from rpd.internal.gateway import DiscordClientWebSocketResponse
 from rpd.helpers.missing import MISSING
 from rpd.helpers.whichjson import _from_json, _to_json
+from rpd.internal.gateway import DiscordClientWebSocketResponse
 
 _log = logging.getLogger(__name__)
 
@@ -73,7 +73,9 @@ class Route:
         return f"{self.channel_id}:{self.guild_id}:{self.path}"
 
 
-async def json_or_text(response: aiohttp.ClientResponse) -> typing.Union[typing.Dict[str, typing.Any], str]:
+async def json_or_text(
+    response: aiohttp.ClientResponse,
+) -> typing.Union[typing.Dict[str, typing.Any], str]:
     text = await response.text(encoding="utf-8")
     try:
         if response.headers["content-type"] == "application/json":
@@ -113,7 +115,9 @@ class HTTPClient:
         connector: typing.Optional[aiohttp.BaseConnector] = None,
     ):
         self._locks: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
-        self.__session: aiohttp.ClientSession = MISSING # Gets filled in by HTTPClient._client_login()
+        self.__session: aiohttp.ClientSession = (
+            MISSING  # Gets filled in by HTTPClient._client_login()
+        )
         self._global_over: asyncio.Event = asyncio.Event()
         self._global_over.set()
         self.loop: asyncio.AbstractEventLoop = (

@@ -34,7 +34,7 @@ class User(PartialUser, total=False):
     mfa_enabled: bool
     local: str
     verified: bool
-    email: typing.Optional[str] # might be stupid but i don't think this is needed?
+    email: typing.Optional[str]  # might be stupid but i don't think this is needed?
     flags: int
     premium_type: PremiumType
     public_flags: int
