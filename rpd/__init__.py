@@ -12,7 +12,6 @@ __author__ = "VincentRPS"
 __license__ = "Apache-2.0"
 __copyright__ = "Copyright 2021 VincentRPS"
 __version__ = "0.3.0"
-__discord__ = "9"
 
 import logging
 from typing import Literal, NamedTuple
