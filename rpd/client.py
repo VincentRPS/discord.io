@@ -20,11 +20,11 @@ import logging
 import sys
 import traceback
 import typing
-from rpd.exceptions import deprecated
 
+from rpd.boot_text import booting_text
+from rpd.exceptions import deprecated
 from rpd.helpers import MISSING
 from rpd.internal import HTTPClient
-from rpd.boot_text import booting_text
 
 _log = logging.getLogger(__name__)
 
@@ -195,7 +195,9 @@ class Client:
 
     def listen(self, coro: Coro) -> Coro:
         print(booting_text)
-        print("This function has been removed please use Client.event, else events won't work anymore.")
+        print(
+            "This function has been removed please use Client.event, else events won't work anymore."
+        )
         print("Tried to register %s", coro)
 
     def event(self, coro: Coro) -> Coro:
