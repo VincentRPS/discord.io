@@ -16,8 +16,7 @@ See the LICENSE file for the specific language governing permissions and
 limitations under the License.
 """
 import re
-
-from setuptools import find_packages, setup
+import setuptools
 
 with open("rpd/__init__.py") as f:
     version = re.search(
@@ -44,7 +43,7 @@ extra_requires = {
     ],
 }
 
-setup(
+setuptools.setup(
     name="RPD",
     version=version,
     packages=packages,
@@ -56,8 +55,8 @@ setup(
     url="https://github.com/RPD-py/RPD",
     license="Apache-2.0",
     author="VincentRPS",
-    long_description=open("README.rst").read(),
-    long_description_content_type="text/x-rst",
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
     install_requires=requirements,
     extra_requires=extra_requires,
     description="Asynchronous Discord API Wrapper For Python",

@@ -131,14 +131,6 @@ class Client:
         else:
             self._schedule_event(coro, event_name, *args, **kwargs)
 
-    @deprecated(version="0.4.0")  # will be expanded in 0.4.0.
-    async def command(self) -> typing.Callable[[CFT], CFT]:
-        """A callable function for commands
-
-        .. versionadded:: 0.1.0
-        """
-        pass
-
     async def login(self, token: str):
         """|coro|
         Logs in the client with the specified credentials.
