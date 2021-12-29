@@ -30,7 +30,7 @@ __all__ = [
     "ResumeWebSocket",
     "WebSocketConnectionClosed",
     "KeepSocketAlive",
-    "DiscordWebSocket"
+    "DiscordWebSocket",
 ]
 
 
@@ -62,9 +62,10 @@ class KeepSocketAlive(threading.Thread):
 
 class GatewayRatelimiter:
     """Checks for if we have reached the Gateway Ratelimit.
-    
+
     .. versionadded:: 0.3.0
     """
+
     def __init__(self, count=110, per=60.0):
         self.max = count
         self.remaining = count

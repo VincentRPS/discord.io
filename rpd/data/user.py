@@ -15,12 +15,16 @@
 # limitations under the License.
 import asyncio
 import typing
+
 from ..internal import http
 from .types.user import User
+
 
 class UserRequests:
     def __init__(self):
         self.http = http.HTTPClient(loop=asyncio.get_event_loop())
 
-    def edit_profile(self, payload: typing.Dict[str, typing.Any]) -> typing.Response[User]:
-        return self.http.request(http.Route('PATCH', '/users/@me'), json=payload)
+    def edit_profile(
+        self, payload: typing.Dict[str, typing.Any]
+    ) -> typing.Response[User]:
+        return self.http.request(http.Route("PATCH", "/users/@me"), json=payload)

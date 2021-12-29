@@ -191,7 +191,9 @@ class HTTPClient:
             # if global_over lock isn't set wait for it to be.
             await self._global_over.wait()
 
-        response: typing.Optional[aiohttp.ClientResponse] = None # here for more of a conveniance.
+        response: typing.Optional[
+            aiohttp.ClientResponse
+        ] = None  # here for more of a conveniance.
         data: typing.Optional[typing.Union[typing.Dict[str, typing.Any], str]] = None
         await lock.acquire()
         with PossiblyUnlock(lock):
@@ -202,7 +204,7 @@ class HTTPClient:
                         method, url, **kwargs
                     ) as response:
                         _log.debug(
-                            "%s %s with %s has returned %s", # weirdly can't get this to be F-stringed? maybe someone else can try.
+                            "%s %s with %s has returned %s",  # weirdly can't get this to be F-stringed? maybe someone else can try.
                             method,
                             url,
                             kwargs.get("data"),
@@ -297,7 +299,7 @@ class HTTPClient:
         )
         old_token = self.token
         self.token = token
-        if len(self.token) != 59: # Checks if the token given is exactly 59 characters.
+        if len(self.token) != 59:  # Checks if the token given is exactly 59 characters.
             raise LoginFailure("Credentials given are too short to be a bot token.")
 
         try:

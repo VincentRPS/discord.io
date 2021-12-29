@@ -24,7 +24,7 @@ import typing
 from rpd.boot_text import booting_text
 from rpd.exceptions import deprecated
 from rpd.helpers import MISSING
-from rpd.internal import HTTPClient, DiscordWebSocket
+from rpd.internal import DiscordWebSocket, HTTPClient
 from rpd.user import ClientUser
 
 _log = logging.getLogger(__name__)
@@ -59,7 +59,9 @@ class Client:
 
     """
 
-    def __init__(self, token: str, loop: typing.Optional[asyncio.AbstractEventLoop] = None):
+    def __init__(
+        self, token: str, loop: typing.Optional[asyncio.AbstractEventLoop] = None
+    ):
         self.loop = loop
         self._listeners: typing.Dict[
             str, typing.List[typing.Tuple[asyncio.Future, typing.Callable[..., bool]]]
@@ -173,7 +175,7 @@ class Client:
         """
 
         _log.info("Trying to login with the specified credentials")
-        
+
         token = self.token
 
         data = await self.http._client_login(token.strip())
