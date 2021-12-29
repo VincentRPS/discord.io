@@ -164,7 +164,7 @@ class DiscordWebSocket:
         initial=False,
         gateway=None,
         session=None,
-        sequesnce=None,
+        sequence=None,
         resume=False,
     ):
         """Creates a WebSocket for :class:`Client` using :meth:`Client.ws_start`
@@ -177,4 +177,4 @@ class DiscordWebSocket:
 
         # Some attr's needed, taken from Client
         ws.token = client.http.token
-        ws._connection = client._connection
+        
