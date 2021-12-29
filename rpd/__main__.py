@@ -13,10 +13,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the LICENSE file for the specific language governing permissions and
 # limitations under the License.
-import sys
 import platform
+import sys
+
 import rpd
+
 from .boot_text import booting_text
+
 
 def main() -> None:
     """Shows the boot message"""
@@ -25,5 +28,6 @@ def main() -> None:
     python_version = platform.python_version()
     sys.stderr.write(f"Running on RPD Version {version},")
     sys.stderr.write(f" with Python version {python_version}.")
+
 
 main()

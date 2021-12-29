@@ -16,6 +16,7 @@ See the LICENSE file for the specific language governing permissions and
 limitations under the License.
 """
 import re
+
 import setuptools
 
 with open("rpd/__init__.py") as f:
