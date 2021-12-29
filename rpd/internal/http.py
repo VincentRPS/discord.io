@@ -39,7 +39,7 @@ if typing.TYPE_CHECKING:
 
     T = typing.TypeVar("T")
     BE = typing.TypeVar("BE", bound=BaseException)
-    MU = typing.TypeVar("MU", bound="MaybeUnlock")
+    MU = typing.TypeVar("MU", bound="PossiblyUnlock")
     Response = typing.Coroutine[typing.Any, typing.Any, T]
 
 __all__ = ("Route", "HTTPClient")
@@ -63,11 +63,11 @@ class Route:
             )
         self.url: str = url
 
-        # Used for bucket cooldowns
+        # bucketing cooldowns
         self.channel_id = parameters.get("channel_id")
         self.guild_id = parameters.get("guild_id")
 
-    # Ratelimit bucket, to be implemented soon
+    # the ratelimit bucket with the parameters.
     @property
     def bucket(self) -> str:
         return f"{self.channel_id}:{self.guild_id}:{self.path}"
@@ -87,7 +87,7 @@ async def json_or_text(
     return text
 
 
-class MaybeUnlock:
+class PossiblyUnlock:
     def __init__(self, lock: asyncio.Lock) -> None:
         self.lock: asyncio.Lock = lock
         self._unlock: bool = True
@@ -165,11 +165,11 @@ class HTTPClient:
             if bucket is not None:
                 self._locks[bucket] = lock
 
-        # header creation
+        # create a basic header.
         headers: typing.Dict[str, str] = {
             "User-Agent": self.user_agent,
         }
-
+        # if the token isn't none add it to the auth header.
         if self.token is not None:
             headers["Authorization"] = "Bot " + self.token
         # checking if it's json
@@ -188,13 +188,13 @@ class HTTPClient:
         kwargs["headers"] = headers
 
         if not self._global_over.is_set():
-            # wait until the global lock is complete
+            # if global_over lock isn't set wait for it to be.
             await self._global_over.wait()
 
-        response: typing.Optional[aiohttp.ClientResponse] = None
+        response: typing.Optional[aiohttp.ClientResponse] = None # here for more of a conveniance.
         data: typing.Optional[typing.Union[typing.Dict[str, typing.Any], str]] = None
         await lock.acquire()
-        with MaybeUnlock(lock) as maybe_lock:
+        with PossiblyUnlock(lock):
             for tries in range(5):
 
                 try:
@@ -202,7 +202,7 @@ class HTTPClient:
                         method, url, **kwargs
                     ) as response:
                         _log.debug(
-                            "%s %s with %s has returned %s",
+                            "%s %s with %s has returned %s", # weirdly can't get this to be F-stringed? maybe someone else can try.
                             method,
                             url,
                             kwargs.get("data"),
@@ -212,18 +212,18 @@ class HTTPClient:
                         # even errors have text involved in them so this is safe to call
                         data = await json_or_text(response)
 
-                        # the request was successful so just return the text/json
+                        # the request was successful, now return the text/json
                         if 300 > response.status >= 200:
                             _log.debug("%s %s has received %s", method, url, data)
                             return data
 
-                        # discord has ratelimited this bot.
+                        # http ratelimited by discord.
                         if response.status == 429:
                             if not response.headers.get("Via") or isinstance(data, str):
-                                # Banned by Cloudflare more than likely.
+                                # Probably banned by Cloudflare
                                 raise HTTPException(response, data)
 
-                            fmt = 'Currently being ratelimited. Retrying in %.2f seconds. Handled with the bucket "%s"'  # type: ignore
+                            fmt = 'Ratelimit has seemingly been reached, Retrying in %.2f seconds. Handled with the bucket "%s"'  # type: ignore
 
                             # sleep a bit
                             retry_after: float = data["retry_after"]
@@ -233,8 +233,7 @@ class HTTPClient:
                             is_global = data.get("global", False)
                             if is_global:
                                 _log.warning(
-                                    "Global rate limit has been hit. Retrying in %.2f seconds.",
-                                    retry_after,
+                                    f"The Global ratelimit bucket was just tipped. Retrying in {retry_after} seconds."
                                 )
                                 self._global_over.clear()
 
@@ -251,12 +250,12 @@ class HTTPClient:
 
                             continue
 
-                        # we've received a 500, 502, or 504, retry
+                        # Try if we've gotten any of these
                         if response.status in {500, 502, 504}:
                             await asyncio.sleep(1 + tries * 2)
                             continue
 
-                        # Some normal exceptions
+                        # "Normal" Exceptions
                         if response.status == 403:
                             raise Forbidden(response, data)
                         elif response.status == 404:
@@ -266,16 +265,16 @@ class HTTPClient:
                         else:
                             raise HTTPException(response, data)
 
-                # This is handling exceptions from the request
+                # Hanling exceptions for the request
                 except OSError as e:
-                    # Connection reset by peer
+                    # Connection was reset by peer
                     if tries < 4 and e.errno in (54, 10054):
                         await asyncio.sleep(1 + tries * 2)
                         continue
                     raise
 
             if response is not None:
-                # Raise an error when there is no more retries left.
+                # Raise when retries have run out
                 if response.status >= 500:
                     raise ServerError(response, data)
 
@@ -298,6 +297,8 @@ class HTTPClient:
         )
         old_token = self.token
         self.token = token
+        if len(self.token) != 59: # Checks if the token given is exactly 59 characters.
+            raise LoginFailure("Credentials given are too short to be a bot token.")
 
         try:
             data = await self.request(Route("GET", "/users/@me"))

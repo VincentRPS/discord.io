@@ -24,7 +24,8 @@ import typing
 from rpd.boot_text import booting_text
 from rpd.exceptions import deprecated
 from rpd.helpers import MISSING
-from rpd.internal import HTTPClient
+from rpd.internal import HTTPClient, DiscordWebSocket
+from rpd.user import ClientUser
 
 _log = logging.getLogger(__name__)
 
@@ -58,13 +59,14 @@ class Client:
 
     """
 
-    def __init__(self, loop: typing.Optional[asyncio.AbstractEventLoop] = None):
+    def __init__(self, token: str, loop: typing.Optional[asyncio.AbstractEventLoop] = None):
         self.loop = loop
         self._listeners: typing.Dict[
             str, typing.List[typing.Tuple[asyncio.Future, typing.Callable[..., bool]]]
         ] = {}
+        self.token = token
         self.http = HTTPClient()
-        # self.ws = DiscordWebSocket()
+        self.ws = DiscordWebSocket(self)
 
     def on_error(self, e_meth: str) -> None:
         """Handles errors for :class:`Client` default.
@@ -150,7 +152,7 @@ class Client:
         else:
             self._schedule_event(coro, event_name, *args, **kwargs)
 
-    async def login(self, token: str):
+    async def login(self):
         """|coro|
         Logs in the client with the specified credentials.
 
@@ -169,12 +171,13 @@ class Client:
             usually when it isn't 200 or the known incorrect credentials
             passing status code.
         """
-        self.token = token
 
         _log.info("Trying to login with the specified credentials")
+        
+        token = self.token
 
-        # data = await self.http._client_login(token.strip())
-        # self._connection.user = ClientUser(data=data)
+        data = await self.http._client_login(token.strip())
+        self._connection.user = ClientUser(data=data)
 
     async def logout(self):
         await self.http._client_logout()
