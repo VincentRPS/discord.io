@@ -187,10 +187,11 @@ class Client:
 
     async def start(self, token: str, auto_reconnect: bool = True) -> None:
         """Combines both :meth:`Client.ws_start` and :meth:`Client.login`"""
+        print(booting_text)
         await self.login(token)
         # await self.ws_start(reconnect=auto_reconnect)
 
-    def run(self, *args: typing.Any, **kwargs: typing.Any):
+    def run(self, *args: typing.Any, **kwargs: typing.Any) -> None:
         """A easy blocking call that starts both the WebSocket and HTTP connections"""
 
     def listen(self, coro: Coro) -> Coro:
