@@ -32,6 +32,9 @@ from .websockets import DiscordClientWebSocketResponse
 
 _log = logging.getLogger(__name__)
 
+__all__ = (
+    'RESTClient',
+)
 
 class RESTClient:
     """REST Implementation for RPD.
