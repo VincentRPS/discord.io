@@ -1,5 +1,5 @@
-# MIT License
-
+# -*- coding: utf-8 -*-
+# cython: language_level=3
 # Copyright (c) 2021 VincentRPS
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,4 +18,17 @@
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+# SOFTWARE
+
+# Implementation of the everyday discord WebSocket.
+
+from __future__ import annotations
+import aiohttp
+
+class DiscordClientWebSocketResponse(aiohttp.ClientWebSocketResponse):
+    """The Discord Client WebSocket Response.
+    
+    .. versionadded:: 0.3.0
+    """
+    async def close(self, *, code: int = 4000, message: bytes = b"") -> bool:
+        return await super().close(code=code, message=message)

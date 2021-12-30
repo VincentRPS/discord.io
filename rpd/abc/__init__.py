@@ -1,7 +1,5 @@
 """
 rpd.abc
 ~~~~~~~
-ABC Module for RPD.
+Stores all abc modules for RPD.
 """
-from .snowflake import *
-from .state import *

@@ -1,5 +1,5 @@
-# MIT License
-
+# -*- coding: utf-8 -*-
+# cython: language_level=3
 # Copyright (c) 2021 VincentRPS
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,4 +18,24 @@
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+# SOFTWARE
+
+# Most requests are done here, except for log-ins and outs since they change the header.
+
+from ..internal.rest import RESTClient
+
+class RESTFactory:
+    """The RESTFactory for most requests.
+
+    .. versionadded:: 0.3.0
+
+    Attributes
+    ----------
+    rest
+        The RESTClient.
+    """
+    def __init__(self):
+        self.rest = RESTClient()
+
+    async def get_gateway_bot(self) -> None:
+        await self.send("GET", "/gateway/bot") # GET's the bot from the gateway endpoint

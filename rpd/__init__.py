@@ -4,32 +4,30 @@ RPD
 Asynchronous Discord API Wrapper For Python
 
 :copyright: 2021 VincentRPS
-:license: Apache-2.0
+:license: MIT
 """
 
 __title__ = "RPD"
 __author__ = "VincentRPS"
-__license__ = "Apache-2.0"
+__license__ = "MIT"
 __copyright__ = "Copyright 2021 VincentRPS"
 __version__ = "0.3.0"
 
 import logging
-from typing import Literal, NamedTuple
+import typing
 
-from .abc import *
-from .client import Client  # type: ignore
-from .data import *
-from .exceptions import *
-from .helpers import *
-from .internal import *
-from .user import *
+from rpd.abc import *
+from rpd.data import *
+from rpd.helpers import *
+from rpd.internal.rest import *
+from rpd.internal.websockets import *
+from rpd.factorys import *
 
-
-class VersionInfo(NamedTuple):
+class VersionInfo(typing.NamedTuple):
     major: int
     minor: int
     micro: int
-    releaselevel: Literal["alpha", "beta", "candidate", "final"]
+    releaselevel: typing.Literal["alpha", "beta", "candidate", "final"]
     serial: int
 
 
