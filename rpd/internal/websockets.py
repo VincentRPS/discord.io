@@ -23,12 +23,15 @@
 # Implementation of the everyday discord WebSocket.
 
 from __future__ import annotations
+
 import aiohttp
+
 
 class DiscordClientWebSocketResponse(aiohttp.ClientWebSocketResponse):
     """The Discord Client WebSocket Response.
-    
+
     .. versionadded:: 0.3.0
     """
+
     async def close(self, *, code: int = 4000, message: bytes = b"") -> bool:
         return await super().close(code=code, message=message)

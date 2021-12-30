@@ -24,6 +24,7 @@
 
 from ..internal.rest import RESTClient
 
+
 class RESTFactory:
     """The RESTFactory for most requests.
 
@@ -34,8 +35,11 @@ class RESTFactory:
     rest
         The RESTClient.
     """
+
     def __init__(self):
         self.rest = RESTClient()
 
     async def get_gateway_bot(self) -> None:
-        await self.send("GET", "/gateway/bot") # GET's the bot from the gateway endpoint
+        await self.send(
+            "GET", "/gateway/bot"
+        )  # GET's the bot from the gateway endpoint

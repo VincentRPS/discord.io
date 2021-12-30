@@ -21,4 +21,3 @@
 # SOFTWARE
 
 # intakes events given by the Discord WebSocket.
-

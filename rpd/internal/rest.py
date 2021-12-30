@@ -20,12 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 from __future__ import annotations
-import aiohttp
+
 import asyncio
 import logging
 import typing
-from .websockets import DiscordClientWebSocketResponse
+
+import aiohttp
+
 from ..helpers.whichjson import _to_json
+from .websockets import DiscordClientWebSocketResponse
 
 _log = logging.getLogger(__name__)
 
@@ -48,51 +51,60 @@ class RESTClient:
     header
         The header sent to discord.
     """
+
     def __init__(self, loop=None):
-        self.url = "https://discord.com/api/v9" # The Discord API Version.
-        self.loop = asyncio.get_event_loop() if loop is None else loop # gets the current event loop or uses your own.
-        self.connector = aiohttp.BaseConnector(loop=self.loop) # defining our own connector would allow for more flexability.
-        self._session = aiohttp.ClientSession(connector=self.connector, loop=self.loop, ws_response_class=DiscordClientWebSocketResponse) # takes the defined loop & connector.
+        self.url = "https://discord.com/api/v9"  # The Discord API Version.
+        self.loop = (
+            asyncio.get_event_loop() if loop is None else loop
+        )  # gets the current event loop or uses your own.
+        self.connector = aiohttp.BaseConnector(
+            loop=self.loop
+        )  # defining our own connector would allow for more flexability.
+        self._session = aiohttp.ClientSession(
+            connector=self.connector,
+            loop=self.loop,
+            ws_response_class=DiscordClientWebSocketResponse,
+        )  # takes the defined loop & connector.
         self.header: typing.Dict[str, str] = {
             "User-Agent": "DiscordBot https://github.com/RPD-py/RPD"
         }
 
     async def send(self, method, endpoint, **kwargs: typing.Any):
         """Sends a request to discord
-        
+
         .. versionadded:: 0.3.0
         """
-        self.method = method # The method you are trying to use. e.g. GET.
-        self.endpoint = endpoint # The endpoint the method is in.
-        url = self.url + self.endpoint # The URL. + Endpoint.
-        self.header["Content-Type"] = "application/json" # Only json.
+        self.method = method  # The method you are trying to use. e.g. GET.
+        self.endpoint = endpoint  # The endpoint the method is in.
+        url = self.url + self.endpoint  # The URL. + Endpoint.
+        self.header["Content-Type"] = "application/json"  # Only json.
         kwargs["data"] = _to_json(kwargs.pop("json"))
         kwargs["headers"] = self.header
 
         try:
-            async with self._session.request(
-                self.method, url, **kwargs
-            ) as r:
+            async with self._session.request(self.method, url, **kwargs) as r:
                 res = r
 
                 if 300 > r.status >= 200:
                     _log.debug(f"Request was sucessfully sent, {res}")
 
-                if r.status == 429: # "Handles" Ratelimit's.
-                    _log.critical(f"Detected a possible ratelimit, RPD will try to reconnect every 30 seconds.")
+                if r.status == 429:  # "Handles" Ratelimit's.
+                    _log.critical(
+                        f"Detected a possible ratelimit, RPD will try to reconnect every 30 seconds."
+                    )
 
-                    await asyncio.sleep(30) # Need some better alternative to this.
+                    await asyncio.sleep(30)  # Need some better alternative to this.
 
                 if r.status in {500, 502, 504}:
                     await asyncio.sleep(7)
 
-                if r.status == 403: # 403 Errors.
+                if r.status == 403:  # 403 Errors.
                     raise Exception(r)
-                if r.status == 404: # 404 Errors.
+                if r.status == 404:  # 404 Errors.
                     raise Exception(r)
-                if r.status >= 500: # 500 Errors.
+                if r.status >= 500:  # 500 Errors.
                     raise Exception(r)
-                else: # Handles any exception not covered here.
+                else:  # Handles any exception not covered here.
                     raise Exception(r)
 
         except Exception as exc:
@@ -100,7 +112,7 @@ class RESTClient:
 
     async def close(self) -> None:
         if self._session:
-            await self._session.close() # Closes the session
+            await self._session.close()  # Closes the session
 
     async def _client_login(self, token: str) -> None:
         self.token = token
@@ -111,9 +123,9 @@ class RESTClient:
             self.header["Authorization"] = "Bot " + self.token
 
         try:
-            await self.send("GET", "/users/@me") # Log's in
+            await self.send("GET", "/users/@me")  # Log's in
         except Exception as exc:
-            raise Exception(f"Failed to login {exc}") # If exception raise.
+            raise Exception(f"Failed to login {exc}")  # If exception raise.
 
     async def _client_logout(self) -> None:
-        await self.send("POST", "/auth/logout") # Log's you out of the bot.
+        await self.send("POST", "/auth/logout")  # Log's you out of the bot.
