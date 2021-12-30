@@ -40,6 +40,6 @@ class RESTFactory:
         self.rest = RESTClient()
 
     async def get_gateway_bot(self) -> None:
-        await self.send(
+        await self.rest.send(
             "GET", "/gateway/bot"
         )  # GET's the bot from the gateway endpoint
