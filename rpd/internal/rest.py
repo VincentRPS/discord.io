@@ -93,8 +93,9 @@ class RESTClient:
 
                 if r.status == 429:  # "Handles" Ratelimit's.
                     _log.critical(
-                        f"Detected a possible ratelimit, RPD will try to reconnect every 30 seconds."
+                        'Detected a possible ratelimit, RPD will try to reconnect every 30 seconds.'
                     )
+
 
                     await asyncio.sleep(30)  # Need some better alternative to this.
 
@@ -105,11 +106,7 @@ class RESTClient:
                     raise Exception(r)
                 if r.status == 404:  # 404 Errors.
                     raise Exception(r)
-                if r.status >= 500:  # 500 Errors.
-                    raise Exception(r)
-                else:  # Handles any exception not covered here.
-                    raise Exception(r)
-
+                raise Exception(r)
         except Exception as exc:
             raise Exception(f"Exception Occured when trying to send a request. {exc}")
 
