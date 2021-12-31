@@ -3,14 +3,14 @@ RPD
 ~~~
 Asynchronous Discord API Wrapper For Python
 
-:copyright: 2021 VincentRPS
+:copyright: 2021-present VincentRPS
 :license: MIT
 """
 
 __title__ = "RPD"
 __author__ = "VincentRPS"
 __license__ = "MIT"
-__copyright__ = "Copyright 2021 VincentRPS"
+__copyright__ = "Copyright 2021-present VincentRPS"
 __version__ = "0.3.0"
 
 import logging

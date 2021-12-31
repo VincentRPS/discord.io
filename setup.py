@@ -71,7 +71,7 @@ setuptools.setup(
     python_requires=">=3.8",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
-        "License :: OSI Approved :: Apache Software License",
+        "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
         "Natural Language :: English",
         "Operating System :: OS Independent",
