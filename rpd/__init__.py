@@ -18,10 +18,11 @@ import typing
 
 from rpd.abc import *
 from rpd.data import *
-from rpd.factorys import *
+from rpd.factories import *
 from rpd.helpers import *
 from rpd.internal.rest import *
 from rpd.internal.websockets import *
+from rpd.boot_text import *
 
 
 class VersionInfo(typing.NamedTuple):
