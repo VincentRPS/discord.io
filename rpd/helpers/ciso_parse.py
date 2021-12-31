@@ -22,15 +22,19 @@
 
 try:
     import ciso8601
-except(ModuleNotFoundError, ImportError):
+except (ModuleNotFoundError, ImportError):
     import datetime
+
     HAS_CISO = False
 else:
     HAS_CISO = True
 
 if HAS_CISO:
+
     def parse_time(time: str):
         ciso8601.parse_datetime(time)
+
 else:
+
     def parse_time(time: str):
-        datetime.strptime(time, '%d/%m/%y %H:%M:%S')
+        datetime.strptime(time, "%d/%m/%y %H:%M:%S")
