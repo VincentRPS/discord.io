@@ -1,2 +1,1 @@
-# The one and only required requirement for RPD.
-aiohttp>=3.7.0,<4.0.0
+aiohttp~=3.8 # http module for asyncio.

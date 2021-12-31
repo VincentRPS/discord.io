@@ -32,6 +32,14 @@ requirements = []
 with open("requirements.txt") as f:
     requirements = f.read().splitlines()
 
+dev_requirements = []
+with open("dev-requirements.txt") as f:
+    dev_requirements = f.read().splitlines()
+
+speed_requirements = []
+with open("speed-requirements.txt") as f:
+    speed_requirements = f.read().splitlines()
+
 packages = [
     "rpd",
     "rpd.internal",
@@ -43,12 +51,8 @@ packages = [
 ]
 
 extra_requires = {
-    "speed": [
-        "orjson>=3.6.5",
-        "aiodns>=1.1",
-        "Brotlipy",
-        "cchardet",
-    ],
+    speed_requirements,
+    dev_requirements,
 }
 
 setuptools.setup(

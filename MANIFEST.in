@@ -1,3 +1,4 @@
 include requirements.txt
 include rpd/py.typed
 exclude pipelines
+exclude docs
