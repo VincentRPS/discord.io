@@ -39,6 +39,7 @@ packages = [
     "rpd.data",
     "rpd.events",
     "rpd.abc",
+    "rpd.factories",
 ]
 
 extra_requires = {
