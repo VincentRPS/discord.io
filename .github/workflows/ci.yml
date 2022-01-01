@@ -55,11 +55,14 @@ jobs:
       run: |
           git config user.name "RPD Actions"
           git config user.email "actions@rps.re"
-    - name: Push To Git
+    - name: Pull Git
+      run: git pull
+    - name: Add Git
+      run: git add .
+          
+    - name: Push Git
       run: |
-          git pull
-          git add .
-          git diff-index --quiet HEAD || git commit -m "ci/cd changes"
+          git diff-index --quiet HEAD || git commit -m "ci changes"
           git push origin master
 
 
