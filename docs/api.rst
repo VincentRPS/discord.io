@@ -28,21 +28,21 @@ And second is by using ``version_info``
 REST API
 --------
 
-.. attributetable:: internal.rest.RESTClient
+.. attributetable:: RESTClient
 
-.. autoclass:: internal.rest.RESTClient
+.. autoclass:: RESTClient
     :members:
 
-.. attributetable:: factories.RESTFactory
+.. attributetable:: RESTFactory
 
-.. autoclass:: factories.RESTFactory
+.. autoclass:: RESTFactory
     :members:
 
 
 WebSockets
 ----------
 
-.. autoclass:: internal.websockets.DiscordClientWebSocketResponse
+.. autoclass:: DiscordClientWebSocketResponse
     :members:
 
 AioClient
