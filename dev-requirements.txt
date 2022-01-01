@@ -13,6 +13,6 @@ flake8-raise~=0.0.5 # exceptions raising.
 sphinx~=4.3.2
 furo~=2021.11.23
 #################
-# Static Typing # [if someone can also fix the mypy errors :D]
+# Static Typing #
 #################
 mypy~=0.930
