@@ -24,8 +24,8 @@ import logging
 
 import aiohttp
 
+from ..exceptions import Forbidden, NotFound, RESTError, ServerError
 from .websockets import DiscordClientWebSocketResponse
-from ..exceptions import RESTError, Forbidden, NotFound, ServerError
 
 _log = logging.getLogger(__name__)
 
@@ -39,31 +39,33 @@ class RESTClientResponse(aiohttp.ClientResponse):
 
         elif self.status == 429:  # "Handles" Ratelimit's or 429s.
             _log.critical(
-                'Detected a possible ratelimit, RPD will try to reconnect every 30 seconds.'
+                f"Detected a possible ratelimit, RPD will try to reconnect every 30 seconds."
             )
 
-
-            await asyncio.sleep(30)  # Need some better alternative to this, Then reconnect every 30s
+            await asyncio.sleep(
+                30
+            )  # Need some better alternative to this, Then reconnect every 30s
 
         elif self.status in {500, 502, 504}:
-                    await asyncio.sleep(7)
+            await asyncio.sleep(7)
 
         elif self.status == 403:
-                    raise Forbidden(self)  # type: ignore
+            raise Forbidden(self)  # type: ignore
         elif self.status == 404:
-                    raise NotFound(self)  # type: ignore
+            raise NotFound(self)  # type: ignore
         elif self.status >= 500:
-                    raise ServerError(self)  # type: ignore
+            raise ServerError(self)  # type: ignore
         else:  # Handles any exception not covered here.
             raise RESTError(self)  # type: ignore
+        # mypy doesn't like us returning nothing for some reason, maybe return self?
         return # type: ignore
 
-def CreateClientSession( # makes creating ClientSessions way easier.
+
+def CreateClientSession(  # makes creating ClientSessions way easier.
     connector: aiohttp.BaseConnector,
     connector_owner: bool = False,
     trust_env: bool = True,
-    loop=None
-
+    loop=None,
 ) -> aiohttp.ClientSession:
     rloop = asyncio.get_event_loop() or loop
     return aiohttp.ClientSession(
@@ -75,5 +77,3 @@ def CreateClientSession( # makes creating ClientSessions way easier.
         version=aiohttp.HttpVersion11,
         response_class=RESTClientResponse,
     )
-
-

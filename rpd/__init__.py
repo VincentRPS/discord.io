@@ -23,6 +23,7 @@ from rpd.helpers import *
 from rpd.internal import *
 from rpd.exceptions import *
 
+
 class VersionInfo(typing.NamedTuple):
     major: int
     minor: int
