@@ -35,14 +35,15 @@ class RESTClientResponse(aiohttp.ClientResponse):
     # Handles HTTPExceptions while doing REST Requests.
     async def ClientResponseErrors(self) -> RESTError:
         if 300 > self.status >= 200:
-                    _log.debug(f"Request was sucessfully sent, {self}")
+            _log.debug(f"Request was sucessfully sent, {self}")
 
         elif self.status == 429:  # "Handles" Ratelimit's or 429s.
-                    _log.critical(
-                        f"Detected a possible ratelimit, RPD will try to reconnect every 30 seconds."
-                    )
+            _log.critical(
+                'Detected a possible ratelimit, RPD will try to reconnect every 30 seconds.'
+            )
 
-                    await asyncio.sleep(30)  # Need some better alternative to this, Then reconnect every 30s
+
+            await asyncio.sleep(30)  # Need some better alternative to this, Then reconnect every 30s
 
         elif self.status in {500, 502, 504}:
                     await asyncio.sleep(7)
@@ -54,7 +55,7 @@ class RESTClientResponse(aiohttp.ClientResponse):
         elif self.status >= 500:
                     raise ServerError(self)  # type: ignore
         else:  # Handles any exception not covered here.
-                    raise RESTError(self)  # type: ignore
+            raise RESTError(self)  # type: ignore
         return # type: ignore
 
 def CreateClientSession( # makes creating ClientSessions way easier.
