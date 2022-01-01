@@ -30,7 +30,7 @@ from .boot_text import booting_text
 def main() -> None:
     """Shows the boot message"""
     print(booting_text)
-    version = rpd.__version__ # type: ignore
+    version = rpd.__version__  # type: ignore
     python_version = platform.python_version()
     sys.stderr.write(f"Running on RPD Version {version},")
     sys.stderr.write(f" with Python version {python_version}.")

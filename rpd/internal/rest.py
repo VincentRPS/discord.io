@@ -28,8 +28,8 @@ import typing
 import aiohttp
 
 from ..helpers.whichjson import _to_json
-from .websockets import DiscordClientWebSocketResponse
 from .aioclient import CreateClientSession
+from .websockets import DiscordClientWebSocketResponse
 
 _log = logging.getLogger(__name__)
 
@@ -75,11 +75,11 @@ class RESTClient:
         self.method = method  # The method you are trying to use. e.g. GET.
         self.endpoint = endpoint  # The endpoint the method is in.
         url = self.url + self.endpoint  # The URL. + Endpoint.
-        
+
         if "json" in kwargs:
             self.header["Content-Type"] = "application/json"  # Only json.
             kwargs["data"] = _to_json(kwargs.pop("json"))
-        
+
         kwargs["headers"] = self.header
 
         try:

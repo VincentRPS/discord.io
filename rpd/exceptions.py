@@ -21,8 +21,8 @@
 # SOFTWARE
 
 import typing
-import attrs
 
+import attrs
 
 __all__: typing.List[str] = [
     "RPDError",
@@ -30,25 +30,31 @@ __all__: typing.List[str] = [
     "WebSocketError",
 ]
 
+
 @attrs.define(auto_exc=True, repr=False, weakref_slot=False)
 class RPDError(Exception):
     """The base exception class for RPD"""
+
 
 @attrs.define(auto_exc=True, repr=False, weakref_slot=False)
 class RESTError(RPDError):
     """REST Errors"""
 
+
 @attrs.define(auto_exc=True, repr=False, weakref_slot=False)
 class Forbidden(RESTError):
     """Forbidden from a URL"""
+
 
 @attrs.define(auto_exc=True, repr=False, weakref_slot=False)
 class NotFound(RESTError):
     """Endpoint Not Found"""
 
+
 @attrs.define(auto_exc=True, repr=False, weakref_slot=False)
 class ServerError(RESTError):
     """A Discord Server Error"""
+
 
 @attrs.define(auto_exc=True, repr=False, weakref_slot=False)
 class WebSocketError(RPDError):

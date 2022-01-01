@@ -21,7 +21,6 @@
 # SOFTWARE
 import typing
 
-
 __all__: typing.List[str] = [
     "booting_text",
 ]

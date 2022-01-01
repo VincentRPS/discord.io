@@ -24,12 +24,14 @@
 
 from __future__ import annotations
 
-import aiohttp
 import typing
+
+import aiohttp
 
 __all__: typing.List[str] = [
     "DiscordClientWebSocketResponse",
 ]
+
 
 class DiscordClientWebSocketResponse(aiohttp.ClientWebSocketResponse):
     """The Discord Client WebSocket Response.

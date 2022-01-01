@@ -24,8 +24,8 @@ import logging
 
 import aiohttp
 
+from ..exceptions import Forbidden, NotFound, RESTError, ServerError
 from .websockets import DiscordClientWebSocketResponse
-from ..exceptions import RESTError, Forbidden, NotFound, ServerError
 
 _log = logging.getLogger(__name__)
 
@@ -34,34 +34,36 @@ class RESTClientResponse(aiohttp.ClientResponse):
     # Handles HTTPExceptions while doing REST Requests.
     async def ClientResponseErrors(self) -> RESTError:
         if 300 > self.status >= 200:
-                    _log.debug(f"Request was sucessfully sent, {self}")
+            _log.debug(f"Request was sucessfully sent, {self}")
 
         elif self.status == 429:  # "Handles" Ratelimit's or 429s.
-                    _log.critical(
-                        f"Detected a possible ratelimit, RPD will try to reconnect every 30 seconds."
-                    )
+            _log.critical(
+                f"Detected a possible ratelimit, RPD will try to reconnect every 30 seconds."
+            )
 
-                    await asyncio.sleep(30)  # Need some better alternative to this, Then reconnect every 30s
+            await asyncio.sleep(
+                30
+            )  # Need some better alternative to this, Then reconnect every 30s
 
         elif self.status in {500, 502, 504}:
-                    await asyncio.sleep(7)
+            await asyncio.sleep(7)
 
         elif self.status == 403:
-                    raise Forbidden(self)  # type: ignore
+            raise Forbidden(self)  # type: ignore
         elif self.status == 404:
-                    raise NotFound(self)  # type: ignore
+            raise NotFound(self)  # type: ignore
         elif self.status >= 500:
-                    raise ServerError(self)  # type: ignore
+            raise ServerError(self)  # type: ignore
         else:  # Handles any exception not covered here.
-                    raise RESTError(self)  # type: ignore
-        return # type: ignore
+            raise RESTError(self)  # type: ignore
+        return  # type: ignore
 
-def CreateClientSession( # makes creating ClientSessions way easier.
+
+def CreateClientSession(  # makes creating ClientSessions way easier.
     connector: aiohttp.BaseConnector,
     connector_owner: bool = False,
     trust_env: bool = True,
-    loop=None
-
+    loop=None,
 ) -> aiohttp.ClientSession:
     rloop = asyncio.get_event_loop() or loop
     return aiohttp.ClientSession(
@@ -73,5 +75,3 @@ def CreateClientSession( # makes creating ClientSessions way easier.
         version=aiohttp.HttpVersion11,
         response_class=RESTClientResponse,
     )
-
-
