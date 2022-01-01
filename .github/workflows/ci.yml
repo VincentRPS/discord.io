@@ -3,11 +3,11 @@ name: CI/CD
 on: [push]
 
 jobs:
+  runs-on: ubuntu-latest
+  strategy:
+    matrix:
+      python-version: ["3.10"]
   stubs:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.10"]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -21,11 +21,6 @@ jobs:
     - name: Stubgen Run
       run: stubgen rpd/data/__init__.py rpd/factories/__init__.py rpd/internal/__init__.py rpd/helpers/__init__.py rpd/__init__.py -o .
   lint:
-    needs: [stubs]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.10"]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -45,10 +40,6 @@ jobs:
 
   deploy:
     needs: [lint, stubs]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.10"]
     steps:
     - uses: actions/checkout@v2
     - name: Setup Git
@@ -62,7 +53,7 @@ jobs:
           
     - name: Push Git
       run: |
-          git diff-index --quiet HEAD || git commit -m "ci changes"
+          git diff-index --quiet HEAD || git commit -m "automated ci changes"
           git push origin master
 
 
