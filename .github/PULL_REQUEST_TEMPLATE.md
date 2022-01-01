@@ -1,6 +1,6 @@
 ## Summary
 
-<!--A summary on what this PR does-->
+<!--A summary of what this PR does-->
 
 ## Checklist
 
