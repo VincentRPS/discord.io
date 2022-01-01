@@ -3,11 +3,11 @@ name: CI/CD
 on: [push]
 
 jobs:
-  runs-on: ubuntu-latest
-  strategy:
-    matrix:
-      python-version: ["3.10"]
   stubs:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10"]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -20,7 +20,25 @@ jobs:
         pip install -U mypy
     - name: Stubgen Run
       run: stubgen rpd/data/__init__.py rpd/factories/__init__.py rpd/internal/__init__.py rpd/helpers/__init__.py rpd/__init__.py -o .
+    - name: Setup Git
+      run: |
+          git config user.name "RPD Actions"
+          git config user.email "actions@rps.re"
+    - name: Pull Git
+      run: git pull
+    - name: Add Git
+      run: git add .
+          
+    - name: Push Git
+      run: |
+          git diff-index --quiet HEAD || git commit -m "stub changes"
+          git push origin master
   lint:
+    needs: [stubs]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10"]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -37,11 +55,6 @@ jobs:
       run: black .
     - name: Flynt
       run: flynt .
-
-  deploy:
-    needs: [lint, stubs]
-    steps:
-    - uses: actions/checkout@v2
     - name: Setup Git
       run: |
           git config user.name "RPD Actions"
@@ -53,7 +66,7 @@ jobs:
           
     - name: Push Git
       run: |
-          git diff-index --quiet HEAD || git commit -m "automated ci changes"
+          git diff-index --quiet HEAD || git commit -m "code linting"
           git push origin master
 
 

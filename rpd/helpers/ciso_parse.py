@@ -37,4 +37,4 @@ if HAS_CISO:
 else:
 
     def parse_time(time: str):
-        datetime.strptime(time, "%d/%m/%y %H:%M:%S")
+        datetime.datetime.strptime(time, "%d/%m/%y %H:%M:%S")
