@@ -31,6 +31,7 @@ _log = logging.getLogger(__name__)
 
 
 class RESTClientResponse(aiohttp.ClientResponse):
+    """A subclass of :class:`aiohttp.ClientResponse` built for RPD"""
     # Handles HTTPExceptions while doing REST Requests.
     async def ClientResponseErrors(self) -> RESTError:
         if 300 > self.status >= 200:

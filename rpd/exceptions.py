@@ -28,6 +28,9 @@ __all__: typing.List[str] = [
     "RPDError",
     "RESTError",
     "WebSocketError",
+    "Forbidden",
+    "NotFound",
+    "ServerError",
 ]
 
 @attrs.define(auto_exc=True, repr=False, weakref_slot=False)
