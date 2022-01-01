@@ -16,13 +16,11 @@ __version__ = "0.3.0"
 import logging
 import typing
 
-from rpd.abc import *
 from rpd.boot_text import *
 from rpd.data import *
 from rpd.factories import *
 from rpd.helpers import *
-from rpd.internal.rest import *
-from rpd.internal.websockets import *
+from rpd.internal import *
 
 
 class VersionInfo(typing.NamedTuple):

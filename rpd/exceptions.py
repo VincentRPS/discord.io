@@ -20,22 +20,36 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-# Implementation of the everyday Discord WebSocket.
-
-from __future__ import annotations
-
-import aiohttp
 import typing
+import attrs
+
 
 __all__: typing.List[str] = [
-    "DiscordClientWebSocketResponse",
+    "RPDError",
+    "RESTError",
+    "WebSocketError",
 ]
 
-class DiscordClientWebSocketResponse(aiohttp.ClientWebSocketResponse):
-    """The Discord Client WebSocket Response.
+@attrs.define(auto_exc=True, repr=False, weakref_slot=False)
+class RPDError(Exception):
+    """The base exception class for RPD"""
 
-    .. versionadded:: 0.3.0
-    """
+@attrs.define(auto_exc=True, repr=False, weakref_slot=False)
+class RESTError(RPDError):
+    """REST Errors"""
 
-    async def close(self, *, code: int = 4000, message: bytes = b"") -> bool:
-        return await super().close(code=code, message=message)
+@attrs.define(auto_exc=True, repr=False, weakref_slot=False)
+class Forbidden(RESTError):
+    """Forbidden from a URL"""
+
+@attrs.define(auto_exc=True, repr=False, weakref_slot=False)
+class NotFound(RESTError):
+    """Endpoint Not Found"""
+
+@attrs.define(auto_exc=True, repr=False, weakref_slot=False)
+class ServerError(RESTError):
+    """A Discord Server Error"""
+
+@attrs.define(auto_exc=True, repr=False, weakref_slot=False)
+class WebSocketError(RPDError):
+    """WebSocket Errors"""

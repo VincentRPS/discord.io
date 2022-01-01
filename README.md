@@ -1,8 +1,13 @@
 <h1 align="center">RPD</h1>
 
-An Asynchronous Discord API Wrapper For Python
+A Asynchronous Discord API Wrapper For Python
 
-# Installing
+## Features
+
+- Sane handling of 429s
+- Customizable
+
+## Installing
 
 To Install RPD Just run the following command:
 
