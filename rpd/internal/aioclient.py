@@ -23,6 +23,8 @@ import asyncio
 import logging
 
 import aiohttp
+import attr
+import typing
 
 from ..exceptions import Forbidden, NotFound, RESTError, ServerError
 from .websockets import DiscordClientWebSocketResponse
@@ -60,18 +62,16 @@ class RESTClientResponse(aiohttp.ClientResponse):
         # mypy doesn't like us returning nothing for some reason, maybe return self?
         return # type: ignore
 
-
-def CreateClientSession(  # makes creating ClientSessions way easier.
-    connector: aiohttp.BaseConnector,
-    connector_owner: bool = False,
-    trust_env: bool = True,
-    loop=None,
-) -> aiohttp.ClientSession:
-    rloop = asyncio.get_event_loop() or loop
-    return aiohttp.ClientSession(
+@attr.define(init=True, repr=False, auto_exc=False)
+class CreateClientSession(aiohttp.ClientSession):
+    connector: aiohttp.BaseConnector
+    connector_owner: bool = False
+    trust_env: bool = True # type: ignore
+    loop=None # type: ignore
+    super().__init__( # type: ignore
         connector=connector,
         connector_owner=connector_owner,
-        loop=rloop,
+        loop=loop,
         ws_response_class=DiscordClientWebSocketResponse,
         trust_env=trust_env,
         version=aiohttp.HttpVersion11,

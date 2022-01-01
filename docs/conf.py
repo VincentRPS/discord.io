@@ -36,6 +36,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
     "attributetable",
+    "exception_hierarchy",
     # 'sphinx.ext.githubpages', putting this off until we have a domain.
 ]
 
