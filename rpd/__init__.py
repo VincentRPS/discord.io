@@ -21,6 +21,7 @@ from rpd.data import *
 from rpd.factories import *
 from rpd.helpers import *
 from rpd.internal import *
+from rpd.exceptions import *
 
 
 class VersionInfo(typing.NamedTuple):

@@ -28,6 +28,9 @@ __all__: typing.List[str] = [
     "RPDError",
     "RESTError",
     "WebSocketError",
+    "Forbidden",
+    "NotFound",
+    "ServerError",
 ]
 
 

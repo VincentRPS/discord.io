@@ -31,6 +31,7 @@ _log = logging.getLogger(__name__)
 
 
 class RESTClientResponse(aiohttp.ClientResponse):
+    """A subclass of :class:`aiohttp.ClientResponse` built for RPD"""
     # Handles HTTPExceptions while doing REST Requests.
     async def ClientResponseErrors(self) -> RESTError:
         if 300 > self.status >= 200:
@@ -56,7 +57,8 @@ class RESTClientResponse(aiohttp.ClientResponse):
             raise ServerError(self)  # type: ignore
         else:  # Handles any exception not covered here.
             raise RESTError(self)  # type: ignore
-        return  # type: ignore
+        # mypy doesn't like us returning nothing for some reason, maybe return self?
+        return # type: ignore
 
 
 def CreateClientSession(  # makes creating ClientSessions way easier.

@@ -25,12 +25,17 @@ And second is by using ``version_info``
     'alpha', 'beta', 'candidate' and 'final'.
 
 
-RESTClient
-----------
+REST API
+--------
 
 .. attributetable:: internal.rest.RESTClient
 
 .. autoclass:: internal.rest.RESTClient
+    :members:
+
+.. attributetable:: factories.RESTFactory
+
+.. autoclass:: factories.RESTFactory
     :members:
 
 
@@ -39,3 +44,37 @@ WebSockets
 
 .. autoclass:: internal.websockets.DiscordClientWebSocketResponse
     :members:
+
+AioClient
+---------
+
+.. autoclass:: RESTClientResponse
+    :members:
+
+Exceptions
+----------
+
+.. autoexception:: RPDError
+    
+.. autoexception:: RESTError
+
+.. autoexception:: WebSocketError
+    
+.. autoexception:: Forbidden
+
+.. autoexception:: NotFound
+
+.. autoexception:: ServerError
+
+Exception Hierarcy
+------------------
+
+.. exception_hierarcy::
+
+    - :exc:`Exception`
+        - :exc:`RPDError`
+            - :exc:`RESTError`
+                - :exc:`Forbidden`
+                - :exc:`NotFound`
+                - :exc:`ServerError`
+            - :exc:`WebSocketError`
