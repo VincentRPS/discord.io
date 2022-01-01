@@ -39,3 +39,9 @@ WebSockets
 
 .. autoclass:: internal.websockets.DiscordClientWebSocketResponse
     :members:
+
+AioClient
+---------
+
+.. autoclass:: RESTClientResponse
+    :members:
