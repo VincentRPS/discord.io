@@ -21,10 +21,10 @@
 # SOFTWARE
 import asyncio
 import logging
+import typing
 
 import aiohttp
 import attr
-import typing
 
 from ..exceptions import Forbidden, NotFound, RESTError, ServerError
 from .websockets import DiscordClientWebSocketResponse
@@ -34,6 +34,7 @@ _log = logging.getLogger(__name__)
 
 class RESTClientResponse(aiohttp.ClientResponse):
     """A subclass of ``ClientResponse`` built for RPD"""
+
     # Handles HTTPExceptions while doing REST Requests.
     async def ClientResponseErrors(self) -> RESTError:
         if 300 > self.status >= 200:
@@ -60,15 +61,16 @@ class RESTClientResponse(aiohttp.ClientResponse):
         else:  # Handles any exception not covered here.
             raise RESTError(self)  # type: ignore
         # mypy doesn't like us returning nothing for some reason, maybe return self?
-        return # type: ignore
+        return  # type: ignore
+
 
 @attr.define(init=True, repr=False, auto_exc=False)
 class CreateClientSession(aiohttp.ClientSession):
     connector: aiohttp.BaseConnector
     connector_owner: bool = False
-    trust_env: bool = True # type: ignore
-    loop=None # type: ignore
-    super().__init__( # type: ignore
+    trust_env: bool = True  # type: ignore
+    loop = None  # type: ignore
+    super().__init__(  # type: ignore
         connector=connector,
         connector_owner=connector_owner,
         loop=loop,
