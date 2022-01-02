@@ -55,18 +55,15 @@ class DiscordClientWebSocketResponse(aiohttp.ClientWebSocketResponse):
         return await super().close(code=code, message=message)
 
 
-@attrs.define(init=False)
+@attrs.define(init=True)
 class WebSocketClient:
     """The WebSocket connection with Discord.
 
     .. versionadded:: 0.3.0
     """
-
-    def __init__(self):
-        self.socket = CreateClientSession()
-        self.temp = aiohttp.ClientSession()
-        self.ws = DiscordClientWebSocketResponse
-        self.url = "wss://gateway.discord.gg/?v=9&encoding=json&compress=zlib-stream"  # the gateway url
+    socket = CreateClientSession()
+    ws = DiscordClientWebSocketResponse
+    url = "wss://gateway.discord.gg/?v=9&encoding=json&compress=zlib-stream"  # the gateway url
 
     async def send(self, data):
         r = await self.socket.ws_connect(url=self.url)
