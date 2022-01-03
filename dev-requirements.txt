@@ -11,7 +11,7 @@ flake8-raise~=0.0.5 # exceptions raising.
 # Documentation #
 #################
 sphinx~=4.3.2
-furo~=2021.11.23
+furo~=2022.1.2
 #################
 # Static Typing #
 #################
