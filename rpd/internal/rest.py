@@ -59,6 +59,7 @@ class RESTClient:
 
     def __init__(self, loop=None):
         self.url = "https://discord.com/api/v9"  # The Discord API Version.
+        self.loop = asyncio.get_event_loop() if loop is None else loop
         self.connector = aiohttp.BaseConnector(
             loop=self.loop
         )  # defining our own connector would allow for more flexability.

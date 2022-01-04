@@ -25,14 +25,26 @@
 from __future__ import annotations
 
 import typing
+from zlib import decompressobj
 
 import aiohttp
+import attrs
+from aiohttp.http_websocket import WSMsgType
+
+from rpd import helpers
+
+from .aioclient import CreateClientSession
 
 __all__: typing.List[str] = [
     "DiscordClientWebSocketResponse",
+    "WebSocketClient",
 ]
 
+ZLIB_SUFFIX = b"\x00\x00\xff\xff"
+inflator = decompressobj()
 
+
+@attrs.define(init=False)
 class DiscordClientWebSocketResponse(aiohttp.ClientWebSocketResponse):
     """The Discord Client WebSocket Response.
 
@@ -41,3 +53,45 @@ class DiscordClientWebSocketResponse(aiohttp.ClientWebSocketResponse):
 
     async def close(self, *, code: int = 4000, message: bytes = b"") -> bool:
         return await super().close(code=code, message=message)
+
+
+@attrs.define(init=True)
+class WebSocketClient:
+    """The WebSocket connection with Discord.
+
+    .. versionadded:: 0.3.0
+    """
+    socket = CreateClientSession()
+    ws = DiscordClientWebSocketResponse
+    url = "wss://gateway.discord.gg/?v=9&encoding=json&compress=zlib-stream"  # the gateway url
+
+    async def send(self, data):
+        r = await self.socket.ws_connect(url=self.url)
+
+        r.send_json(data=data, dumps=helpers._from_json)
+
+    def wsr_decompressor(self, msg: bytes) -> typing.Optional[str]:
+        self.__buffer = bytearray()
+        self.__buffer.extend(msg)
+
+        if len(self.__buffer) < 4 or self.__buffer[-4:] != ZLIB_SUFFIX:
+            return None
+
+        msg = inflator.decompress(msg)
+        return msg  # type: ignore
+
+    async def decompress(self):
+        async for wsr in self.ws:
+            if wsr.type == WSMsgType.TEXT:
+                pass
+            elif wsr.type == WSMsgType.BINARY:
+                data = self.wsr_decompressor(wsr.data)
+                if data:
+                    await self.handle_data(data)
+
+    async def send_data(self, data: typing.Dict[typing.Any]):
+        """Sends data to discord."""
+
+    async def identify(self):
+        """Identifys to Discord WebSocket"""
+        self.send
