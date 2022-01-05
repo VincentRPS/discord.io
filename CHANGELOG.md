@@ -1,7 +1,7 @@
-# `21.2.10` Plan
-Currently `21.2.10` is just meant to be the big User side update, it will also add a lot of new endpoints and events including **Client**
+# `22.2.10` Plan
+Currently `22.2.10` is just meant to be the big User side update, it will also add a lot of new endpoints and events including **Client**
 
-# `21.1.10`
+# `22.1.10`
 
 ## BREAKING:
 Most changes this Version were breaking because of the rewrite.
