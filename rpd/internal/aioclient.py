@@ -64,12 +64,12 @@ class RESTClientResponse(aiohttp.ClientResponse):
 
 
 @attr.define(init=True, repr=False, auto_exc=False)
-class CreateClientSession(aiohttp.ClientSession):
+def CreateClientSession():
     connector: aiohttp.BaseConnector
     connector_owner: bool = False
-    trust_env: bool = True  # type: ignore
-    loop = None  # type: ignore
-    super().__init__(  # type: ignore
+    trust_env: bool = True
+    loop = None
+    return aiohttp.ClientSession(
         connector=connector,
         connector_owner=connector_owner,
         loop=loop,
