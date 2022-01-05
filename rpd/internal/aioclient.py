@@ -27,7 +27,6 @@ import aiohttp
 import attr
 
 from ..exceptions import Forbidden, NotFound, RESTError, ServerError
-from .websockets import DiscordClientWebSocketResponse
 
 _log = logging.getLogger(__name__)
 
@@ -74,7 +73,6 @@ class CreateClientSession(aiohttp.ClientSession):
         connector=connector,
         connector_owner=connector_owner,
         loop=loop,
-        ws_response_class=DiscordClientWebSocketResponse,
         trust_env=trust_env,
         version=aiohttp.HttpVersion11,
         response_class=RESTClientResponse,
