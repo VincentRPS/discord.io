@@ -6,7 +6,7 @@ A asynchronous Discord API Wrapper for Python
 
 ## Features
 
-- Sane handling of 429s
+- Handling of 429s
 - Customizable
 - Statically Typed
 
