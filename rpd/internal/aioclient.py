@@ -59,15 +59,9 @@ class RESTClientResponse(aiohttp.ClientResponse):
             raise ServerError(self)
         else:  # Handles any exception not covered here.
             raise RESTError(self)
-        return
+        return # type: ignore
 
-
-@attr.define(init=True, repr=False, auto_exc=False)
-def CreateClientSession():
-    connector: aiohttp.BaseConnector
-    connector_owner: bool = False
-    trust_env: bool = True
-    loop = None
+def CreateClientSession(connector: aiohttp.BaseConnector, connector_owner: bool = False, trust_env: bool = True, loop = None):
     return aiohttp.ClientSession(
         connector=connector,
         connector_owner=connector_owner,
