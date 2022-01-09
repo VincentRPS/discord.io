@@ -29,7 +29,6 @@ import aiohttp
 
 from ..helpers.whichjson import _to_json
 from .aioclient import CreateClientSession
-from .websockets import DiscordClientWebSocketResponse
 
 _log = logging.getLogger(__name__)
 
