@@ -46,7 +46,6 @@ class WebSocketClient:
     .. versionadded:: 0.3.0
     """
     socket = CreateClientSession()
-    ws = DiscordClientWebSocketResponse
     url = "wss://gateway.discord.gg/?v=9&encoding=json&compress=zlib-stream"  # the gateway url
 
     async def send(self, data):
