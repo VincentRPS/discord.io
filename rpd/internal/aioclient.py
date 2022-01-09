@@ -61,7 +61,7 @@ class RESTClientResponse(aiohttp.ClientResponse):
             raise RESTError(self)
         return # type: ignore
 
-def CreateClientSession(connector: aiohttp.BaseConnector, connector_owner: bool = False, trust_env: bool = True, loop = None):
+def CreateClientSession(connector: aiohttp.BaseConnector = None, connector_owner: bool = False, trust_env: bool = True, loop = None):
     return aiohttp.ClientSession(
         connector=connector,
         connector_owner=connector_owner,
