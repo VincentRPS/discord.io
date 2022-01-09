@@ -25,7 +25,6 @@
 from __future__ import annotations
 
 import typing
-from zlib import decompressobj
 
 import aiohttp
 import attrs
@@ -38,9 +37,6 @@ from .aioclient import CreateClientSession
 __all__: typing.List[str] = [
     "WebSocketClient",
 ]
-
-ZLIB_SUFFIX = b"\x00\x00\xff\xff"
-inflator = decompressobj()
 
 
 @attrs.define(init=True)
@@ -59,5 +55,5 @@ class WebSocketClient:
         r.send_json(data=data, dumps=helpers._from_json)
 
     async def identify(self):
-        """Identifys to Discord WebSocket"""
+        """Identifys to the Discord WebSocket"""
         ...
