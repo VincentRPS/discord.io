@@ -69,7 +69,7 @@ Exceptions
 Exception Hierarcy
 ------------------
 
-.. exception_hierarcy::
+.. exception_hierarchy::
 
     - :exc:`Exception`
         - :exc:`RPDError`
