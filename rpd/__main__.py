@@ -36,4 +36,5 @@ def main() -> None:
     sys.stderr.write(f" with Python version {python_version}.")
 
 
-main()
+if __name__ == "__main__":
+    main()

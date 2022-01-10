@@ -34,7 +34,6 @@ if HAS_CISO:
     def parse_time(time: str):
         ciso8601.parse_datetime(time)
 
-
 else:
 
     def parse_time(time: str):

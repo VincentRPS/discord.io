@@ -21,10 +21,8 @@
 # SOFTWARE
 import asyncio
 import logging
-import typing
 
 import aiohttp
-import attr
 
 from ..exceptions import Forbidden, NotFound, RESTError, ServerError
 
@@ -59,9 +57,15 @@ class RESTClientResponse(aiohttp.ClientResponse):
             raise ServerError(self)
         else:  # Handles any exception not covered here.
             raise RESTError(self)
-        return # type: ignore
+        return  # type: ignore
 
-def CreateClientSession(connector: aiohttp.BaseConnector = None, connector_owner: bool = False, trust_env: bool = True, loop = None):
+
+def CreateClientSession(
+    connector: aiohttp.BaseConnector = None,
+    connector_owner: bool = False,
+    trust_env: bool = True,
+    loop=None,
+):
     return aiohttp.ClientSession(
         connector=connector,
         connector_owner=connector_owner,
