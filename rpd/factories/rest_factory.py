@@ -22,7 +22,7 @@
 
 # Most requests are done here, except for log-ins and outs since they change the header.
 
-from ..internal.rest import RESTClient
+from rpd.internal.rest import RESTClient
 
 
 class RESTFactory:

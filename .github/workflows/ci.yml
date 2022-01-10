@@ -19,7 +19,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -U mypy
     - name: Stubgen Run
-      run: stubgen rpd/data/__init__.py rpd/factories/__init__.py rpd/internal/__init__.py rpd/helpers/__init__.py rpd/__init__.py -o .
+      run: stubgen rpd/data/__init__.py rpd/factories/__init__.py rpd/internal/__init__.py rpd/ext/__init__.py rpd/__init__.py -o .
   lint:
     needs: [stubs]
     runs-on: ubuntu-latest

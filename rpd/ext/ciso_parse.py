@@ -21,7 +21,7 @@
 # SOFTWARE
 
 try:
-    import ciso8601
+    import ciso8601 # type: ignore
 except (ModuleNotFoundError, ImportError):
     import datetime
 

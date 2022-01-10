@@ -33,7 +33,7 @@ class _Missing:
         return "..."
 
     def __str__(self):
-        return None
+        return None # maybe return "..." or "MISSING" instead.
 
 
 MISSING: typing.Any = _Missing()

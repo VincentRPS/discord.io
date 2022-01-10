@@ -27,7 +27,7 @@ import typing
 
 import aiohttp
 
-from ..helpers.whichjson import _to_json
+from rpd.ext import _to_json
 from .aioclient import CreateClientSession
 
 _log = logging.getLogger(__name__)

@@ -2,9 +2,9 @@
 Currently `0.4.0` is just meant to be the big User side update, it will also add a lot of new endpoints and events including **Client**
 
 # `0.3.0`
+Most changes this Version were breaking because of the rewrite.
 
 ## BREAKING:
-Most changes this Version were breaking because of the rewrite.
 
 HTTPClient was changed to RESTClient, Error handling moved.
 
