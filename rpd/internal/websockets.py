@@ -31,9 +31,8 @@ import attr
 from aiohttp import ClientSession
 
 from rpd import helpers
-
-from rpd.internal.rest import _log
 from rpd.factories import rest_factory as RF
+from rpd.internal.rest import _log
 
 __all__: typing.List[str] = [
     "WebSocketClient",
@@ -64,7 +63,7 @@ class WebSocketClient:
 
     async def identify(self):
         """Identifys to the Discord WebSocket"""
-        await self.rest.get_gateway_bot() # Make sure we have access.
+        await self.rest.get_gateway_bot()  # Make sure we have access.
         payload = {
             "op": 2,
             "d": {
