@@ -29,35 +29,23 @@ from ..exceptions import Forbidden, NotFound, RESTError, ServerError
 _log = logging.getLogger(__name__)
 
 
-class RESTClientResponse(aiohttp.ClientResponse):
-    """A subclass of ``ClientResponse`` built for RPD"""
+# Handles HTTPExceptions while doing REST Requests.
+async def ClientResponseErrors(r: aiohttp.ClientResponse) -> None:
+    if 300 > r.status >= 200:
+        _log.debug(f"Request was sucessfully sent, {r}")
 
-    # Handles HTTPExceptions while doing REST Requests.
-    async def ClientResponseErrors(self) -> None:
-        if 300 > self.status >= 200:
-            _log.debug(f"Request was sucessfully sent, {self}")
+    elif r.status in {500, 502, 504}:
+        await asyncio.sleep(7)
 
-        elif self.status == 429:  # "Handles" Ratelimit's or 429s.
-            _log.critical(
-                "Detected a possible ratelimit, RPD will try to reconnect every 30 seconds."
-            )
-
-            await asyncio.sleep(
-                30
-            )  # Need some better alternative to this, Then reconnect every 30s
-
-        elif self.status in {500, 502, 504}:
-            await asyncio.sleep(7)
-
-        elif self.status == 403:
-            raise Forbidden(self)
-        elif self.status == 404:
-            raise NotFound(self)
-        elif self.status >= 500:
-            raise ServerError(self)
-        else:  # Handles any exception not covered here.
-            raise RESTError(self)
-        return  # type: ignore
+    elif r.status == 403:
+        raise Forbidden(r)
+    elif r.status == 404:
+        raise NotFound(r)
+    elif r.status >= 500:
+        raise ServerError(r)
+    else:  # Handles any exception not covered here.
+        raise RESTError(r)
+    return  # type: ignore
 
 
 def CreateClientSession(
@@ -72,5 +60,4 @@ def CreateClientSession(
         loop=loop,
         trust_env=trust_env,
         version=aiohttp.HttpVersion11,
-        response_class=RESTClientResponse,
     )

@@ -23,13 +23,15 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import random
 import typing
 
 import aiohttp
 
-from rpd.ext import _to_json
+from rpd.ext import _to_json  # type: ignore
 
-from .aioclient import CreateClientSession
+from .aioclient import CreateClientSession, ClientResponseErrors
+from urllib.parse import quote
 
 _log = logging.getLogger(__name__)
 
@@ -81,11 +83,30 @@ class RESTClient:
             self.header["Content-Type"] = "application/json"  # Only json.
             kwargs["data"] = _to_json(kwargs.pop("json"))
 
+        elif "token" in kwargs:
+            self.header["Authorization"] = "Bot " + kwargs.pop("token")
+
+        elif "reason" in kwargs:
+            self.header["X-Audit-Log-Reason"] = quote(kwargs.pop("reason"), "/ ")
+
         kwargs["headers"] = self.header
 
         try:
             _log.debug("Sending a request...")
-            await self._session.request(self.method, url, **kwargs)
+            async with self._session.request(self.method, url, **kwargs) as r:
+                if r.status == 429:  # "Handles" Ratelimit's or 429s.
+                    retries: int = random.randint(1, 90)
+                    _log.critical(
+                        "Detected a possible ratelimit, RPD will try to reconnect every 30 seconds."
+                    )
+
+                    for tries in retries:
+                        await asyncio.sleep(
+                            random.randint(1, 20)
+                        )  # Need some better alternative to this, Then reconnect every 30s
+                        self.send(method, endpoint, **kwargs)
+                else:
+                    await ClientResponseErrors(r)
 
         except Exception as exc:
             raise Exception(f"Exception Occured when trying to send a request. {exc}")
@@ -93,19 +114,3 @@ class RESTClient:
     async def close(self) -> None:
         if self._session:
             await self._session.close()  # Closes the session
-
-    async def _client_login(self, token: str) -> None:
-        self.token = token
-
-        if len(self.token) != 59:
-            raise Exception("Invalid Bot Token Was Passed")
-        else:
-            self.header["Authorization"] = "Bot " + self.token
-
-        try:
-            await self.send("GET", "/users/@me")  # Log's in
-        except Exception as exc:
-            raise Exception(f"Failed to login {exc}")  # If exception raise.
-
-    async def _client_logout(self) -> None:
-        await self.send("POST", "/auth/logout")  # Log's you out of the bot.

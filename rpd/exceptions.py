@@ -34,31 +34,25 @@ __all__: typing.List[str] = [
 ]
 
 
-@attr.define(auto_exc=True, repr=False, weakref_slot=False)
 class RPDError(Exception):
     """The base exception class for RPD"""
 
 
-@attr.define(auto_exc=True, repr=False, weakref_slot=False)
 class RESTError(RPDError):
     """REST Errors"""
 
 
-@attr.define(auto_exc=True, repr=False, weakref_slot=False)
 class Forbidden(RESTError):
     """Forbidden from a URL"""
 
 
-@attr.define(auto_exc=True, repr=False, weakref_slot=False)
 class NotFound(RESTError):
     """Endpoint Not Found"""
 
 
-@attr.define(auto_exc=True, repr=False, weakref_slot=False)
 class ServerError(RESTError):
     """A Discord Server Error"""
 
 
-@attr.define(auto_exc=True, repr=False, weakref_slot=False)
 class WebSocketError(RPDError):
     """WebSocket Errors"""

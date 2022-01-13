@@ -19,27 +19,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from __future__ import annotations
 
-import json
-import typing
 
-try:
-    import orjson  # type: ignore
-except ModuleNotFoundError:
-    SPEED = False
-else:
-    SPEED = True
+class Color:
+    """Represents the default discord colors
 
-if SPEED:
-
-    def _to_json(obj: typing.Any) -> str:  # type: ignore
-        return orjson.dumps(obj).decode("utf-8")
-
-    _from_json = orjson.loads  # type: ignore
-else:
-
-    def _to_json(obj: typing.Any) -> str:
-        return json.dumps(obj, separators=(",", ":"), ensure_ascii=True)
-
-    _from_json = json.loads
+    To be added in 0.4.0.
+    """

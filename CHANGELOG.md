@@ -13,3 +13,9 @@ REST And WebSocket events and requests are both now done through **event_factory
 HTTPClient had a rewrite, removing both the Route class and if_json class.
 
 Client was removed during the rewrite to focus on REST and WebSocket connections, it shall be added back once we are done with both.
+
+rpd.Intents has been added to calculate intents easier.
+
+rpd.Color and rpd.Colour have been added to help with colors.
+
+rpd.helpers was moved to rpd.ext

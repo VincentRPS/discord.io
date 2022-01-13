@@ -19,27 +19,11 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from __future__ import annotations
 
-import json
-import typing
 
-try:
-    import orjson  # type: ignore
-except ModuleNotFoundError:
-    SPEED = False
-else:
-    SPEED = True
+class RPDWarning(Warning):
+    """The base warning class for RPD"""
 
-if SPEED:
 
-    def _to_json(obj: typing.Any) -> str:  # type: ignore
-        return orjson.dumps(obj).decode("utf-8")
-
-    _from_json = orjson.loads  # type: ignore
-else:
-
-    def _to_json(obj: typing.Any) -> str:
-        return json.dumps(obj, separators=(",", ":"), ensure_ascii=True)
-
-    _from_json = json.loads
+class Deprecated(RPDWarning):
+    """Gets raised when a object has been deprecated but not removed"""

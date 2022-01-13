@@ -19,3 +19,4 @@ furo~=2022.1.2
 # Static Typing #
 #################
 mypy~=0.931
+types-orjson~=3.6.2

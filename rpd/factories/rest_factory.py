@@ -22,7 +22,13 @@
 
 # Most requests are done here, except for log-ins and outs since they change the header.
 
+import typing
 from rpd.internal.rest import RESTClient
+from rpd.snowflake import Snowflake
+
+__all__: typing.List[str] = [
+    "RESTFactory",
+]
 
 
 class RESTFactory:
@@ -39,7 +45,48 @@ class RESTFactory:
     def __init__(self):
         self.rest = RESTClient()
 
+    async def login(self, token: str) -> None:
+        self.token = token
+
+        if len(self.token) != 59:
+            raise Exception("Invalid Bot Token Was Passed")
+        else:
+            pass
+
+        await self.rest.send("GET", "/users/@me", token=self.token)  # Log's in
+
+    async def logout(self) -> None:
+        await self.rest.send("POST", "/auth/logout")  # Log's you out of the bot.
+
     async def get_gateway_bot(self) -> None:
-        await self.rest.send(
+        return await self.rest.send(
             "GET", "/gateway/bot"
         )  # GET's the bot from the gateway endpoint
+
+    def get_channel(self, channel: Snowflake):
+        return self.rest.send("GET", f"/channels/{channel}")
+    
+    def edit_channel(self, name: str, channel: Snowflake, type):
+        if type == "group_dm":
+            payload = {}
+            if name:
+                payload["name"] = name
+        return self.rest.send("PATCH", f"/channels/{channel}")
+    
+    def create_invite(
+        self, 
+        channel_id: Snowflake,
+        *,
+        reason: typing.Optional[str] = None,
+        max_age: int = 0,
+        max_uses: int = 0,
+        tempoary: bool = False,
+        unique: bool = True,
+        ):
+        payload = {
+            "max_age": max_age,
+            "max_uses": max_uses,
+            "tempoary": tempoary,
+            "unique": unique,
+        }
+        # return self.send("", reason=reason, json=payload)
