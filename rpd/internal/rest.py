@@ -24,14 +24,15 @@ from __future__ import annotations
 import asyncio
 import logging
 import random
+import sys
 import typing
+from urllib.parse import quote
 
 import aiohttp
 
 from rpd.ext import _to_json  # type: ignore
 
-from .aioclient import CreateClientSession, ClientResponseErrors
-from urllib.parse import quote
+from .aioclient import ClientResponseErrors, CreateClientSession
 
 _log = logging.getLogger(__name__)
 
@@ -103,8 +104,9 @@ class RESTClient:
                     for tries in retries:
                         await asyncio.sleep(
                             random.randint(1, 20)
-                        )  # Need some better alternative to this, Then reconnect every 30s
-                        self.send(method, endpoint, **kwargs)
+                        )
+                        sys.stderr("This bot has %s tries left", tries)
+                        await self.send(method, endpoint, **kwargs)
                 else:
                     await ClientResponseErrors(r)
 

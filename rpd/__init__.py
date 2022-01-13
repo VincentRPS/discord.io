@@ -17,9 +17,15 @@ import logging
 import typing
 
 from rpd.boot_text import *
+from rpd.color import *
+from rpd.colour import *
 from rpd.exceptions import *
 from rpd.factories import *
+from rpd.intents import *
 from rpd.internal import *
+from rpd.snowflake import *
+from rpd.warnings import *
+from rpd.webhooks import *
 
 
 class VersionInfo(typing.NamedTuple):

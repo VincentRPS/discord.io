@@ -23,6 +23,7 @@
 # Most requests are done here, except for log-ins and outs since they change the header.
 
 import typing
+
 from rpd.internal.rest import RESTClient
 from rpd.snowflake import Snowflake
 
@@ -65,16 +66,16 @@ class RESTFactory:
 
     def get_channel(self, channel: Snowflake):
         return self.rest.send("GET", f"/channels/{channel}")
-    
+
     def edit_channel(self, name: str, channel: Snowflake, type):
         if type == "group_dm":
             payload = {}
             if name:
                 payload["name"] = name
         return self.rest.send("PATCH", f"/channels/{channel}")
-    
+
     def create_invite(
-        self, 
+        self,
         channel_id: Snowflake,
         *,
         reason: typing.Optional[str] = None,
@@ -82,7 +83,7 @@ class RESTFactory:
         max_uses: int = 0,
         tempoary: bool = False,
         unique: bool = True,
-        ):
+    ):
         payload = {
             "max_age": max_age,
             "max_uses": max_uses,
