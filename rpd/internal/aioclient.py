@@ -39,7 +39,7 @@ class RESTClientResponse(aiohttp.ClientResponse):
 
         elif self.status == 429:  # "Handles" Ratelimit's or 429s.
             _log.critical(
-                f"Detected a possible ratelimit, RPD will try to reconnect every 30 seconds."
+                "Detected a possible ratelimit, RPD will try to reconnect every 30 seconds."
             )
 
             await asyncio.sleep(

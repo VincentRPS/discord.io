@@ -19,21 +19,3 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-import typing
-
-
-class _Missing:
-    def __eq__(self, other):
-        return False
-
-    def __bool__(self):
-        return False
-
-    def __repr__(self):
-        return "..."
-
-    def __str__(self):
-        return None  # maybe return "..." or "MISSING" instead.
-
-
-MISSING: typing.Any = _Missing()
