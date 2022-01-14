@@ -22,7 +22,6 @@
 
 import typing
 
-
 class Intents:
     """Helps defining your Intents
     For a full list of intents and there usage please visit
@@ -71,7 +70,7 @@ class Intents:
 
     def __init__(self, intents: int = 0):
         self.intents = intents
-        if not self.intents:
+        if self.intents == "0":
             intents = self.default()
 
     @staticmethod
