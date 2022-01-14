@@ -90,8 +90,8 @@ class Webhook:
     def edit_webhook_message(
         self,
         message: Snowflake,
-        content: typing.Optional[str],
-        allowed_mentions: typing.Optional[bool],
+        content: typing.Optional[str] = None,
+        allowed_mentions: typing.Optional[bool] = None,
     ):
         json = {}
         if content:
@@ -110,11 +110,11 @@ class Webhook:
 
     def send(
         self,
-        content: typing.Optional[str],
-        username: typing.Optional[str],
-        avatar_url: typing.Optional[str],
-        tts: typing.Optional[bool],
-        allowed_mentions: typing.Optional[bool],
+        content: typing.Optional[str] = None,
+        username: typing.Optional[str] = None,
+        avatar_url: typing.Optional[str] = None,
+        tts: typing.Optional[bool] = None,
+        allowed_mentions: typing.Optional[bool] = None,
     ):
         json = {}
         if content:
