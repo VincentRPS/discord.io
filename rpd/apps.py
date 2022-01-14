@@ -20,39 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-import typing
-
-import attr
-
-__all__: typing.List[str] = [
-    "RPDError",
-    "RESTError",
-    "WebSocketError",
-    "Forbidden",
-    "NotFound",
-    "ServerError",
-]
-
-
-class RPDError(Exception):
-    """The base exception class for RPD"""
-
-
-class RESTError(RPDError):
-    """REST Errors"""
-
-
-class Forbidden(RESTError):
-    """Forbidden from a URL"""
-
-
-class NotFound(RESTError):
-    """Endpoint Not Found"""
-
-
-class ServerError(RESTError):
-    """A Discord Server Error"""
-
-
-class WebSocketError(RPDError):
-    """WebSocket Errors"""
+# Ehese apps are the building blocks for the library.
+# While RESTClient.blah will give you the payload, that isn't what you would want
+# most classes will use these bases because they parse the payload data to useable, readable human data.
+# or except for RESTClient.fetch_user(json bull) it's just RESTApp.fetch_user(user).

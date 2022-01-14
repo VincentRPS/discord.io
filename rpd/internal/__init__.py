@@ -1,8 +1,5 @@
 """
 rpd.internal
 ~~~~~~~~~~~~
-The internals of RPD.
+Internal processes for RPD.
 """
-from .aioclient import *
-from .rest import *
-from .websockets import *

@@ -24,7 +24,7 @@
 
 import typing
 
-from rpd.internal.rest import RESTClient
+from rpd.api.rest import RESTClient
 from rpd.snowflake import Snowflake
 
 __all__: typing.List[str] = [

@@ -24,7 +24,7 @@ import logging
 
 import aiohttp
 
-from ..exceptions import Forbidden, NotFound, RESTError, ServerError
+from ..internal.exceptions import Forbidden, NotFound, RESTError, ServerError
 
 _log = logging.getLogger(__name__)
 

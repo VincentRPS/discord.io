@@ -24,3 +24,6 @@ To install our speed requirements just run the following command:
 pip install RPD[speed]
 ```
 **WARNING:** This **will** install some linux-only packages since the only reason you would need speed is when hosting.
+
+## Requirements
+Currently our only requirement is aiohttp, but we plan to rewrite to requests and gevent soon.

@@ -73,10 +73,12 @@ class Intents:
         if self.intents == "0":
             intents = self.default()
 
-    def default(self):
+    @staticmethod
+    def default():
         """Gives every non-privledged Intent"""
 
-    def all(self):
+    @staticmethod
+    def all():
         """Gives every Intent"""
 
     def GUILDS(self):

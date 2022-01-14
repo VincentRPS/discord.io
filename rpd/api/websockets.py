@@ -29,10 +29,10 @@ import typing
 
 from aiohttp import ClientSession
 
-from rpd import ext
-from rpd.factories import rest_factory as RF
+from rpd import util
+from rpd.api import rest_factory as RF
+from rpd.api.rest import _log
 from rpd.intents import Intents
-from rpd.internal.rest import _log
 
 __all__: typing.List[str] = [
     "WebSocketClient",
@@ -58,9 +58,9 @@ class WebSocketClient:
 
         _log.debug("Sending {data}")
 
-        await r.send_json(data=data, dumps=ext._to_json)  # type: ignore
+        await r.send_json(data=data, dumps=util._to_json)  # type: ignore
 
-        return await r.receive_json(loads=ext._from_json)  # type: ignore
+        return await r.receive_json(loads=util._from_json)  # type: ignore
 
     async def identify(self):
         """Identifys to the Discord WebSocket"""
