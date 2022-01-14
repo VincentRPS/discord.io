@@ -22,7 +22,6 @@
 
 import typing
 
-
 class Intents:
     """Helps defining your Intents
     For a full list of intents and there usage please visit
@@ -69,16 +68,14 @@ class Intents:
     GUILD_SCHEDULED_EVENTS
     """
 
-    def __init__(self, intents: int or typing.List[int]):
+    def __init__(self, intents: int = 0):
         self.intents = intents
-        if not self.intents:
+        if self.intents == "0":
             intents = self.default()
 
-    @staticmethod
     def default(self):
         """Gives every non-privledged Intent"""
 
-    @staticmethod
     def all(self):
         """Gives every Intent"""
 
