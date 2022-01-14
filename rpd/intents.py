@@ -22,6 +22,7 @@
 
 import typing
 
+
 class Intents:
     """Helps defining your Intents
     For a full list of intents and there usage please visit

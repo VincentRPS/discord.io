@@ -101,10 +101,10 @@ class RESTClient:
                         "Detected a possible ratelimit, RPD will try to reconnect every 30 seconds."
                     )
 
-                    for tries in retries: # type: ignore
+                    for tries in retries:  # type: ignore
                         await asyncio.sleep(random.randint(1, 20))
                         # uhhu ok mypy, maybe take a break...
-                        sys.stderr("This bot has %s tries left", tries) # type: ignore
+                        sys.stderr("This bot has %s tries left", tries)  # type: ignore
                         await self.send(method, endpoint, **kwargs)
                 else:
                     await ClientResponseErrors(r)

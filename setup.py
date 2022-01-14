@@ -38,11 +38,11 @@ packages = [
 
 extra_requires = {
     "speed": [
-        "orjson~=3.6.5", # Faster alternative to the normal json module.
-        "aiodns~=3.0", # included in aiohttp speed.
-        "Brotli~=1.0.9", # included in aiohttp speed.
-        "cchardet~=2.1.7", # included in aiohttp speed.
-        "ciso8601~=2.2.0", # Faster datetime parsing.
+        "orjson~=3.6.5",  # Faster alternative to the normal json module.
+        "aiodns~=3.0",  # included in aiohttp speed.
+        "Brotli~=1.0.9",  # included in aiohttp speed.
+        "cchardet~=2.1.7",  # included in aiohttp speed.
+        "ciso8601~=2.2.0",  # Faster datetime parsing.
     ]
 }
 

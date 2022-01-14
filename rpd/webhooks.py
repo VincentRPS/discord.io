@@ -24,12 +24,13 @@ import typing
 from logging import getLogger
 from urllib.parse import quote
 
-import gevent # type: ignore
+import gevent  # type: ignore
 import requests
 
 from rpd.internal.exceptions import Forbidden, NotFound, ServerError
+from rpd.snowflake import Snowflake
 # mypy, it does have _to_json, _from_json.
-from rpd.util import _to_json # type: ignore
+from rpd.util import _to_json  # type: ignore
 
 log = getLogger(__name__)
 
@@ -38,7 +39,10 @@ log = getLogger(__name__)
 # mostly to see if speed would differ a bunch, to test gevent and to have fun.
 # and now i don't wanna have to rewrite to just use RESTClient so unless you wanna make a PR it will stay like this.
 class Webhook:
-    def __init__(self):
+    # https://discord.com/developers/docs/resources/webhook
+    def __init__(self, webhook_id, webhook_token):
+        self.id = webhook_id
+        self.token = webhook_token
         self.__session = requests.Session()
         self.header: typing.Dict[str, str] = {
             "User-Agent": "DiscordBot https://github.com/RPD-py/RPD"
@@ -52,8 +56,7 @@ class Webhook:
         if "json" in kwargs:
             self.header["Content-Type"] = "application/json"
             kwargs["data"] = _to_json(kwargs.pop("json"))
-        if "webhook_token" in kwargs:
-            self.header["Authorization"] = kwargs.pop("webhook_token")
+
         if "reason" in kwargs:
             self.header["X-Audit-Log-Reason"] = quote(kwargs.pop("reason"), "/ ")
 
@@ -70,3 +73,58 @@ class Webhook:
                 raise ServerError(r)  # Server Exception, raise
             else:
                 log.debug("< %s", r)
+                return r
+
+    def get_webhook(self):
+        return self.request("GET", f"/{self.id}/{self.token}")
+
+    def modify_webhook(self):
+        return self.request("PATCH", f"/{self.id}/{self.token}")
+
+    def delete_webhook(self):
+        return self.request("DELETE", f"/{self.id}/{self.token}")
+
+    def get_webhook_message(self, message: Snowflake):
+        return self.request("GET", f"/{self.id}/{self.token}/messages/{message}")
+
+    def edit_webhook_message(
+        self,
+        message: Snowflake,
+        content: typing.Optional[str],
+        allowed_mentions: typing.Optional[bool],
+    ):
+        json = {}
+        if content:
+            json["content"] = content
+        elif allowed_mentions:
+            json["allowed_mentions"] = allowed_mentions
+        return self.request(
+            "POST", f"/{self.id}/{self.token}/messages/{message}", json=json
+        )
+
+    def delete_webhook_message(
+        self,
+        message: Snowflake,
+    ):
+        return self.request("DELETE", f"/{self.id}/{self.token}/messages/{message}")
+
+    def send(
+        self,
+        content: typing.Optional[str],
+        username: typing.Optional[str],
+        avatar_url: typing.Optional[str],
+        tts: typing.Optional[bool],
+        allowed_mentions: typing.Optional[bool],
+    ):
+        json = {}
+        if content:
+            json["content"] = content
+        elif username:
+            json["username"] = username
+        elif avatar_url:
+            json["avatar_url"] = avatar_url
+        elif tts:
+            json["tts"] = tts
+        elif allowed_mentions:
+            json["allowed_mentions"] = allowed_mentions
+        return self.request("POST", f"/{self.id}/{self.token}", json=json)
