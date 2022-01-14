@@ -1,2 +1,1 @@
 aiohttp~=3.8 # http module for asyncio.
-attrs~=21.4.0 # object protocol implementation

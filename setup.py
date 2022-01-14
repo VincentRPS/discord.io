@@ -23,41 +23,32 @@ import re
 
 import setuptools
 
-with open("rpd/__init__.py") as f:
-    version = re.search(
-        r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE
-    ).group(1)
+from rpd import __version__
 
 requirements = []
 with open("requirements.txt") as f:
     requirements = f.read().splitlines()
 
-dev_requirements = []
-with open("dev-requirements.txt") as f:
-    dev_requirements = f.read().splitlines()
-
-speed_requirements = []
-with open("speed-requirements.txt") as f:
-    speed_requirements = f.read().splitlines()
-
 packages = [
     "rpd",
+    "rpd.api",
+    "rpd.util",
     "rpd.internal",
-    "rpd.helpers",
-    "rpd.data",
-    "rpd.events",
-    "rpd.abc",
-    "rpd.factories",
 ]
 
 extra_requires = {
-    speed_requirements,
-    dev_requirements,
+    "speed": [
+        "orjson~=3.6.5", # Faster alternative to the normal json module.
+        "aiodns~=3.0", # included in aiohttp speed.
+        "Brotli~=1.0.9", # included in aiohttp speed.
+        "cchardet~=2.1.7", # included in aiohttp speed.
+        "ciso8601~=2.2.0", # Faster datetime parsing.
+    ]
 }
 
 setuptools.setup(
     name="RPD",
-    version=version,
+    version=__version__,
     packages=packages,
     project_utls={
         "Documentation": "https://RPD.rtfd.io",

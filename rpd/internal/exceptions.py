@@ -20,11 +20,37 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
+import typing
 
-class Color:
-    """Represents the default discord colors
+__all__: typing.List[str] = [
+    "RPDError",
+    "RESTError",
+    "WebSocketError",
+    "Forbidden",
+    "NotFound",
+    "ServerError",
+]
 
-    Defines factory methods which return a certain color code to be used.
 
-    .. versionadded:: 0.4.0
-    """
+class RPDError(Exception):
+    """The base exception class for RPD"""
+
+
+class RESTError(RPDError):
+    """REST Errors"""
+
+
+class Forbidden(RESTError):
+    """Forbidden from a URL"""
+
+
+class NotFound(RESTError):
+    """Endpoint Not Found"""
+
+
+class ServerError(RESTError):
+    """A Discord Server Error"""
+
+
+class WebSocketError(RPDError):
+    """WebSocket Errors"""

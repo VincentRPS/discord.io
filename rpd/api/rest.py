@@ -30,7 +30,7 @@ from urllib.parse import quote
 
 import aiohttp
 
-from rpd.ext import _to_json  # type: ignore
+from rpd.util import _to_json  # type: ignore
 
 from .aioclient import ClientResponseErrors, CreateClientSession
 
@@ -101,11 +101,10 @@ class RESTClient:
                         "Detected a possible ratelimit, RPD will try to reconnect every 30 seconds."
                     )
 
-                    for tries in retries:
-                        await asyncio.sleep(
-                            random.randint(1, 20)
-                        )
-                        sys.stderr("This bot has %s tries left", tries)
+                    for tries in retries: # type: ignore
+                        await asyncio.sleep(random.randint(1, 20))
+                        # uhhu ok mypy, maybe take a break...
+                        sys.stderr("This bot has %s tries left", tries) # type: ignore
                         await self.send(method, endpoint, **kwargs)
                 else:
                     await ClientResponseErrors(r)

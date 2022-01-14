@@ -32,13 +32,5 @@ booting_text = """
 /**///**  /**////  /**    /**
 /**  //** /**      /**    ** 
 /**   //**/**      /*******  
-//     // //       ///////
-
-d ss    d   sss.   sSSs.   sSSSs   d ss.  d ss         d      d d ss.  d ss.  d s.   d ss.  Ss   sS 
-S   ~o  S d       S       S     S  S    b S   ~o       S      S S    b S    b S  ~O  S    b   S S   
-S     b S Y      S       S       S S    P S     b      S      S S    P S    P S   `b S    P    S    
-S     S S   ss.  S       S       S S sS'  S     S      S      S S sSS' S sS'  S sSSO S sS'     S    
-S     P S      b S       S       S S   S  S     P      S      S S    b S   S  S    O S   S     S    
-S    S  S      P  S       S     S  S    S S    S       S      S S    P S    S S    O S    S    S    
-P ss"   P ` ss'    "sss'   "sss"   P    P P ss"        P sSSs P P `SS  P    P P    P P    P    P            
+//     // //       ///////        
 """

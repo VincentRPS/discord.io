@@ -69,17 +69,17 @@ class Intents:
     GUILD_SCHEDULED_EVENTS
     """
 
-    def __init__(self, intents: int or typing.List[int]):
+    def __init__(self, intents: int = 0):
         self.intents = intents
         if not self.intents:
             intents = self.default()
 
     @staticmethod
-    def default(self):
+    def default():
         """Gives every non-privledged Intent"""
 
     @staticmethod
-    def all(self):
+    def all():
         """Gives every Intent"""
 
     def GUILDS(self):
