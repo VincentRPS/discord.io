@@ -24,7 +24,6 @@ from __future__ import annotations
 import asyncio
 import logging
 import random
-import sys
 import typing
 from urllib.parse import quote
 
@@ -92,8 +91,6 @@ class RESTClient:
                     _log.critical("Detected a possible ratelimit, Handling...")
 
                     await asyncio.sleep(random.randint(1, 20))
-                    # uhhu ok mypy, maybe take a break...
-                    _log.debug("This bot has %s tries left", tries)  # type: ignore
                     await self.send(method, endpoint, **kwargs)
                 elif r.status == 403:
                     raise Forbidden(r)

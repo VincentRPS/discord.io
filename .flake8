@@ -33,6 +33,8 @@ ignore =
     T101
     # E402: module level import not at top of file
     E402
+    # CFQ002: Function has 7 arguments that exceeds max allowed 6
+    CFQ002
 
 per-file-ignores =
     # imported but unused

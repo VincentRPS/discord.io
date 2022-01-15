@@ -41,6 +41,7 @@ class Webhook:
     token
         The webhook token
     """
+
     def __init__(self, webhook_id, webhook_token):
         self.id = webhook_id
         self.token = webhook_token
@@ -84,9 +85,7 @@ class Webhook:
         self,
         message: Snowflake,
     ):
-        return self.rest.send(
-            "DELETE", f"/{self.id}/{self.token}/messages/{message}"
-        )
+        return self.rest.send("DELETE", f"/{self.id}/{self.token}/messages/{message}")
 
     def send_message(
         self,
