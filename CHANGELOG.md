@@ -1,5 +1,5 @@
 # `0.4.0` Plan
-Currently `0.4.0` is just meant to be the big User side update, it will also add a lot of new endpoints and events including **Client**
+Currently `0.4.0` is just meant to be the big User side update, it will also add a lot of new endpoints and events including **BotApp**
 
 rpd.Color and rpd.Colour would be added to help with colors.
 
