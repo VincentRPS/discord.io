@@ -22,7 +22,7 @@
 
 # Implementation of the everyday Discord WebSocket.
 
-from __future__ import annotations
+from __future__ import absolute_import
 
 import platform
 import typing
@@ -56,11 +56,9 @@ class WebSocketClient:
     async def send(self, data: typing.Dict):
         r = await self.socket.ws_connect(self.url)
 
-        _log.debug("Sending {data}")
+        _log.debug("< %s", data)
 
         await r.send_json(data=data, dumps=util._to_json)  # type: ignore
-
-        return await r.receive_json(loads=util._from_json)  # type: ignore
 
     async def identify(self):
         """Identifys to the Discord WebSocket"""

@@ -26,6 +26,7 @@ from rpd.internal.warnings import *
 from rpd.snowflake import *
 from rpd.util import *
 from rpd.webhooks import *
+from rpd.apps import *
 
 
 class VersionInfo(typing.NamedTuple):

@@ -30,9 +30,8 @@ from urllib.parse import quote
 
 import aiohttp
 
+from rpd.internal.exceptions import Forbidden, NotFound, ServerError
 from rpd.util import _to_json  # type: ignore
-
-from .aioclient import ClientResponseErrors, CreateClientSession
 
 _log = logging.getLogger(__name__)
 
@@ -66,7 +65,7 @@ class RESTClient:
         self.connector = aiohttp.BaseConnector(
             loop=self.loop
         )  # defining our own connector would allow for more flexability.
-        self._session = CreateClientSession()
+        self._session = aiohttp.ClientSession(connector=self.connector, loop=self.loop)
         self.header: typing.Dict[str, str] = {
             "User-Agent": "DiscordBot https://github.com/RPD-py/RPD"
         }
@@ -93,21 +92,23 @@ class RESTClient:
         kwargs["headers"] = self.header
 
         try:
-            _log.debug("Sending a request...")
+            _log.debug("< %s, %s, %s", method, endpoint, **kwargs)
             async with self._session.request(self.method, url, **kwargs) as r:
                 if r.status == 429:  # "Handles" Ratelimit's or 429s.
-                    retries: int = random.randint(1, 90)
-                    _log.critical(
-                        "Detected a possible ratelimit, RPD will try to reconnect every 30 seconds."
-                    )
+                    _log.critical("Detected a possible ratelimit, Handling...")
 
-                    for tries in retries:  # type: ignore
-                        await asyncio.sleep(random.randint(1, 20))
-                        # uhhu ok mypy, maybe take a break...
-                        sys.stderr("This bot has %s tries left", tries)  # type: ignore
-                        await self.send(method, endpoint, **kwargs)
+                    await asyncio.sleep(random.randint(1, 20))
+                    # uhhu ok mypy, maybe take a break...
+                    _log.debug("This bot has %s tries left", tries)  # type: ignore
+                    await self.send(method, endpoint, **kwargs)
+                elif r.status == 403:
+                    raise Forbidden(r)
+                elif r.status == 404:
+                    raise NotFound(r)
+                elif r.status == 500:
+                    raise ServerError(r)
                 else:
-                    await ClientResponseErrors(r)
+                    _log.debug("< %s", r)
 
         except Exception as exc:
             raise Exception(f"Exception Occured when trying to send a request. {exc}")

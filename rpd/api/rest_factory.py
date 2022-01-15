@@ -84,10 +84,12 @@ class RESTFactory:
         tempoary: bool = False,
         unique: bool = True,
     ):
-        payload = {
+        json = {
             "max_age": max_age,
             "max_uses": max_uses,
             "tempoary": tempoary,
             "unique": unique,
         }
-        # return self.send("", reason=reason, json=payload)
+        if channel_id:
+            json["channel_id"] = channel_id
+        return self.send("POST", reason=reason, json=json)

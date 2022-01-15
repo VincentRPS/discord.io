@@ -1,8 +1,9 @@
 """
-rpd.internal
-~~~~~~~~~~~~
-The internals of RPD.
+rpd.api
+~~~~~~~
+The internal api of RPD.
 """
-from .aioclient import *
+from .event_factory import *
 from .rest import *
+from .rest_factory import *
 from .websockets import *
