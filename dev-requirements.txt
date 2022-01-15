@@ -19,9 +19,3 @@ furo~=2022.1.2
 #################
 mypy~=0.931
 types-orjson~=3.6.2
-type-requests~=2.27.7
-###########
-# Rewrite # [TEMP] and still in talks.
-###########
-gevent~=21.12.0
-requests~=2.27.1
