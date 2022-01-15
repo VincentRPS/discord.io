@@ -25,19 +25,6 @@ from ..webhooks import Webhook
 
 
 @attr.s(init=True)
-class WebhookFetchers(abc.ABC):
-    webhook_id: int
-    webhook_token: str
-    fetchhook = Webhook(webhook_id, webhook_token)
-
-    def fetch_message(self):
-        return self.fetchhook.fetch_message
-
-    def fetch_self(self):
-        return self.fetchhook.fetch_webhook
-
-
-@attr.s(init=True)
 class BasicWebhook(abc.ABC):
     """Provides basic functionality of a webhook,
     like sending, deleting and editing messages
@@ -49,7 +36,8 @@ class BasicWebhook(abc.ABC):
 
     webhook_id: int
     webhook_token: str
-    basichook = Webhook(webhook_id, webhook_token)
+    def init(self):
+        self.basichook = Webhook(self.webhook_id, self.webhook_token)
 
     def send(self):
         """Sends a message via the webhook id & token"""
@@ -63,10 +51,16 @@ class BasicWebhook(abc.ABC):
         """Edits a message via the webhook id & token"""
         return self.basichook.edit_message
 
+    def fetch_message(self):
+        return self.basichook.fetch_message
+
+    def fetch_self(self):
+        return self.basichook.fetch_webhook
+
 
 @attr.s(init=True)
-class WebhookApp(WebhookFetchers, BasicWebhook, abc.ABC):
-    """A subclass of :class:`BasicWebhook` & :class:`WebhookFetchers`
+class WebhookApp(BasicWebhook, abc.ABC):
+    """A subclass of :class:`BasicWebhook`
     providing a fully featured webhook experience.
     This class also adds the modify method
     for modifying the current webhook.

@@ -53,19 +53,12 @@ class RESTClient:
         The current event loop or your own.
     connector
         The base aiohttp connector
-    _session
-        The aiohttp ClientSession
     header
         The header sent to discord.
     """
 
-    def __init__(self, loop=None):
+    def __init__(self):
         self.url = "https://discord.com/api/v9"  # The Discord API Version.
-        self.loop = asyncio.get_running_loop() if loop is None else loop
-        self.connector = aiohttp.BaseConnector(
-            loop=self.loop
-        )  # defining our own connector would allow for more flexability.
-        self._session = aiohttp.ClientSession(connector=self.connector, loop=self.loop)
         self.header: typing.Dict[str, str] = {
             "User-Agent": "DiscordBot https://github.com/RPD-py/RPD"
         }
@@ -75,6 +68,7 @@ class RESTClient:
 
         .. versionadded:: 0.3.0
         """
+        self._session = aiohttp.ClientSession()
         self.method = method  # The method you are trying to use. e.g. GET.
         self.endpoint = endpoint  # The endpoint the method is in.
         url = self.url + self.endpoint  # The URL. + Endpoint.
@@ -92,7 +86,7 @@ class RESTClient:
         kwargs["headers"] = self.header
 
         try:
-            _log.debug("< %s, %s, %s", method, endpoint, **kwargs)
+            _log.debug("< %s, %s", method, endpoint)
             async with self._session.request(self.method, url, **kwargs) as r:
                 if r.status == 429:  # "Handles" Ratelimit's or 429s.
                     _log.critical("Detected a possible ratelimit, Handling...")
