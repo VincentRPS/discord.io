@@ -23,6 +23,7 @@ import abc
 import attr
 from ..webhooks import Webhook
 
+
 @attr.s(init=True)
 class WebhookFetchers(abc.ABC):
     webhook_id: int
@@ -35,18 +36,21 @@ class WebhookFetchers(abc.ABC):
     def fetch_self(self):
         return self.fetchhook.fetch_webhook
 
+
 @attr.s(init=True)
 class BasicWebhook(abc.ABC):
-    """Provides basic functionality of a webhook, 
+    """Provides basic functionality of a webhook,
     like sending, deleting and editing messages
     If you want to fetch messages or the webhook itself,
     please use :class:`WebhookFetchers` or :class:`WebhookApp`
 
     .. versionadded:: 0.3.0
     """
+
     webhook_id: int
     webhook_token: str
     basichook = Webhook(webhook_id, webhook_token)
+
     def send(self):
         """Sends a message via the webhook id & token"""
         return self.basichook.send_message
@@ -59,13 +63,14 @@ class BasicWebhook(abc.ABC):
         """Edits a message via the webhook id & token"""
         return self.basichook.edit_message
 
+
 @attr.s(init=True)
 class WebhookApp(WebhookFetchers, BasicWebhook, abc.ABC):
-    """A subclass of :class:`BasicWebhook` & :class:`WebhookFetchers` 
+    """A subclass of :class:`BasicWebhook` & :class:`WebhookFetchers`
     providing a fully featured webhook experience.
-    This class also adds the modify method 
+    This class also adds the modify method
     for modifying the current webhook.
-    
+
     .. versionadded:: 0.3.0
 
     Attributes
@@ -75,6 +80,7 @@ class WebhookApp(WebhookFetchers, BasicWebhook, abc.ABC):
     webhook_token
         The webhook token
     """
+
     def __init__(self, webhook_id: int, webhook_token: str):
         self.webhook = Webhook(webhook_id, webhook_token)
         super().__init__(webhook_id, webhook_token)
