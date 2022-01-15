@@ -20,7 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 import abc
+
 import attr
+
 from ..webhooks import Webhook
 
 
@@ -36,6 +38,7 @@ class BasicWebhook(abc.ABC):
 
     webhook_id: int
     webhook_token: str
+
     def init(self):
         self.basichook = Webhook(self.webhook_id, self.webhook_token)
 
