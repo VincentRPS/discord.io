@@ -19,7 +19,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -U mypy
     - name: Stubgen Run
-      run: stubgen rpd/api/__init__.py rpd/internal/__init__.py rpd/util/__init__.py rpd/__init__.py -o .
+      run: stubgen rpd/api/__init__.py rpd/internal/__init__.py rpd/util/__init__.py rpd/__init__.py rpd/apps/__init__.py -o .
   lint:
     needs: [stubs]
     runs-on: ubuntu-latest

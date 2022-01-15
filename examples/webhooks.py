@@ -9,7 +9,7 @@ webhook = WebhookApp(
 
 
 async def connection():
-    await webhook.send(content="Hello!")  # Send a message.
+    await webhook.send("Hello!")  # Send a message.
 
 
 asyncio.run(connection())

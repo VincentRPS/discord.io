@@ -15,7 +15,7 @@ class VersionInfo(typing.NamedTuple):
     major: int
     minor: int
     micro: int
-    releaselevel: typing.Literal["alpha", "beta", "candidate", "final"]
+    releaselevel: typing.Literal['alpha', 'beta', 'candidate', 'final']
     serial: int
 
 version_info: VersionInfo
