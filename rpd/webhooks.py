@@ -31,8 +31,15 @@ log = getLogger(__name__)
 
 class Webhook:
     """The base class for interperting Webhooks
-    
+
     .. versionadded:: 0.3.0
+
+    Parameters
+    ----------
+    id
+        The webhook id
+    token
+        The webhook token
     """
     def __init__(self, webhook_id, webhook_token):
         self.id = webhook_id
