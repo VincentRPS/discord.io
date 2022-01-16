@@ -60,9 +60,7 @@ class RESTFactory:
         await self.rest.send("POST", "/auth/logout")  # Log's you out of the bot.
 
     async def get_gateway_bot(self) -> None:
-        return self.rest.send(
-            "GET", "/gateway/bot"
-        )
+        return self.rest.send("GET", "/gateway/bot")
 
     def get_channel(self, channel: Snowflake):
         return self.rest.send("GET", f"/channels/{channel}")

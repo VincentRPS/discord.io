@@ -35,6 +35,8 @@ ignore =
     E402
     # CFQ002: Function has 7 arguments that exceeds max allowed 6
     CFQ002
+    # E722: do not use bare 'except'
+    E722
 
 per-file-ignores =
     # imported but unused

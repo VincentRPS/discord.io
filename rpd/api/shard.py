@@ -31,7 +31,6 @@ import zlib
 
 import aiohttp
 
-from rpd import util
 from rpd.api import rest_factory as RF
 from rpd.api.rest import _log
 from rpd.intents import Intents

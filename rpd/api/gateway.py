@@ -36,5 +36,6 @@ class Gateway:
         self.rest = RESTFactory()
 
     async def connect(self):
-        r = await self.rest.get_gateway_bot()
-        info = await r.json()
+        # r = await self.rest.get_gateway_bot()
+        # info = await r.json()
+        ...
