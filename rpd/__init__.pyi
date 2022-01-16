@@ -1,5 +1,3 @@
-import typing
-
 from rpd.api import *
 from rpd.apps import *
 from rpd.boot_text import *
@@ -11,12 +9,13 @@ from rpd.internal.warnings import *
 from rpd.snowflake import *
 from rpd.util import *
 from rpd.webhooks import *
+import typing
 
 class VersionInfo(typing.NamedTuple):
     major: int
     minor: int
     micro: int
-    releaselevel: typing.Literal["alpha", "beta", "candidate", "final"]
+    releaselevel: typing.Literal['alpha', 'beta', 'candidate', 'final']
     serial: int
 
 version_info: VersionInfo

@@ -26,7 +26,7 @@ import attr
 from ..webhooks import Webhook
 
 
-@attr.s(init=True)
+@attr.define(init=True)
 class BasicWebhook(abc.ABC):
     """Provides basic functionality of a webhook,
     like sending, deleting and editing messages
@@ -39,7 +39,7 @@ class BasicWebhook(abc.ABC):
     webhook_id: int
     webhook_token: str
 
-    def init(self):
+    def definew(self):
         self.basichook = Webhook(self.webhook_id, self.webhook_token)
 
     def send(self):

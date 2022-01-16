@@ -100,6 +100,7 @@ class RESTClient:
                     raise ServerError(r)
                 else:
                     _log.debug("< %s", r)
+                    return r
 
         except Exception as exc:
             raise Exception(f"Exception Occured when trying to send a request. {exc}")

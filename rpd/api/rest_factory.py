@@ -60,9 +60,9 @@ class RESTFactory:
         await self.rest.send("POST", "/auth/logout")  # Log's you out of the bot.
 
     async def get_gateway_bot(self) -> None:
-        return await self.rest.send(
+        return self.rest.send(
             "GET", "/gateway/bot"
-        )  # GET's the bot from the gateway endpoint
+        )
 
     def get_channel(self, channel: Snowflake):
         return self.rest.send("GET", f"/channels/{channel}")
@@ -76,7 +76,7 @@ class RESTFactory:
 
     def create_invite(
         self,
-        channel_id: Snowflake,
+        channel_id: Snowflake = None,  # mypy errors out here?
         *,
         reason: typing.Optional[str] = None,
         max_age: int = 0,
@@ -92,4 +92,4 @@ class RESTFactory:
         }
         if channel_id:
             json["channel_id"] = channel_id
-        return self.send("POST", reason=reason, json=json)
+        return self.rest.send("POST", reason=reason, json=json)
