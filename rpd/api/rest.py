@@ -22,6 +22,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import random
 import typing
@@ -30,7 +31,6 @@ from urllib.parse import quote
 import aiohttp
 
 from rpd.internal.exceptions import Forbidden, NotFound, ServerError
-from rpd.util import _to_json  # type: ignore
 
 _log = logging.getLogger(__name__)
 
@@ -74,7 +74,7 @@ class RESTClient:
 
         if "json" in kwargs:
             self.header["Content-Type"] = "application/json"  # Only json.
-            kwargs["data"] = _to_json(kwargs.pop("json"))
+            kwargs["data"] = json.dumps(kwargs.pop("json"))
 
         elif "token" in kwargs:
             self.header["Authorization"] = "Bot " + kwargs.pop("token")
