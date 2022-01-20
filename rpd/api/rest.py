@@ -30,7 +30,7 @@ from urllib.parse import quote
 
 import aiohttp
 
-from rpd.internal.exceptions import Forbidden, NotFound, ServerError
+from rpd.internal.exceptions import Forbidden, NotFound, RESTError, ServerError
 
 _log = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ __all__: typing.List[str] = [
 
 
 class RESTClient:
-    """REST Implementation for RPD.
+    """Represents a Rest connection with Discord.
 
     .. versionadded:: 0.3.0
 
@@ -98,9 +98,11 @@ class RESTClient:
                     raise NotFound(r)
                 elif r.status == 500:
                     raise ServerError(r)
-                else:
+                elif r.status == 200:
                     _log.debug("< %s", r)
                     return r
+                else:
+                    raise RESTError(r)
 
         except Exception as exc:
             raise Exception(f"Exception Occured when trying to send a request. {exc}")

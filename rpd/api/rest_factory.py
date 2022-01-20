@@ -25,7 +25,7 @@
 import typing
 
 from rpd.api.rest import RESTClient
-from rpd.snowflake import Snowflake
+from rpd.snowflake import Snowflakeish
 
 __all__: typing.List[str] = [
     "RESTFactory",
@@ -62,10 +62,10 @@ class RESTFactory:
     async def get_gateway_bot(self) -> None:
         return self.rest.send("GET", "/gateway/bot")
 
-    def get_channel(self, channel: Snowflake):
+    def get_channel(self, channel: Snowflakeish):
         return self.rest.send("GET", f"/channels/{channel}")
 
-    def edit_channel(self, name: str, channel: Snowflake, type):
+    def edit_channel(self, name: str, channel: Snowflakeish, type):
         if type == "group_dm":
             payload = {}
             if name:
@@ -74,7 +74,7 @@ class RESTFactory:
 
     def create_invite(
         self,
-        channel_id: Snowflake = None,  # mypy errors out here?
+        channel_id: Snowflakeish = None,  # mypy errors out here?
         *,
         reason: typing.Optional[str] = None,
         max_age: int = 0,

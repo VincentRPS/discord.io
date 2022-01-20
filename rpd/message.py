@@ -20,26 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-# This is a basically ShardGateway but with only 1 shard, or unsharded.
 
-from __future__ import annotations
+class Message:
+    """Represents a discord message."""
 
-import typing as t
-from .rest_factory import RESTFactory
-from .shard import ShardGateway
+    def __init__(self):
+        self.content: str = None
 
-__all__: t.List[str] = [
-    "Gateway",
-]
-
-class Gateway:
-    def __init__(self, shard_count: int = 0, shard_id: int = None):
-        self.shard_count = shard_count
-        self.shard_id = shard_count if shard_id is None else shard_id
-        self.core = ShardGateway(shard_count)
-        self.rest = RESTFactory()
-
-    async def connect(self):
-        # r = await self.rest.get_gateway_bot()
-        # info = await r.json()
-        ...
+    ...

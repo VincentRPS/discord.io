@@ -22,9 +22,15 @@
 import abc
 
 import attr
+import typing as t
 
+from ..state import ConnectionState
 from ..webhooks import Webhook
 
+__all__: t.List[str] = [
+    "BasicWebhook",
+    "WebhookApp"
+]
 
 @attr.define(init=True)
 class BasicWebhook(abc.ABC):
@@ -38,6 +44,7 @@ class BasicWebhook(abc.ABC):
 
     webhook_id: int
     webhook_token: str
+    state = ConnectionState()
 
     def definew(self):
         self.basichook = Webhook(self.webhook_id, self.webhook_token)
@@ -54,17 +61,21 @@ class BasicWebhook(abc.ABC):
         """Edits a message via the webhook id & token"""
         return self.basichook.edit_message
 
-    def fetch_message(self):
+    def get_message(self):
         return self.basichook.fetch_message
 
-    def fetch_self(self):
+    def get_self(self):
         return self.basichook.fetch_webhook
+    
+    def fetch_message(self, message_id):
+        return self.state._sent_messages_cache.pop(message_id)
 
 
 @attr.s(init=True)
 class WebhookApp(BasicWebhook, abc.ABC):
     """A subclass of :class:`BasicWebhook`
     providing a fully featured webhook experience.
+    
     This class also adds the modify method
     for modifying the current webhook.
 

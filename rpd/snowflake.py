@@ -20,7 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 # Snowflake implementation
-from typing import List, Union
+from typing import TypeVar, Union
 
-Snowflake = Union[str, int]
-SnowflakeList = List[Snowflake]
+T = TypeVar("T", covariant=True)
+
+Snowflakeish = Union[str, int]
+
+SnowflakeishList = list[Snowflakeish]
+
+SnowflakeishOr = Union[T, Snowflakeish]

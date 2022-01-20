@@ -24,7 +24,7 @@ import typing
 from logging import getLogger
 
 from rpd import api
-from rpd.snowflake import Snowflake
+from rpd.snowflake import Snowflakeish
 
 log = getLogger(__name__)
 
@@ -63,12 +63,12 @@ class Webhook:
     def delete_webhook(self):
         return self.rest.send("DELETE", f"/{self.id}/{self.token}")
 
-    def fetch_message(self, message: Snowflake):
+    def fetch_message(self, message: Snowflakeish):
         return self.rest.send("GET", f"/{self.id}/{self.token}/messages/{message}")
 
     def edit_message(
         self,
-        message: Snowflake,
+        message: Snowflakeish,
         content: typing.Optional[str] = None,
         allowed_mentions: typing.Optional[bool] = None,
     ):
@@ -83,7 +83,7 @@ class Webhook:
 
     def delete_message(
         self,
-        message: Snowflake,
+        message: Snowflakeish,
     ):
         return self.rest.send("DELETE", f"/{self.id}/{self.token}/messages/{message}")
 
