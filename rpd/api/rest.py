@@ -202,7 +202,7 @@ class RESTClient:
 
                             await asyncio.sleep(retry_in)
                             _log.debug(
-                                "Finished retrying for the ratelimit, now retrying..."
+                                "Finished waiting for the ratelimit, now retrying..."
                             )
 
                             if is_global:
