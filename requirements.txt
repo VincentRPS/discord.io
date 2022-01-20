@@ -1,2 +1,3 @@
 aiohttp~=3.8 # http module for asyncio.
 attrs~=21.4.0 # classes without boilerplate's
+colorlog~=6.6 # colored terminal logging.

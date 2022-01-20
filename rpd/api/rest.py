@@ -24,8 +24,8 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
-import random
 import typing
+import weakref
 from urllib.parse import quote
 
 import aiohttp
@@ -37,6 +37,59 @@ _log = logging.getLogger(__name__)
 __all__: typing.List[str] = [
     "RESTClient",
 ]
+
+PAD = typing.TypeVar("PAD", bound="PadLock")
+
+
+async def parse_tj(
+    response: aiohttp.ClientResponse,
+) -> typing.Union[typing.Dict[str, typing.Any], str]:
+    text = await response.text(encoding="utf-8")
+    try:
+        if response.headers["content-type"] == "application/json":
+            return json.loads(text)  # type: ignore
+    except KeyError:
+        # could be errored out
+        # cause of cloudflare
+        pass
+
+    return text
+
+
+class Route:
+    def __init__(self, method: str, endpoint: str, **params: typing.Any):
+        self.method = method
+        self.endpoint = endpoint
+        self.url = "https://discord.com/api/v9" + endpoint
+
+        self.guild_id: typing.Optional[int] = params.get("guild_id")
+        self.channel_id: typing.Optional[int] = params.get("channel_id")
+
+        # Webhooks
+        self.webhook_id: typing.Optional[int] = params.get("webhook_id")
+        self.webhook_token: typing.Optional[str] = params.get("webhook_token")
+
+    @property
+    def bucket(self) -> str:
+        return f"{self.method}:{self.endpoint}:{self.guild_id}:{self.channel_id}:{self.webhook_id}:{self.webhook_token}"  # type: ignore # noqa: ignore
+
+
+class PadLock:
+    # based off the PadLock of interactions.py & MaybeUnlock of discord.py.
+    def __init__(self, lock: asyncio.Lock):
+        self.lock: asyncio.Lock = lock
+        self.MaybeUnlock: bool = True
+
+    def __enter__(self, pad: PAD) -> PAD:
+        return self
+
+    # defers the UnLock.
+    def defer(self) -> None:
+        self.MaybeUnlock = False
+
+    def __exit__(self) -> None:
+        if self.MaybeUnlock:
+            self.lock.release()
 
 
 class RESTClient:
@@ -56,56 +109,124 @@ class RESTClient:
         The header sent to discord.
     """
 
-    def __init__(self):
-        self.url = "https://discord.com/api/v9"  # The Discord API Version.
+    def __init__(self, *, loop=None):
         self.header: typing.Dict[str, str] = {
             "User-Agent": "DiscordBot https://github.com/RPD-py/RPD"
         }
+        self._locks: weakref.WeakValueDictionary[
+            str, asyncio.Lock
+        ] = weakref.WeakValueDictionary()
+        self._has_global: asyncio.Event = asyncio.Event()
+        self.loop: asyncio.AbstractEventLoop = loop or None
 
-    async def send(self, method, endpoint, **kwargs: typing.Any):
+    async def send(self, route: Route, **params: typing.Any):  # noqa: ignore
         """Sends a request to discord
 
         .. versionadded:: 0.3.0
         """
         self._session = aiohttp.ClientSession()
-        self.method = method  # The method you are trying to use. e.g. GET.
-        self.endpoint = endpoint  # The endpoint the method is in.
-        url = self.url + self.endpoint  # The URL. + Endpoint.
+        method = route.method
+        url = route.url
+        bucket = route.bucket
 
-        if "json" in kwargs:
+        lock = self._locks.get(bucket)
+
+        if lock is None:
+            lock = asyncio.Lock()
+            if bucket is not None:
+                self._locks[bucket] = lock
+
+        if "json" in params:
             self.header["Content-Type"] = "application/json"  # Only json.
-            kwargs["data"] = json.dumps(kwargs.pop("json"))
+            params["data"] = json.dumps(params.pop("json"))
 
-        elif "token" in kwargs:
-            self.header["Authorization"] = "Bot " + kwargs.pop("token")
+        elif "token" in params:
+            self.header["Authorization"] = "Bot " + params.pop("token")
 
-        elif "reason" in kwargs:
-            self.header["X-Audit-Log-Reason"] = quote(kwargs.pop("reason"), "/ ")
+        elif "reason" in params:
+            self.header["X-Audit-Log-Reason"] = quote(params.pop("reason"), "/ ")
 
-        kwargs["headers"] = self.header
+        params["headers"] = self.header
 
-        try:
-            _log.debug("< %s, %s", method, endpoint)
-            async with self._session.request(self.method, url, **kwargs) as r:
-                if r.status == 429:  # "Handles" Ratelimit's or 429s.
-                    _log.critical("Detected a possible ratelimit, Handling...")
+        if not self._has_global.is_set():
+            await self._has_global.wait()
 
-                    await asyncio.sleep(random.randint(1, 20))
-                    await self.send(method, endpoint, **kwargs)
-                elif r.status == 403:
-                    raise Forbidden(r)
-                elif r.status == 404:
-                    raise NotFound(r)
-                elif r.status == 500:
-                    raise ServerError(r)
-                elif r.status == 200:
-                    _log.debug("< %s", r)
-                    return r
-                else:
-                    raise RESTError(r)
+        with PadLock(lock) as padl:
+            for _ in range(5):
 
-        except Exception as exc:
-            raise Exception(f"Exception Occured when trying to send a request. {exc}")
+                try:
+                    async with self._session.request(method, url, **params) as r:
+                        _log.debug("< %s", r)
+
+                        d = parse_tj(r)
+
+                        try:
+                            remains = int(r.headers["X-RateLimit-Remaining"])
+                            reset_after = float(r.headers["X-RateLimit-Reset-After"])
+                        except KeyError:
+                            # Some endpoints don't give you these ratelimit headers
+                            # and so they will error out.
+                            pass
+
+                        if remains == "0" and r.status != 429:
+                            # the bucket was depleted
+                            padl.defer()
+                            _log.debug(
+                                "A ratelimit Bucket was depleted. (bucket: %s, retry: %s)",
+                                bucket,
+                                float(reset_after),
+                            )
+                            self.loop.call_later(reset_after, lock.release)
+
+                        if r.status == 429:
+                            if not r.headers.get("via") or isinstance(d, str):
+                                # handles couldflare bans
+                                raise RESTError(d)
+
+                            retry_in: float = d["retry_after"]
+                            _log.warning(
+                                "The Rest Client seems to be ratelimited,"
+                                " Retrying in: %.2f seconds. Handled with the bucket: %s",
+                                retry_in,
+                                bucket,
+                            )
+
+                            is_global = d.get("global", False)
+
+                            if is_global:
+                                _log.debug(
+                                    "Global ratelimit was hit, retrying in %s", retry_in
+                                )
+                                self._has_global.clear()
+
+                            await asyncio.sleep(retry_in)
+                            _log.debug(
+                                "Finished retrying for the ratelimit, now retrying..."
+                            )
+
+                            if is_global:
+                                self._has_global.set()
+                                _log.debug("Global ratelimit has been depleted.")
+
+                            continue
+
+                        elif r.status == 403:
+                            raise Forbidden(r)
+                        elif r.status == 404:
+                            raise NotFound(r)
+                        elif r.status == 500:
+                            raise ServerError(r)
+                        elif 300 > r.status >= 200:
+                            _log.debug("> %s", r)
+                            return r
+                        else:
+                            # unhandled error.
+                            raise RESTError(r)
+
+                except Exception as exc:
+                    raise Exception(
+                        f"Exception Occured when trying to send a request. {exc}"
+                    )
 
     async def close(self) -> None:
         if self._session:

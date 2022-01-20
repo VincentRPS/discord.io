@@ -19,16 +19,31 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-import typing
+# User interfacing, made to make the library look. Cool.
+# based off hikari's use of colorlog.
+import sys
+import time
+import colorlog
+import string
+import importlib.resources
+import datetime
+from rpd import __version__, __copyright__, __license__
 
-__all__: typing.List[str] = [
-    "booting_text",
-]
-booting_text = """
-d8888b.   d8888b.  d8888b. 
-88  `8D   88  `8D  88  `8D 
-88oobY'   88oodD'  88   88 
-88`8b     88       88   88 
-88 `88.   88       88  .8D 
-o8o o8o  o88o      Y8888D'     
-"""
+def print_banner(module: str):
+    if module is None:
+        module == "rpd"
+
+    banner = importlib.resources.read_text(module, "banner.txt")
+    today = datetime.date.today()
+
+    args = {
+        "copyright": __copyright__,
+        "version": __version__,
+        "license": __license__,
+        "current_time": today.strftime("%B %d, %Y")
+    }
+    args.update(colorlog.escape_codes.escape_codes)
+    
+    sys.stdout.write(string.Template(banner).safe_substitute(args))
+    sys.stdout.flush()
+    time.sleep(0.162)  # sleep for a bit.
