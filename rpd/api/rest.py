@@ -117,6 +117,7 @@ class RESTClient:
             str, asyncio.Lock
         ] = weakref.WeakValueDictionary()
         self._has_global: asyncio.Event = asyncio.Event()
+        self._has_global.set()
         self.loop: asyncio.AbstractEventLoop = loop or None
 
     async def send(self, route: Route, **params: typing.Any):  # noqa: ignore
