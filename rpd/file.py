@@ -12,9 +12,6 @@
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 
-import datetime
-import importlib.resources
-import string
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,31 +19,23 @@ import string
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-# User interfacing, made to make the library look. Cool.
-# based off hikari's use of colorlog.
-import sys
-import time
-
-import colorlog
-
-from rpd import __copyright__, __license__, __version__
+# Implementation of sending Files via rest.
+import io
+import os
+import typing as t
 
 
-def print_banner(module: str):
-    if module is None:
-        module == "rpd"
+class File:
+    """Represents a Discord file.
 
-    banner = importlib.resources.read_text(module, "banner.txt")
-    today = datetime.date.today()
+    .. versionadded:: 0.4.0
+    """
 
-    args = {
-        "copyright": __copyright__,
-        "version": __version__,
-        "license": __license__,
-        "current_time": today.strftime("%B %d, %Y"),
-    }
-    args.update(colorlog.escape_codes.escape_codes)
-
-    sys.stdout.write(string.Template(banner).safe_substitute(args))
-    sys.stdout.flush()
-    time.sleep(0.162)  # sleep for a bit.
+    def __init__(
+        self,
+        fp: t.Union[str, bytes, os.PathLike, io.BufferedIOBase],
+        *,
+        filename: t.Optional[str] = None,
+        spoiler: bool = False
+    ):
+        ...
