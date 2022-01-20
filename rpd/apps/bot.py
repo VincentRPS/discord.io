@@ -19,29 +19,39 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-
-# This is a basically ShardGateway but with only 1 shard, or unsharded.
-
-from __future__ import annotations
-
-import typing as t
-
-from .rest_factory import RESTFactory
-from .shard import ShardGateway
-
-__all__: t.List[str] = [
-    "Gateway",
-]
+from rpd.api import RESTFactory
+from rpd.state import ConnectionState
 
 
-class Gateway:
-    def __init__(self, shard_count: int = 0, shard_id: int = None):
-        self.shard_count = shard_count
-        self.shard_id = shard_count if shard_id is None else shard_id
-        self.core = ShardGateway(shard_count)
-        self.rest = RESTFactory()
+class BotApp:
+    """Represents a Discord bot.
 
-    async def connect(self):
-        # r = await self.rest.get_gateway_bot()
-        # info = await r.json()
-        ...
+    .. versionadded:: 0.4.0
+
+    Attributes
+    ----------
+    factory
+        The instance of RESTFactory
+    state
+        The client's connection state
+    """
+
+    def __init__(self):
+        self.factory = RESTFactory()
+        self.state = ConnectionState()
+
+    def login(self):
+        """Starts the bot connection
+
+        This also will set ConnectionState._ready.
+
+        .. versionadded:: 0.4.0
+
+        """
+        self.state._ready.set()
+        return self.factory.login
+
+    @property
+    async def is_ready(self):
+        """Returns if the bot is ready or not."""
+        return self.state._ready.is_set()

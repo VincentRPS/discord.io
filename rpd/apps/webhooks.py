@@ -20,17 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 import abc
+import typing as t
 
 import attr
-import typing as t
 
 from ..state import ConnectionState
 from ..webhooks import Webhook
 
-__all__: t.List[str] = [
-    "BasicWebhook",
-    "WebhookApp"
-]
+__all__: t.List[str] = ["BasicWebhook", "WebhookApp"]
+
 
 @attr.define(init=True)
 class BasicWebhook(abc.ABC):
@@ -66,7 +64,7 @@ class BasicWebhook(abc.ABC):
 
     def get_self(self):
         return self.basichook.fetch_webhook
-    
+
     def fetch_message(self, message_id):
         return self.state._sent_messages_cache.pop(message_id)
 
@@ -75,7 +73,7 @@ class BasicWebhook(abc.ABC):
 class WebhookApp(BasicWebhook, abc.ABC):
     """A subclass of :class:`BasicWebhook`
     providing a fully featured webhook experience.
-    
+
     This class also adds the modify method
     for modifying the current webhook.
 

@@ -19,6 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
+import asyncio
 
 
 class ConnectionState:
@@ -28,3 +29,4 @@ class ConnectionState:
         self._guilds_cache = {}
         self._sent_messages_cache = {}
         self._deleted_messages_cache = {}
+        self._ready: asyncio.Event = asyncio.Event
