@@ -24,6 +24,7 @@ import typing
 from logging import getLogger
 
 from rpd import api
+from rpd.api.rest import Route
 from rpd.snowflake import Snowflakeish
 
 log = getLogger(__name__)
@@ -58,13 +59,35 @@ class Webhook:
             json["name"] = name
         if avatar:
             json["avatar"] = avatar
-        return self.rest.send("PATCH", f"/{self.id}/{self.token}", json=json)
+        return self.rest.send(
+            Route(
+                "PATCH",
+                f"/{self.id}/{self.token}",
+                webhook_id=self.id,
+                webhook_token=self.token,
+            ),
+            json=json,
+        )
 
     def delete_webhook(self):
-        return self.rest.send("DELETE", f"/{self.id}/{self.token}")
+        return self.rest.send(
+            Route(
+                "DELETE",
+                f"/{self.id}/{self.token}",
+                webhook_id=self.id,
+                webhook_token=self.token,
+            )
+        )
 
     def fetch_message(self, message: Snowflakeish):
-        return self.rest.send("GET", f"/{self.id}/{self.token}/messages/{message}")
+        return self.rest.send(
+            Route(
+                "GET",
+                f"/{self.id}/{self.token}/messages/{message}",
+                webhook_id=self.id,
+                webhook_token=self.token,
+            )
+        )
 
     def edit_message(
         self,
@@ -78,14 +101,27 @@ class Webhook:
         elif allowed_mentions:
             json["allowed_mentions"] = allowed_mentions
         return self.rest.send(
-            "POST", f"/{self.id}/{self.token}/messages/{message}", json=json
+            Route(
+                "POST",
+                f"/{self.id}/{self.token}/messages/{message}",
+                webhook_id=self.id,
+                webhook_token=self.token,
+            ),
+            json=json,
         )
 
     def delete_message(
         self,
         message: Snowflakeish,
     ):
-        return self.rest.send("DELETE", f"/{self.id}/{self.token}/messages/{message}")
+        return self.rest.send(
+            Route(
+                "DELETE",
+                f"/{self.id}/{self.token}/messages/{message}",
+                webhook_id=self.id,
+                webhook_token=self.token,
+            )
+        )
 
     def send_message(
         self,
@@ -106,4 +142,12 @@ class Webhook:
             json["tts"] = tts
         elif allowed_mentions:
             json["allowed_mentions"] = allowed_mentions
-        return self.rest.send("POST", f"/{self.id}/{self.token}", json=json)
+        return self.rest.send(
+            Route(
+                "POST",
+                f"/{self.id}/{self.token}",
+                webhook_id=self.id,
+                webhook_token=self.token,
+            ),
+            json=json,
+        )

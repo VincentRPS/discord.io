@@ -24,7 +24,7 @@
 
 import typing
 
-from rpd.api.rest import RESTClient
+from rpd.api.rest import RESTClient, Route
 from rpd.snowflake import Snowflakeish
 
 __all__: typing.List[str] = [
@@ -46,7 +46,7 @@ class RESTFactory:
     def __init__(self):
         self.rest = RESTClient()
 
-    async def login(self, token: str) -> None:
+    def login(self, token: typing.Optional[str] = None) -> None:
         self.token = token
 
         if len(self.token) != 59:
@@ -54,33 +54,40 @@ class RESTFactory:
         else:
             pass
 
-        await self.rest.send("GET", "/users/@me", token=self.token)  # Log's in
+        return self.rest.send(Route("GET", "/users/@me"), token=self.token)  # Log's in
 
-    async def logout(self) -> None:
-        await self.rest.send("POST", "/auth/logout")  # Log's you out of the bot.
+    def logout(self) -> None:
+        return self.rest.send(
+            Route("POST", "/auth/logout")
+        )  # Log's you out of the bot.
 
-    async def get_gateway_bot(self) -> None:
-        return self.rest.send("GET", "/gateway/bot")
+    def get_gateway_bot(self) -> None:
+        return self.rest.send(Route("GET", "/gateway/bot"))
 
-    def get_channel(self, channel: Snowflakeish):
-        return self.rest.send("GET", f"/channels/{channel}")
+    def get_channel(self, channel: typing.Optional[Snowflakeish] = None):
+        return self.rest.send(Route("GET", f"/channels/{channel}"))
 
-    def edit_channel(self, name: str, channel: Snowflakeish, type):
+    def edit_channel(
+        self,
+        name: typing.Optional[str] = None,
+        channel: typing.Optional[Snowflakeish] = None,
+        type: typing.Optional[str] = None,
+    ):
         if type == "group_dm":
             payload = {}
             if name:
                 payload["name"] = name
-        return self.rest.send("PATCH", f"/channels/{channel}")
+        return self.rest.send(Route("PATCH", f"/channels/{channel}"))
 
     def create_invite(
         self,
-        channel_id: Snowflakeish = None,  # mypy errors out here?
         *,
+        channel_id: typing.Optional[Snowflakeish] = None,  # mypy errors out here?
         reason: typing.Optional[str] = None,
-        max_age: int = 0,
-        max_uses: int = 0,
-        tempoary: bool = False,
-        unique: bool = True,
+        max_age: typing.Optional[int] = 0,
+        max_uses: typing.Optional[int] = 0,
+        tempoary: typing.Optional[bool] = False,
+        unique: typing.Optional[bool] = True,
     ):
         json = {
             "max_age": max_age,
@@ -90,4 +97,4 @@ class RESTFactory:
         }
         if channel_id:
             json["channel_id"] = channel_id
-        return self.rest.send("POST", reason=reason, json=json)
+        return self.rest.send(Route("POST"), reason=reason, json=json)
