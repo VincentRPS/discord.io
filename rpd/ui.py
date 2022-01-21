@@ -27,10 +27,10 @@ import importlib.resources
 import string
 import sys
 import time
+from typing import Optional
 
 import colorlog
 
-from typing import Optional
 from rpd import __copyright__, __license__, __version__
 
 

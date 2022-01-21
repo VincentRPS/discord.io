@@ -21,6 +21,7 @@
 # SOFTWARE
 from rpd.state import ConnectionState
 
+
 class TestCache:
     state = ConnectionState()
 
