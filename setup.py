@@ -59,7 +59,7 @@ setuptools.setup(
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     install_requires=requirements,
-    extra_requires=extra_requires,
+    extras_require=extra_requires,
     description="Asynchronous Discord API Wrapper For Python",
     python_requires=">=3.8",
     classifiers=[
