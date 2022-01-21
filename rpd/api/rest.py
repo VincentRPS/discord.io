@@ -30,6 +30,7 @@ from urllib.parse import quote
 
 import aiohttp
 
+from rpd.file import File
 from rpd.internal.exceptions import Forbidden, NotFound, RESTError, ServerError
 
 _log = logging.getLogger(__name__)
@@ -109,13 +110,7 @@ class RESTClient:
         The header sent to discord.
     """
 
-    def __init__(
-        self, 
-        *, 
-        loop=None,
-        proxy=None,
-        proxy_auth=None
-        ):
+    def __init__(self, *, loop=None, proxy=None, proxy_auth=None):
         self.header: typing.Dict[str, str] = {
             "User-Agent": "DiscordBot https://github.com/RPD-py/RPD"
         }
@@ -128,7 +123,12 @@ class RESTClient:
         self.proxy = proxy
         self.proxy_auth = proxy_auth
 
-    async def send(self, route: Route, **params: typing.Any):  # noqa: ignore
+    async def send(  # noqa: ignore
+        self,
+        route: Route,
+        files: typing.Optional[typing.Sequence[File]] = None,
+        **params: typing.Any,
+    ):
         """Sends a request to discord
 
         .. versionadded:: 0.3.0
@@ -147,7 +147,7 @@ class RESTClient:
 
         if self.proxy is not None:
             params["proxy"] = self.proxy
-        
+
         elif self.proxy_auth is not None:
             params["proxy_auth"] = self.proxy_auth
 
@@ -168,7 +168,11 @@ class RESTClient:
 
         await lock.acquire()
         with PadLock(lock) as padl:
-            for _ in range(5):
+            for tries in range(5):
+
+                if files:
+                    for f in files:
+                        f.reset(seek=tries)
 
                 try:
                     async with self._session.request(method, url, **params) as r:

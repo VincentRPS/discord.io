@@ -24,6 +24,8 @@ import io
 import os
 import typing as t
 
+from rpd.internal.exceptions import Forbidden, RPDError
+
 
 class File:
     """Represents a Discord file.
@@ -36,6 +38,52 @@ class File:
         fp: t.Union[str, bytes, os.PathLike, io.BufferedIOBase],
         *,
         filename: t.Optional[str] = None,
-        spoiler: bool = False
+        spoiler: bool = False,
     ):
-        ...
+        if isinstance(fp, io.IOBase):
+            if not (fp.seekable() and fp.readable()):
+                raise RPDError(
+                    f"File buffer {fp!r} must be both seekable and readable."
+                )
+            self.fp = fp
+            self._og_pos = fp.tell()
+            self._owner = False
+        else:
+            self.fp = open(fp, "rb")
+            self._og_pos = 0
+            self._owner = True
+
+        self._closer = self.fp.close()
+        self.fp.close = lambda: None
+
+        if filename is None:
+            if isinstance(fp, str):
+                _, self.filename = os.path.split(fp)
+            else:
+                self.filename = getattr(fp, "name", None)
+        else:
+            self.filename = filename
+
+        if (
+            spoiler
+            and self.filename is not None  # noqa: ignore
+            and not self.filename.startswith("SPOILER_")  # noqa: ignore
+        ):
+            self.filename = "SPOILER_" + self.filename
+
+        self.spoiler = spoiler or (
+            self.filename is not None and self.filename.startswith("SPOILER_")
+        )
+
+    def reset(self, *, seek: t.Union[int, bool] = True) -> None:
+        if seek:
+            self.fp.seek(self._og_pos)
+
+    def close(self) -> None:
+        self.fp.close = self._closer
+        if self._owner:
+            self._closer()
+        else:
+            raise Forbidden(
+                "You aren't allowed to close this file, since you aren't a owner."
+            )
