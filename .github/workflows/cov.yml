@@ -16,7 +16,7 @@ jobs:
         run: pip install -r dev-requirements.txt
       - name: Collect Coverage & Run Tests
         run: |
-          pytest --cov=./tests
+          pytest --suppress-no-test-exit-code --cov=./tests
           coverage xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
