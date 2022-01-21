@@ -22,14 +22,13 @@
 from rpd import Snowflakeish, SnowflakeishList
 
 
-def test_snowflakeish():
-    assert Snowflakeish(1) == 1
-    assert Snowflakeish("2") == "2"
+class TestSnowflake:
+
+    def test_snowflakeish(self):
+        assert Snowflakeish(1) == 1
+        assert Snowflakeish("2") == 2
 
 
-def test_snowflakeish_list():
-    assert SnowflakeishList([1, 2]) == [1, 2]
-    assert SnowflakeishList(["1", "2"]) == ["1", "2"]
-    
-test_snowflakeish()
-test_snowflakeish_list()
+    def test_snowflakeish_list(self):
+        assert SnowflakeishList([1, 2]) == [1, 2]
+        assert SnowflakeishList(["1", "2"]) == ["1", "2"]
