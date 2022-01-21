@@ -19,33 +19,28 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-# User interfacing, made to make the library look. Cool.
-# based off hikari's use of colorlog.
+from rpd.state import ConnectionState
 
-import datetime
-import importlib.resources
-import string
-import sys
-import time
+class TestCache:
+    state = ConnectionState()
 
-import colorlog
+    def test_a_cache(self):
+        # caching a simple fake guild
+        json = {
+            "name": "RPD",
+            "members": 0,
+            "bots": 0,
+            "shard": 0,
+            "school_hub": False,
+        }
+        self.state._guilds_cache["919060781969059961"] = json
 
-from typing import Optional
-from rpd import __copyright__, __license__, __version__
-
-
-def print_banner(module: Optional[str] = "rpd"):
-    banner = importlib.resources.read_text(module, "banner.txt")
-    today = datetime.date.today()
-
-    args = {
-        "copyright": __copyright__,
-        "version": __version__,
-        "license": __license__,
-        "current_time": today.strftime("%B %d, %Y"),
-    }
-    args.update(colorlog.escape_codes.escape_codes)
-
-    sys.stdout.write(string.Template(banner).safe_substitute(args))
-    sys.stdout.flush()
-    time.sleep(0.162)  # sleep for a bit.
+    def get_cache(self):
+        json = {
+            "name": "RPD",
+            "members": 0,
+            "bots": 0,
+            "shard": 0,
+            "school_hub": False,
+        }
+        assert self.state._guilds_cache["919060781969059961"] == json
