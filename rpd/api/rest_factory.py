@@ -64,6 +64,32 @@ class RESTFactory:
     def get_gateway_bot(self) -> None:
         return self.rest.send(Route("GET", "/gateway/bot"))
 
+    def create_message(
+        self,
+        channel: typing.Optional[Snowflakeish] = None,
+        content: typing.Optional[str] = None,
+        tts: bool = False,
+        embeds: dict = None,
+        allowed_mentions: bool = False,
+        message_reference: Snowflakeish = None,
+        components: dict = None,
+    ):
+        json = {}
+        if content:
+            json["content"] = content
+        elif tts:
+            json["tts"] = tts
+        elif allowed_mentions:
+            json["allowed_mentions"] = allowed_mentions
+        elif message_reference:
+            json["message_reference"] = message_reference
+        elif components:
+            json["components"] = components
+        return self.rest.send(
+            Route("POST", f"/channels/{channel}/messages", channel_id=channel),
+            json=json,
+        )
+
     def get_channel(self, channel: typing.Optional[Snowflakeish] = None):
         return self.rest.send(Route("GET", f"/channels/{channel}"))
 
