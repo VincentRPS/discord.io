@@ -80,14 +80,14 @@ class PadLock:
         self.lock: asyncio.Lock = lock
         self.MaybeUnlock: bool = True
 
-    def __enter__(self, pad: PAD) -> PAD:
+    def __enter__(self: PAD) -> PAD:
         return self
 
     # defers the UnLock.
     def defer(self) -> None:
         self.MaybeUnlock = False
 
-    def __exit__(self) -> None:
+    def __exit__(self, exc_type, exc, traceback) -> None:
         if self.MaybeUnlock:
             self.lock.release()
 
@@ -109,7 +109,13 @@ class RESTClient:
         The header sent to discord.
     """
 
-    def __init__(self, *, loop=None):
+    def __init__(
+        self, 
+        *, 
+        loop=None,
+        proxy=None,
+        proxy_auth=None
+        ):
         self.header: typing.Dict[str, str] = {
             "User-Agent": "DiscordBot https://github.com/RPD-py/RPD"
         }
@@ -119,6 +125,8 @@ class RESTClient:
         self._has_global: asyncio.Event = asyncio.Event()
         self._has_global.set()
         self.loop: asyncio.AbstractEventLoop = loop or None
+        self.proxy = proxy
+        self.proxy_auth = proxy_auth
 
     async def send(self, route: Route, **params: typing.Any):  # noqa: ignore
         """Sends a request to discord
@@ -137,6 +145,12 @@ class RESTClient:
             if bucket is not None:
                 self._locks[bucket] = lock
 
+        if self.proxy is not None:
+            params["proxy"] = self.proxy
+        
+        elif self.proxy_auth is not None:
+            params["proxy_auth"] = self.proxy_auth
+
         if "json" in params:
             self.header["Content-Type"] = "application/json"  # Only json.
             params["data"] = json.dumps(params.pop("json"))
@@ -152,6 +166,7 @@ class RESTClient:
         if not self._has_global.is_set():
             await self._has_global.wait()
 
+        await lock.acquire()
         with PadLock(lock) as padl:
             for _ in range(5):
 
@@ -159,11 +174,11 @@ class RESTClient:
                     async with self._session.request(method, url, **params) as r:
                         _log.debug("< %s", r)
 
-                        d = parse_tj(r)
+                        d = await parse_tj(r)
 
                         try:
-                            remains = int(r.headers["X-RateLimit-Remaining"])
-                            reset_after = float(r.headers["X-RateLimit-Reset-After"])
+                            remains = r.headers.get("X-RateLimit-Remaining")
+                            reset_after = r.headers.get("X-RateLimit-Reset-After")
                         except KeyError:
                             # Some endpoints don't give you these ratelimit headers
                             # and so they will error out.
@@ -177,7 +192,7 @@ class RESTClient:
                                 bucket,
                                 float(reset_after),
                             )
-                            self.loop.call_later(reset_after, lock.release)
+                            self.loop.call_later(float(reset_after), lock.release)
 
                         if r.status == 429:
                             if not r.headers.get("via") or isinstance(d, str):
@@ -221,8 +236,7 @@ class RESTClient:
                             _log.debug("> %s", r)
                             return r
                         else:
-                            # unhandled error.
-                            raise RESTError(r)
+                            _log.error(r)
 
                 except Exception as exc:
                     raise Exception(

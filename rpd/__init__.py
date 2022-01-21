@@ -18,7 +18,6 @@ import typing
 
 from rpd.api import *
 from rpd.apps import *
-from rpd.boot_text import *
 from rpd.color import *
 from rpd.colour import *
 from rpd.intents import *
