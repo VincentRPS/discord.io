@@ -22,3 +22,6 @@ types-orjson~=3.6.2
 #########
 # tests #
 #########
+coverage==6.2
+pytest==6.2.5
+pytest-cov==3.0.0
