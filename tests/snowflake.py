@@ -30,3 +30,6 @@ def test_snowflakeish():
 def test_snowflakeish_list():
     assert SnowflakeishList([1, 2]) == [1, 2]
     assert SnowflakeishList(["1", "2"]) == ["1", "2"]
+    
+test_snowflakeish()
+test_snowflakeish_list()
