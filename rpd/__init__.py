@@ -16,7 +16,6 @@ __version__: str = "0.3.0"
 import logging
 import typing
 
-
 # there are a lot of
 # problems with importing rpd.apps for some reason.
 from rpd.api import *
