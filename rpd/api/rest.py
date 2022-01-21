@@ -119,7 +119,7 @@ class RESTClient:
         ] = weakref.WeakValueDictionary()
         self._has_global: asyncio.Event = asyncio.Event()
         self._has_global.set()
-        self.loop: asyncio.AbstractEventLoop = loop or None
+        self.loop = loop or asyncio.get_running_loop()
         self.proxy = proxy
         self.proxy_auth = proxy_auth
 

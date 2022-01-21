@@ -24,6 +24,8 @@
 
 import typing
 
+import asyncio
+
 from rpd.api.rest import RESTClient, Route
 from rpd.snowflake import Snowflakeish
 
@@ -43,8 +45,9 @@ class RESTFactory:
         The RESTClient.
     """
 
-    def __init__(self):
-        self.rest = RESTClient()
+    def __init__(self, loop=None):
+        self.loop = loop or asyncio.get_running_loop()
+        self.rest = RESTClient(loop=self.loop)
 
     def login(self, token: typing.Optional[str] = None) -> None:
         self.token = token
@@ -69,22 +72,24 @@ class RESTFactory:
         channel: typing.Optional[Snowflakeish] = None,
         content: typing.Optional[str] = None,
         tts: bool = False,
-        embeds: dict = None,
+        embeds: typing.Dict[str, str] = None,
         allowed_mentions: bool = False,
         message_reference: Snowflakeish = None,
         components: dict = None,
     ):
         json = {}
-        if content:
+        if content is not None:
             json["content"] = content
-        elif tts:
+        elif tts is not False:
             json["tts"] = tts
-        elif allowed_mentions:
+        elif allowed_mentions is not False:
             json["allowed_mentions"] = allowed_mentions
-        elif message_reference:
+        elif message_reference is not None:
             json["message_reference"] = message_reference
-        elif components:
+        elif components is not None:
             json["components"] = components
+        elif embeds is not None:
+            json["embeds"] = [embeds]
         return self.rest.send(
             Route("POST", f"/channels/{channel}/messages", channel_id=channel),
             json=json,
