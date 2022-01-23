@@ -1,5 +1,5 @@
 ##########
-# Flake8 # [if anyone wants to fix the errors please do..]
+# Flake8 #
 ##########
 flake8~=4.0.1
 flake8-functions~=0.0.6 # lint function.
@@ -15,7 +15,7 @@ isort[requirements_deprecated_finder]
 sphinx~=4.4.0
 furo~=2022.1.2
 #################
-# Static Typing #
+# Static Typing # free PR's
 #################
 mypy~=0.931
 types-orjson~=3.6.2
