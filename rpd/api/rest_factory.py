@@ -22,9 +22,8 @@
 
 # Most requests are done here, except for log-ins and outs since they change the header.
 
-import typing
-
 import asyncio
+import typing
 
 from rpd.api.rest import RESTClient, Route
 from rpd.snowflake import Snowflakeish
