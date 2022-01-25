@@ -42,5 +42,3 @@ jobs:
       run: black . --check
     - name: flake8
       run: flake8 .
-    - name: mypy
-      run: mypy . --strict
