@@ -1,5 +1,4 @@
 import pytest
-import pytest_asyncio  # noqa: ignore
 
 from rpd.apps import BasicWebhook, WebhookApp
 from rpd.internal import Forbidden

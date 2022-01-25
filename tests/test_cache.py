@@ -24,24 +24,17 @@ from rpd.state import ConnectionState
 
 class TestCache:
     state = ConnectionState()
+    json = {
+            "name": "RPD",
+            "members": 0,
+            "bots": 0,
+            "shard": 0,
+            "school_hub": False,
+        }
 
     def test_a_cache(self):
         # caching a simple fake guild
-        json = {
-            "name": "RPD",
-            "members": 0,
-            "bots": 0,
-            "shard": 0,
-            "school_hub": False,
-        }
-        self.state._guilds_cache["919060781969059961"] = json
+        self.state._guilds_cache["919060781969059961"] = self.json
 
     def get_cache(self):
-        json = {
-            "name": "RPD",
-            "members": 0,
-            "bots": 0,
-            "shard": 0,
-            "school_hub": False,
-        }
-        assert self.state._guilds_cache["919060781969059961"] == json
+        assert self.state._guilds_cache["919060781969059961"] == self.json

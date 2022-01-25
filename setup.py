@@ -48,6 +48,9 @@ setuptools.setup(
     name="RPD",
     version=__version__,
     packages=packages,
+    package_data={
+        "rpd": ["banner.txt"],
+    },
     project_utls={
         "Documentation": "https://RPD.rtfd.io",
         "Issue Tracker": "https://github.com/RPD-py/RPD/issues",
