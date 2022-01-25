@@ -36,9 +36,10 @@ class BotApp:
         The client's connection state
     """
 
-    def __init__(self):
+    def __init__(self, **options):
         self.factory = RESTFactory()
         self.state = ConnectionState()
+        self.ops = options
 
     def login(self):
         """Starts the bot connection

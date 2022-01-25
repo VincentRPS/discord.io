@@ -27,6 +27,7 @@ import typing
 
 from rpd.api.rest import RESTClient, Route
 from rpd.snowflake import Snowflakeish
+from rpd.state import ConnectionState
 
 __all__: typing.List[str] = [
     "RESTFactory",
@@ -44,9 +45,9 @@ class RESTFactory:
         The RESTClient.
     """
 
-    def __init__(self, loop=None):
-        self.loop = loop or asyncio.get_running_loop()
-        self.rest = RESTClient(loop=self.loop)
+    def __init__(self):
+        self.state = ConnectionState()
+        self.rest = RESTClient()
 
     def login(self, token: typing.Optional[str] = None) -> None:
         self.token = token
