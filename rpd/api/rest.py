@@ -32,6 +32,7 @@ import aiohttp
 
 from rpd.file import File
 from rpd.internal.exceptions import Forbidden, NotFound, RESTError, ServerError
+from rpd.state import ConnectionState
 
 _log = logging.getLogger(__name__)
 
@@ -110,7 +111,7 @@ class RESTClient:
         The header sent to discord.
     """
 
-    def __init__(self, *, loop=None, proxy=None, proxy_auth=None):
+    def __init__(self, *, proxy=None, proxy_auth=None):
         self.header: typing.Dict[str, str] = {
             "User-Agent": "DiscordBot https://github.com/RPD-py/RPD"
         }
@@ -119,7 +120,7 @@ class RESTClient:
         ] = weakref.WeakValueDictionary()
         self._has_global: asyncio.Event = asyncio.Event()
         self._has_global.set()
-        self.loop = loop or asyncio.get_running_loop()
+        self.state = ConnectionState()
         self.proxy = proxy
         self.proxy_auth = proxy_auth
 
@@ -176,7 +177,7 @@ class RESTClient:
 
                 try:
                     async with self._session.request(method, url, **params) as r:
-                        _log.debug("< %s", r)
+                        _log.debug("< %s", await r.json())
 
                         d = await parse_tj(r)
 
@@ -196,7 +197,7 @@ class RESTClient:
                                 bucket,
                                 float(reset_after),
                             )
-                            self.loop.call_later(float(reset_after), lock.release)
+                            self.state.loop.call_later(float(reset_after), lock.release)
 
                         if r.status == 429:
                             if not r.headers.get("via") or isinstance(d, str):

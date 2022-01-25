@@ -19,5 +19,48 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
+"""
+A system for traits, based off hikari.
+"""
+import typing as t
 
-# intakes events given by the Discord WebSocket.
+from rpd.api.gateway import Gateway
+from rpd.api.rest import RESTClient
+from rpd.api.rest_factory import RESTFactory
+from rpd.apps import bot
+
+
+class GWAware(t.Protocol):
+    """Represents a Gateway aware App."""
+
+    __slots__ = ()
+
+    @property
+    def app(self) -> Gateway:
+        """The Gateway instance to use for Gateway Interactions."""
+        raise NotImplementedError
+
+
+class RESTAware(t.Protocol):
+    """Represents a Rest aware App."""
+
+    __slots__ = ()
+
+    @property
+    def app(self) -> RESTClient:
+        """The RESTClient instance to use for Rest Interactions."""
+        raise NotImplementedError
+
+    @property
+    def factory(self) -> RESTFactory:
+        """The RESTFactory instance to use for Rest Interactions."""
+        raise NotImplementedError
+
+
+class BotAppAware(t.Protocol):
+    """Represents a BotApp aware app"""
+
+    @property
+    def app(self) -> bot.BotApp:
+        """The BotApp instance to use."""
+        raise NotImplementedError

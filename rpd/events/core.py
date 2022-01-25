@@ -19,38 +19,21 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-"""
-The ConnectionState Caches most things during connection.
-"""
-import asyncio
+import abc
+
+from rpd import traits
 
 
-class ConnectionState:
-    # if you are intereasted, the ConnectionState caches everything during connections.
-    # in the future i want this to support redis and other dbs.
-    def __init__(self, **options):
-        self._guilds_cache = {}
-        self._sent_messages_cache = {}
-        self._deleted_messages_cache = {}
-        self._ready: asyncio.Event = asyncio.Event()
+class Event(abc.ABC):
+    @property
+    @abc.abstractmethod
+    def gateway(self) -> traits.GWAware:
+        """Returns the instance of :class:`Gateway`
+        this app is using
+        """
 
-        self._bot_token: str = options.get("token", None)
-        """The cached bot token, used for Gateway."""
-
-        self._bot_intents: int = options.get("intents", 0)
-        """The cached bot intents, used for Gateway"""
-
-        self._session_id: int = None
-        """The Gateway, session id"""
-
-        self._seq: int = None
-        """The seq number"""
-
-        self._said_hello: bool = False
-        """If the Gateway got a hello or not."""
-
-        try:
-            self.loop: asyncio.AbstractEventLoop = asyncio.get_running_loop()
-            """The loop."""
-        except RuntimeError:
-            self.loop: asyncio.AbstractEventLoop = asyncio.new_event_loop()
+    @property
+    @abc.abstractmethod
+    def rest(self) -> traits.RESTAware:
+        """Returns the instance of :class:`RESTClient`
+        this app is using."""

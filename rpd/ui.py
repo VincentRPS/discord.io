@@ -19,8 +19,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-# User interfacing, made to make the library look. Cool.
-# based off hikari's use of colorlog.
+"""
+User interfacing, made to make the library look. Cool.
+based off hikari's use of colorlog.
+"""
 
 import datetime
 import importlib.resources

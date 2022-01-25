@@ -20,37 +20,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 """
-The ConnectionState Caches most things during connection.
+Dispatches raw OpCode events to Event classes.
 """
-import asyncio
+
+import logging
+
+from rpd.state import ConnectionState
+
+_log = logging.getLogger(__name__)
 
 
-class ConnectionState:
-    # if you are intereasted, the ConnectionState caches everything during connections.
-    # in the future i want this to support redis and other dbs.
-    def __init__(self, **options):
-        self._guilds_cache = {}
-        self._sent_messages_cache = {}
-        self._deleted_messages_cache = {}
-        self._ready: asyncio.Event = asyncio.Event()
+class Dispatcher:
+    def __init__(self):
+        self.listeners = {}
+        self.state = ConnectionState()
 
-        self._bot_token: str = options.get("token", None)
-        """The cached bot token, used for Gateway."""
+    def dispatch(self, op: int, *args) -> None:
+        """Dispatch an OpCode event."""
+        _log.debug("Dispatching Op: %s", op)
 
-        self._bot_intents: int = options.get("intents", 0)
-        """The cached bot intents, used for Gateway"""
-
-        self._session_id: int = None
-        """The Gateway, session id"""
-
-        self._seq: int = None
-        """The seq number"""
-
-        self._said_hello: bool = False
-        """If the Gateway got a hello or not."""
-
-        try:
-            self.loop: asyncio.AbstractEventLoop = asyncio.get_running_loop()
-            """The loop."""
-        except RuntimeError:
-            self.loop: asyncio.AbstractEventLoop = asyncio.new_event_loop()
+        for listener in self.listeners[op]:
+            self.state.loop.create_task(listener(*args))
