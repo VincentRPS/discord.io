@@ -26,10 +26,10 @@ based off hikari's use of colorlog.
 
 import datetime
 import importlib.resources
+import platform
 import string
 import sys
 import time
-import platform
 from typing import Optional
 
 import colorlog
@@ -46,7 +46,7 @@ def print_banner(module: Optional[str] = "rpd"):
         "version": __version__,
         "license": __license__,
         "current_time": today.strftime("%B %d, %Y"),
-        "py_version": platform.python_version()
+        "py_version": platform.python_version(),
     }
     args.update(colorlog.escape_codes.escape_codes)
 

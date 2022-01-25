@@ -43,7 +43,7 @@ class Dispatcher:
         try:
             for listener in self.state.listeners[name]:
                 self.state.loop.create_task(listener(data))
-            
+
             for listener in self.state._gle_l:
                 self.state.loop.create_task(listener(name, data))
         except KeyError:

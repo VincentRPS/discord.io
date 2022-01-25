@@ -1,17 +1,14 @@
-# This shows a simple rest connection with Discord.
-import asyncio
+from rpd import BotApp
 
-from rpd import ConnectionState
-from rpd.api import Gateway, rest_factory
-
-state = ConnectionState(intents=0)
-rest = rest_factory.RESTFactory()
-gate = Gateway(state=state)
+# the instance of your bot,
+# a few notes, 1 intents are required
+# 2 you need to provide your own event loop!
+bot = BotApp(token="my_bot_token", intents=0)
 
 
-async def connection():
-    await rest.login("my_token")
-    await gate.connect()
+@bot.listen
+async def on_ready():
+    print("bot is ready!")
 
 
-asyncio.run(connection())
+bot.run()

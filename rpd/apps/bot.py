@@ -21,15 +21,16 @@
 # SOFTWARE
 """The bot app"""
 
+import asyncio
 import logging
-from typing import Any, Callable, Awaitable
+from typing import Any, Awaitable, Callable
 
 from rpd.api import RESTFactory
 from rpd.api.gateway import Gateway
+from rpd.internal import dispatcher
 from rpd.presence import Presence
 from rpd.state import ConnectionState
 from rpd.ui import print_banner
-from rpd.internal import dispatcher
 
 _log = logging.getLogger(__name__)
 
@@ -50,7 +51,9 @@ class BotApp:
     def __init__(self, **options):
         self.token = options.get("token")
         self.state = ConnectionState(
-            loop=options.get("loop"), intents=options.get("intents"), token=self.token
+            loop=options.get("loop", asyncio.new_event_loop()),
+            intents=options.get("intents"),
+            token=self.token,
         )
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
         self.factory = RESTFactory(state=self.state)
@@ -101,14 +104,18 @@ class BotApp:
     def presence(self) -> list[str]:
         return self.state._bot_presences
 
-    def listen(self, event: Any = None) -> Callable[[Any], Callable[..., Awaitable[Any]]]:
+    def listen(
+        self, event: Any = None
+    ) -> Callable[[Any], Callable[..., Awaitable[Any]]]:
         """Listens to a certain event."""
-        
-        def inside(coro: Callable[..., Awaitable[Any]]) -> Callable[..., Awaitable[Any]]:
+
+        def inside(
+            coro: Callable[..., Awaitable[Any]]
+        ) -> Callable[..., Awaitable[Any]]:
             if event is None:
                 self.state._gle_l.append(coro)
             else:
                 self.state.listeners[event].append(coro)
             return coro
-        
+
         return inside

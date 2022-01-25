@@ -239,6 +239,7 @@ class RESTClient:
                         elif 300 > r.status >= 200:
                             t = await r.json()
                             _log.debug("> %s", t)
+                            await self.close()
                             return t
                         else:
                             _log.error(r)
