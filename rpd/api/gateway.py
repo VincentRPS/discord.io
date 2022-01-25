@@ -47,7 +47,7 @@ class Gateway:
 
     def __init__(self, state: ConnectionState):
         self.state = state
-        self.dis = Dispatcher()
+        self.dis = Dispatcher(self.state)
         self.buffer = bytearray()
 
     async def connect(self):

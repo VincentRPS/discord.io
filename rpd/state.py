@@ -60,3 +60,8 @@ class ConnectionState:
 
         self._bot_presence_type: int = 0
         """Precense type"""
+
+        self.listeners = {}
+        """The listeners"""
+
+        self._gle_l = []

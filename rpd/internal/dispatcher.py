@@ -31,9 +31,8 @@ _log = logging.getLogger(__name__)
 
 
 class Dispatcher:
-    def __init__(self):
-        self.listeners = {}
-        self.state = ConnectionState()
+    def __init__(self, state: ConnectionState):
+        self.state = state
 
     def dispatch(self, name: str, data) -> None:
         """Dispatch an OpCode event."""
@@ -42,8 +41,11 @@ class Dispatcher:
         _log.debug("Dispatching event: %s", name)
 
         try:
-            for listener in self.listeners[name]:
+            for listener in self.state.listeners[name]:
                 self.state.loop.create_task(listener(data))
+            
+            for listener in self.state._gle_l:
+                self.state.loop.create_task(listener(name, data))
         except KeyError:
             # some weird keyerror can happen here for some reason.
             pass

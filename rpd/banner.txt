@@ -1,6 +1,6 @@
- d8888b.   d8888b.  d8888b.     ${reset}${bold_white}version:   ${reset}${thin_white}${version}${reset}
- 88  `8D   88  `8D  88  `8D     ${reset}${bold_white}copyright: ${reset}${thin_white}${copyright} | ${license} ${reset}
- 88oobY'   88oodD'  88   88     ${reset}${bold_white}date:      ${reset}${thin_white}${current_time} ${reset}
- 88`8b     88       88   88     ${reset}${bold_white}
- 88 `88.   88       88  .8D     ${reset}${bold_white}
- o8o o8o  o88o      Y8888D'
+ ${bold_red}d8888b.   d8888b.  d8888b.     ${reset}${bold_white}version:   ${reset}${thin_white}${version}${reset}
+ ${red}88  `8D   88  `8D  88  `8D     ${reset}${bold_white}copyright: ${reset}${thin_white}${copyright} | ${license} ${reset}
+ ${blue}88oobY'   88oodD'  88   88     ${reset}${bold_white}date:      ${reset}${thin_white}${current_time} ${reset}
+ ${cyan}88`8b     88       88   88     ${reset}${bold_white}python:    ${reset}${thin_white}${py_version} ${reset}
+ ${bold_cyan}88 `88.   88       88  .8D     ${reset}${bold_white}api:       ${reset}${thin_white}9 ${reset}
+ ${yellow}o8o o8o  o88o      Y88888D     ${reset}${bold_white}discord:   ${reset}${thin_white}https://discord.gg/rf3xKaUpbP ${reset}

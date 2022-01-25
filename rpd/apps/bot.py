@@ -21,14 +21,15 @@
 # SOFTWARE
 """The bot app"""
 
-import asyncio
 import logging
+from typing import Any, Callable, Awaitable
 
 from rpd.api import RESTFactory
 from rpd.api.gateway import Gateway
 from rpd.presence import Presence
 from rpd.state import ConnectionState
 from rpd.ui import print_banner
+from rpd.internal import dispatcher
 
 _log = logging.getLogger(__name__)
 
@@ -51,6 +52,7 @@ class BotApp:
         self.state = ConnectionState(
             loop=options.get("loop"), intents=options.get("intents"), token=self.token
         )
+        self.dispatcher = dispatcher.Dispatcher(state=self.state)
         self.factory = RESTFactory(state=self.state)
         self.gateway = Gateway(state=self.state)
         self._got_gateway_bot: bool = False
@@ -92,9 +94,21 @@ class BotApp:
         """Returns if the bot is ready or not."""
         return self.state._ready.is_set()
 
-    def change_presence(self):
-        return self.p.edit
+    async def change_presence(self, name: str, type: int):
+        await self.p.edit(name, type)
 
     @property
     def presence(self) -> list[str]:
         return self.state._bot_presences
+
+    def listen(self, event: Any = None) -> Callable[[Any], Callable[..., Awaitable[Any]]]:
+        """Listens to a certain event."""
+        
+        def inside(coro: Callable[..., Awaitable[Any]]) -> Callable[..., Awaitable[Any]]:
+            if event is None:
+                self.state._gle_l.append(coro)
+            else:
+                self.state.listeners[event].append(coro)
+            return coro
+        
+        return inside
