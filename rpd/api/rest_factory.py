@@ -44,9 +44,9 @@ class RESTFactory:
         The RESTClient.
     """
 
-    def __init__(self):
-        self.state = ConnectionState()
-        self.rest = RESTClient()
+    def __init__(self, state=None):
+        self.state = state or ConnectionState()
+        self.rest = RESTClient(state=self.state)
 
     def login(self, token: typing.Optional[str] = None) -> None:
         self.token = token

@@ -111,7 +111,7 @@ class RESTClient:
         The header sent to discord.
     """
 
-    def __init__(self, *, proxy=None, proxy_auth=None):
+    def __init__(self, *, state=None, proxy=None, proxy_auth=None):
         self.header: typing.Dict[str, str] = {
             "User-Agent": "DiscordBot https://github.com/RPD-py/RPD"
         }
@@ -120,7 +120,7 @@ class RESTClient:
         ] = weakref.WeakValueDictionary()
         self._has_global: asyncio.Event = asyncio.Event()
         self._has_global.set()
-        self.state = ConnectionState()
+        self.state = state or ConnectionState()
         self.proxy = proxy
         self.proxy_auth = proxy_auth
 
@@ -177,7 +177,6 @@ class RESTClient:
 
                 try:
                     async with self._session.request(method, url, **params) as r:
-                        _log.debug("< %s", await r.json())
 
                         d = await parse_tj(r)
 

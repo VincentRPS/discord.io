@@ -39,5 +39,10 @@ class Dispatcher:
         """Dispatch an OpCode event."""
         _log.debug("Dispatching Op: %s", op)
 
-        for listener in self.listeners[op]:
-            self.state.loop.create_task(listener(*args))
+        try:
+            for listener in self.listeners[op]:
+                self.state.loop.create_task(listener(*args))
+        except KeyError:
+            # some weird keyerror can happen here for some reason.
+            pass
+        

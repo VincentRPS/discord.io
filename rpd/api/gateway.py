@@ -72,22 +72,23 @@ class Gateway:
                 buffer.extend(msg.data)
                 raw = inflator.decompress(buffer).decode("utf-8")
                 data = json.loads(raw)
-                if self.state._said_hello is False:
-                    self.state._said_hello = True
-                    await self.hello(data)
-                    await self._ready(data)
-                if self.state._seq != data["s"]:
-                    self.state._seq = data["s"]
+                self._seq = data["s"]
                 _log.debug("> %s", data)
                 self.dis.dispatch(data["op"], data)
 
                 if data["op"] == 0:
                     self.dis.dispatch(data["op"], data["d"])
+                elif data["op"] == 10:
+                    await self.hello(data)
+                    await self._ready(data)
+                else:
+                    _log.error("invalid opcode was given.")
+
             else:
                 raise
 
     async def heartbeat(self, interval: float):
-        await self.send({"op": 1, "d": self.seq})
+        await self.send({"op": 1, "d": self._seq})
         await asyncio.sleep(interval)
 
     async def hello(self, data):
@@ -122,7 +123,7 @@ class Gateway:
                 "d": {
                     "token": self.state._bot_token,
                     "session_id": self.state._session_id,
-                    "seq": self.state._seq,
+                    "seq": self._seq,
                 },
             }
         )

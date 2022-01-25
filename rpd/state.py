@@ -49,8 +49,4 @@ class ConnectionState:
         self._said_hello: bool = False
         """If the Gateway got a hello or not."""
 
-        try:
-            self.loop: asyncio.AbstractEventLoop = asyncio.get_running_loop()
-            """The loop."""
-        except RuntimeError:
-            self.loop: asyncio.AbstractEventLoop = asyncio.new_event_loop()
+        self.loop: asyncio.AbstractEventLoop = options.get("loop", None)
