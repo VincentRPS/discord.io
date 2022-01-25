@@ -56,5 +56,5 @@ exclude =
     .github,
 
 accept-encodings = utf-8
-max-complexity = 15
+max-complexity = 19
 docstring-convention = numpy
