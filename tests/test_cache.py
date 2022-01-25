@@ -38,3 +38,9 @@ class TestCache:
 
     def get_cache(self):
         assert self.state._guilds_cache["919060781969059961"] == self.json
+    
+    def intents(self):
+        assert self.state._bot_intents == 1
+
+    def not_ready(self):
+        assert self.state._ready.is_set == False
