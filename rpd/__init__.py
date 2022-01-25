@@ -21,10 +21,14 @@ import typing
 from rpd.api import *
 from rpd.color import *
 from rpd.colour import *
+from rpd.events import *
 from rpd.intents import *
 from rpd.internal.exceptions import *
 from rpd.internal.warnings import *
+from rpd.message import *
 from rpd.snowflake import *
+from rpd.traits import *
+from rpd.ui import *
 from rpd.util import *
 from rpd.webhooks import *
 
