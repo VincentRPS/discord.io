@@ -237,8 +237,9 @@ class RESTClient:
                         elif r.status == 500:
                             raise ServerError(r)
                         elif 300 > r.status >= 200:
-                            _log.debug("> %s", r)
-                            return r
+                            t = await r.json()
+                            _log.debug("> %s", t)
+                            return t
                         else:
                             _log.error(r)
 
