@@ -19,24 +19,18 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
+"""The bot app"""
 
 import asyncio
 import logging
 
 from rpd.api import RESTFactory
 from rpd.api.gateway import Gateway
+from rpd.presence import Presence
 from rpd.state import ConnectionState
+from rpd.ui import print_banner
 
 _log = logging.getLogger(__name__)
-
-
-def loopu():
-    try:
-        o = asyncio.get_running_loop()
-    except RuntimeError:
-        o = asyncio.new_event_loop()
-
-    return o
 
 
 class BotApp:
@@ -53,19 +47,24 @@ class BotApp:
     """
 
     def __init__(self, **options):
-        self.factory = RESTFactory()
-        self.state = ConnectionState(loop=loopu())
+        self.token = options.get("token")
+        self.state = ConnectionState(
+            loop=options.get("loop"), intents=options.get("intents"), token=self.token
+        )
+        self.factory = RESTFactory(state=self.state)
         self.gateway = Gateway(state=self.state)
-        self.ops = options
         self._got_gateway_bot: bool = False
+        self.p = Presence(options.get("status", "online"), options.get("afk", False))
+        print_banner(options.get("module", "rpd"))
 
-    def login(self):
+    async def login(self, token):
         """Starts the bot connection
 
         .. versionadded:: 0.4.0
 
         """
-        return self.factory.login
+        self.token = token
+        await self.factory.login(token)
 
     async def connect(self):
         """Starts the WebSocket(Gateway) connection with Discord.
@@ -75,38 +74,27 @@ class BotApp:
         if self._got_gateway_bot is False:
             await self.factory.get_gateway_bot()
 
-        return self.gateway.connect()
+        await self.gateway.connect()
 
-    async def start(self, token):
-        """A function to start both the REST & Gateway Connection."""
-        await self.login(token)
-        await self.connect()
-
-    def run(self, token):
+    def run(self):
         """A blocking function to start your bot"""
 
         async def runner():
-            await self.start(token)
+            await self.login(token=self.token)
+            await self.factory.get_gateway_bot()
+            await self.connect()
 
-        def stop(f):
-            self.state.loop.stop()
-
-        future = asyncio.ensure_future(runner(), loop=self.state.loop)
-        future.add_done_callback(stop)
-        try:
-            self.state.loop.run_forever()
-        except KeyboardInterrupt:
-            print("Received request to kill the bot process.")
-        finally:
-            future.remove_done_callback(stop)
-
-        if not future.cancelled():
-            try:
-                return future.result()
-            except KeyboardInterrupt:
-                return None
+        self.state.loop.create_task(runner())
+        self.state.loop.run_forever()
 
     @property
     async def is_ready(self):
         """Returns if the bot is ready or not."""
         return self.state._ready.is_set()
+
+    def change_presence(self):
+        return self.p.edit
+
+    @property
+    def presence(self) -> list[str]:
+        return self.state._bot_presences

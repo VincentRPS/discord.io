@@ -53,9 +53,13 @@ class Gateway:
     async def connect(self):
         self._session = aiohttp.ClientSession()
         self.ws = await self._session.ws_connect(url)
-        await self.identify()
-        self.state.loop.create_task(self.recv())
-        self.state._ready.set()
+        if self.state._session_id is None:
+            await self.identify()
+            self.state.loop.create_task(self.recv())
+            self.state._ready.set()
+        else:
+            await self.resume()
+            _log.debug("Reconnected to the Gateway")
 
     async def send(self, data: dict):
         _log.debug("< %s", data)
@@ -75,20 +79,29 @@ class Gateway:
                 data = json.loads(raw)
                 self._seq = data["s"]
                 _log.debug("> %s", data)
-                self.dis.dispatch(data["op"], data)
 
                 if data["op"] == 0:
-                    self.dis.dispatch(data["op"], data["d"])
+                    self.dis.dispatch(data["t"], data["d"])
+                    if data["s"] is not None:
+                        self._seq = data["s"]
+                    if (
+                        data["t"] == "READY"
+                    ):  # only fire up getting the session_id once ready.
+                        await self._ready(data)
+                elif data["op"] == 9:
+                    await self.ws.close(code=1008)
+                    await self.resume()
                 elif data["op"] == 10:
                     await self.hello(data)
-                    await self._ready(data)
+                elif data["op"] == 11:
+                    _log.debug("> %s", data)
                 else:
                     self.dis.dispatch(data["op"], data)
 
             else:
                 raise
 
-        code = self.ws.close_code()
+        code = self.ws.close_code
         if code is None:
             return
         else:
@@ -96,11 +109,61 @@ class Gateway:
 
     async def closed(self, code):
         if code == 4000:
-            await self.connect()
+            pass
+
+        elif code == 4001:
+            raise
+
+        elif code == 4002:
+            # just ignore it.
+            pass
+
+        elif code == 4003:
+            # something weird happened, just ignore it.
+            pass
+
+        elif code == 4004:
+            raise
+
+        elif code == 4005:
+            # pass!
+            pass
+
+        elif code == 4007:
+            # pass and make a new session
+            pass
+
+        elif code == 4008:
+            # retry!
+            pass
+
+        elif code == 4009:
+            # try to resume.
+            await self.resume()
+
+        elif code == 4010:
+            raise  # this doesn't really happen, unless you are dumb
+
+        elif code == 4011:
+            # just tell the owner to shard!
+            raise
+
+        elif code == 4012:
+            # most likely a old lib version.
+            raise
+
+        elif code == 4013:
+            raise
+
+        elif code == 4014:
+            raise
+
+        await self.connect()
 
     async def heartbeat(self, interval: float):
         await self.send({"op": 1, "d": self._seq})
         await asyncio.sleep(interval)
+        self.state.loop.create_task(self.heartbeat(interval))
 
     async def hello(self, data):
         interval = data["d"]["heartbeat_interval"] / 1000
@@ -109,7 +172,7 @@ class Gateway:
         self.state.loop.create_task(self.heartbeat(interval))
 
     async def _ready(self, data):
-        self.state._session_id = data["session_id"]
+        self.state._session_id = data["d"]["session_id"]
 
     async def identify(self) -> None:
         await self.send(

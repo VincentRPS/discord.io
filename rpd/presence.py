@@ -19,31 +19,47 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-"""
-Dispatches raw OpCode events to Event classes.
-"""
+"""Represents a Discord Presence"""
 
-import logging
+import time
 
+from rpd.api.gateway import Gateway
 from rpd.state import ConnectionState
 
-_log = logging.getLogger(__name__)
 
-
-class Dispatcher:
-    def __init__(self):
-        self.listeners = {}
+class Presence:
+    def __init__(self, status: str = "online", afk: bool = False):
         self.state = ConnectionState()
+        self.status = status
+        self.afk = afk
 
-    def dispatch(self, name: str, data) -> None:
-        """Dispatch an OpCode event."""
-        fake_name = str(name.lower())
-        name = "on_" + str(fake_name)
-        _log.debug("Dispatching event: %s", name)
+    async def add(self, name: str, type: int = 0):
+        self.gate = Gateway(state=self.state)
+        if not self.gate.ws:
+            raise
+        await self.gate.send(
+            {
+                "op": 3,
+                "d": {
+                    "since": time.time(),
+                    "activites": [{"name": str(name), "type": int(type)}],
+                    "status": self.status,
+                    "afk": self.afk,
+                },
+            }
+        )
 
-        try:
-            for listener in self.listeners[name]:
-                self.state.loop.create_task(listener(data))
-        except KeyError:
-            # some weird keyerror can happen here for some reason.
-            pass
+    async def edit(self, name, type: int = 0):
+        if not self.gate.ws:
+            raise
+        self.gate.send(
+            {
+                "op": 3,
+                "d": {
+                    "since": time.time(),
+                    "activites": [{"name": str(name), "type": int(type)}],
+                    "status": self.status,
+                    "afk": self.afk,
+                },
+            }
+        )

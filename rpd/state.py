@@ -23,6 +23,7 @@
 The ConnectionState Caches most things during connection.
 """
 import asyncio
+from typing import Any
 
 
 class ConnectionState:
@@ -50,3 +51,12 @@ class ConnectionState:
         """If the Gateway got a hello or not."""
 
         self.loop: asyncio.AbstractEventLoop = options.get("loop", None)
+
+        self._bot_presences: list[str, Any] = []
+        """The precenses"""
+
+        self._bot_status: str = "online"
+        """The status"""
+
+        self._bot_presence_type: int = 0
+        """Precense type"""

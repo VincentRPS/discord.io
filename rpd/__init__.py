@@ -19,7 +19,7 @@ import typing
 # there are a lot of
 # problems with importing rpd.apps for some reason.
 from rpd.api import *
-from rpd.apps.bot import *
+from rpd.apps import *
 from rpd.color import *
 from rpd.colour import *
 from rpd.events import *
