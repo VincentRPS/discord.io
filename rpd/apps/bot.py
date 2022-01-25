@@ -19,8 +19,24 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
+
+import asyncio
+import logging
+
 from rpd.api import RESTFactory
+from rpd.api.gateway import Gateway
 from rpd.state import ConnectionState
+
+_log = logging.getLogger(__name__)
+
+
+def loopu():
+    try:
+        o = asyncio.get_running_loop()
+    except RuntimeError:
+        o = asyncio.new_event_loop()
+
+    return o
 
 
 class BotApp:
@@ -38,19 +54,57 @@ class BotApp:
 
     def __init__(self, **options):
         self.factory = RESTFactory()
-        self.state = ConnectionState()
+        self.state = ConnectionState(loop=loopu())
+        self.gateway = Gateway(state=self.state)
         self.ops = options
+        self._got_gateway_bot: bool = False
 
     def login(self):
         """Starts the bot connection
 
-        This also will set ConnectionState._ready.
-
         .. versionadded:: 0.4.0
 
         """
-        self.state._ready.set()
         return self.factory.login
+
+    async def connect(self):
+        """Starts the WebSocket(Gateway) connection with Discord.
+
+        .. versionadded:: 0.4.0
+        """
+        if self._got_gateway_bot is False:
+            await self.factory.get_gateway_bot()
+
+        return self.gateway.connect()
+
+    async def start(self, token):
+        """A function to start both the REST & Gateway Connection."""
+        await self.login(token)
+        await self.connect()
+
+    def run(self, token):
+        """A blocking function to start your bot"""
+
+        async def runner():
+            await self.start(token)
+
+        def stop(f):
+            self.state.loop.stop()
+
+        future = asyncio.ensure_future(runner(), loop=self.state.loop)
+        future.add_done_callback(stop)
+        try:
+            self.state.loop.run_forever()
+        except KeyboardInterrupt:
+            print("Received request to kill the bot process.")
+        finally:
+            future.remove_done_callback(stop)
+
+        if not future.cancelled():
+            try:
+                return future.result()
+            except KeyboardInterrupt:
+                return None
 
     @property
     async def is_ready(self):

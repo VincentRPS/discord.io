@@ -37,7 +37,6 @@ from rpd.internal.dispatcher import Dispatcher
 from ..state import ConnectionState
 
 ZLIB_SUFFIX = b"\x00\x00\xff\xff"
-buffer = bytearray()
 inflator = zlib.decompressobj()
 _log = logging.getLogger(__name__)
 url = "wss://gateway.discord.gg/?v=9&encoding=json&compress=zlib-stream"
@@ -49,6 +48,7 @@ class Gateway:
     def __init__(self, state: ConnectionState):
         self.state = state
         self.dis = Dispatcher()
+        self.buffer = bytearray()
 
     async def connect(self):
         self._session = aiohttp.ClientSession()
@@ -69,8 +69,9 @@ class Gateway:
     async def recv(self):
         async for msg in self.ws:
             if msg.type == aiohttp.WSMsgType.BINARY:
-                buffer.extend(msg.data)
-                raw = inflator.decompress(buffer).decode("utf-8")
+                self.buffer.extend(msg.data)
+                raw = inflator.decompress(self.buffer).decode("utf-8")
+                self.buffer = bytearray()  # clean buffer
                 data = json.loads(raw)
                 self._seq = data["s"]
                 _log.debug("> %s", data)
@@ -82,10 +83,20 @@ class Gateway:
                     await self.hello(data)
                     await self._ready(data)
                 else:
-                    _log.error("invalid opcode was given.")
+                    self.dis.dispatch(data["op"], data)
 
             else:
                 raise
+
+        code = self.ws.close_code()
+        if code is None:
+            return
+        else:
+            await self.closed(code)
+
+    async def closed(self, code):
+        if code == 4000:
+            await self.connect()
 
     async def heartbeat(self, interval: float):
         await self.send({"op": 1, "d": self._seq})
