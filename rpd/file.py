@@ -85,5 +85,5 @@ class File:
             self._closer()
         else:
             raise Forbidden(
-                "You aren't allowed to close this file, since you aren't a owner."
+                "You aren't allowed to close this file"
             )
