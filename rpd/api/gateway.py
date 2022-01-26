@@ -88,7 +88,7 @@ class Gateway:
                     self.dis.dispatch(data["t"], data["d"])
                     if (
                         data["t"] == "READY"
-                    ):  # only fire up getting the session_id once ready.
+                    ):  # only fire up getting the session_id on a ready event.
                         await self._ready(data)
                 elif data["op"] == 9:
                     await self.ws.close(code=1008)
