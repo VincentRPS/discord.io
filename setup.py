@@ -29,6 +29,8 @@ with open("requirements.txt") as f:
 
 packages = [
     "rpd",
+    "rpd.apps",
+    "rpd.events",
     "rpd.api",
     "rpd.util",
     "rpd.internal",
