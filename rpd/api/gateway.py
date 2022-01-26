@@ -164,6 +164,7 @@ class Gateway:
         if self._seq is None:
             await self.close(1008)
             await self.connect()
+            return
         await self.send({"op": 1, "d": self._seq})
         await asyncio.sleep(interval)
         self.state.loop.create_task(self.heartbeat(interval))
