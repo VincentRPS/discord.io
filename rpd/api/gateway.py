@@ -81,10 +81,11 @@ class Gateway:
                 data = json.loads(raw)
                 _log.debug("> %s", data)
 
+                if data["s"] is not None:
+                        self._seq = data["s"]
+
                 if data["op"] == 0:
                     self.dis.dispatch(data["t"], data["d"])
-                    if data["s"] is not None:
-                        self._seq = data["s"]
                     if (
                         data["t"] == "READY"
                     ):  # only fire up getting the session_id once ready.
