@@ -20,3 +20,7 @@ To install our speed requirements just run the following command:
 ```py
 pip install RPD[speed]
 ```
+
+## Useful Links
+
+The RPD [Discord Server](https://discord.gg/cvCAwntVhm)
