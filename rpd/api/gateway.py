@@ -75,7 +75,7 @@ class Gateway:
             if msg.type == aiohttp.WSMsgType.BINARY:
                 self.buffer.extend(msg.data)
                 raw = inflator.decompress(self.buffer).decode("utf-8")
-                if len(msg.data) < 4 or data[-4:] != ZLIB_SUFFIX:  # noqa: ignore
+                if len(msg.data) < 4 or msg.data[-4:] != ZLIB_SUFFIX:  # noqa: ignore
                     raise
                 self.buffer = bytearray()  # clean buffer
                 data = json.loads(raw)
