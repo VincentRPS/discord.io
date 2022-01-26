@@ -75,14 +75,14 @@ class Gateway:
             if msg.type == aiohttp.WSMsgType.BINARY:
                 self.buffer.extend(msg.data)
                 raw = inflator.decompress(self.buffer).decode("utf-8")
-                if len(msg.data) < 4 or data[-4:] != ZLIB_SUFFIX:
+                if len(msg.data) < 4 or data[-4:] != ZLIB_SUFFIX:  # noqa: ignore
                     raise
                 self.buffer = bytearray()  # clean buffer
                 data = json.loads(raw)
                 _log.debug("> %s", data)
 
                 if data["s"] is not None:
-                        self._seq = data["s"]
+                    self._seq = data["s"]
 
                 if data["op"] == 0:
                     self.dis.dispatch(data["t"], data["d"])
