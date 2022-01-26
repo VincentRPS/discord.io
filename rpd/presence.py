@@ -24,17 +24,16 @@
 import time
 
 from rpd.api.gateway import Gateway
-from rpd.state import ConnectionState
 
 
 class Presence:
-    def __init__(self, status: str = "online", afk: bool = False):
-        self.state = ConnectionState()
+    def __init__(self, state, status: str = "online", afk: bool = False):
+        self.state = state
+        self.gate = Gateway(state=self.state)
         self.status = status
         self.afk = afk
 
     async def add(self, name: str, type: int = 0):
-        self.gate = Gateway(state=self.state)
         if not self.gate.ws:
             raise
         await self.gate.send(
