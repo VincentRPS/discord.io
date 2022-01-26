@@ -23,7 +23,7 @@
 The ConnectionState Caches most things during connection.
 """
 import asyncio
-from typing import Any, List, Dict, Tuple, Callable
+from typing import Any, Callable, Dict, List, Tuple
 
 
 class ConnectionState:

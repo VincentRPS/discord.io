@@ -30,7 +30,7 @@ from typing import Any, Callable, Coroutine, TypeVar
 from rpd.state import ConnectionState
 
 _log = logging.getLogger(__name__)
-Coro = TypeVar('Coro', bound=Callable[..., Coroutine[Any, Any, Any]])
+Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
 
 
 class Dispatcher:
@@ -105,6 +105,6 @@ class Dispatcher:
     def listen(self, coro: Coro) -> Coro:
         if not asyncio.iscoroutinefunction(coro):
             raise TypeError
-        
+
         setattr(self, coro.__name__, coro)
         _log.debug(f"{coro.__name__} has been registered!")
