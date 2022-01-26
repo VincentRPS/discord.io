@@ -1,8 +1,7 @@
 from rpd import BotApp
 
 # the instance of your bot,
-# a few notes, 1 intents are required
-# 2 you need to provide your own event loop!
+# intents are required
 bot = BotApp(token="my_bot_token", intents=0)
 
 
