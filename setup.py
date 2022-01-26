@@ -23,11 +23,7 @@ import re
 # SOFTWARE.
 import setuptools
 
-__version__ = ""
-with open("rpd/__init__.py") as f:
-    __version__ = re.search(
-        r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE
-    ).group(1)
+__version__ = str("0.4.2")
 
 requirements = []
 with open("requirements.txt") as f:
