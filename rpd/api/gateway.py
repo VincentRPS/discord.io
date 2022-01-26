@@ -161,9 +161,17 @@ class Gateway:
         await self.connect()
 
     async def heartbeat(self, interval: float):
+        if self._seq is None:
+            await self.close(1008)
+            await self.connect()
         await self.send({"op": 1, "d": self._seq})
         await asyncio.sleep(interval)
         self.state.loop.create_task(self.heartbeat(interval))
+    
+    async def close(self, code: int = 1000):
+        if self.ws:
+            await self.ws.close(code=code)
+        self.buffer.clear()
 
     async def hello(self, data):
         interval = data["d"]["heartbeat_interval"] / 1000

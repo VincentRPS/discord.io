@@ -65,3 +65,4 @@ class ConnectionState:
         """The listeners"""
 
         self._gle_l = []
+        """Global listeners"""
