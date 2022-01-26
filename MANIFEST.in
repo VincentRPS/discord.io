@@ -1,5 +1,6 @@
 include requirements.txt
 include rpd/py.typed
 include rpd/banner.txt
+include rpd/apps
 exclude pipelines
 exclude docs

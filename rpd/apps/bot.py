@@ -23,7 +23,7 @@
 
 import asyncio
 import logging
-from typing import Any, Awaitable, Callable
+from typing import Any, Awaitable, Callable, List
 
 from rpd.api import RESTFactory
 from rpd.api.gateway import Gateway
@@ -33,6 +33,9 @@ from rpd.state import ConnectionState
 from rpd.ui import print_banner
 
 _log = logging.getLogger(__name__)
+__all__: List[str] = [
+    "BotApp"
+]
 
 
 class BotApp:
