@@ -75,9 +75,10 @@ class Gateway:
             if msg.type == aiohttp.WSMsgType.BINARY:
                 self.buffer.extend(msg.data)
                 raw = inflator.decompress(self.buffer).decode("utf-8")
+                if len(msg.data) < 4 or data[-4:] != ZLIB_SUFFIX:
+                    raise
                 self.buffer = bytearray()  # clean buffer
                 data = json.loads(raw)
-                self._seq = data["s"]
                 _log.debug("> %s", data)
 
                 if data["op"] == 0:
@@ -168,7 +169,7 @@ class Gateway:
         await self.send({"op": 1, "d": self._seq})
         await asyncio.sleep(interval)
         self.state.loop.create_task(self.heartbeat(interval))
-    
+
     async def close(self, code: int = 1000):
         if self.ws:
             await self.ws.close(code=code)

@@ -33,9 +33,7 @@ from rpd.state import ConnectionState
 from rpd.ui import print_banner
 
 _log = logging.getLogger(__name__)
-__all__: List[str] = [
-    "BotApp"
-]
+__all__: List[str] = ["BotApp"]
 
 
 class BotApp:
@@ -62,7 +60,11 @@ class BotApp:
         self.factory = RESTFactory(state=self.state)
         self.gateway = Gateway(state=self.state)
         self._got_gateway_bot: bool = False
-        self.p = Presence(state=self.state, status=options.get("status", "online"), afk=options.get("afk", False))
+        self.p = Presence(
+            state=self.state,
+            status=options.get("status", "online"),
+            afk=options.get("afk", False),
+        )
         print_banner(options.get("module", "rpd"))
 
     async def login(self, token):
