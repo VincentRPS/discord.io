@@ -90,6 +90,8 @@ class Gateway:
                         data["t"] == "READY"
                     ):  # only fire up getting the session_id on a ready event.
                         await self._ready(data)
+                    elif data["t"] == "GUILD_CREATE":
+                        self.state._guilds_cache[data["d"]["id"]] == data["d"]
                 elif data["op"] == 9:
                     await self.ws.close(code=1008)
                     await self.resume()
