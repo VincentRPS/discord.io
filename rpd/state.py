@@ -23,7 +23,7 @@
 The ConnectionState Caches most things during connection.
 """
 import asyncio
-from typing import Any
+from typing import Any, List, Dict, Tuple, Callable
 
 
 class ConnectionState:
@@ -61,8 +61,5 @@ class ConnectionState:
         self._bot_presence_type: int = 0
         """Precense type"""
 
-        self.listeners = {}
+        self.listeners: Dict[str, List[Tuple[asyncio.Future, Callable[..., bool]]]] = {}
         """The listeners"""
-
-        self._gle_l = []
-        """Global listeners"""

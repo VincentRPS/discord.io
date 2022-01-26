@@ -85,13 +85,18 @@ class Gateway:
                     self._seq = data["s"]
 
                 if data["op"] == 0:
-                    self.dis.dispatch(data["t"], data["d"])
                     if (
                         data["t"] == "READY"
                     ):  # only fire up getting the session_id on a ready event.
                         await self._ready(data)
+                        self.dis.dispatch("READY")
                     elif data["t"] == "GUILD_CREATE":
                         self.state._guilds_cache[data["d"]["id"]] = data["d"]
+                        self.dis.dispatch("GUILD_CREATE", data["d"])
+                    elif data["t"] == "MESSAGE_CREATE":
+                        self.dis.dispatch("MESSAGE", data["d"])
+                    else:
+                        self.dis.dispatch(data["t"], data["d"])
                 elif data["op"] == 9:
                     await self.ws.close(code=1008)
                     await self.resume()

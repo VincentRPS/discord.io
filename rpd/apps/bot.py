@@ -23,7 +23,7 @@
 
 import asyncio
 import logging
-from typing import Any, Awaitable, Callable, List
+from typing import List
 
 from rpd.api import RESTFactory
 from rpd.api.gateway import Gateway
@@ -109,18 +109,5 @@ class BotApp:
     def presence(self) -> list[str]:
         return self.state._bot_presences
 
-    def listen(
-        self, event: Any = None
-    ) -> Callable[[Any], Callable[..., Awaitable[Any]]]:
-        """Listens to a certain event."""
-
-        def inside(
-            coro: Callable[..., Awaitable[Any]]
-        ) -> Callable[..., Awaitable[Any]]:
-            if event is None:
-                self.state._gle_l.append(coro)
-            else:
-                self.state.listeners[event].append(coro)
-            return coro
-
-        return inside
+    def listen(self, coro: dispatcher.Coro) -> dispatcher.Coro:
+        return self.dispatcher.listen(coro)

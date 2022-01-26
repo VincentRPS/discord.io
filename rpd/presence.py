@@ -34,8 +34,6 @@ class Presence:
         self.afk = afk
 
     async def add(self, name: str, type: int = 0):
-        if not self.gate.ws:
-            raise
         await self.gate.send(
             {
                 "op": 3,
@@ -49,9 +47,7 @@ class Presence:
         )
 
     async def edit(self, name, type: int = 0):
-        if not self.gate.ws:
-            raise
-        self.gate.send(
+        await self.gate.send(
             {
                 "op": 3,
                 "d": {

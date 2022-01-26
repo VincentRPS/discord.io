@@ -24,7 +24,7 @@ from rpd.state import ConnectionState
 
 class TestCache:
     state = ConnectionState()
-    json = {
+    json = {  # this isn't exactly what the payload would be.
         "name": "RPD",
         "members": 0,
         "bots": 0,
