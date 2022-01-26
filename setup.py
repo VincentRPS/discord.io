@@ -21,7 +21,7 @@
 # SOFTWARE.
 import setuptools
 
-from rpd import __version__
+from rpd.__init__ import __version__
 
 requirements = []
 with open("requirements.txt") as f:
