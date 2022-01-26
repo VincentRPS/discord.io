@@ -23,7 +23,7 @@ import re
 # SOFTWARE.
 import setuptools
 
-__version__ = str("0.4.3")
+__version__ = str("0.4.4")
 
 requirements = []
 with open("requirements.txt") as f:

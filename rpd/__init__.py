@@ -11,7 +11,7 @@ __title__: str = "RPD"
 __author__: str = "VincentRPS"
 __license__: str = "MIT"
 __copyright__: str = "Copyright 2021-present VincentRPS"
-__version__: str = "0.4.3"
+__version__: str = "0.4.4"
 
 import logging
 import typing
@@ -43,7 +43,7 @@ class VersionInfo(typing.NamedTuple):
 
 
 version_info: VersionInfo = VersionInfo(
-    major=0, minor=4, micro=3, releaselevel="final", serial=0
+    major=0, minor=4, micro=4, releaselevel="final", serial=0
 )
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
