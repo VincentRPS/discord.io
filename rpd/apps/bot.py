@@ -61,6 +61,7 @@ class BotApp:
         self.gateway = Gateway(state=self.state)
         self._got_gateway_bot: bool = False
         self.p = Presence(
+            gateway=self.gateway,
             state=self.state,
             status=options.get("status", "online"),
             afk=options.get("afk", False),
