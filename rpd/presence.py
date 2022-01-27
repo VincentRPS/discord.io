@@ -27,9 +27,9 @@ from rpd.api.gateway import Gateway
 
 
 class Presence:
-    def __init__(self, state, status: str = "online", afk: bool = False):
+    def __init__(self, state, gateway, status: str = "online", afk: bool = False):
         self.state = state
-        self.gate = Gateway(state=self.state)
+        self.gate = gateway
         self.status = status
         self.afk = afk
 
