@@ -24,7 +24,7 @@ from typing import TypeVar, Union
 
 T = TypeVar("T", covariant=True)
 
-Snowflakeish = Union[str, int]
+Snowflakeish = int
 
 SnowflakeishList = list[Snowflakeish]
 
