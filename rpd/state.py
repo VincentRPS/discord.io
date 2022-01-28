@@ -63,3 +63,39 @@ class ConnectionState:
 
         self.listeners: Dict[str, List[Tuple[asyncio.Future, Callable[..., bool]]]] = {}
         """The listeners"""
+
+        self.all = {}
+        """The appendix of all cache."""
+
+    async def update(self):
+        """Updates the cache appendix."""
+        self.all["status"] = self._bot_status
+        self.all["presences"] = self._bot_presences
+        self.all["gateway_session_id"] = self._session_id
+        self.all["gateway_seq"] = self._seq
+        self.all["listeners"] = self.listeners
+        self.all["intents"] = self._bot_intents
+        self.all["token"] = self._bot_token
+        self.all["presence_type"] = self._bot_presence_type
+        self.all["guilds"] = self._guilds_cache
+        self.all["ready"] = self._ready.is_set()
+        self.all["sent_messages"] = self._sent_messages_cache
+        self.all["deleted_messages"] = self._deleted_messages_cache
+        self.loop.create_task(self.update(), name="RPD Full Connection Cache")
+    
+    def create(self):
+        """Creates a cache appendix."""
+        # yes this is very very slow, nothing i can do about it.
+        self.all["status"] = self._bot_status
+        self.all["presences"] = self._bot_presences
+        self.all["gateway_session_id"] = self._session_id
+        self.all["gateway_seq"] = self._seq
+        self.all["listeners"] = self.listeners
+        self.all["intents"] = self._bot_intents
+        self.all["token"] = self._bot_token
+        self.all["presence_type"] = self._bot_presence_type
+        self.all["guilds"] = self._guilds_cache
+        self.all["ready"] = self._ready.is_set()
+        self.all["sent_messages"] = self._sent_messages_cache
+        self.all["deleted_messages"] = self._deleted_messages_cache
+        self.loop.create_task(self.update(), name="RPD Full Connection Cache")

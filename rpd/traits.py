@@ -24,9 +24,8 @@ A system for traits, based off hikari.
 """
 import typing as t
 
-from rpd.api.gateway import Gateway
-from rpd.api.rest import RESTClient
-from rpd.api.rest_factory import RESTFactory
+from rpd.api import rest, gateway
+from rpd.api import rest_factory
 from rpd.apps import bot
 
 
@@ -36,7 +35,7 @@ class GWAware(t.Protocol):
     __slots__ = ()
 
     @property
-    def app(self) -> Gateway:
+    def app(self) -> gateway.Gateway:
         """The Gateway instance to use for Gateway Interactions."""
         raise NotImplementedError
 
@@ -47,12 +46,12 @@ class RESTAware(t.Protocol):
     __slots__ = ()
 
     @property
-    def app(self) -> RESTClient:
+    def app(self) -> rest.RESTClient:
         """The RESTClient instance to use for Rest Interactions."""
         raise NotImplementedError
 
     @property
-    def factory(self) -> RESTFactory:
+    def factory(self) -> rest_factory.RESTFactory:
         """The RESTFactory instance to use for Rest Interactions."""
         raise NotImplementedError
 
