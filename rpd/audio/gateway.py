@@ -20,10 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 """The V4 Voice Gateway."""
+import typing
 from ..state import ConnectionState
 
 url = "wss://gateway.discord.gg/?v=4&encoding=json&compress=zlib-stream"
 
+__all__: typing.List[str] = [
+    "Gateway"
+]
 
 class Gateway:
     def __init__(self, state: ConnectionState):

@@ -32,6 +32,10 @@ from typing import Any, List, Tuple
 
 from ..internal.exceptions import RPDError
 
+__all__: List[str] = [
+    "Encoder"
+]
+
 # structs
 EncoderStruct = ctypes.Structure()
 
