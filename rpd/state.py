@@ -106,4 +106,9 @@ class ConnectionState:
         self.all["ready"] = self._ready.is_set()
         self.all["sent_messages"] = self._sent_messages_cache
         self.all["deleted_messages"] = self._deleted_messages_cache
+        self.all["voice"] = {
+            "session_id": self._voice_session_id,
+            "seq": self._voice_seq,
+            "user_data": self._voice_user_data,
+        }
         self.loop.create_task(self.update(), name="RPD Full Connection Cache")
