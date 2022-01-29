@@ -32,6 +32,9 @@ from rpd.traits import *
 from rpd.ui import *
 from rpd.util import *
 from rpd.webhooks import *
+from rpd.modules import *
+from rpd.interactions import *
+from rpd.audio import *
 
 
 class VersionInfo(typing.NamedTuple):
