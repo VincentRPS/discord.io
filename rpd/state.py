@@ -44,8 +44,16 @@ class ConnectionState:
         self._session_id: int = None
         """The Gateway, session id"""
 
+        self._voice_session_id: int = None
+
         self._seq: int = None
         """The seq number"""
+
+        self._voice_seq: int = None
+
+        self._voice_user_data: Dict = {}
+
+        self._speaking: bool = False
 
         self._said_hello: bool = False
         """If the Gateway got a hello or not."""
