@@ -82,7 +82,7 @@ class ConnectionState:
         self.all["sent_messages"] = self._sent_messages_cache
         self.all["deleted_messages"] = self._deleted_messages_cache
         self.loop.create_task(self.update(), name="RPD Full Connection Cache")
-    
+
     def create(self):
         """Creates a cache appendix."""
         # yes this is very very slow, nothing i can do about it.

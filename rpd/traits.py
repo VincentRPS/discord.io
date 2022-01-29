@@ -24,8 +24,7 @@ A system for traits, based off hikari.
 """
 import typing as t
 
-from rpd.api import rest, gateway
-from rpd.api import rest_factory
+from rpd.api import gateway, rest, rest_factory
 from rpd.apps import bot
 
 

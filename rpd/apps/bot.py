@@ -23,6 +23,7 @@
 
 import asyncio
 import logging
+from threading import Event
 from typing import List
 
 from rpd.api import RESTFactory
@@ -59,7 +60,7 @@ class BotApp:
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
         self.factory = RESTFactory(state=self.state)
         self.gateway = Gateway(state=self.state)
-        self._got_gateway_bot: bool = False
+        self._got_gateway_bot: Event = Event()
         self.p = Presence(
             gateway=self.gateway,
             state=self.state,
@@ -82,8 +83,9 @@ class BotApp:
 
         .. versionadded:: 0.4.0
         """
-        if self._got_gateway_bot is False:
+        if self._got_gateway_bot.is_set() is False:
             await self.factory.get_gateway_bot()
+            self._got_gateway_bot.set()
 
         await self.gateway.connect()
 

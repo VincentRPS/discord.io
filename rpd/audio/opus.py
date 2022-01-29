@@ -19,40 +19,50 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-"""Represents a Discord Presence"""
+"""Implementation of Opus."""
+# based off the implementation of discord.py and disco.
+import ctypes
+import ctypes.util as loader
+from enum import Enum
 
-import time
+from ..internal.exceptions import RPDError
+
+# structs
+EncoderStruct = ctypes.Structure()
+
+# if your curious, the "decoder" handles, voice recv.
+DecoderStuct = ctypes.Structure()
+
+# pointers
+c_int_ptr = ctypes.POINTER(ctypes.c_int)
+c_int16_ptr = ctypes.POINTER(ctypes.c_int16)
+c_float_ptr = ctypes.POINTER(ctypes.c_float)
+
+EncoderStructPtr = ctypes.POINTER(EncoderStruct)
+DecoderStructPtr = ctypes.POINTER(DecoderStuct)
+
+# Enums
 
 
-class Presence:
-    def __init__(self, state, gateway, status: str = "online", afk: bool = False):
-        self.state = state
-        self.gate = gateway
-        self.status = status
-        self.afk = afk
+class AppEnum(Enum):
+    AUDIO = 2049
+    VOIP = 2048
+    LOWDELAY = 2051
 
-    async def add(self, name: str, type: int = 0):
-        await self.gate.send(
-            {
-                "op": 3,
-                "d": {
-                    "since": time.time() if self.afk is True else None,
-                    "activites": [{"name": str(name), "type": int(type)}],
-                    "status": self.status,
-                    "afk": self.afk,
-                },
-            }
-        )
 
-    async def edit(self, name, type: int = 0):
-        await self.gate.send(
-            {
-                "op": 3,
-                "d": {
-                    "since": time.time() if self.afk is True else None,
-                    "activites": [{"name": str(name), "type": int(type)}],
-                    "status": self.status,
-                    "afk": self.afk,
-                },
-            }
-        )
+# Errors
+class OpusError(RPDError):
+    pass
+
+
+# loader
+def find_opus():
+    try:
+        return loader.find_library('opus')
+    except Exception:
+        raise
+
+
+# encoder
+class Encoder:
+    ...

@@ -19,40 +19,16 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-"""Represents a Discord Presence"""
+"""The V4 Voice Gateway."""
+from ..state import ConnectionState
 
-import time
+url = "wss://gateway.discord.gg/?v=4&encoding=json&compress=zlib-stream"
 
 
-class Presence:
-    def __init__(self, state, gateway, status: str = "online", afk: bool = False):
+class Gateway:
+    def __init__(self, state: ConnectionState):
         self.state = state
-        self.gate = gateway
-        self.status = status
-        self.afk = afk
+        self.buffer = bytearray()
 
-    async def add(self, name: str, type: int = 0):
-        await self.gate.send(
-            {
-                "op": 3,
-                "d": {
-                    "since": time.time() if self.afk is True else None,
-                    "activites": [{"name": str(name), "type": int(type)}],
-                    "status": self.status,
-                    "afk": self.afk,
-                },
-            }
-        )
-
-    async def edit(self, name, type: int = 0):
-        await self.gate.send(
-            {
-                "op": 3,
-                "d": {
-                    "since": time.time() if self.afk is True else None,
-                    "activites": [{"name": str(name), "type": int(type)}],
-                    "status": self.status,
-                    "afk": self.afk,
-                },
-            }
-        )
+    async def connect(self):
+        ...

@@ -81,8 +81,7 @@ class Gateway:
                 data = json.loads(raw)
                 _log.debug("> %s", data)
 
-                if data["s"] is not None:
-                    self._seq = data["s"]
+                self._seq = data["s"]
 
                 if data["op"] == 0:
                     if (

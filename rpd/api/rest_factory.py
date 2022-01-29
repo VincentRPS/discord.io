@@ -112,7 +112,7 @@ class RESTFactory:
     def create_invite(
         self,
         *,
-        channel_id: typing.Optional[Snowflakeish] = None,  # mypy errors out here?
+        channel_id: typing.Optional[Snowflakeish] = None,
         reason: typing.Optional[str] = None,
         max_age: typing.Optional[int] = 0,
         max_uses: typing.Optional[int] = 0,

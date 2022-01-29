@@ -104,7 +104,7 @@ class Dispatcher:
 
     def listen(self, coro: Coro) -> Coro:
         if not asyncio.iscoroutinefunction(coro):
-            raise TypeError
+            raise TypeError("Function is not a coroutine.")
 
         setattr(self, coro.__name__, coro)
         _log.debug(f"{coro.__name__} has been registered!")

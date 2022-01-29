@@ -40,7 +40,7 @@ ignore =
 
 per-file-ignores =
     # imported but unused
-    __init__.py: F401, F403
+    __init__.py: F401, F403, W291
 
 exclude =
     .git,

@@ -42,6 +42,8 @@ __all__: typing.List[str] = [
 
 PAD = typing.TypeVar("PAD", bound="PadLock")
 
+aiohttp.hdrs.WEBSOCKET = "websocket"
+
 
 async def parse_tj(
     response: aiohttp.ClientResponse,
@@ -198,6 +200,9 @@ class RESTClient:
                             )
                             self.state.loop.call_later(float(reset_after), lock.release)
 
+                        elif remains == "1":
+                            await asyncio.sleep(float("0.111"))
+
                         if r.status == 429:
                             if not r.headers.get("via") or isinstance(d, str):
                                 # handles couldflare bans
@@ -248,6 +253,17 @@ class RESTClient:
                     raise Exception(
                         f"Exception Occured when trying to send a request. {exc}"
                     )
+
+    async def cdn(self, url) -> bytes:
+        async with self._session.get(url) as r:
+            if r.status == 200:
+                return await r.read()
+            elif r.status == 404:
+                raise NotFound(f"{url} is not found!")
+            elif r.status == 403:
+                raise Forbidden("You are not allowed to see this image!")
+            else:
+                raise RESTError(r, "asset recovery failed.")
 
     async def close(self) -> None:
         if self._session:
