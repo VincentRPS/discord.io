@@ -19,15 +19,19 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
+"""The Voice Client."""
+from rpd.internal.warnings import NaClWarning
 
+has_nacl: bool
 
-class RPDWarning(Warning):
-    """The base warning class for RPD"""
+try:
+    import nacl.secret
+except (ImportError, ModuleNotFoundError):
+    has_nacl = False
+else:
+    has_nacl = True
 
-
-class Deprecated(RPDWarning):
-    """Gets raised when a object has been deprecated but not removed"""
-
-
-class NaClWarning(RPDWarning):
-    """Raised when you don't have PyNaCl"""
+if not has_nacl:
+    raise NaClWarning(
+        "You don't seem to have PyNaCl, meaning you won't be able to use voice!"
+    )
