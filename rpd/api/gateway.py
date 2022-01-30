@@ -250,6 +250,6 @@ class Gateway:
             self.s = ShardedGateway(self._s, self._d, shard)
             self._s.loop.create_task(self.s.connect(token))
             self.shards.append(self.s)
-    
-    async def send(self, payload):
-        return await self.s.send(payload)
+
+    def send(self, payload):
+        return self.s.send(payload)
