@@ -50,7 +50,7 @@ async def on_ready():
 
 @bot.listen
 async def on_message(msg):
-    if msg["content"] == "!ping":
+    if str(msg["content"]).startswith("!ping"):
         await bot.factory.create_message(msg["channel_id"], "pong!")
 
 bot.run("my_bot_token")

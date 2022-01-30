@@ -46,6 +46,8 @@ class ConnectionState:
         self._seq: int = None
         """The seq number"""
 
+        self.app = options.get("bot", None)
+
         self._voice_seq: int = None
 
         self._voice_user_data: Dict = {}
@@ -86,7 +88,7 @@ class ConnectionState:
         self.all["ready"] = self._ready.is_set()
         self.all["sent_messages"] = self._sent_messages_cache
         self.all["deleted_messages"] = self._deleted_messages_cache
-        self.loop.create_task(self.update(), name="RPD Full Connection Cache")
+        self.loop.create_task(self.update())
 
     def create(self):
         """Creates a cache appendix."""

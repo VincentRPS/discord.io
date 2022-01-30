@@ -20,20 +20,5 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-
-import abc
-import typing
-
-from rpd.state import ConnectionState
-
-
-class Module(abc.ABC):
-    def __init__(self, state: ConnectionState):
-        self.state = state
-
-        super().__init__()
-    
-    @classmethod
-    def name(cls):
-        return f"{cls.__module__}.{cls.__name__}"
-    
+class Button:
+    ...

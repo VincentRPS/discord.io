@@ -246,6 +246,8 @@ class RESTClient:
                             _log.debug("> %s", t)
                             await self.close()
                             return t
+                        elif r.status == 204:
+                            pass
                         else:
                             _log.error(r)
 

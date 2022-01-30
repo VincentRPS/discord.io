@@ -54,6 +54,8 @@ class BotApp:
         The Gateway
     p
         The presence
+    cogs
+        A :class:`dict` if all Cogs.
 
     Parameters
     ----------
@@ -82,11 +84,13 @@ class BotApp:
         self.state = ConnectionState(
             loop=loop,
             intents=intents,
+            bot=self,
         )
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
         self.factory = RESTFactory(state=self.state)
         self.gateway = Gateway(state=self.state, dispatcher=self.dispatcher)
         self._got_gateway_bot: Event = Event()
+        self.cogs = {}
         self.p = Presence(
             gateway=self.gateway,
             state=self.state,

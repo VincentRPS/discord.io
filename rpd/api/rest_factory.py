@@ -128,3 +128,115 @@ class RESTFactory:
         if channel_id:
             json["channel_id"] = channel_id
         return self.rest.send(Route("POST"), reason=reason, json=json)
+
+    # Application Commands
+
+    # global
+
+    def create_global_application_command(
+        self,
+        application_id: Snowflakeish,
+        name: str,
+        description: str,
+        options: typing.List[typing.Dict[str, typing.Any]],
+        default_permission: typing.Optional[bool] = True,
+        type: typing.Literal["CHAT_INPUT", "USER", "MESSAGE"] = "CHAT_INPUT",
+    ):
+        json = {
+            "name": name,
+            "description": description,
+            "options": options,
+            "default_permission": default_permission,
+            "type": type,
+        }
+        return self.rest.send(
+            Route("POST", f"/applications/{application_id}/commands"), json=json
+        )
+
+    def get_global_application_command(
+        self, application_id: Snowflakeish, command: Snowflakeish
+    ):
+        return self.rest.send(
+            Route("GET", f"/applications/{application_id}/commands/{command}")
+        )
+
+    def edit_global_application_command(
+        self,
+        application_id: Snowflakeish,
+        command_id: Snowflakeish,
+        name: str,
+        description: str,
+        options: typing.List[typing.Dict[str, typing.Any]],
+        default_permission: typing.Optional[bool] = True,
+    ):
+        json = {
+            "name": name,
+            "description": description,
+            "options": options,
+            "default_permission": default_permission,
+        }
+        return self.rest.send(
+            Route("PATCH", f"/applications/{application_id}/commands/{command_id}"),
+            json=json,
+        )
+
+    # Guild Commands
+
+    def create_global_application_command(
+        self,
+        application_id: Snowflakeish,
+        guild_id: Snowflakeish,
+        name: str,
+        description: str,
+        options: typing.List[typing.Dict[str, typing.Any]],
+        default_permission: typing.Optional[bool] = True,
+        type: typing.Literal["CHAT_INPUT", "USER", "MESSAGE"] = "CHAT_INPUT",
+    ):
+        json = {
+            "name": name,
+            "description": description,
+            "options": options,
+            "default_permission": default_permission,
+            "type": type,
+        }
+        return self.rest.send(
+            Route("POST", f"/applications/{application_id}/guilds/{guild_id}/commands"),
+            json=json,
+        )
+
+    def get_global_application_command(
+        self,
+        application_id: Snowflakeish,
+        guild_id: Snowflakeish,
+        command: Snowflakeish,
+    ):
+        return self.rest.send(
+            Route(
+                "GET",
+                f"/applications/{application_id}/guilds/{guild_id}/commands/{command}",
+            )
+        )
+
+    def edit_global_application_command(
+        self,
+        application_id: Snowflakeish,
+        command_id: Snowflakeish,
+        guild_id: Snowflakeish,
+        name: str,
+        description: str,
+        options: typing.List[typing.Dict[str, typing.Any]],
+        default_permission: typing.Optional[bool] = True,
+    ):
+        json = {
+            "name": name,
+            "description": description,
+            "options": options,
+            "default_permission": default_permission,
+        }
+        return self.rest.send(
+            Route(
+                "PATCH",
+                f"/applications/{application_id}/guilds/{guild_id}/commands/{command_id}",
+            ),
+            json=json,
+        )
