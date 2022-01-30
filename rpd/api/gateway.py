@@ -43,16 +43,25 @@ url = "wss://gateway.discord.gg/?v=9&encoding=json&compress=zlib-stream"
 
 
 class Gateway:
-    """Represents a Gateway connection with Discord."""
+    """Represents a Gateway connection with Discord.
 
-    def __init__(self, state: ConnectionState):
+    Attributes
+    ----------
+    buffer
+        An array of bytes which buffers the connection.
+    dis
+        The dispatcher
+    """
+
+    def __init__(self, state: ConnectionState, dispatcher: Dispatcher):
         self.state = state
-        self.dis = Dispatcher(self.state)
+        self.dis = dispatcher
         self.buffer = bytearray()
 
-    async def connect(self):
+    async def connect(self, token):
         self._session = aiohttp.ClientSession()
         self.ws = await self._session.ws_connect(url)
+        self.token = token
         if self.state._session_id is None:
             await self.identify()
             self.state.loop.create_task(self.recv())
@@ -107,7 +116,7 @@ class Gateway:
                     self.dis.dispatch(data["op"], data)
 
             else:
-                raise
+                raise RuntimeError
 
         code = self.ws.close_code
         if code is None:
@@ -120,7 +129,7 @@ class Gateway:
             pass
 
         elif code == 4001:
-            raise
+            pass
 
         elif code == 4002:
             # just ignore it.
@@ -166,13 +175,9 @@ class Gateway:
         elif code == 4014:
             raise
 
-        await self.connect()
+        await self.connect(token=self.token)
 
     async def heartbeat(self, interval: float):
-        if self._seq is None:
-            await self.close(1008)
-            await self.connect()
-            return
         await self.send({"op": 1, "d": self._seq})
         await asyncio.sleep(interval)
         self.state.loop.create_task(self.heartbeat(interval))
@@ -196,7 +201,7 @@ class Gateway:
             {
                 "op": 2,
                 "d": {
-                    "token": self.state._bot_token,
+                    "token": self.token,
                     "intents": self.state._bot_intents,
                     "properties": {
                         "$os": platform.system(),
@@ -212,7 +217,7 @@ class Gateway:
             {
                 "op": 6,
                 "d": {
-                    "token": self.state._bot_token,
+                    "token": self.token,
                     "session_id": self.state._session_id,
                     "seq": self._seq,
                 },

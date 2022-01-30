@@ -35,9 +35,6 @@ class ConnectionState:
         self._deleted_messages_cache = {}
         self._ready: asyncio.Event = asyncio.Event()
 
-        self._bot_token: str = options.get("token", None)
-        """The cached bot token, used for Gateway."""
-
         self._bot_intents: int = options.get("intents", 0)
         """The cached bot intents, used for Gateway"""
 

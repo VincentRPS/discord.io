@@ -32,15 +32,17 @@ from typing import Any, List, Tuple
 
 from ..internal.exceptions import RPDError
 
-__all__: List[str] = [
-    "Encoder"
-]
+__all__: List[str] = ["Encoder"]
 
 # structs
-EncoderStruct = ctypes.Structure()
+class EncoderStruct(ctypes.Structure):
+    pass
+
 
 # if your curious, the "decoder" handles, voice recv.
-DecoderStuct = ctypes.Structure()
+class DecoderStuct(ctypes.Structure):
+    pass
+
 
 # pointers
 c_int_ptr = ctypes.POINTER(ctypes.c_int)

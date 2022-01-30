@@ -24,7 +24,7 @@
 import asyncio
 import logging
 from threading import Event
-from typing import List
+from typing import List, Optional
 
 from rpd.api import RESTFactory
 from rpd.api.gateway import Gateway
@@ -48,28 +48,54 @@ class BotApp:
         The instance of RESTFactory
     state
         The client's connection state
+    dispatcher
+        The dispatcher
+    gateway
+        The Gateway
+    p
+        The presence
+
+    Parameters
+    ----------
+    token
+        The bot token
+    intents
+        The bot intents, defaults `32509`
+    status
+        The bot status, defaults to online
+    afk
+        If the bot is afk, default to False
+    loop
+        The loop you want to use, defaults to :class:`asyncio.new_event_loop`
+    module
+        The module with a `banner.txt` to print
     """
 
-    def __init__(self, **options):
-        self.token = options.get("token")
+    def __init__(
+        self,
+        loop: Optional[asyncio.AbstractEventLoop] = asyncio.new_event_loop(),
+        intents: Optional[int] = 32509,
+        status: Optional[str] = "online",
+        afk: Optional[bool] = False,
+        module: Optional[str] = "rpd",
+    ):
         self.state = ConnectionState(
-            loop=options.get("loop", asyncio.new_event_loop()),
-            intents=options.get("intents"),
-            token=self.token,
+            loop=loop,
+            intents=intents,
         )
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
         self.factory = RESTFactory(state=self.state)
-        self.gateway = Gateway(state=self.state)
+        self.gateway = Gateway(state=self.state, dispatcher=self.dispatcher)
         self._got_gateway_bot: Event = Event()
         self.p = Presence(
             gateway=self.gateway,
             state=self.state,
-            status=options.get("status", "online"),
-            afk=options.get("afk", False),
+            status=status,
+            afk=afk,
         )
-        print_banner(options.get("module", "rpd"))
+        print_banner(module)
 
-    async def login(self, token):
+    async def login(self, token: str):
         """Starts the bot connection
 
         .. versionadded:: 0.4.0
@@ -78,7 +104,7 @@ class BotApp:
         self.token = token
         await self.factory.login(token)
 
-    async def connect(self):
+    async def connect(self, token: str):
         """Starts the WebSocket(Gateway) connection with Discord.
 
         .. versionadded:: 0.4.0
@@ -87,15 +113,15 @@ class BotApp:
             await self.factory.get_gateway_bot()
             self._got_gateway_bot.set()
 
-        await self.gateway.connect()
+        await self.gateway.connect(token=token)
 
-    def run(self):
+    def run(self, token: str):
         """A blocking function to start your bot"""
 
         async def runner():
-            await self.login(token=self.token)
+            await self.login(token=token)
             await self.factory.get_gateway_bot()
-            await self.connect()
+            await self.connect(token=token)
 
         self.state.loop.create_task(runner())
         self.state.loop.run_forever()

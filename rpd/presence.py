@@ -49,7 +49,7 @@ class Presence:
             {
                 "op": 3,
                 "d": {
-                    "since": time.time() if self.afk is True else None,
+                    "since": time.time(),
                     "activites": [{"name": str(name), "type": int(type)}],
                     "status": self.status,
                     "afk": self.afk,

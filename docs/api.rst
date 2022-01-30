@@ -39,17 +39,73 @@ REST API
     :members:
 
 
-WebSockets
-----------
-
-.. autoclass:: DiscordClientWebSocketResponse
-    :members:
-
-AioClient
+Gateway's
 ---------
 
-.. autoclass:: RESTClientResponse
+.. attributetable:: Gateway
+
+.. autoclass:: Gateway
     :members:
+
+.. attributetable:: VoiceGateway
+
+.. autoclass:: VoiceGateway
+    :members:
+
+Opus
+----
+
+.. autoclass:: Encoder
+    :members:
+
+Apps
+----
+
+.. attributetable:: BaseWebhookApp
+
+.. autoclass:: BaseWebhookApp
+    :members:
+
+.. attributetable:: WebhookApp
+
+.. autoclass:: WebhookApp
+    :members:
+
+.. attributetable:: BotApp
+
+.. autoclass:: BotApp
+    :members:
+
+Webhooks
+--------
+
+.. attributetable:: Webhook
+
+.. autoclass:: Webhook
+    :members:
+
+Dispatcher
+----------
+
+.. attributetable:: Dispatcher
+
+.. autoclass:: Dispatcher
+    :members:
+
+Snowflakes
+----------
+
+.. autoclass:: Snowflakeish
+    
+    A Discord Snowflake.
+
+.. autoclass:: SnowflakeishList
+
+    A list of Snowflakes
+
+.. autoclass:: SnowflakeishOr
+
+    A Snowflake or object class.
 
 Exceptions
 ----------
@@ -64,8 +120,6 @@ Exceptions
 
 .. autoexception:: NotFound
 
-.. autoexception:: ServerError
-
 Exception Hierarcy
 ------------------
 
@@ -77,4 +131,3 @@ Exception Hierarcy
                 - :exc:`Forbidden`
                 - :exc:`NotFound`
                 - :exc:`ServerError`
-            - :exc:`WebSocketError`

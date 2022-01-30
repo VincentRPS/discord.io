@@ -20,11 +20,11 @@ sys.path.append(os.path.abspath("extensions"))
 # -- Project information -----------------------------------------------------
 
 project = "RPD"
-copyright = "2021, VincentRPS"
+copyright = "2021-present, VincentRPS"
 author = "VincentRPS"
 
 # The full version, including alpha/beta/rc tags
-release = "0.3.0"
+release = "0.5.0"
 
 
 # -- General configuration ---------------------------------------------------
@@ -37,6 +37,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "attributetable",
     "exception_hierarchy",
+    "resourcelinks",
     # 'sphinx.ext.githubpages', putting this off until we have a domain.
 ]
 
@@ -70,6 +71,13 @@ rst_prolog = """
 .. |coroutine_link| replace:: *coroutine*
 .. _coroutine_link: https://docs.python.org/3/library/asyncio-task.html#coroutine
 """
+
+resource_links = {
+    "discord": "https://discord.gg/cvCAwntVhm",
+    "issues": "https://github.com/RPD-py/RPD/issues",
+    "discussions": "https://github.com/RPD-py/RPD/discussions",
+    "examples": "https://github.com/RPD-py/RPD/tree/master/examples",
+}
 
 # -- Options for intersphinx extension ---------------------------------------
 

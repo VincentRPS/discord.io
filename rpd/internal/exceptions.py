@@ -25,7 +25,6 @@ import typing
 __all__: typing.List[str] = [
     "RPDError",
     "RESTError",
-    "WebSocketError",
     "Forbidden",
     "NotFound",
     "ServerError",
@@ -50,7 +49,3 @@ class NotFound(RESTError):
 
 class ServerError(RESTError):
     """A Discord Server Error"""
-
-
-class WebSocketError(RPDError):
-    """WebSocket Errors"""

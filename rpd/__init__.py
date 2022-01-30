@@ -11,7 +11,7 @@ __title__: str = "RPD"
 __author__: str = "VincentRPS"
 __license__: str = "MIT"
 __copyright__: str = "Copyright 2021-present VincentRPS"
-__version__: str = "0.4.6"
+__version__: str = "0.5.0"
 
 import logging
 import typing
@@ -20,21 +20,21 @@ import typing
 # problems with importing rpd.apps for some reason.
 from rpd.api import *
 from rpd.apps import *
+from rpd.audio import *
 from rpd.color import *
 from rpd.colour import *
 from rpd.events import *
 from rpd.intents import *
+from rpd.interactions import *
 from rpd.internal.exceptions import *
 from rpd.internal.warnings import *
 from rpd.message import *
+from rpd.modules import *
 from rpd.snowflake import *
 from rpd.traits import *
 from rpd.ui import *
 from rpd.util import *
 from rpd.webhooks import *
-from rpd.modules import *
-from rpd.interactions import *
-from rpd.audio import *
 
 
 class VersionInfo(typing.NamedTuple):
@@ -46,7 +46,7 @@ class VersionInfo(typing.NamedTuple):
 
 
 version_info: VersionInfo = VersionInfo(
-    major=0, minor=4, micro=6, releaselevel="final", serial=0
+    major=0, minor=5, micro=0, releaselevel="final", serial=0
 )
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

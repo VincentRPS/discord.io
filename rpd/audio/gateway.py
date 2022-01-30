@@ -21,15 +21,15 @@
 # SOFTWARE
 """The V4 Voice Gateway."""
 import typing
+
 from ..state import ConnectionState
 
 url = "wss://gateway.discord.gg/?v=4&encoding=json&compress=zlib-stream"
 
-__all__: typing.List[str] = [
-    "Gateway"
-]
+__all__: typing.List[str] = ["VoiceGateway"]
 
-class Gateway:
+
+class VoiceGateway:
     def __init__(self, state: ConnectionState):
         self.state = state
         self.buffer = bytearray()
