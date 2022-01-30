@@ -21,7 +21,7 @@
 # SOFTWARE.
 import setuptools
 
-__version__ = str("0.5.0")
+__version__ = str("0.6.0")
 
 requirements = []
 with open("requirements.txt") as f:
@@ -69,7 +69,7 @@ setuptools.setup(
     description="Asynchronous Discord API Wrapper For Python",
     python_requires=">=3.8",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
         "Natural Language :: English",

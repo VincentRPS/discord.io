@@ -30,11 +30,11 @@ from typing import List, Optional
 
 from rpd.api import RESTFactory
 from rpd.api.gateway import Gateway
+from rpd.audio import has_nacl
 from rpd.internal import dispatcher
 from rpd.presence import Presence
 from rpd.state import ConnectionState
 from rpd.ui import print_banner
-from rpd.audio import has_nacl
 
 _log = logging.getLogger(__name__)
 __all__: List[str] = ["BotApp"]

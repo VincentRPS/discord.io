@@ -19,30 +19,37 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
+"""Represents a Discord Embed.
 
+ref: https://discord.dev/resources/channel#embed-limits
+"""
 
-import abc
-from typing import TypeVar
+from typing import List, Optional
 
-from rpd.internal import dispatcher
-from rpd.state import ConnectionState
+__all__: List[str] = [
+    "Embed"
+]
 
-ModuleT = TypeVar("ModuleT", bound="Module")
+def Embed(
+        title: Optional[str] = None,
+        description: Optional[str] = None,
+        url: Optional[str] = None,
+        date: Optional[str] = None,
+        color: Optional[int] = None,
+    ):
+        ret = {
+            "type": "rich",
+        }
 
-
-class Module(abc.ABC):
-    def __init__(self, state: ConnectionState, dispatcher: dispatcher.Dispatcher):
-        self.state = state
-        self.dispatcher = dispatcher
-
-        super().__init__()
-
-    @classmethod
-    def name(cls):
-        return f"{cls.__module__}.{cls.__name__}"
-
-    def listen(self, coro: dispatcher.Coro):
-        return self.dispatcher.listen(coro)
-
-    def _inject(self):
-        return self
+        if title:
+            ret["title"] = title
+        if description:
+            ret["description"] = description
+        if url:
+            ret["url"] = url
+        if date:
+            ret["date"] = date
+        if color:
+            ret["color"] = color
+        
+        return [ret]

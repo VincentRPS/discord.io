@@ -93,6 +93,7 @@ class Gateway:
                 self._seq = data["s"]
 
                 if data["op"] == 0:
+                    self.dis.dispatch("SOCKET_RECEIVE")
                     if (
                         data["t"] == "READY"
                     ):  # only fire up getting the session_id on a ready event.

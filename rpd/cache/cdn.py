@@ -19,30 +19,25 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
+"""Represents a Connection with the Discord CDN.
+
+url: https://cdn.discordapp.com
+
+ref: https://discord.dev/reference#image-formatting
+"""
+
+import typing
 
 
-import abc
-from typing import TypeVar
+__all__: typing.List[str] = [
+    "CDN"
+]
 
-from rpd.internal import dispatcher
-from rpd.state import ConnectionState
+class CDN:
+    """Represents the Discord CDN."""
 
-ModuleT = TypeVar("ModuleT", bound="Module")
+    def __init__(self):
+        ...
 
-
-class Module(abc.ABC):
-    def __init__(self, state: ConnectionState, dispatcher: dispatcher.Dispatcher):
-        self.state = state
-        self.dispatcher = dispatcher
-
-        super().__init__()
-
-    @classmethod
-    def name(cls):
-        return f"{cls.__module__}.{cls.__name__}"
-
-    def listen(self, coro: dispatcher.Coro):
-        return self.dispatcher.listen(coro)
-
-    def _inject(self):
-        return self
+    def from_hash(self, hash):
+        ...

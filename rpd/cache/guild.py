@@ -19,9 +19,43 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-import attr
+"""Represents a Discord Guild.
 
+ref: https://discord.dev/resources/guild
+"""
+from typing import Any, Dict, List
 
-@attr.define(init=True)
-class Embed:
-    ...
+__all__: List[str] = [
+    "Guild"
+]
+
+class Guild:
+    """Represents a Discord Guild.
+
+    .. versionadded:: 0.6.0
+    """
+
+    # cache helpers for guilds.
+    def __init__(self, guild: dict):
+        self._guild_cache = guild
+
+    def joined_at(self) -> str:
+        return self._guild_cache["joined_at"]
+
+    def vanity(self) -> str:
+        return self._guild_cache["vanity_url_code"]
+
+    def splash(self) -> str:
+        return self._guild_cache["splash"]
+
+    def discovery_splash(self) -> str:
+        return self._guild_cache["discovery_splash"]
+
+    def sub_count(self) -> int:
+        return self._guild_cache["premium_subscription_count"]
+
+    def emojis(self) -> List[Dict[str, Any]]:
+        return self._guild_cache["emojis"]
+
+    def from_dict(self) -> dict:
+        return self._guild_cache

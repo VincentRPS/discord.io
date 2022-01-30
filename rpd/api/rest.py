@@ -181,6 +181,9 @@ class RESTClient:
                     async with self._session.request(method, url, **params) as r:
 
                         d = await parse_tj(r)
+                        _log.debug(
+                            "< %s %s %s %s", method, url, params.get("data"), bucket
+                        )
 
                         try:
                             remains = r.headers.get("X-RateLimit-Remaining")

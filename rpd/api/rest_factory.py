@@ -68,27 +68,26 @@ class RESTFactory:
 
     def create_message(
         self,
-        channel: typing.Optional[Snowflakeish] = None,
-        content: typing.Optional[str] = None,
-        tts: bool = False,
-        embeds: typing.Dict[str, str] = None,
-        allowed_mentions: bool = False,
-        message_reference: Snowflakeish = None,
-        components: dict = None,
+        channel: Snowflakeish,
+        content: str,
+        tts: typing.Optional[bool] = False,
+        embeds: typing.List[typing.Dict[str, typing.Any]] = None,
+        allowed_mentions: typing.Optional[bool] = False,
+        message_reference: typing.Optional[dict] = None,
+        components: typing.Optional[list[dict]] = None,
     ):
-        json = {}
-        if content is not None:
-            json["content"] = content
-        elif tts is not False:
-            json["tts"] = tts
-        elif allowed_mentions is not False:
-            json["allowed_mentions"] = allowed_mentions
-        elif message_reference is not None:
+        json = {
+            "content": content,
+            "tts": tts,
+            "allowed_mentions": int(allowed_mentions)
+        }
+        if message_reference is not None:
             json["message_reference"] = message_reference
-        elif components is not None:
+        if components is not None:
             json["components"] = components
-        elif embeds is not None:
-            json["embeds"] = [embeds]
+        if embeds is not None:
+            json["embeds"] = embeds
+
         return self.rest.send(
             Route("POST", f"/channels/{channel}/messages", channel_id=channel),
             json=json,

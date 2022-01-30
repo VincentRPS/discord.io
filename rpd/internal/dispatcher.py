@@ -64,7 +64,7 @@ class Dispatcher:
     def dispatch(self, name: str, *args, **kwargs) -> None:
         fake_name = str(name.lower())
         real_name = "on_" + str(fake_name)
-        _log.debug("Dispatching event: %s", name)
+        _log.debug("Dispatching event: %s", real_name)
 
         listeners = self.state.listeners.get(name)
         if listeners:

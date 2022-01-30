@@ -33,11 +33,11 @@ class ConnectionState:
 
         The connection state is responsible for caching
         everything, meaning most classes will depend on it.
-    
+
     .. note::
 
-        .. data:: ConnectionState._speaking 
-        
+        .. data:: ConnectionState._speaking
+
         is planned to be deprecated soon.
 
     Attributes
@@ -56,22 +56,22 @@ class ConnectionState:
 
     app :class:`BotApp` or :class:`WebhookApp`
         The bot app
-        
+
         .. versionadded:: 0.5.0
 
     _voice_seq :class:`int`
         The Voice Gateway seq
-        
+
         .. versionadded:: 0.5.0
 
     _voice_user_data :class:`dict`
         The Voice User Data given by the Voice Gateway.
-        
+
         .. versionadded:: 0.5.0
 
     _speaking :class:`bool`
         If the bot is currently speaking, defaults False
-        
+
         .. versionadded:: 0.5.0
 
     _said_hello :class:`bool`
@@ -92,7 +92,7 @@ class ConnectionState:
     listeners :class:`dict`
         The bot listeners
 
-    self.all :class:`dict`
+    all :class:`dict`
         The appendix of all cache.
 
     .. versionadded:: 0.4.0
@@ -199,5 +199,5 @@ class ConnectionState:
         }
         self.loop.create_task(self.update(), name="RPD Full Connection Cache")
 
-    def append(self) -> Dict:
+    def list(self) -> Dict:
         return self.all
