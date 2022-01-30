@@ -61,9 +61,9 @@ Opus
 Apps
 ----
 
-.. attributetable:: BasicWebhookApp
+.. attributetable:: BasicWebhook
 
-.. autoclass:: BasicWebhookApp
+.. autoclass:: BasicWebhook
     :members:
 
 .. attributetable:: WebhookApp
