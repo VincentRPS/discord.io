@@ -22,6 +22,12 @@ To install our speed requirements just run the following command:
 pip install RPD[speed]
 ```
 
+For voice support please run the following command:
+
+```py
+pip install RPD[audio]
+```
+
 ## Example
 This is a quick usecase example for the library!
 
