@@ -26,7 +26,7 @@ class TestSnowflake:
     def test_snowflakeish(self):
         try:
             assert Snowflakeish(1) == 1
-            assert Snowflakeish("2") == "2"
+            assert Snowflakeish("2") == 2
         except KeyError:
             pass
 
