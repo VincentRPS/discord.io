@@ -89,6 +89,11 @@ Snowflakes
 
     A Snowflake or object class.
 
+State
+-----
+
+.. autoclass:: ConnectionState
+
 Exceptions
 ----------
 
@@ -99,6 +104,8 @@ Exceptions
 .. autoexception:: Forbidden
 
 .. autoexception:: NotFound
+
+.. autoexception:: ServerError
 
 Exception Hierarcy
 ------------------

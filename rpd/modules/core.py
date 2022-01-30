@@ -27,7 +27,7 @@ from typing import TypeVar
 
 from rpd.state import ConnectionState
 
-Module = TypeVar('ModuleT', bound='Module')
+ModuleT = TypeVar("ModuleT", bound="Module")
 
 
 class Module(abc.ABC):
@@ -36,14 +36,13 @@ class Module(abc.ABC):
         self.dispatcher = dispatcher
 
         super().__init__()
-    
+
     @classmethod
     def name(cls):
         return f"{cls.__module__}.{cls.__name__}"
-    
+
     def listen(self, coro: dispatcher.Coro):
         return self.dispatcher.listen(coro)
-    
-    
+
     def _inject(self):
         return self

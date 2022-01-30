@@ -27,8 +27,22 @@ from typing import Any, Callable, Dict, List, Tuple
 
 
 class ConnectionState:
-    # if you are intereasted, the ConnectionState caches everything during connections.
-    # in the future i want this to support redis and other dbs.
+    """The Connection State
+
+    .. note::
+
+        The connection state is responsible for caching
+        everything, meaning most classes will depend on it.
+    
+    .. note::
+
+        .. data:: ConnectionState._speaking 
+        
+        is planned to be deprecated soon.
+
+    .. versionadded:: 0.4.0
+    """
+
     def __init__(self, **options):
         self._guilds_cache = {}
         self._sent_messages_cache = {}
@@ -47,17 +61,34 @@ class ConnectionState:
         """The seq number"""
 
         self.app = options.get("bot", None)
+        """The bot app
+        
+        .. versionadded:: 0.5.0
+        """
 
         self._voice_seq: int = None
+        """The Voice Gateway seq
+        
+        .. versionadded:: 0.5.0
+        """
 
         self._voice_user_data: Dict = {}
+        """The Voice User Data given by the Voice Gateway.
+        
+        .. versionadded:: 0.5.0
+        """
 
         self._speaking: bool = False
+        """If the bot is currently speaking
+        
+        .. versionadded:: 0.5.0
+        """
 
         self._said_hello: bool = False
         """If the Gateway got a hello or not."""
 
         self.loop: asyncio.AbstractEventLoop = options.get("loop", None)
+        """The current loop"""
 
         self._bot_presences: list[str, Any] = []
         """The precenses"""
@@ -111,3 +142,6 @@ class ConnectionState:
             "user_data": self._voice_user_data,
         }
         self.loop.create_task(self.update(), name="RPD Full Connection Cache")
+
+    def append(self) -> Dict:
+        return self.all
