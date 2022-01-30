@@ -61,9 +61,9 @@ Opus
 Apps
 ----
 
-.. attributetable:: BaseWebhookApp
+.. attributetable:: BasicWebhookApp
 
-.. autoclass:: BaseWebhookApp
+.. autoclass:: BasicWebhookApp
     :members:
 
 .. attributetable:: WebhookApp
@@ -113,8 +113,6 @@ Exceptions
 .. autoexception:: RPDError
     
 .. autoexception:: RESTError
-
-.. autoexception:: WebSocketError
     
 .. autoexception:: Forbidden
 
