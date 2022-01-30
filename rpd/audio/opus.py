@@ -28,7 +28,8 @@ import struct
 import sys
 import threading
 from enum import Enum
-from typing import Any, List, Tuple
+from typing import List
+import array
 
 from ..internal.exceptions import RPDError
 
@@ -56,30 +57,10 @@ opus_loaded: threading.Event = threading.Event()
 
 
 # options
-"""default_options = {
+default_options = {
     # generic stuff
-    ("opus_get_version_string", None, ctypes.c_char_p, None),
-    ("opus_strerror", [ctypes.c_int], ctypes.c_char_p, None),
-    # encoder
-    ("opus_encoder_get_size", [ctypes.c_int], ctypes.c_int, None),
-    (
-        "opus_encoder_create",
-        [ctypes.c_int, ctypes.c_int, ctypes.c_int, c_int_ptr],
-        EncoderStructPtr,
-    ),
-    (
-        "opus_encode",
-        [EncoderStructPtr, c_int16_ptr, ctypes.c_int, ctypes.c_char_p, ctypes.c_int32],
-        ctypes.c_int32,
-    ),
-    (
-        "opus_encode_float",
-        [EncoderStructPtr, c_float_ptr, ctypes.c_int, ctypes.c_char_p, ctypes.c_int32],
-        ctypes.c_int32,
-    ),
-    ("opus_encoder_ctl", None, ctypes.c_int32),
-    ("opus_encoder_destroy", [EncoderStructPtr], None, None),
-    # TODO: Decoder Funcs
+    "opus_get_version_string": (None, ctypes.c_char_p, None),
+    "opus_strerror": ([ctypes.c_int], ctypes.c_char_p, None),
     
     # packets
     
@@ -87,7 +68,7 @@ opus_loaded: threading.Event = threading.Event()
     "opus_packet_get_nb_channels": ([ctypes.c_char_p], ctypes.c_int),
     "opus_packet_get_nb_frames": ([ctypes.c_char_p, ctypes.c_int], ctypes.c_int),
     "opus_packet_get_samples_per_frame": ([ctypes.c_char_p, ctypes.c_int], ctypes.c_int),
-}"""
+}
 
 # Enums
 
@@ -118,17 +99,6 @@ class OpusError(RPDError):
 def loader(name: str):
     opus = ctypes.cdll.LoadLibrary(name)
 
-    for name, option in default_options.items():  # type: ignore # noqa: ignore
-        func = getattr(opus, name)
-
-        try:
-            if option[1]:
-                func.argtypes = option[1]
-
-            func.restype = option[2]
-        except KeyError:
-            pass
-
     return opus
 
 
@@ -158,9 +128,36 @@ def check_load() -> None:
     else:
         pass
 
+class Opus:
+    EXP = {}
+    def __init__(self):
+        meths = {}
+        meths.update(default_options)
+        meths.update(self.EXP)
+
+        for name, option in meths.items():  # type: ignore # noqa: ignore
+            func = getattr(loader, name)
+
+            try:
+                if option[1]:
+                    func.argtypes = option[0]
+
+                func.restype = option[1]
+
+                setattr(self, name, func)
+            except KeyError:
+                pass
 
 # encoder
-class Encoder:
+class Encoder(Opus):
+    EXP = {
+    "opus_encoder_get_size": ([ctypes.c_int], ctypes.c_int, None),
+    "opus_encoder_create": ([ctypes.c_int, ctypes.c_int, ctypes.c_int, c_int_ptr], EncoderStructPtr),
+    "opus_encode": ([EncoderStructPtr, c_int16_ptr, ctypes.c_int, ctypes.c_char_p, ctypes.c_int32], ctypes.c_int32),
+    "opus_encode_float": ([EncoderStructPtr, c_float_ptr, ctypes.c_int, ctypes.c_char_p, ctypes.c_int32], ctypes.c_int32),
+    "opus_encoder_ctl": (None, ctypes.c_int32),
+    "opus_encoder_destroy": ([EncoderStructPtr], None, None)
+}
     def __init__(self):
         check_load()
         self._inst = None
@@ -171,10 +168,51 @@ class Encoder:
             self._inst = self.create()
             self.set_bitrate(128)
             self.set_fec(True)
-            self.set_expected_packet_loss_percent(0.15)
+            self.set_expected_plp(0.15)
 
         return self._inst
 
-    def set_bitrate(self, bit):
-        kbps = min(128, max(16, int(CntrlEnum.SET_BITRATE.value), bit * 1024))
-        # ret = default_options.pop()
+    def set_bitrate(self, kbps):
+        kbps = min(128, max(16, int(kbps)))
+        ret = self.opus_encoder_ctl(self.inst, int(CntrlEnum.SET_BITRATE.value), kbps * 1024)
+
+        if ret is 0:
+            raise RuntimeError("Failed to set bitrate, %s: %s", kbps, ret)
+    
+    def set_fec(self, value):
+        ret = self.opus_encoder_ctl(self.inst, int(CntrlEnum.SET_FEC.value), int(value))
+
+        if ret is 0:
+            raise RuntimeError("Failed to set bitrate, %s: %s", value, ret)
+    
+    def set_expected_plp(self, perc):
+        ret = self.opus_encoder_ctl(self.inst, int(CntrlEnum.SET_PLP.value), min(100, max(0, int(perc * 100))))
+
+        if ret is 0:
+            raise RuntimeError("Failed to set bitrate, %s: %s", perc, ret)
+    
+    def create(self):
+        ret = ctypes.c_int()
+        result = self.opus_encoder_create(self.sampling_rate, self.channels, self.application.value, ctypes.byref(ret))
+
+        if ret.value != 0:
+            raise RuntimeError
+        
+        return result
+
+    def __del__(self):
+        if hasattr(self, "_inst") and self._inst:
+            self.opus_encoder_destroy(self._inst)
+            self._inst = None
+    
+    def encode(self, pcm, frame_size):
+        m_data_bytes = len(pcm)
+        pcm = ctypes.cast(pcm, c_int16_ptr)
+        data = (ctypes.c_char * m_data_bytes)()
+
+        ret = self.opus_encode(self.inst, pcm, frame_size, data, m_data_bytes)
+
+        if ret is 0:
+            raise RuntimeError
+
+        return array.array("b", data[:ret].tobytes())
