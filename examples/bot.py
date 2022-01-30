@@ -1,7 +1,9 @@
-from rpd import BotApp
+from rpd import BotApp, Intents
+
+intents = Intents.default()
 
 # the instance of your bot
-bot = BotApp()
+bot = BotApp(intents=intents)
 
 
 @bot.listen

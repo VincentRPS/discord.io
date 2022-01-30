@@ -22,14 +22,18 @@
 
 
 import abc
-import typing
+from rpd.internal import dispatcher
+from typing import TypeVar
 
 from rpd.state import ConnectionState
 
+Module = TypeVar('ModuleT', bound='Module')
+
 
 class Module(abc.ABC):
-    def __init__(self, state: ConnectionState):
+    def __init__(self, state: ConnectionState, dispatcher: dispatcher.Dispatcher):
         self.state = state
+        self.dispatcher = dispatcher
 
         super().__init__()
     
@@ -37,3 +41,9 @@ class Module(abc.ABC):
     def name(cls):
         return f"{cls.__module__}.{cls.__name__}"
     
+    def listen(self, coro: dispatcher.Coro):
+        return self.dispatcher.listen(coro)
+    
+    
+    def _inject(self):
+        return self

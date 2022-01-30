@@ -22,7 +22,9 @@
 """The bot app"""
 
 import asyncio
+import importlib
 import logging
+import os
 from threading import Event
 from typing import List, Optional
 
@@ -32,6 +34,7 @@ from rpd.internal import dispatcher
 from rpd.presence import Presence
 from rpd.state import ConnectionState
 from rpd.ui import print_banner
+from rpd.audio import has_nacl
 
 _log = logging.getLogger(__name__)
 __all__: List[str] = ["BotApp"]
@@ -98,6 +101,8 @@ class BotApp:
             afk=afk,
         )
         print_banner(module)
+        if not has_nacl:
+            _log.warning("You don't have PyNaCl, meaning you won't be able to use Voice features.")
 
     async def login(self, token: str):
         """Starts the bot connection
@@ -144,3 +149,10 @@ class BotApp:
 
     def listen(self, coro: dispatcher.Coro) -> dispatcher.Coro:
         return self.dispatcher.listen(coro)
+    
+    def load_module(self, location, package):
+        importlib.import_module(location, package)
+    
+    def load_modules(self, folder):
+        for file in os.listdir(folder):
+            self.load_module(file)

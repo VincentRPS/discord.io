@@ -20,8 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 """The Voice Client."""
-from rpd.internal.warnings import NaClWarning
-
 has_nacl: bool
 
 try:
@@ -30,8 +28,3 @@ except (ImportError, ModuleNotFoundError):
     has_nacl = False
 else:
     has_nacl = True
-
-if not has_nacl:
-    raise NaClWarning(
-        "You don't seem to have PyNaCl, meaning you won't be able to use voice!"
-    )
