@@ -29,21 +29,22 @@ import logging
 import platform
 import zlib
 from random import random
+from typing import List
 
 import aiohttp
 
 from rpd.internal.dispatcher import Dispatcher
 
 from ..state import ConnectionState
+from .rest_factory import RESTFactory
 
 ZLIB_SUFFIX = b"\x00\x00\xff\xff"
-inflator = zlib.decompressobj()
 _log = logging.getLogger(__name__)
 url = "wss://gateway.discord.gg/?v=9&encoding=json&compress=zlib-stream"
 
 
-class Gateway:
-    """Represents a Gateway connection with Discord.
+class ShardedGateway:
+    """Represents a Sharded Gateway connection with Discord.
 
     Attributes
     ----------
@@ -53,16 +54,19 @@ class Gateway:
         The dispatcher
     """
 
-    def __init__(self, state: ConnectionState, dispatcher: Dispatcher):
+    def __init__(self, state: ConnectionState, dispatcher: Dispatcher, shard_id: int):
         self.state = state
         self.dis = dispatcher
+        self.inflator = zlib.decompressobj()
+        self.shard_id = shard_id
         self.buffer = bytearray()
+        self._session_id = None
 
     async def connect(self, token):
         self._session = aiohttp.ClientSession()
         self.ws = await self._session.ws_connect(url)
         self.token = token
-        if self.state._session_id is None:
+        if self._session_id is None:
             await self.identify()
             self.state.loop.create_task(self.recv())
             self.state._ready.set()
@@ -83,7 +87,7 @@ class Gateway:
         async for msg in self.ws:
             if msg.type == aiohttp.WSMsgType.BINARY:
                 self.buffer.extend(msg.data)
-                raw = inflator.decompress(self.buffer).decode("utf-8")
+                raw = self.inflator.decompress(self.buffer).decode("utf-8")
                 if len(msg.data) < 4 or msg.data[-4:] != ZLIB_SUFFIX:
                     raise
                 self.buffer = bytearray()  # clean buffer
@@ -195,7 +199,7 @@ class Gateway:
         self.state.loop.create_task(self.heartbeat(interval))
 
     async def _ready(self, data):
-        self.state._session_id = data["d"]["session_id"]
+        self._session_id = data["d"]["session_id"]
 
     async def identify(self) -> None:
         await self.send(
@@ -209,6 +213,7 @@ class Gateway:
                         "$browser": "RPD",
                         "$device": "RPD",
                     },
+                    "shard": (self.shard_id, self.state.shard_count),
                 },
             }
         )
@@ -219,8 +224,32 @@ class Gateway:
                 "op": 6,
                 "d": {
                     "token": self.token,
-                    "session_id": self.state._session_id,
+                    "session_id": self._session_id,
                     "seq": self._seq,
                 },
             }
         )
+
+
+class Gateway:
+    def __init__(self, state: ConnectionState, dispatcher, factory: RESTFactory):
+        self._s = state
+        self.count = self._s.shard_count
+        self._d = dispatcher
+        self._f = factory
+        self.shards: List[ShardedGateway] = []
+
+    async def connect(self, token):
+        r = await self._f.get_gateway_bot()
+        if self.count is None:
+            shds = r["shards"]
+        else:
+            shds = self.count
+
+        for shard in range(shds):
+            self.s = ShardedGateway(self._s, self._d, shard)
+            self._s.loop.create_task(self.s.connect(token))
+            self.shards.append(self.s)
+    
+    async def send(self, payload):
+        return await self.s.send(payload)

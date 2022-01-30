@@ -95,6 +95,11 @@ class ConnectionState:
     all :class:`dict`
         The appendix of all cache.
 
+    shard_count :class:`int`
+        the number of shards.
+
+        .. versionadded:: 0.6.0
+
     .. versionadded:: 0.4.0
 
     """
@@ -107,9 +112,6 @@ class ConnectionState:
 
         self._bot_intents: int = options.get("intents", 0)
         """The cached bot intents, used for Gateway"""
-
-        self._session_id: int = None
-        """The Gateway, session id"""
 
         self._voice_session_id: int = None
 
@@ -161,11 +163,13 @@ class ConnectionState:
         self.all = {}
         """The appendix of all cache."""
 
+        self.shard_count: int = options.get("shard_count")
+        """The shard count"""
+
     async def update(self):
         """Updates the cache appendix."""
         self.all["status"] = self._bot_status
         self.all["presences"] = self._bot_presences
-        self.all["gateway_session_id"] = self._session_id
         self.all["gateway_seq"] = self._seq
         self.all["listeners"] = self.listeners
         self.all["intents"] = self._bot_intents
@@ -182,7 +186,6 @@ class ConnectionState:
         # yes this is very very slow, nothing i can do about it.
         self.all["status"] = self._bot_status
         self.all["presences"] = self._bot_presences
-        self.all["gateway_session_id"] = self._session_id
         self.all["gateway_seq"] = self._seq
         self.all["listeners"] = self.listeners
         self.all["intents"] = self._bot_intents

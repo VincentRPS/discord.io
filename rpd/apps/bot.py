@@ -83,15 +83,19 @@ class BotApp:
         status: Optional[str] = "online",
         afk: Optional[bool] = False,
         module: Optional[str] = "rpd",
+        shards: Optional[int] = None,
     ):
         self.state = ConnectionState(
             loop=loop,
             intents=intents,
             bot=self,
+            shard_count=shards,
         )
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
         self.factory = RESTFactory(state=self.state)
-        self.gateway = Gateway(state=self.state, dispatcher=self.dispatcher)
+        self.gateway = Gateway(
+            state=self.state, dispatcher=self.dispatcher, factory=self.factory
+        )
         self._got_gateway_bot: Event = Event()
         self.cogs = {}
         self.p = Presence(
@@ -120,9 +124,6 @@ class BotApp:
 
         .. versionadded:: 0.4.0
         """
-        if self._got_gateway_bot.is_set() is False:
-            await self.factory.get_gateway_bot()
-            self._got_gateway_bot.set()
 
         await self.gateway.connect(token=token)
 
@@ -131,7 +132,7 @@ class BotApp:
 
         async def runner():
             await self.login(token=token)
-            await self.factory.get_gateway_bot()
+            await asyncio.sleep(0.111)  # sleep for a bit
             await self.connect(token=token)
 
         self.state.loop.create_task(runner())
