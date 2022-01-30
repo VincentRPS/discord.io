@@ -21,7 +21,7 @@
 # SOFTWARE.
 import setuptools
 
-__version__ = str("0.4.6")
+__version__ = str("0.5.0")
 
 requirements = []
 with open("requirements.txt") as f:
