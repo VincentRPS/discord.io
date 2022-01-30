@@ -55,7 +55,7 @@ class BotApp:
     p
         The presence
     cogs
-        A :class:`dict` if all Cogs.
+        A :class:`dict` of all Cogs.
 
     Parameters
     ----------
