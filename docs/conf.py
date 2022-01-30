@@ -35,7 +35,6 @@ release = "0.5.0"
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
-    "attributetable",
     "exception_hierarchy",
     "resourcelinks",
     # 'sphinx.ext.githubpages', putting this off until we have a domain.

@@ -28,12 +28,8 @@ And second is by using ``version_info``
 REST API
 --------
 
-.. attributetable:: RESTClient
-
 .. autoclass:: RESTClient
     :members:
-
-.. attributetable:: RESTFactory
 
 .. autoclass:: RESTFactory
     :members:
@@ -42,12 +38,8 @@ REST API
 Gateway's
 ---------
 
-.. attributetable:: Gateway
-
 .. autoclass:: Gateway
     :members:
-
-.. attributetable:: VoiceGateway
 
 .. autoclass:: VoiceGateway
     :members:
@@ -61,17 +53,11 @@ Opus
 Apps
 ----
 
-.. attributetable:: BasicWebhook
-
 .. autoclass:: BasicWebhook
     :members:
 
-.. attributetable:: WebhookApp
-
 .. autoclass:: WebhookApp
     :members:
-
-.. attributetable:: BotApp
 
 .. autoclass:: BotApp
     :members:
@@ -79,15 +65,11 @@ Apps
 Webhooks
 --------
 
-.. attributetable:: Webhook
-
 .. autoclass:: Webhook
     :members:
 
 Dispatcher
 ----------
-
-.. attributetable:: Dispatcher
 
 .. autoclass:: Dispatcher
     :members:
