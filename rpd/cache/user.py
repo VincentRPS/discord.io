@@ -27,9 +27,8 @@ from typing import List
 
 # parses user data.
 
-__all__: List[str] = [
-    "User"
-]
+__all__: List[str] = ["User"]
+
 
 class User:
     """Represents a Discord User"""

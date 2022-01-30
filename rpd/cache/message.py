@@ -24,18 +24,16 @@
 ref: https://discord.dev/resources/channel
 """
 
-from typing import Optional, List
+from typing import List, Optional
 
 from rpd.apps import BotApp
 from rpd.snowflake import Snowflakeish
 
+from .embed import Embed
 from .guild import Guild
 from .user import User
-from .embed import Embed
 
-__all__: List[str] = [
-    "Message"
-]
+__all__: List[str] = ["Message"]
 
 # makes message data readable.
 class Message:

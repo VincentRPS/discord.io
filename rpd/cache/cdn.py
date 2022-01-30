@@ -28,10 +28,8 @@ ref: https://discord.dev/reference#image-formatting
 
 import typing
 
+__all__: typing.List[str] = ["CDN"]
 
-__all__: typing.List[str] = [
-    "CDN"
-]
 
 class CDN:
     """Represents the Discord CDN."""

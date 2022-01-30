@@ -26,30 +26,30 @@ ref: https://discord.dev/resources/channel#embed-limits
 
 from typing import List, Optional
 
-__all__: List[str] = [
-    "Embed"
-]
+__all__: List[str] = ["Embed"]
+
 
 def Embed(
-        title: Optional[str] = None,
-        description: Optional[str] = None,
-        url: Optional[str] = None,
-        date: Optional[str] = None,
-        color: Optional[int] = None,
-    ):
-        ret = {
-            "type": "rich",
-        }
+    title: Optional[str] = None,
+    description: Optional[str] = None,
+    url: Optional[str] = None,
+    date: Optional[str] = None,
+    color: Optional[int] = None,
+):
+    """Generates a rich presence"""
+    ret = {
+        "type": "rich",
+    }
 
-        if title:
-            ret["title"] = title
-        if description:
-            ret["description"] = description
-        if url:
-            ret["url"] = url
-        if date:
-            ret["date"] = date
-        if color:
-            ret["color"] = color
-        
-        return [ret]
+    if title:
+        ret["title"] = title
+    if description:
+        ret["description"] = description
+    if url:
+        ret["url"] = url
+    if date:
+        ret["date"] = date
+    if color:
+        ret["color"] = color
+
+    return [ret]

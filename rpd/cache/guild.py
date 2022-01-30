@@ -25,9 +25,8 @@ ref: https://discord.dev/resources/guild
 """
 from typing import Any, Dict, List
 
-__all__: List[str] = [
-    "Guild"
-]
+__all__: List[str] = ["Guild"]
+
 
 class Guild:
     """Represents a Discord Guild.

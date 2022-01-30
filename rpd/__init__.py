@@ -21,6 +21,7 @@ import typing
 from .api import *
 from .apps import *
 from .audio import *
+from .cache import *
 from .color import *
 from .colour import *
 from .events import *
@@ -35,7 +36,6 @@ from .traits import *
 from .ui import *
 from .util import *
 from .webhooks import *
-from .cache import *
 
 
 class VersionInfo(typing.NamedTuple):

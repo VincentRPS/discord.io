@@ -79,7 +79,7 @@ class RESTFactory:
         json = {
             "content": content,
             "tts": tts,
-            "allowed_mentions": int(allowed_mentions)
+            "allowed_mentions": int(allowed_mentions),
         }
         if message_reference is not None:
             json["message_reference"] = message_reference
