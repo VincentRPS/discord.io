@@ -25,8 +25,10 @@
 import typing
 
 from rpd.api.rest import RESTClient, Route
+from rpd.flags import MessageFlags
 from rpd.snowflake import Snowflakeish
 from rpd.state import ConnectionState
+from rpd.types import allowed_mentions
 
 __all__: typing.List[str] = [
     "RESTFactory",
@@ -72,14 +74,14 @@ class RESTFactory:
         content: str,
         tts: typing.Optional[bool] = False,
         embeds: typing.List[typing.Dict[str, typing.Any]] = None,
-        allowed_mentions: typing.Optional[bool] = False,
+        allowed_mentions: typing.Optional[allowed_mentions.MentionObject] = None,
         message_reference: typing.Optional[dict] = None,
         components: typing.Optional[list[dict]] = None,
     ):
         json = {
             "content": content,
             "tts": tts,
-            "allowed_mentions": int(allowed_mentions),
+            "allowed_mentions": allowed_mentions,
         }
         if message_reference is not None:
             json["message_reference"] = message_reference
@@ -181,7 +183,7 @@ class RESTFactory:
 
     # Guild Commands
 
-    def create_global_application_command(
+    def create_guild_application_command(
         self,
         application_id: Snowflakeish,
         guild_id: Snowflakeish,
@@ -203,7 +205,7 @@ class RESTFactory:
             json=json,
         )
 
-    def get_global_application_command(
+    def get_guild_application_command(
         self,
         application_id: Snowflakeish,
         guild_id: Snowflakeish,
@@ -216,7 +218,7 @@ class RESTFactory:
             )
         )
 
-    def edit_global_application_command(
+    def edit_guild_application_command(
         self,
         application_id: Snowflakeish,
         command_id: Snowflakeish,
@@ -239,3 +241,82 @@ class RESTFactory:
             ),
             json=json,
         )
+
+    # interaction response.
+
+    def create_interaction_response(
+        self,
+        interaction_id: int,
+        interaction_token: str,
+        content: str,
+        embeds: typing.Optional[typing.List[typing.Dict]] = None,
+        tts: typing.Optional[bool] = False,
+        allowed_mentions: typing.Optional[allowed_mentions.MentionObject] = None,
+        flags: typing.Optional[MessageFlags] = None,
+        components: typing.Optional[dict] = None,
+    ):
+        json = {
+            "content": content,
+        }
+        if embeds is not None:
+            json["embeds"] = embeds
+        if tts is not False:
+            json["tts"] = tts
+        if allowed_mentions is not None:
+            json["allowed_mentions"] = allowed_mentions
+        if flags is not None:
+            json["flags"] = flags
+        if components is not None:
+            json["components"] = components
+        return self.rest.send(
+            Route(
+                "POST",
+                f"/interactions/{interaction_id}/{interaction_token}/callback",
+            ),
+            json=json,
+        )
+
+    def get_initial_response(self, application_id, interaction_token):
+        return self.rest.send(
+            Route("GET", f"/webhooks/{application_id}/{interaction_token}/@original")
+        )
+
+    # TODO: Edit and Delete initial reponse.
+
+    def create_followup_message(
+        self,
+        application_id,
+        interaction_token,
+        content: str,
+        embeds: typing.Optional[typing.List[dict]] = None,
+        allowed_mentions: typing.Optional[allowed_mentions.MentionObject] = None,
+        components: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = None,
+        flags: typing.Optional[MessageFlags] = None,
+    ):
+        json = {"content": content}
+        if embeds is not None:
+            json["embeds"] = embeds
+        if allowed_mentions is not None:
+            json["allowed_mentions"] = allowed_mentions
+        if components is not None:
+            json["components"] = components
+        if flags is not None:
+            json["flags"] = flags
+        return self.rest.send(
+            "POST", f"/webhooks/{application_id}/{interaction_token}", json=json
+        )
+
+    def get_followup_message(
+        self,
+        application_id,
+        interaction_token,
+        message,
+        ):
+        return self.rest.send(
+            Route(
+                "GET",
+                f"/webhooks/{application_id}/{interaction_token}/messages/{message}",
+            ),
+        )
+    
+    # TODO: Edit and Delete followup message

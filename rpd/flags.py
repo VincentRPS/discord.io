@@ -19,5 +19,37 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-"""Represents a Chat Input command."""
 
+
+class MessageFlags:
+    @classmethod
+    def CROSSPOSTED(self):
+        return 1 << 0
+
+    @classmethod
+    def IS_CROSSPOSTED(self):
+        return 1 << 1
+
+    @classmethod
+    def SUPPRESS_EMBEDS(self):
+        return 1 << 2
+
+    @classmethod
+    def SOURCE_MESSAGE_DELETED(self):
+        return 1 << 3
+
+    @classmethod
+    def URGENT(self):
+        return 1 << 4
+
+    @classmethod
+    def HAS_THREAD(self):
+        return 1 << 5
+
+    @classmethod
+    def EPHEMERAL(self):
+        return 1 << 6
+
+    @classmethod
+    def LOADING(self):
+        return 1 << 7

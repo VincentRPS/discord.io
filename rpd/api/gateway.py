@@ -27,7 +27,6 @@ import asyncio
 import json
 import logging
 import platform
-import time
 import zlib
 from random import random
 from typing import List
@@ -44,8 +43,8 @@ _log = logging.getLogger(__name__)
 url = "wss://gateway.discord.gg/?v=9&encoding=json&compress=zlib-stream"
 
 
-class ShardedGateway:
-    """Represents a Sharded Gateway connection with Discord.
+class Shard:
+    """Represents a Discord Shard.
 
     Attributes
     ----------
@@ -252,7 +251,7 @@ class Gateway:
         self.count = self._s.shard_count
         self._d = dispatcher
         self._f = factory
-        self.shards: List[ShardedGateway] = []
+        self.shards: List[Shard] = []
 
     async def connect(self, token):
         r = await self._f.get_gateway_bot()
@@ -262,7 +261,7 @@ class Gateway:
             shds = self.count
 
         for shard in range(shds):
-            self.s = ShardedGateway(self._s, self._d, shard, mobile=self.mobile)
+            self.s = Shard(self._s, self._d, shard, mobile=self.mobile)
             self._s.loop.create_task(self.s.connect(token))
             self.shards.append(self.s)
 

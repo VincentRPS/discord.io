@@ -6,7 +6,7 @@ intents = Intents.default()
 bot = BotApp(intents=intents)
 
 
-@bot.listen
+@bot.event
 async def on_ready():
     print("bot is ready!")
 

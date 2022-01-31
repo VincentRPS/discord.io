@@ -19,5 +19,25 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-"""Represents a Chat Input command."""
 
+from typing import List
+
+__all__: List[str] = ["MentionObject"]
+
+
+def MentionObject(
+    users: bool = False,
+    usrs: list[str] = None,
+    roles: bool = False,
+    roles_list: list[str] = None,
+):
+    ret = {"parse": []}
+    if users is not False and usrs is not None:
+        ret.update("parse", "users")
+        ret["users"] = usrs
+    else:
+        raise NotImplementedError
+
+    if roles is not False and roles_list is not None:
+        ret.update("parse", "roles")
+        ret["roles"] = roles_list

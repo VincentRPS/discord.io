@@ -21,6 +21,7 @@
 # SOFTWARE
 """Implementation of Opus."""
 import array
+
 # based off the implementation of discord.py and disco.
 import ctypes
 import ctypes.util

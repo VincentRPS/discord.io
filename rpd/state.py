@@ -113,6 +113,8 @@ class ConnectionState:
         self._bot_intents: int = options.get("intents", 0)
         """The cached bot intents, used for Gateway"""
 
+        self._bot_id: int = None
+
         self._voice_session_id: int = None
 
         self._seq: int = None
@@ -165,6 +167,21 @@ class ConnectionState:
 
         self.shard_count: int = options.get("shard_count")
         """The shard count"""
+
+        self.commands = {}
+        """Stores commands
+        
+        The basic idea of: ::
+
+            self.commands = {
+                "command_name": {
+                    "id": "interaction.id",
+                    "options": {
+                        ...
+                    }
+                }
+            }
+        """
 
     async def update(self):
         """Updates the cache appendix."""

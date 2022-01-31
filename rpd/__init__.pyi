@@ -1,16 +1,24 @@
 import typing
 
-from rpd.api import *
-from rpd.apps import *
-from rpd.boot_text import *
-from rpd.color import *
-from rpd.colour import *
-from rpd.intents import *
-from rpd.internal.exceptions import *
-from rpd.internal.warnings import *
-from rpd.snowflake import *
-from rpd.util import *
-from rpd.webhooks import *
+from .api import *
+from .apps import *
+from .audio import *
+from .cache import *
+from .color import *
+from .colour import *
+from .events import *
+from .intents import *
+from .interactions import *
+from .internal.exceptions import *
+from .internal.warnings import *
+from .modules import *
+from .snowflake import *
+from .state import *
+from .traits import *
+from .types import *
+from .ui import *
+from .util import *
+from .webhooks import *
 
 class VersionInfo(typing.NamedTuple):
     major: int

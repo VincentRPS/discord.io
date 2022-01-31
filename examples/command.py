@@ -1,26 +1,26 @@
-from rpd import BotApp, cache
+from rpd import BotApp, Embed, Message
 
 bot = BotApp()
 
 
-@bot.listen
+@bot.event
 async def on_ready():
     print("ready!")
 
 
 # normal
-@bot.listen
+@bot.event
 async def on_message(msg):
-    message = cache.Message(msg, bot)
+    message = Message(msg, bot)
     if message.content.startswith("!ping"):
         await message.reply("pong!")
 
 
 # with embeds
-@bot.listen
+@bot.event
 async def on_message(msg):
-    message = cache.Message(msg, bot)
-    embed = cache.Embed(title="bonk", description="boop")
+    message = Message(msg, bot)
+    embed = Embed(title="bonk", description="boop")
     if message.content.startswith("!ping"):
         await message.reply("pong!", embed)
 

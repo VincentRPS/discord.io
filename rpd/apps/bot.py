@@ -31,6 +31,7 @@ from typing import Callable, List, Optional, TypeVar
 from rpd.api import RESTFactory
 from rpd.api.gateway import Gateway
 from rpd.audio import has_nacl
+from rpd.interactions.command import Command
 from rpd.internal import dispatcher
 from rpd.state import ConnectionState
 from rpd.ui import print_banner
@@ -81,7 +82,7 @@ class BotApp:
         loop: Optional[asyncio.AbstractEventLoop] = asyncio.new_event_loop(),
         intents: Optional[int] = 32509,
         module: Optional[str] = "rpd",
-        shards: Optional[int] = None,
+        shards: Optional[int] = 0,
         mobile: Optional[bool] = False,
     ):
         self.state = ConnectionState(
@@ -113,7 +114,9 @@ class BotApp:
 
         """
         self.token = token
-        await self.factory.login(token)
+        r = await self.factory.login(token)
+        self.state._bot_id = r["id"]
+        return r
 
     async def connect(self, token: str):
         """Starts the WebSocket(Gateway) connection with Discord.
@@ -159,3 +162,11 @@ class BotApp:
             return func
 
         return decorator
+    
+    def command(
+        self, 
+        slash_command: bool = False, 
+        user_command: bool = False, 
+        message_command: bool = False
+    ):
+        return Command(self.state, self.factory)
