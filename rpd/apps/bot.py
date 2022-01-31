@@ -31,6 +31,7 @@ from typing import Callable, List, Optional, TypeVar
 from rpd.api import RESTFactory
 from rpd.api.gateway import Gateway
 from rpd.audio import has_nacl
+from rpd.implements.core import implements
 from rpd.interactions.command import Command
 from rpd.internal import dispatcher
 from rpd.state import ConnectionState
@@ -82,9 +83,11 @@ class BotApp:
         loop: Optional[asyncio.AbstractEventLoop] = asyncio.new_event_loop(),
         intents: Optional[int] = 32509,
         module: Optional[str] = "rpd",
-        shards: Optional[int] = 0,
+        shards: Optional[int] = None,
         mobile: Optional[bool] = False,
+        command_prefix: Optional[str] = None,
     ):
+        self.command_prefix = command_prefix
         self.state = ConnectionState(
             loop=loop,
             intents=intents,
@@ -126,6 +129,11 @@ class BotApp:
 
         await self.gateway.connect(token=token)
 
+    def implements(self, command_name: str, prefixed_command: bool = False):
+        return implements(
+            self, self.command_prefix, self.dispatcher, command_name, prefixed_command
+        )
+
     def run(self, token: str):
         """A blocking function to start your bot"""
 
@@ -162,11 +170,11 @@ class BotApp:
             return func
 
         return decorator
-    
+
     def command(
-        self, 
-        slash_command: bool = False, 
-        user_command: bool = False, 
-        message_command: bool = False
+        self,
+        slash_command: bool = False,
+        user_command: bool = False,
+        message_command: bool = False,
     ):
         return Command(self.state, self.factory)

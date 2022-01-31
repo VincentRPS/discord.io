@@ -12,6 +12,8 @@
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 
+from typing import List, Optional
+
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,32 +21,15 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-"""Represents a Discord Message
-
-ref: https://discord.dev/resources/channel
-"""
-
-from typing import List, Optional
-
+from rpd.cache import Embed, Guild, User
+from rpd.internal.dispatcher import Dispatcher
 from rpd.snowflake import Snowflakeish
 
-from .embed import Embed
-from .guild import Guild
-from .user import User
 
-__all__: List[str] = ["Message"]
-
-# makes message data readable.
-class Message:
-    """Represents a Discord Message
-
-    .. versionadded:: 0.6.0
-    """
-
+class Context:
     def __init__(self, msg: dict, app):
         self._message = msg
         self.app = app
-        self.content: str = self._message["content"]
         self.channel: Snowflakeish = msg["channel_id"]
 
     @property
@@ -89,3 +74,18 @@ class Message:
                 "message_id": self.id,
             },
         )
+
+
+class Command:
+    def __init__(self, app, dispatcher: Dispatcher, prefix: str, name: str):
+        self.app = app
+        self.dispatch = dispatcher
+        self.prefix = prefix
+        self.name = name
+
+    async def callback(self, data):
+        if str(data["content"]).startswith(f"{self.prefix}{self.name}"):
+            return Context(self.app, data)
+
+    def __call__(self, context: Context):
+        return self.dispatch.add_listener(self.callback, "on_message")

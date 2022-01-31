@@ -19,4 +19,17 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-"""Represents a Chat Input command."""
+
+from rpd.implements._prefix.core import Command
+from rpd.internal.dispatcher import Dispatcher
+
+
+def implements(
+    app,
+    prefix: str,
+    dispatcher: Dispatcher,
+    command_name: str,
+    prefixed_command: bool = False,
+):
+    if prefixed_command is True:
+        return Command(app, dispatcher, prefix, command_name)

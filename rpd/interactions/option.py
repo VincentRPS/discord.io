@@ -24,14 +24,14 @@ from typing import List, Optional
 
 
 def SlashOptionType(
-    string: bool = False, 
-    integer: bool = False, 
-    boolean: bool = False, 
-    user: bool = False, 
-    channel: bool = False, 
-    role: bool = False, 
-    mentionable: bool = False, 
-    number: bool = False
+    string: bool = False,
+    integer: bool = False,
+    boolean: bool = False,
+    user: bool = False,
+    channel: bool = False,
+    role: bool = False,
+    mentionable: bool = False,
+    number: bool = False,
 ) -> int:
     if string:
         return 3
@@ -50,27 +50,23 @@ def SlashOptionType(
     if number:
         return 10
 
-def SlashChoice(
-    name: str,
-    value: str
-):
+
+def SlashChoice(name: str, value: str):
     return name, value
 
+
 def SlashOption(
-    type: SlashOptionType, 
-    name: str, 
-    description: Optional[str] = None, 
+    type: SlashOptionType,
+    name: str,
+    description: Optional[str] = None,
     required: bool = False,
     choices: List[SlashChoice] = None,
     channel_types: int = None,
     min_value: int = None,
     max_value: int = None,
-    autocomplete: bool = False
+    autocomplete: bool = False,
 ):
-    ret = {
-        "type": type,
-        "name": name
-    }
+    ret = {"type": type, "name": name}
     if description:
         ret["description"] = description
     if required is not False:

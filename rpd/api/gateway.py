@@ -256,7 +256,7 @@ class Gateway:
     async def connect(self, token):
         r = await self._f.get_gateway_bot()
         if self.count is None:
-            shds = r["shards"]
+            shds = int(r["shards"])
         else:
             shds = self.count
 

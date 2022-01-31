@@ -303,7 +303,7 @@ class RESTFactory:
         if flags is not None:
             json["flags"] = flags
         return self.rest.send(
-            "POST", f"/webhooks/{application_id}/{interaction_token}", json=json
+            Route("POST", f"/webhooks/{application_id}/{interaction_token}"), json=json
         )
 
     def get_followup_message(
@@ -311,12 +311,12 @@ class RESTFactory:
         application_id,
         interaction_token,
         message,
-        ):
+    ):
         return self.rest.send(
             Route(
                 "GET",
                 f"/webhooks/{application_id}/{interaction_token}/messages/{message}",
             ),
         )
-    
+
     # TODO: Edit and Delete followup message

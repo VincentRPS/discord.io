@@ -121,10 +121,8 @@ class Dispatcher:
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Function is not a coroutine.")
 
-        if name in self.state.listeners:
-            self.state.listeners[name].append(func)
-        else:
-            self.state.listeners[name] = [func]
+        setattr(self, name, func)
+        _log.debug(f"{name} added as a listener!")
 
     def remove_listener(self, func: CoroFunc, name: Optional[str] = None):
         name = func.__name__ if name is None else name
