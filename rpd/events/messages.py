@@ -21,19 +21,12 @@
 # SOFTWARE
 import abc
 
-from rpd import traits
+from rpd.cache import Message
+from rpd.internal.dispatcher import Dispatcher
 
 
-class Event(abc.ABC):
-    @property
-    @abc.abstractmethod
-    def gateway(self) -> traits.GWAware:
-        """Returns the instance of :class:`Gateway`
-        this app is using
-        """
+class OnMessage:
+    def __init__(self, data, dispatcher: Dispatcher, app):
+        ret = Message(data, app)
+        dispatcher.dispatch("MESSAGE", ret)
 
-    @property
-    @abc.abstractmethod
-    def rest(self) -> traits.RESTAware:
-        """Returns the instance of :class:`RESTClient`
-        this app is using."""

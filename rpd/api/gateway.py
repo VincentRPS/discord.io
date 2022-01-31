@@ -31,6 +31,7 @@ import zlib
 from random import random
 from time import time
 from typing import List
+from rpd.events.messages import OnMessage
 
 import aiohttp
 
@@ -60,7 +61,6 @@ class Shard:
         state: ConnectionState,
         dispatcher: Dispatcher,
         shard_id: int,
-        full: int,
         mobile: bool = False,
     ):
         self.remaining = 110
@@ -144,7 +144,7 @@ class Shard:
                 _log.debug("> %s", data)
 
                 self._seq = data["s"]
-                self.dis.dispatch("SOCKET_RECEIVE")
+                self.dis.dispatch("RAW_SOCKET_RECEIVE")
 
                 if data["op"] == 0:
                     if (
@@ -154,9 +154,10 @@ class Shard:
                         self.dis.dispatch("READY")
                     elif data["t"] == "GUILD_CREATE":
                         self.state._guilds_cache[data["d"]["id"]] = data["d"]
-                        self.dis.dispatch("GUILD_CREATE", data["d"])
+                        self.dis.dispatch("RAW_GUILD_CREATE", data["d"])
                     elif data["t"] == "MESSAGE_CREATE":
-                        self.dis.dispatch("MESSAGE", data["d"])
+                        self.dis.dispatch("RAW_MESSAGE", data["d"])
+                        OnMessage(data["d"], self.dis, self.state.app)
                     else:
                         self.dis.dispatch(data["t"], data["d"])
                 elif data["op"] == 9:
@@ -307,7 +308,7 @@ class Gateway:
             shds = self.count
 
         for shard in range(shds):
-            self.s = Shard(self._s, self._d, shard, mobile=self.mobile, full=shds)
+            self.s = Shard(self._s, self._d, shard, mobile=self.mobile)
             self._s.loop.create_task(self.s.connect(token))
             self.shards.append(self.s)
 

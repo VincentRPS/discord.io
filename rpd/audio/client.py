@@ -40,10 +40,10 @@ _log = logging.getLogger(__name__)
 
 
 class VoiceClient:
-    def __init__(self, dispatcher: Dispatcher, gateway: VoiceGateway):
+    def __init__(self, state, dispatcher: Dispatcher, gateway):
         self.ssrc: int = None
         self.dispatcher = dispatcher
-        self.gateway = gateway
+        self.gateway = VoiceGateway(state, self.dispatcher, gateway)
         self._supported = [
             "xsalsa20_poly1305_lite",
             "xsalsa20_poly1305_suffix",
@@ -52,11 +52,7 @@ class VoiceClient:
         self.dispatcher.add_listener(
             self.on_voice_server_update, "on_voice_server_update"
         )
-        self.dispatcher.add_listener(
-            self.on_voice_state_update, "on_voice_state_update"
-        )
         self.endpoints = {}
-        self.started: asyncio.Event = asyncio.Event()
         self.session_id = None
 
     async def on_voice_server_update(self, data):
@@ -64,29 +60,12 @@ class VoiceClient:
         self.endpoints[data["guild_id"]] = data["endpoint"]
         _log.info("Updated Server Info!")
 
-    async def on_voice_state_update(self, data):
-        self.session_id = data["session_id"]
-        self.started.set()
-        ...
-
     async def connect(self, guild, channel):
         self.guild = guild
         self.channel = channel
         await self.gateway.connect(guild, channel)
         await asyncio.sleep(0.300)
         await self.identify()
-
-    def identify(self):
-        json = {
-            "op": 0,
-            "d": {
-                "server_id": self.guild,
-                "user_id": self.gateway.state._bot_id,
-                "session_id": self.session_id,
-                "token": self.token,
-            },
-        }
-        return self.gateway.send(json)
 
     def speak_without_audio(self):
         return self.gateway.speaking

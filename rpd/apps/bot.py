@@ -103,8 +103,11 @@ class BotApp:
             factory=self.factory,
             mobile=mobile,
         )
-        self.voice_gateway = VoiceGateway(self.state, self.dispatcher, self.gateway)
-        self.voice = VoiceClient(self.dispatcher, self.voice_gateway)
+        self.voice = VoiceClient(
+            self.state,
+            self.dispatcher,
+            self.gateway
+        )
         self._got_gateway_bot: Event = Event()
         self.cogs = {}
         print_banner(module)

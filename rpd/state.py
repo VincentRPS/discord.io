@@ -183,6 +183,8 @@ class ConnectionState:
             }
         """
 
+        self.components = {}
+
     async def update(self):
         """Updates the cache appendix."""
         self.all["status"] = self._bot_status

@@ -26,6 +26,9 @@ ref: https://discord.dev/resources/channel
 
 from typing import List, Optional
 
+from rpd.components.core import Button
+from rpd.internal.dispatcher import Dispatcher
+
 from rpd.snowflake import Snowflakeish
 
 from .embed import Embed
@@ -63,6 +66,7 @@ class Message:
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[bool] = False,
+        components: List[Button] = None
     ):
         await self.app.factory.create_message(
             channel=self.channel,
@@ -70,6 +74,7 @@ class Message:
             embeds=embeds,
             tts=tts,
             allowed_mentions=allowed_mentions,
+            components=components
         )
 
     async def reply(
@@ -78,6 +83,7 @@ class Message:
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[bool] = False,
+        components: List[Button] = None
     ):
         await self.app.factory.create_message(
             channel=self.channel,
@@ -88,4 +94,5 @@ class Message:
             message_reference={
                 "message_id": self.id,
             },
+            components=components
         )

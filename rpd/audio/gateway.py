@@ -42,7 +42,6 @@ class VoiceGateway:
         self,
         state: ConnectionState,
         dispatcher: Dispatcher,
-        session_id: int,
         gateway: Gateway,
         self_mute: bool = False,
         self_deaf: bool = False,
@@ -52,13 +51,17 @@ class VoiceGateway:
         self.state = state
         self.mute = self_mute
         self.deaf = self_deaf
-        self.session_id = session_id
+        self.session_id: str = None
         self.buffer = bytearray()
         self.inflator = zlib.decompressobj()
+        self.started: asyncio.Event = asyncio.Event()
+        self.dispatcher.add_listener(
+            self.on_voice_state_update, "on_voice_state_update"
+        )
 
     async def connect(self, guild, channel):
         self._session = aiohttp.ClientSession()
-        r = await self.gateway.gain_voice_access(guild, channel, self.mute, self.deaf)
+        await self.gateway.gain_voice_access(guild, channel, self.mute, self.deaf)
         self.ws = await self._session.ws_connect(url)
         if self.session_id is None:
             await self.identify()
@@ -66,6 +69,10 @@ class VoiceGateway:
         else:
             await self.resume()
             _log.debug("Reconnected to the Gateway")
+    
+    async def on_voice_state_update(self, data):
+        self.session_id = data["session_id"]
+        self.started.set()
 
     async def heartbeat(self, interval: float):
         await self.send({"op": 1, "d": self._seq})
@@ -122,3 +129,15 @@ class VoiceGateway:
             payload = payload.encode("utf-8")
 
         await self.ws.send_bytes(payload)
+    
+    def identify(self):
+        json = {
+            "op": 0,
+            "d": {
+                "server_id": self.guild,
+                "user_id": self.gateway.state._bot_id,
+                "session_id": self.session_id,
+                "token": self.token,
+            },
+        }
+        return self.send(json)
