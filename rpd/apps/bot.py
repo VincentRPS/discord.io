@@ -30,7 +30,8 @@ from typing import Callable, List, Optional, TypeVar
 
 from rpd.api import RESTFactory
 from rpd.api.gateway import Gateway
-from rpd.audio import has_nacl
+from rpd.audio import VoiceClient, has_nacl
+from rpd.audio.gateway import VoiceGateway
 from rpd.implements.core import implements
 from rpd.interactions.command import Command
 from rpd.internal import dispatcher
@@ -102,6 +103,8 @@ class BotApp:
             factory=self.factory,
             mobile=mobile,
         )
+        self.voice_gateway = VoiceGateway(self.state, self.dispatcher, self.gateway)
+        self.voice = VoiceClient(self.dispatcher, self.voice_gateway)
         self._got_gateway_bot: Event = Event()
         self.cogs = {}
         print_banner(module)

@@ -29,6 +29,7 @@ import logging
 import platform
 import zlib
 from random import random
+from time import time
 from typing import List
 
 import aiohttp
@@ -59,8 +60,13 @@ class Shard:
         state: ConnectionState,
         dispatcher: Dispatcher,
         shard_id: int,
+        full: int,
         mobile: bool = False,
     ):
+        self.remaining = 110
+        self.per = 60.0
+        self.window = 0.0
+        self.max = 110
         self.state = state
         self.mobile = mobile
         self.dis = dispatcher
@@ -68,6 +74,7 @@ class Shard:
         self.shard_id = shard_id
         self.buffer = bytearray()
         self._session_id = None
+        self._ratelimit_lock: asyncio.Lock = asyncio.Lock()
 
     async def connect(self, token):
         self._session = aiohttp.ClientSession()
@@ -79,6 +86,42 @@ class Shard:
         else:
             await self.resume()
             _log.debug("Reconnected to the Gateway")
+
+    @property
+    def is_ratelimited(self):
+        now = time()
+        if now > self.window + self.per:
+            return False
+        return self.remaining == 0
+
+    def delay(self):
+        now = time()
+
+        if now > self.window + self.per:
+            self.remaining = self.max
+
+        if self.remaining == self.max:
+            self.window = now
+
+        if self.remaining == 0:
+            return self.per - (now - self.window)
+
+        self.remaining -= 1
+        if self.remaining == 0:
+            self.window = now
+
+        return 0.0
+
+    async def block(self):
+        async with self._ratelimit_lock:
+            delay = self.delay()
+            if delay:
+                _log.warning(
+                    "Shard %s was ratelimited, waiting %.2f seconds.",
+                    self.shard_id,
+                    delay,
+                )
+                await asyncio.sleep(delay)
 
     async def send(self, data: dict):
         _log.debug("< %s", data)
@@ -189,6 +232,8 @@ class Shard:
         await self.connect(token=self.token)
 
     async def heartbeat(self, interval: float):
+        if self.is_ratelimited:
+            await self.block()
         await self.send({"op": 1, "d": self._seq})
         await asyncio.sleep(interval)
         self.state.loop.create_task(self.heartbeat(interval))
@@ -257,13 +302,26 @@ class Gateway:
         r = await self._f.get_gateway_bot()
         if self.count is None:
             shds = int(r["shards"])
+            self._s.shard_count = shds
         else:
             shds = self.count
 
         for shard in range(shds):
-            self.s = Shard(self._s, self._d, shard, mobile=self.mobile)
+            self.s = Shard(self._s, self._d, shard, mobile=self.mobile, full=shds)
             self._s.loop.create_task(self.s.connect(token))
             self.shards.append(self.s)
 
     def send(self, payload):
         return self.s.send(payload)
+
+    def gain_voice_access(self, guild, channel, mute: bool, deaf: bool):
+        json = {
+            "op": 4,
+            "d": {
+                "guild_id": guild,
+                "channel_id": channel,
+                "self_mute": mute,
+                "self_deaf": deaf,
+            },
+        }
+        return self.s.send(json)

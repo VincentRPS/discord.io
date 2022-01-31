@@ -165,7 +165,7 @@ class ConnectionState:
         self.all = {}
         """The appendix of all cache."""
 
-        self.shard_count: int = options.get("shard_count", 1)
+        self.shard_count: int = options.get("shard_count")
         """The shard count"""
 
         self.commands = {}

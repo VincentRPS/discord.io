@@ -12,8 +12,6 @@
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 
-from typing import List, Optional
-
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,16 +19,18 @@ from typing import List, Optional
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
+
+from typing import List, Optional
+
 from rpd.cache import Embed, Guild, User
 from rpd.internal.dispatcher import Dispatcher
-from rpd.snowflake import Snowflakeish
 
 
 class Context:
     def __init__(self, msg: dict, app):
         self._message = msg
         self.app = app
-        self.channel: Snowflakeish = msg["channel_id"]
+        self.channel = msg["channel_id"]
 
     @property
     def id(self):
@@ -83,9 +83,9 @@ class Command:
         self.prefix = prefix
         self.name = name
 
-    async def callback(self, data):
-        if str(data["content"]).startswith(f"{self.prefix}{self.name}"):
-            return Context(self.app, data)
+    async def callback(self, context):
+        if str(context._message["content"]).startswith(f"{self.prefix}{self.name}"):
+            return context.send
 
     def __call__(self, context: Context):
         return self.dispatch.add_listener(self.callback, "on_message")
