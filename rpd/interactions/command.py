@@ -65,10 +65,10 @@ class Command:
             )
 
     def message_callback(self):
-        ...
+        raise NotImplementedError
 
     def user_callback(self):
-        ...
+        raise NotImplementedError
 
     def __call__(
         self,

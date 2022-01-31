@@ -26,7 +26,8 @@ import importlib
 import logging
 import os
 from threading import Event
-from typing import Callable, List, Optional, TypeVar
+from time import time
+from typing import Callable, List, Literal, Optional, TypeVar
 
 from rpd.api import RESTFactory
 from rpd.api.gateway import Gateway
@@ -103,11 +104,7 @@ class BotApp:
             factory=self.factory,
             mobile=mobile,
         )
-        self.voice = VoiceClient(
-            self.state,
-            self.dispatcher,
-            self.gateway
-        )
+        self.voice = VoiceClient(self.state, self.dispatcher, self.gateway)
         self._got_gateway_bot: Event = Event()
         self.cogs = {}
         print_banner(module)
@@ -159,6 +156,41 @@ class BotApp:
     @property
     def presence(self) -> list[str]:
         return self.state._bot_presences
+
+    def change_presence(
+        self,
+        name: str,
+        type: int,
+        status: Literal["online", "dnd", "idle", "invisible", "offline"] = "online",
+        stream_url: Optional[str] = None,
+        afk: bool = False,
+    ):
+        if type == 1 and stream_url is None:
+            raise NotImplementedError("Streams need to be provided a url!")
+        elif type == 1 and stream_url is not None:
+            ret = {
+                "name": name,
+                "type": 1,
+                "url": stream_url,
+            }
+        else:
+            # another type
+            ret = {
+                "name": name,
+                "type": type,
+            }
+        json = {"op": 3, "d": {"activities": [ret]}}
+
+        if afk is True:
+            json["d"]["afk"] = True
+            json["d"]["since"] = time()
+        else:
+            json["d"]["afk"] = False
+            json["d"]["since"] = None
+
+        json["d"]["status"] = status
+
+        return self.gateway.send(json)
 
     def event(self, coro: dispatcher.Coro) -> dispatcher.Coro:
         return self.dispatcher.listen(coro)

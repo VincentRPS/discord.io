@@ -20,8 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 """Implementation of Opus."""
-import array
 # based off the implementation of discord.py and disco.
+import array
 import ctypes
 import ctypes.util
 import os
@@ -123,17 +123,18 @@ def load_opus() -> bool:
     return lib is not None
 
 
-def check_load() -> None:
+def check_load():
     if opus_loaded.is_set() is not True:
-        load_opus()
+        return load_opus()
     else:
-        pass
+        return lib
 
 
 class Opus:
     EXP = {}
 
     def __init__(self):
+        self.lib = check_load()
         meths = {}
         meths.update(default_options)
         meths.update(self.EXP)
@@ -185,7 +186,6 @@ class Encoder(Opus):
     }
 
     def __init__(self):
-        check_load()
         self._inst = None
 
     @property

@@ -69,7 +69,7 @@ class VoiceGateway:
         else:
             await self.resume()
             _log.debug("Reconnected to the Gateway")
-    
+
     async def on_voice_state_update(self, data):
         self.session_id = data["session_id"]
         self.started.set()
@@ -129,7 +129,7 @@ class VoiceGateway:
             payload = payload.encode("utf-8")
 
         await self.ws.send_bytes(payload)
-    
+
     def identify(self):
         json = {
             "op": 0,

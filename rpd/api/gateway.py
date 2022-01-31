@@ -31,10 +31,10 @@ import zlib
 from random import random
 from time import time
 from typing import List
-from rpd.events.messages import OnMessage
 
 import aiohttp
 
+from rpd.events.messages import OnMessage
 from rpd.internal.dispatcher import Dispatcher
 
 from ..state import ConnectionState

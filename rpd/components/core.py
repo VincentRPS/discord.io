@@ -20,21 +20,28 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 import random
-import typing
 import string
+import typing
 
 from rpd.state import ConnectionState
+
 
 class Button:
     def __init__(self, state: ConnectionState):
         self.state = state
 
-    def create(self, label: str, style: typing.Literal[1, 2, 3, 4, 5] = 1, custom_id: str = None, url: str = None,):
+    def create(
+        self,
+        label: str,
+        style: typing.Literal[1, 2, 3, 4, 5] = 1,
+        custom_id: str = None,
+        url: str = None,
+    ):
         if custom_id:
             self.id = custom_id
         else:
             self.id = "".join(random.choice(string.ascii_letters) for _ in range(100))
-        
+
         ret = {
             "label": label,
             "style": style,

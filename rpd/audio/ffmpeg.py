@@ -19,13 +19,4 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-import abc
-
-from rpd.cache import Message
-from rpd.internal.dispatcher import Dispatcher
-
-
-class OnMessage:
-    def __init__(self, data, dispatcher: Dispatcher, app):
-        ret = Message(data, app)
-        dispatcher.dispatch("MESSAGE", ret)
+from __future__ import annotations
