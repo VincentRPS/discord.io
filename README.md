@@ -36,7 +36,7 @@ import rpd
 
 bot = rpd.BotApp()
 
-@bot.listen
+@bot.event
 async def on_ready():
     print("ready!")
 
@@ -50,11 +50,11 @@ import rpd
 
 bot = rpd.BotApp()
 
-@bot.listen
+@bot.event
 async def on_ready():
     print("ready!")
 
-@bot.listen
+@bot.event
 async def on_message(msg):
     message = rpd.Message(msg, bot)
     if message.content.startswith("!ping"):

@@ -27,6 +27,7 @@ import asyncio
 import json
 import logging
 import platform
+import time
 import zlib
 from random import random
 from typing import List
@@ -54,8 +55,15 @@ class ShardedGateway:
         The dispatcher
     """
 
-    def __init__(self, state: ConnectionState, dispatcher: Dispatcher, shard_id: int):
+    def __init__(
+        self,
+        state: ConnectionState,
+        dispatcher: Dispatcher,
+        shard_id: int,
+        mobile: bool = False,
+    ):
         self.state = state
+        self.mobile = mobile
         self.dis = dispatcher
         self.inflator = zlib.decompressobj()
         self.shard_id = shard_id
@@ -69,7 +77,6 @@ class ShardedGateway:
         if self._session_id is None:
             await self.identify()
             self.state.loop.create_task(self.recv())
-            self.state._ready.set()
         else:
             await self.resume()
             _log.debug("Reconnected to the Gateway")
@@ -95,9 +102,9 @@ class ShardedGateway:
                 _log.debug("> %s", data)
 
                 self._seq = data["s"]
+                self.dis.dispatch("SOCKET_RECEIVE")
 
                 if data["op"] == 0:
-                    self.dis.dispatch("SOCKET_RECEIVE")
                     if (
                         data["t"] == "READY"
                     ):  # only fire up getting the session_id on a ready event.
@@ -200,6 +207,7 @@ class ShardedGateway:
 
     async def _ready(self, data):
         self._session_id = data["d"]["session_id"]
+        self.state._ready.set()
 
     async def identify(self) -> None:
         await self.send(
@@ -210,7 +218,7 @@ class ShardedGateway:
                     "intents": self.state._bot_intents,
                     "properties": {
                         "$os": platform.system(),
-                        "$browser": "RPD",
+                        "$browser": "RPD" if self.mobile is False else "Discord iOS",
                         "$device": "RPD",
                     },
                     "shard": (self.shard_id, self.state.shard_count),
@@ -232,8 +240,15 @@ class ShardedGateway:
 
 
 class Gateway:
-    def __init__(self, state: ConnectionState, dispatcher, factory: RESTFactory):
+    def __init__(
+        self,
+        state: ConnectionState,
+        dispatcher,
+        factory: RESTFactory,
+        mobile: bool = False,
+    ):
         self._s = state
+        self.mobile = mobile
         self.count = self._s.shard_count
         self._d = dispatcher
         self._f = factory
@@ -247,7 +262,7 @@ class Gateway:
             shds = self.count
 
         for shard in range(shds):
-            self.s = ShardedGateway(self._s, self._d, shard)
+            self.s = ShardedGateway(self._s, self._d, shard, mobile=self.mobile)
             self._s.loop.create_task(self.s.connect(token))
             self.shards.append(self.s)
 

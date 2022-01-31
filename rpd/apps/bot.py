@@ -26,18 +26,18 @@ import importlib
 import logging
 import os
 from threading import Event
-from typing import List, Optional
+from typing import Callable, List, Optional, TypeVar
 
 from rpd.api import RESTFactory
 from rpd.api.gateway import Gateway
 from rpd.audio import has_nacl
 from rpd.internal import dispatcher
-from rpd.presence import Presence
 from rpd.state import ConnectionState
 from rpd.ui import print_banner
 
 _log = logging.getLogger(__name__)
 __all__: List[str] = ["BotApp"]
+CFT = TypeVar("CFT", bound="dispatcher.CoroFunc")
 
 
 class BotApp:
@@ -80,10 +80,9 @@ class BotApp:
         self,
         loop: Optional[asyncio.AbstractEventLoop] = asyncio.new_event_loop(),
         intents: Optional[int] = 32509,
-        status: Optional[str] = "online",
-        afk: Optional[bool] = False,
         module: Optional[str] = "rpd",
         shards: Optional[int] = None,
+        mobile: Optional[bool] = False,
     ):
         self.state = ConnectionState(
             loop=loop,
@@ -94,16 +93,13 @@ class BotApp:
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
         self.factory = RESTFactory(state=self.state)
         self.gateway = Gateway(
-            state=self.state, dispatcher=self.dispatcher, factory=self.factory
+            state=self.state,
+            dispatcher=self.dispatcher,
+            factory=self.factory,
+            mobile=mobile,
         )
         self._got_gateway_bot: Event = Event()
         self.cogs = {}
-        self.p = Presence(
-            gateway=self.gateway,
-            state=self.state,
-            status=status,
-            afk=afk,
-        )
         print_banner(module)
         if not has_nacl:
             _log.warning(
@@ -143,14 +139,11 @@ class BotApp:
         """Returns if the bot is ready or not."""
         return self.state._ready.is_set()
 
-    async def change_presence(self, name: str, type: int):
-        await self.p.edit(name, type)
-
     @property
     def presence(self) -> list[str]:
         return self.state._bot_presences
 
-    def listen(self, coro: dispatcher.Coro) -> dispatcher.Coro:
+    def event(self, coro: dispatcher.Coro) -> dispatcher.Coro:
         return self.dispatcher.listen(coro)
 
     def load_module(self, location, package):
@@ -159,3 +152,10 @@ class BotApp:
     def load_modules(self, folder):
         for file in os.listdir(folder):
             self.load_module(file)
+
+    def listen(self, name: str = None) -> Callable[[CFT], CFT]:
+        def decorator(func: CFT) -> CFT:
+            self.dispatcher.add_listener(func, name)
+            return func
+
+        return decorator

@@ -25,12 +25,15 @@ Dispatches raw OpCode events to Event classes.
 
 import asyncio
 import logging
-from typing import Any, Callable, Coroutine, TypeVar
+from typing import Any, Callable, Coroutine, Optional, TypeVar
 
 from rpd.state import ConnectionState
 
 _log = logging.getLogger(__name__)
-Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
+CoroT = TypeVar("CoroT", bound=Callable[..., Coroutine[Any, Any, Any]])
+T = TypeVar("T")
+Coro = Coroutine[Any, Any, T]
+CoroFunc = Callable[..., Coro[Any]]
 
 
 class Dispatcher:
@@ -108,3 +111,26 @@ class Dispatcher:
 
         setattr(self, coro.__name__, coro)
         _log.debug(f"{coro.__name__} has been registered!")
+
+    def event(self, event: str):
+        ...
+
+    def add_listener(self, func: CoroFunc, name: Optional[str] = None):
+        name = func.__name__ if name is None else name
+
+        if not asyncio.iscoroutinefunction(func):
+            raise TypeError("Function is not a coroutine.")
+
+        if name in self.state.listeners:
+            self.state.listeners[name].append(func)
+        else:
+            self.state.listeners[name] = [func]
+
+    def remove_listener(self, func: CoroFunc, name: Optional[str] = None):
+        name = func.__name__ if name is None else name
+
+        if name in self.state.listeners:
+            try:
+                self.state.listeners[name].remove(func)
+            except ValueError:
+                pass
