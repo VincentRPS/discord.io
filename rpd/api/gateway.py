@@ -159,7 +159,7 @@ class Shard:
                         self.dis.dispatch("RAW_MESSAGE", data["d"])
                         OnMessage(data["d"], self.dis, self.state.app)
                     else:
-                        self.dis.dispatch(data["t"], data["d"])
+                        self.dis.dispatch("RAW_{}".format(data["t"]), data["d"])
                 elif data["op"] == 9:
                     await self.ws.close(code=1008)
                     await self.resume()

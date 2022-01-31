@@ -1,6 +1,6 @@
-from rpd import BotApp, Embed, Message
+import rpd
 
-bot = BotApp()
+bot = rpd.BotApp()
 
 
 @bot.event
@@ -9,20 +9,18 @@ async def on_ready():
 
 
 # normal
-@bot.event
-async def on_message(msg):
-    message = Message(msg, bot)
-    if message.content.startswith("!ping"):
-        await message.reply("pong!")
+@bot.listen("on_message")
+async def ping_command(msg):
+    if msg.content.startswith("!ping"):
+        await msg.reply("pong!")
 
 
 # with embeds
-@bot.event
-async def on_message(msg):
-    message = Message(msg, bot)
-    embed = Embed(title="bonk", description="boop")
-    if message.content.startswith("!ping"):
-        await message.reply("pong!", embed)
+@bot.listen("on_message")
+async def embed_command(msg):
+    embed = rpd.Embed(title="bonk", description="boop")
+    if msg.content.startswith("!embed"):
+        await msg.reply("here is your embed", embed)
 
 
 bot.run("my_token")

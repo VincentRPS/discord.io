@@ -56,9 +56,8 @@ async def on_ready():
 
 @bot.event
 async def on_message(msg):
-    message = rpd.Message(msg, bot)
-    if message.content.startswith("!ping"):
-        await message.reply("pong!")
+    if msg.content.startswith("!ping"):
+        await msg.reply("pong!")
 
 bot.run("my_bot_token")
 ```

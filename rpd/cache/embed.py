@@ -36,7 +36,7 @@ def Embed(
     date: Optional[str] = None,
     color: Optional[int] = None,
 ):
-    """Generates a rich presence"""
+    """Generates a rich embed"""
     ret = {
         "type": "rich",
     }

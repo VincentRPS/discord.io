@@ -72,12 +72,10 @@ class Intents:
         if self.intents == "0":
             intents = self.default()
 
-    @classmethod
     def default():
         """Gives every non-privledged Intent"""
         return 32509
 
-    @classmethod
     def all():
         """Gives every Intent"""
         return 32767
