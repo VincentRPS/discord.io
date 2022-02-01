@@ -36,4 +36,4 @@ class Event(abc.ABC):
 
     # @property
     # def app(self) -> traits.BotAppAware:
-        # raise NotImplementedError
+    # raise NotImplementedError

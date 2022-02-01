@@ -29,8 +29,8 @@ from threading import Event
 from time import time
 from typing import Any, Callable, Dict, List, Literal, Optional, TypeVar, Union
 
-from rpd.api.rest_factory import RESTFactory
 from rpd.api.gateway import Gateway
+from rpd.api.rest_factory import RESTFactory
 from rpd.audio import VoiceClient, has_nacl
 from rpd.implements.core import implements
 from rpd.interactions.command import Command

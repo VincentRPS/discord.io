@@ -119,7 +119,7 @@ class Dispatcher:
             raise TypeError("Function is not a coroutine.")
 
         setattr(self, name, func)
-        
+
         if name.startswith("on_raw"):
             _log.debug(f"{name} added as a listener!")
         else:

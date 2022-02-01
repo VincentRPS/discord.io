@@ -316,7 +316,13 @@ class Gateway:
             shds = self.count
 
         for shard in range(shds):
-            self.s = Shard(self._s, self._d, shard, mobile=self.mobile, url=r["url"]+url_extension)
+            self.s = Shard(
+                self._s,
+                self._d,
+                shard,
+                mobile=self.mobile,
+                url=r["url"] + url_extension,
+            )
             self._s.loop.create_task(self.s.connect(token))
             self.shards.append(self.s)
             _log.info("Shard %s has connected to Discord", shard)

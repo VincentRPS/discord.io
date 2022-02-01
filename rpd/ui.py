@@ -72,8 +72,8 @@ def start_logging(flavor: Union[None, int, str, Dict[str, Any]], debug: bool = F
             "INFO": "green",
             "WARNING": "yellow",
             "ERROR": "red",
-            "CRITICAL": "red, bg_white"
-        }
+            "CRITICAL": "red, bg_white",
+        },
     )
     warnings.simplefilter("always", DeprecationWarning)
     logging.captureWarnings(True)
