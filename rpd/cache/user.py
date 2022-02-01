@@ -42,7 +42,8 @@ class User:
     def discriminator(self) -> int:
         return self._d["discriminator"]
 
-    def id(self):
+    @property
+    def id(self) -> int:
         return self._d["id"]
 
     def public_flags(self):

@@ -34,6 +34,13 @@ packages = [
     "rpd.api",
     "rpd.util",
     "rpd.internal",
+    "rpd.components",
+    "rpd.audio",
+    "rpd.cache",
+    "rpd.implements",
+    "rpd.interactions",
+    "rpd.modules",
+    "rpd.types",
 ]
 
 extra_requires = {

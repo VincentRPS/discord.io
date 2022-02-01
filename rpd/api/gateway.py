@@ -34,7 +34,7 @@ from typing import List
 
 import aiohttp
 
-from rpd.events.messages import OnMessage
+from rpd.events import OnMessage, OnMessageDelete, OnMessageEdit
 from rpd.internal.dispatcher import Dispatcher
 
 from ..state import ConnectionState
@@ -157,7 +157,13 @@ class Shard:
                         self.dis.dispatch("RAW_GUILD_CREATE", data["d"])
                     elif data["t"] == "MESSAGE_CREATE":
                         self.dis.dispatch("RAW_MESSAGE", data["d"])
-                        OnMessage(data["d"], self.dis, self.state.app)
+                        OnMessage(data["d"], self.dis, self.state)
+                    elif data["t"] == "MESSAGE_DELETE":
+                        self.dis.dispatch("RAW_MESSAGE_DELETE", data["d"])
+                        OnMessageDelete(data["d"], self.dis, self.state)
+                    elif data["t"] == "MESSAGE_UPDATE":
+                        self.dis.dispatch("RAW_MESSAGE_EDIT", data["d"])
+                        OnMessageEdit(data["d"], self.dis, self.state)
                     else:
                         self.dis.dispatch("RAW_{}".format(data["t"]), data["d"])
                 elif data["op"] == 9:

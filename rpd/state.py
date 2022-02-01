@@ -107,6 +107,7 @@ class ConnectionState:
     def __init__(self, **options):
         self._guilds_cache = {}
         self._sent_messages_cache = {}
+        self._edited_messages_cache = {}
         self._deleted_messages_cache = {}
         self._ready: asyncio.Event = asyncio.Event()
 

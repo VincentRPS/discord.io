@@ -26,8 +26,9 @@ ref: https://discord.dev/resources/channel
 
 from typing import List, Optional
 
+from rpd.types import allowed_mentions
+
 from rpd.components.core import Button
-from rpd.internal.dispatcher import Dispatcher
 from rpd.snowflake import Snowflakeish
 
 from .embed import Embed
@@ -56,7 +57,7 @@ class Message:
     def guild(self):
         return Guild(id=self._message["guild_id"])
 
-    def author(self):
+    def author(self) -> User:
         return User(usr=self._message["author"])
 
     async def send(
@@ -64,7 +65,7 @@ class Message:
         content: str,
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
-        allowed_mentions: Optional[bool] = False,
+        allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
         components: List[Button] = None,
     ):
         await self.app.factory.create_message(
@@ -81,7 +82,7 @@ class Message:
         content: str,
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
-        allowed_mentions: Optional[bool] = False,
+        allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
         components: List[Button] = None,
     ):
         await self.app.factory.create_message(
