@@ -140,6 +140,7 @@ class BotApp:
         await self.gateway.connect(token=token)
 
     def implements(self, command_name: str, prefixed_command: bool = False):
+        _log.warning("bot.implements has been deprecated.")
         return implements(
             self, self.command_prefix, self.dispatcher, command_name, prefixed_command
         )

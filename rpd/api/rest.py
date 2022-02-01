@@ -239,11 +239,11 @@ class RESTClient:
                             continue
 
                         elif r.status == 403:
-                            raise Forbidden(r)
+                            raise Forbidden(d)
                         elif r.status == 404:
-                            raise NotFound(r)
+                            raise NotFound(d)
                         elif r.status == 500:
-                            raise ServerError(r)
+                            raise ServerError(d)
                         elif 300 > r.status >= 200:
                             t = await r.json()
                             _log.debug("> %s", t)
@@ -255,8 +255,8 @@ class RESTClient:
                             _log.error(r)
 
                 except Exception as exc:
-                    raise Exception(
-                        f"Exception Occured when trying to send a request. {exc}"
+                    raise RESTError(
+                        f"{exc}"
                     )
 
     async def cdn(self, url) -> bytes:

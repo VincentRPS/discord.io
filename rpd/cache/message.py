@@ -82,7 +82,7 @@ class Message:
 
     async def reply(
         self,
-        content: str,
+        content: Optional[str] = None,
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,

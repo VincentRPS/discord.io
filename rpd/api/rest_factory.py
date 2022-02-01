@@ -71,7 +71,7 @@ class RESTFactory:
     def create_message(
         self,
         channel: Snowflakeish,
-        content: str,
+        content: typing.Optional[str] = None,
         tts: typing.Optional[bool] = False,
         embeds: typing.List[typing.Dict[str, typing.Any]] = None,
         allowed_mentions: typing.Optional[allowed_mentions.MentionObject] = None,
@@ -79,10 +79,11 @@ class RESTFactory:
         components: typing.Optional[list[dict]] = None,
     ):
         json = {
-            "content": content,
             "tts": tts,
             "allowed_mentions": allowed_mentions,
         }
+        if content is not None:
+            json["content"] = content
         if message_reference is not None:
             json["message_reference"] = message_reference
         if components is not None:
@@ -320,3 +321,30 @@ class RESTFactory:
         )
 
     # TODO: Edit and Delete followup message
+
+
+    def get_audit_log_entry(
+        self, 
+        guild: Snowflakeish, 
+        user_id: typing.Optional[Snowflakeish] = None, 
+        action_type: typing.Optional[int] = None,
+        before: typing.Optional[Snowflakeish] = None,
+        limit: typing.Optional[int] = 50
+    ):
+        ret = {
+            "limit": limit
+        }
+        if user_id:
+            ret["user_id"] = user_id
+        if action_type:
+            ret["action_type"] = action_type
+        if before:
+            ret["before"] = before
+        if limit:
+            ret["limit"] = limit
+        return self.rest.send(
+            Route(
+                "GET", f"/guilds/{guild}/audit-logs", guild_id=guild,
+            ),
+            json=ret,
+        )

@@ -22,4 +22,11 @@
 """Implementation of Colours."""
 from .color import Color
 
-Colour = Color
+
+class Colour(Color):
+    """Represents the default discord colours
+
+    Defines factory methods which return a certain colour code to be used.
+
+    .. versionadded:: 0.7.0
+    """

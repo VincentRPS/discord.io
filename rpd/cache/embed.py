@@ -24,7 +24,9 @@
 ref: https://discord.dev/resources/channel#embed-limits
 """
 
-from typing import List, Optional
+from typing import List, Optional, Union
+
+from rpd.color import Color
 
 __all__: List[str] = ["Embed"]
 
@@ -34,7 +36,7 @@ def Embed(
     description: Optional[str] = None,
     url: Optional[str] = None,
     date: Optional[str] = None,
-    color: Optional[int] = None,
+    color: Optional[Union[int, Color]] = None,
 ):
     """Generates a rich embed"""
     ret = {
