@@ -42,7 +42,7 @@ from .rest_factory import RESTFactory
 
 ZLIB_SUFFIX = b"\x00\x00\xff\xff"
 _log = logging.getLogger(__name__)
-url = "wss://gateway.discord.gg/?v=9&encoding=json&compress=zlib-stream"
+url_extension = "?v=9&encoding=json&compress=zlib-stream"
 
 
 class Shard:
@@ -61,6 +61,7 @@ class Shard:
         state: ConnectionState,
         dispatcher: Dispatcher,
         shard_id: int,
+        url: str,
         mobile: bool = False,
     ):
         self.remaining = 110
@@ -68,6 +69,7 @@ class Shard:
         self.window = 0.0
         self.max = 110
         self.state = state
+        self.url = url
         self.mobile = mobile
         self.dis = dispatcher
         self.inflator = zlib.decompressobj()
@@ -78,7 +80,7 @@ class Shard:
 
     async def connect(self, token):
         self._session = aiohttp.ClientSession()
-        self.ws = await self._session.ws_connect(url)
+        self.ws = await self._session.ws_connect(self.url)
         self.token = token
         if self._session_id is None:
             await self.identify()
@@ -314,7 +316,7 @@ class Gateway:
             shds = self.count
 
         for shard in range(shds):
-            self.s = Shard(self._s, self._d, shard, mobile=self.mobile)
+            self.s = Shard(self._s, self._d, shard, mobile=self.mobile, url=r["url"]+url_extension)
             self._s.loop.create_task(self.s.connect(token))
             self.shards.append(self.s)
             _log.info("Shard %s has connected to Discord", shard)

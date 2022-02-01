@@ -46,7 +46,10 @@ def start_logging(flavor: Union[None, int, str, Dict[str, Any]], debug: bool = F
         return  # the user is most likely using logging.basicConfig or another alt.
 
     if flavor is None:
-        flavor = logging.INFO
+        if not debug:
+            flavor = logging.INFO
+        else:
+            flavor = logging.DEBUG
 
     if isinstance(flavor, dict):
         logging.config.dictConfig(flavor)
