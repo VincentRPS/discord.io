@@ -61,7 +61,7 @@ setuptools.setup(
     package_data={
         "rpd": ["banner.txt"],
     },
-    project_utls={
+    project_urls={
         "Documentation": "https://RPD.rtfd.io",
         "Issue Tracker": "https://github.com/RPD-py/RPD/issues",
         "Pull Request Tracker": "https://github.com/RPD-py/RPD/pulls",
