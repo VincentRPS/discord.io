@@ -38,6 +38,7 @@ class OnMessageEdit:
         try:
             before = Message(state._sent_messages_cache[data["id"]], state.app)
         except KeyError:
+            # if the message is not in the cache we cant really save it.
             before = None
         state._edited_messages_cache[data["id"]] = data
         after = Message(data, state.app)
