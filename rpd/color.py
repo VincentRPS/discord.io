@@ -125,7 +125,7 @@ class Color:
 
     @classmethod
     def dark_theme(self) -> int:
-        return int(0x36393F)
+        return int(0x2F3136)
     
     @classmethod
     def fushia(self) -> int:
