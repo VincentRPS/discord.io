@@ -62,7 +62,7 @@ def start_logging(flavor: Union[None, int, str, Dict[str, Any]], debug: bool = F
         format="%(log_color)s%(bold)s%(levelname)-1.1s%(thin)s %(asctime)23.23s %(bold)s%(name)s: %(thin)s%(message)s%(reset)s",
         stream=sys.stderr,
         log_colors={
-            "DEBUG": "blue",
+            "DEBUG": "cyan",
             "INFO": "green",
             "WARNING": "yellow",
             "ERROR": "red",

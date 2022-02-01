@@ -119,7 +119,11 @@ class Dispatcher:
             raise TypeError("Function is not a coroutine.")
 
         setattr(self, name, func)
-        _log.info(f"{name} added as a listener!")
+        
+        if name.startswith("on_raw"):
+            _log.debug(f"{name} added as a listener!")
+        else:
+            _log.info(f"{name} added as a listener!")
 
     def remove_listener(self, func: CoroFunc, name: Optional[str] = None):
         name = func.__name__ if name is None else name
