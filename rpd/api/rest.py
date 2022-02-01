@@ -232,7 +232,7 @@ class RESTClient:
                                 "Finished waiting for the ratelimit, now retrying..."
                             )
 
-                            if is_global:
+                            if not is_global:
                                 self._has_global.set()
                                 _log.debug("Global ratelimit has been depleted.")
 
