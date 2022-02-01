@@ -42,8 +42,11 @@ from rpd import __copyright__, __license__, __version__
 
 def start_logging(flavor: Union[None, int, str, Dict[str, Any]], debug: bool = False):
 
-    if len(logging.root.handlers) != 0 or flavor is None:
+    if len(logging.root.handlers) != 0:
         return  # the user is most likely using logging.basicConfig or another alt.
+
+    if flavor is None:
+        flavor = logging.INFO
 
     if isinstance(flavor, dict):
         logging.config.dictConfig(flavor)

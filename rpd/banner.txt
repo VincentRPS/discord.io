@@ -1,11 +1,11 @@
 
 
 ${bold_red}8888888b.  8888888b.  8888888b.     ${reset}${bold_white}version:   ${reset}${thin_white}${version}${reset}
-${red}888   Y88b 888   Y88b 888  "Y88b    ${reset}${bold_white}copyright: ${reset}${thin_white}${copyright} | ${license} ${reset}
+${red}888   Y88b 888   Y88b 888   Y88b    ${reset}${bold_white}copyright: ${reset}${thin_white}${copyright} | ${license} ${reset}
 ${yellow}888    888 888    888 888    888    ${reset}${bold_white}date:      ${reset}${thin_white}${current_time} ${reset}
 ${green}888   d88P 888   d88P 888    888    ${reset}${bold_white}python:    ${reset}${thin_white}${py_version} ${reset}
 ${blue}8888888P"  8888888P"  888    888    ${reset}${bold_white}api:       ${reset}${thin_white}v9 ${reset}
 ${cyan}888 T88b   888        888    888    ${reset}${bold_white}discord:   ${reset}${thin_white}https://discord.gg/cvCAwntVhm ${reset}
 ${purple}888  T88b  888        888  .d88P    ${reset}${bold_white}github:    ${reset}${thin_white}https://github.com/RPD-py/RPD ${reset}
-${bold_yellow}888   T88b 888        8888888P"     ${reset}${bold_white}docs:      ${reset}${thin_white}https://RPD.rtfd.io/en/latest ${reset}
+${bold_yellow}888   T88b 888        88888888P     ${reset}${bold_white}docs:      ${reset}${thin_white}https://RPD.rtfd.io/en/latest ${reset}
 
