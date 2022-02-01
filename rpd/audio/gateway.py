@@ -100,7 +100,7 @@ class VoiceGateway:
             self.token = data["token"]
             self.endpoint = data["endpoint"]
             self.guild = data["guild_id"]
-            await self.connect(url="wss://"+self.endpoint)
+            await self.connect(url="wss://" + self.endpoint)
 
     def identify(self):
         json = {
@@ -140,7 +140,9 @@ class VoiceGateway:
             else:
                 _log.error("Inproper WebSocket message type given.")
 
-    def speaking(self,):
+    def speaking(
+        self,
+    ):
         json = {
             "op": 5,
             "d": {

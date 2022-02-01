@@ -21,17 +21,19 @@
 # SOFTWARE
 
 import abc
+
+# from rpd import traits
 from rpd.internal.dispatcher import Dispatcher
-from rpd import traits
 
 
 class Event(abc.ABC):
     """The base event class for all events."""
+
     def __init__(self, data, dispatcher: Dispatcher, state):
         self.data = data
         self.dispatch = dispatcher.dispatch
         self.state = state
-    
-    @property
-    def app(self) -> traits.BotAppAware:
-        raise NotImplementedError
+
+    # @property
+    # def app(self) -> traits.BotAppAware:
+        # raise NotImplementedError

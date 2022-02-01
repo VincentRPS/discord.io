@@ -110,7 +110,7 @@ class Dispatcher:
             raise TypeError("Function is not a coroutine.")
 
         setattr(self, coro.__name__, coro)
-        _log.debug(f"{coro.__name__} has been registered!")
+        _log.info(f"{coro.__name__} has been registered!")
 
     def add_listener(self, func: CoroFunc, name: Optional[str] = None):
         name = func.__name__ if name is None else name
@@ -119,7 +119,7 @@ class Dispatcher:
             raise TypeError("Function is not a coroutine.")
 
         setattr(self, name, func)
-        _log.debug(f"{name} added as a listener!")
+        _log.info(f"{name} added as a listener!")
 
     def remove_listener(self, func: CoroFunc, name: Optional[str] = None):
         name = func.__name__ if name is None else name

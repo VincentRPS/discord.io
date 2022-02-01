@@ -20,8 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 from rpd.cache import Message
-from rpd.state import ConnectionState
 from rpd.internal.dispatcher import Dispatcher
+from rpd.state import ConnectionState
+
 from .core import Event
 
 

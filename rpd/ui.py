@@ -26,15 +26,51 @@ based off hikari's use of colorlog.
 
 import datetime
 import importlib.resources
+import logging
+import logging.config
 import platform
 import string
 import sys
 import time
-from typing import Optional
+import warnings
+from typing import Any, Dict, Optional, Union
 
 import colorlog
 
 from rpd import __copyright__, __license__, __version__
+
+
+def start_logging(flavor: Union[None, int, str, Dict[str, Any]], debug: bool = False):
+
+    if len(logging.root.handlers) != 0 or flavor is None:
+        return  # the user is most likely using logging.basicConfig or another alt.
+
+    if isinstance(flavor, dict):
+        logging.config.dictConfig(flavor)
+
+        if flavor.get("handler"):
+            return
+
+        flavor = None
+
+    # things that never will be logged.
+    logging.logThreads = None
+    logging.logProcesses = None
+
+    colorlog.basicConfig(
+        level=flavor,
+        format="%(log_color)s%(bold)s%(levelname)-1.1s%(thin)s %(asctime)23.23s %(bold)s%(name)s: %(thin)s%(message)s%(reset)s",
+        stream=sys.stderr,
+        log_colors={
+            "DEBUG": "blue",
+            "INFO": "green",
+            "WARNING": "yellow",
+            "ERROR": "red",
+            "CRITICAL": "red, bg_white"
+        }
+    )
+    warnings.simplefilter("always", DeprecationWarning)
+    logging.captureWarnings(True)
 
 
 def print_banner(module: Optional[str] = "rpd"):

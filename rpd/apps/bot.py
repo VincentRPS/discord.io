@@ -27,16 +27,16 @@ import logging
 import os
 from threading import Event
 from time import time
-from typing import Callable, List, Literal, Optional, TypeVar
+from typing import Any, Callable, Dict, List, Literal, Optional, TypeVar, Union
 
-from rpd.api import RESTFactory
+from rpd.api.rest_factory import RESTFactory
 from rpd.api.gateway import Gateway
 from rpd.audio import VoiceClient, has_nacl
 from rpd.implements.core import implements
 from rpd.interactions.command import Command
 from rpd.internal import dispatcher
 from rpd.state import ConnectionState
-from rpd.ui import print_banner
+from rpd.ui import print_banner, start_logging
 
 _log = logging.getLogger(__name__)
 __all__: List[str] = ["BotApp"]
@@ -77,6 +77,10 @@ class BotApp:
         The loop you want to use, defaults to :class:`asyncio.new_event_loop`
     module
         The module with a `banner.txt` to print
+    logs
+        A :class:`int`, :class:`str` or :class:`dict`.
+    debug
+        To show debug logs or not.
     """
 
     def __init__(
@@ -87,7 +91,11 @@ class BotApp:
         shards: Optional[int] = None,
         mobile: Optional[bool] = False,
         command_prefix: Optional[str] = None,
+        logs: Optional[Union[None, int, str, Dict[str, Any]]] = None,
+        debug: Optional[bool] = False,
     ):
+        print_banner(module)
+        start_logging(logs, debug)
         self.command_prefix = command_prefix
         self.state = ConnectionState(
             loop=loop,
@@ -106,7 +114,6 @@ class BotApp:
         self.voice = VoiceClient(self.state, self.dispatcher, self.gateway)
         self._got_gateway_bot: Event = Event()
         self.cogs = {}
-        print_banner(module)
 
         if not has_nacl:
             _log.warning(
