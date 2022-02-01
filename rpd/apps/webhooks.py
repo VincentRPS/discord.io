@@ -46,6 +46,7 @@ class BasicWebhook(abc.ABC):
 
     def definew(self):
         self.basichook = Webhook(self.webhook_id, self.webhook_token)
+        raise DeprecationWarning("BasicWebhook aswell as WebhookApp are deprecated. please use rpd.Webhook instead.")
 
     def send(self):
         """Sends a message via the webhook id & token"""
