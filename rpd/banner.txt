@@ -6,6 +6,6 @@ ${yellow}888    888 888    888 888    888    ${reset}${bold_white}date:      ${r
 ${green}888   d88P 888   d88P 888    888    ${reset}${bold_white}python:    ${reset}${thin_white}${py_version} ${reset}
 ${blue}88888888P  8888888P"  888    888    ${reset}${bold_white}api:       ${reset}${thin_white}v9 ${reset}
 ${cyan}888 T88b   888        888    888    ${reset}${bold_white}discord:   ${reset}${thin_white}https://discord.gg/cvCAwntVhm ${reset}
-${purple}888  T88b  888        888  .d88P    ${reset}${bold_white}github:    ${reset}${thin_white}https://github.com/RPD-py/RPD ${reset}
+${purple}888  T88b  888        888  .d88P    ${reset}${bold_white}github:    ${reset}${thin_white}https://github.com/VincentRPS/RPD ${reset}
 ${bold_yellow}888   T88b 888        88888888P     ${reset}${bold_white}docs:      ${reset}${thin_white}https://RPD.rtfd.io/en/latest ${reset}
 

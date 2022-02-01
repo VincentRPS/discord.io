@@ -73,9 +73,9 @@ rst_prolog = """
 
 resource_links = {
     "discord": "https://discord.gg/cvCAwntVhm",
-    "issues": "https://github.com/RPD-py/RPD/issues",
-    "discussions": "https://github.com/RPD-py/RPD/discussions",
-    "examples": "https://github.com/RPD-py/RPD/tree/master/examples",
+    "issues": "https://github.com/VincentRPS/RPD/issues",
+    "discussions": "https://github.com/VincentRPS/RPD/discussions",
+    "examples": "https://github.com/VincentRPS/RPD/tree/master/examples",
 }
 
 # -- Options for intersphinx extension ---------------------------------------

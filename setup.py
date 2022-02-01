@@ -63,10 +63,10 @@ setuptools.setup(
     },
     project_urls={
         "Documentation": "https://RPD.rtfd.io",
-        "Issue Tracker": "https://github.com/RPD-py/RPD/issues",
-        "Pull Request Tracker": "https://github.com/RPD-py/RPD/pulls",
+        "Issue Tracker": "https://github.com/VincentRPS/RPD/issues",
+        "Pull Request Tracker": "https://github.com/VincentRPS/RPD/pulls",
     },
-    url="https://github.com/RPD-py/RPD",
+    url="https://github.com/VincentRPS/RPD",
     license="MIT",
     author="VincentRPS",
     long_description=open("README.md").read(),

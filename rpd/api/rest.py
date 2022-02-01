@@ -115,7 +115,7 @@ class RESTClient:
 
     def __init__(self, *, state=None, proxy=None, proxy_auth=None):
         self.header: typing.Dict[str, str] = {
-            "User-Agent": "DiscordBot https://github.com/RPD-py/RPD"
+            "User-Agent": "DiscordBot https://github.com/VincentRPS/RPD"
         }
         self._locks: weakref.WeakValueDictionary[
             str, asyncio.Lock
