@@ -26,10 +26,9 @@ ref: https://discord.dev/resources/channel
 
 from typing import List, Optional
 
-from rpd.types import allowed_mentions
-
 from rpd.components.core import Button
 from rpd.snowflake import Snowflakeish
+from rpd.types import allowed_mentions
 
 from .embed import Embed
 from .guild import Guild
@@ -47,7 +46,11 @@ class Message:
     def __init__(self, msg: dict, app):
         self._message = msg
         self.app = app
-        self.content: str = self._message["content"]
+        try:
+            self.content: str = self._message["content"]
+        except KeyError:
+            # can error out for embed only/link only messages.
+            self.content: str = ""
         self.channel: Snowflakeish = msg["channel_id"]
 
     @property

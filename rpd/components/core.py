@@ -25,9 +25,8 @@ import typing
 
 from rpd.state import ConnectionState
 
-__all__: typing.List[str] = [
-    "Button"
-]
+__all__: typing.List[str] = ["Button"]
+
 
 class Button:
     def __init__(self, state: ConnectionState):
@@ -43,17 +42,22 @@ class Button:
         if custom_id:
             self.id = custom_id
         else:
-            self.id = "".join(random.choice(string.ascii_letters) for _ in range(random.randint(10, 100)))
+            self.id = "".join(
+                random.choice(string.ascii_letters)
+                for _ in range(random.randint(10, 100))
+            )
 
         ret = {
             "type": 1,
-            "components": [{
-                "type": 2,
-                "label": label,
-                "style": style,
-                "url": url,
-                "custom_id": custom_id
-            }]
+            "components": [
+                {
+                    "type": 2,
+                    "label": label,
+                    "style": style,
+                    "url": url,
+                    "custom_id": custom_id,
+                }
+            ],
         }
 
         return [ret]

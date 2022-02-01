@@ -40,7 +40,7 @@ class EncoderStruct(ctypes.Structure):
     pass
 
 
-# if your curious, the "decoder" handles, voice recv.
+# if your curious, the 'decoder' handles, voice recv.
 class DecoderStuct(ctypes.Structure):
     pass
 

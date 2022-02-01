@@ -112,9 +112,6 @@ class Dispatcher:
         setattr(self, coro.__name__, coro)
         _log.debug(f"{coro.__name__} has been registered!")
 
-    def event(self, event: str):
-        ...
-
     def add_listener(self, func: CoroFunc, name: Optional[str] = None):
         name = func.__name__ if name is None else name
 

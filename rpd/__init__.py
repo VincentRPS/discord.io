@@ -24,6 +24,7 @@ from .audio import *
 from .cache import *
 from .color import *
 from .colour import *
+from .components import *
 from .events import *
 from .implements import *
 from .intents import *
@@ -38,7 +39,7 @@ from .types import *
 from .ui import *
 from .util import *
 from .webhooks import *
-from .components import *
+
 
 class VersionInfo(typing.NamedTuple):
     major: str

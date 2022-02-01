@@ -19,31 +19,19 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from rpd.cache import Message
-from rpd.state import ConnectionState
+
+import abc
 from rpd.internal.dispatcher import Dispatcher
-from .core import Event
+from rpd import traits
 
 
-class OnMessage:
-    def __init__(self, data, dispatcher: Dispatcher, state: ConnectionState):
-        ret = Message(data, state.app)
-        state._sent_messages_cache[data["id"]] = data
-        dispatcher.dispatch("MESSAGE", ret)
-
-
-class OnMessageEdit:
-    def __init__(self, data, dispatcher: Dispatcher, state: ConnectionState):
-        try:
-            before = Message(state._sent_messages_cache[data["id"]], state.app)
-        except KeyError:
-            before = None
-        state._edited_messages_cache[data["id"]] = data
-        after = Message(data, state.app)
-        dispatcher.dispatch("MESSAGE_EDIT", before, after)
-
-
-class OnMessageDelete:
-    def __init__(self, data, dispatcher: Dispatcher, state: ConnectionState):
-        message = Message(state._sent_messages_cache[data["id"]], state.app)
-        dispatcher.dispatch("MESSAGE_DELETE", message)
+class Event(abc.ABC):
+    """The base event class for all events."""
+    def __init__(self, data, dispatcher: Dispatcher, state):
+        self.data = data
+        self.dispatch = dispatcher.dispatch
+        self.state = state
+    
+    @property
+    def app(self) -> traits.BotAppAware:
+        raise NotImplementedError

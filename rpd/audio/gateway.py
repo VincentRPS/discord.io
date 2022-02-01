@@ -25,7 +25,7 @@ import asyncio
 import json
 import logging
 import zlib
-from random import random
+from random import randint, random
 
 import aiohttp
 
@@ -34,7 +34,7 @@ from rpd.internal.dispatcher import Dispatcher
 from rpd.state import ConnectionState
 
 _log = logging.getLogger(__name__)
-url = "wss://gateway.discord.gg/?v=4&encoding=json&compress=zlib-stream"
+aurl = "wss://gateway.discord.gg/?v=4&encoding=json&compress=zlib-stream"
 
 
 class VoiceGateway:
@@ -56,16 +56,24 @@ class VoiceGateway:
         self.inflator = zlib.decompressobj()
         self.started: asyncio.Event = asyncio.Event()
         self.dispatcher.add_listener(
-            self.on_voice_state_update, "on_voice_state_update"
+            self.on_voice_state_update, "on_raw_voice_state_update"
+        )
+        self.dispatcher.add_listener(
+            self.on_voice_server_update, "on_raw_voice_server_update"
         )
 
-    async def connect(self, guild, channel):
+    async def connect(self, guild=None, channel=None, url: str = None):
         self._session = aiohttp.ClientSession()
+        if url is not None:
+            self.ws = await self._session.ws_connect(url[:-4])
+        self.session = aiohttp.ClientSession()
+        self.v4ws = await self.session.ws_connect(aurl)
         await self.gateway.gain_voice_access(guild, channel, self.mute, self.deaf)
-        self.ws = await self._session.ws_connect(url)
         if self.session_id is None:
-            await self.identify()
             self.state.loop.create_task(self.recv())
+            if self.ws is not None:
+                self.state.loop.create_task(self.recv())
+                await self.identify()
         else:
             await self.resume()
             _log.debug("Reconnected to the Gateway")
@@ -75,7 +83,7 @@ class VoiceGateway:
         self.started.set()
 
     async def heartbeat(self, interval: float):
-        await self.send({"op": 1, "d": self._seq})
+        await self.send({"op": 1, "d": randint(100000, 999999)}, v4=False)
         await asyncio.sleep(interval)
         self.state.loop.create_task(self.heartbeat(interval))
 
@@ -85,8 +93,29 @@ class VoiceGateway:
         await asyncio.sleep(init)
         self.state.loop.create_task(self.heartbeat(interval))
 
+    async def on_voice_server_update(self, data):
+        if not self.started.is_set():
+            await self.started.wait()
+        else:
+            self.token = data["token"]
+            self.endpoint = data["endpoint"]
+            self.guild = data["guild_id"]
+            await self.connect(url="wss://"+self.endpoint)
+
+    def identify(self):
+        json = {
+            "op": 0,
+            "d": {
+                "server_id": self.guild,
+                "user_id": self.state._bot_id,
+                "session_id": self.session_id,
+                "token": self.token,
+            },
+        }
+        return self.send(json)
+
     async def recv(self):
-        for msg in self.ws:
+        for msg in self.v4ws and self.ws:
             if msg.type == aiohttp.WSMsgType.BINARY:
                 self.buffer.extend(msg.data)
                 raw = self.inflator.decompress(self.buffer).decode("utf-8")
@@ -111,7 +140,7 @@ class VoiceGateway:
             else:
                 _log.error("Inproper WebSocket message type given.")
 
-    def speaking(self):
+    def speaking(self,):
         json = {
             "op": 5,
             "d": {
@@ -119,25 +148,27 @@ class VoiceGateway:
                 "delay": 0,
             },
         }
-        return self.send(json)
+        return self.send(json, False)
 
-    async def send(self, data: dict):
+    def resume(self):
+        ret = {
+            "op": 7,
+            "d": {
+                "server_id": self.guild,
+                "session_id": self.session_id,
+                "token": self.token,
+            },
+        }
+        return self.send(ret, False)
+
+    async def send(self, data: dict, v4: bool = True):
         _log.debug("< %s", data)
         payload = json.dumps(data)
 
         if isinstance(payload, str):
             payload = payload.encode("utf-8")
 
-        await self.ws.send_bytes(payload)
-
-    def identify(self):
-        json = {
-            "op": 0,
-            "d": {
-                "server_id": self.guild,
-                "user_id": self.gateway.state._bot_id,
-                "session_id": self.session_id,
-                "token": self.token,
-            },
-        }
-        return self.send(json)
+        if v4:
+            await self.v4ws.send_bytes(payload)
+        else:
+            await self.ws.send_bytes(payload)

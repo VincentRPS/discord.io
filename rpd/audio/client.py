@@ -49,23 +49,12 @@ class VoiceClient:
             "xsalsa20_poly1305_suffix",
             "xsalsa20_poly1305",
         ]
-        self.dispatcher.add_listener(
-            self.on_voice_server_update, "on_voice_server_update"
-        )
-        self.endpoints = {}
-        self.session_id = None
-
-    async def on_voice_server_update(self, data):
-        self.token = data["token"]
-        self.endpoints[data["guild_id"]] = data["endpoint"]
-        _log.info("Updated Server Info!")
+        self.endpoint: str = None
 
     async def connect(self, guild, channel):
         self.guild = guild
         self.channel = channel
-        await self.gateway.connect(guild, channel)
-        await asyncio.sleep(0.300)
-        await self.identify()
+        await self.gateway.connect(guild=guild, channel=channel)
 
     def speak_without_audio(self):
         return self.gateway.speaking

@@ -32,7 +32,6 @@ from typing import Callable, List, Literal, Optional, TypeVar
 from rpd.api import RESTFactory
 from rpd.api.gateway import Gateway
 from rpd.audio import VoiceClient, has_nacl
-from rpd.audio.gateway import VoiceGateway
 from rpd.implements.core import implements
 from rpd.interactions.command import Command
 from rpd.internal import dispatcher
@@ -108,6 +107,7 @@ class BotApp:
         self._got_gateway_bot: Event = Event()
         self.cogs = {}
         print_banner(module)
+
         if not has_nacl:
             _log.warning(
                 "You don't have PyNaCl, meaning you won't be able to use Voice features."
@@ -215,4 +215,10 @@ class BotApp:
         user_command: bool = False,
         message_command: bool = False,
     ):
-        return Command(self.state, self.factory)
+        return Command(
+            self.state,
+            self.factory,
+            slash_command=slash_command,
+            message_command=message_command,
+            user_command=user_command,
+        )
