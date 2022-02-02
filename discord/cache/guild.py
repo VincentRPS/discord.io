@@ -42,19 +42,32 @@ class Guild:
         return self._guild_cache["joined_at"]
 
     def vanity(self) -> str:
+        """The vanity url, if None returns None"""
         return self._guild_cache["vanity_url_code"]
 
     def splash(self) -> str:
+        """The splash screen, if None returns None"""
         return self._guild_cache["splash"]
 
     def discovery_splash(self) -> str:
+        """The discovery splash, if None returns None"""
         return self._guild_cache["discovery_splash"]
 
     def sub_count(self) -> int:
+        """The subscription count, returns a int"""
         return self._guild_cache["premium_subscription_count"]
 
     def emojis(self) -> List[Dict[str, Any]]:
+        """A list of emojis
+
+        .. note::
+
+            we are currently working on making a emoji class
+            to return a list of them, but while that is being made
+            this will just return a dict of all emojis.
+        """
         return self._guild_cache["emojis"]
 
     def from_dict(self) -> dict:
+        """returns the Guild dict."""
         return self._guild_cache

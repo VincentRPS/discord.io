@@ -29,7 +29,7 @@ from discord.internal.exceptions import DiscordError, Forbidden
 
 class File:
     """Represents a Discord file.
-    
+
     .. versionadded:: 0.4.0
 
     Parameters

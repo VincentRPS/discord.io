@@ -55,12 +55,15 @@ class Message:  # noqa: ignore
 
     @property
     def id(self):
+        """Returns the message id"""
         return self._message["id"]
 
     def guild(self):
+        """Returns the :class:`Guild` of the message"""
         return Guild(id=self._message["guild_id"])
 
     def author(self) -> User:
+        """Returns the :class:`User` of the message"""
         return User(usr=self._message["author"])
 
     async def send(
@@ -71,6 +74,7 @@ class Message:  # noqa: ignore
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
         components: List[Button] = None,
     ):
+        """Sends a message."""
         await self.app.factory.create_message(
             channel=self.channel,
             content=content,
@@ -88,6 +92,7 @@ class Message:  # noqa: ignore
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
         components: List[Button] = None,
     ):
+        """Replys to the certain message."""
         await self.app.factory.create_message(
             channel=self.channel,
             content=content,

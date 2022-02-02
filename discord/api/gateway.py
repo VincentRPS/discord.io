@@ -108,7 +108,7 @@ class Shard:
         ----------
         token
             Your bot token.
-        
+
         Attributes
         ----------
         _session
@@ -128,7 +128,7 @@ class Shard:
 
     @property
     def is_ratelimited(self) -> bool:
-        """Returns a True if this shard is ratelimited 
+        """Returns a True if this shard is ratelimited
         and False if it isn't
         """
         now = time()
@@ -169,7 +169,7 @@ class Shard:
 
     async def send(self, data: Dict) -> None:
         """Send a request to the Gateway via the shard
-        
+
         Parameters
         ----------
         data :class:`Dict`
@@ -345,7 +345,7 @@ class Shard:
 
 class Gateway:
     """Represents a Gateway connection with Discord.
-    
+
     Parameters
     ----------
     state
@@ -357,6 +357,7 @@ class Gateway:
     mobile
         If your bot should have a mobile presence or not.
     """
+
     def __init__(
         self,
         state: ConnectionState,
@@ -373,7 +374,7 @@ class Gateway:
 
     async def connect(self, token: str) -> None:
         """Connects to the Gateway via WebSockets
-        
+
         Parameters
         ----------
         token

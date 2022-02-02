@@ -37,14 +37,18 @@ class User:
         self._d = usr
 
     def username(self) -> str:
+        """The users username"""
         return self._d["username"]
 
     def discriminator(self) -> int:
+        """The users discriminator id"""
         return self._d["discriminator"]
 
     @property
     def id(self) -> int:
+        """The users snowflake id"""
         return self._d["id"]
 
     def public_flags(self):
+        """The users public flags."""
         return self._d["public_flags"]

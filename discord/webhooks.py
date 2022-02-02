@@ -42,7 +42,7 @@ class Webhook:
         The webhook id
     token
         The webhook token
-    
+
     Attributes
     ----------
     rest
@@ -62,7 +62,7 @@ class Webhook:
         self, name: typing.Optional[str] = None, avatar: typing.Optional[str] = None
     ):
         """Modify the Webhook
-        
+
         Parameters
         ----------
         name
@@ -114,7 +114,7 @@ class Webhook:
         allowed_mentions: typing.Optional[bool] = None,
     ):
         """Edits a Webhook message
-        
+
         Parameters
         ----------
         message
@@ -144,7 +144,7 @@ class Webhook:
         message: Snowflakeish,
     ):
         """Deletes a message
-        
+
         Parameters
         ----------
         message
@@ -167,8 +167,8 @@ class Webhook:
         tts: typing.Optional[bool] = None,
         allowed_mentions: typing.Optional[bool] = None,
     ):
-        """Execute the Webhook  
-        
+        """Execute the Webhook
+
         Parameters
         ----------
         content :class:`str`
