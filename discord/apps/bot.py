@@ -77,6 +77,8 @@ class BotApp:
         The loop you want to use, defaults to :class:`asyncio.new_event_loop`
     module
         The module with a `banner.txt` to print
+    voice
+        If to enable the voice gateway or not, defaults False.
     logs
         A :class:`int`, :class:`str` or :class:`dict`.
     debug
@@ -92,6 +94,7 @@ class BotApp:
         mobile: Optional[bool] = False,
         proxy: Optional[str] = None,
         proxy_auth: Optional[str] = None,
+        voice: Optional[bool] = False,
         logs: Optional[Union[None, int, str, Dict]] = None,
         debug: Optional[bool] = False,
     ):
@@ -111,7 +114,8 @@ class BotApp:
             factory=self.factory,
             mobile=mobile,
         )
-        self.voice = VoiceClient(self.state, self.dispatcher, self.gateway)
+        if voice is True:
+            self.voice = VoiceClient(self.state, self.dispatcher, self.gateway)
         self._got_gateway_bot: Event = Event()
         self.cogs = {}
 

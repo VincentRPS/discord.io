@@ -21,10 +21,10 @@
 # SOFTWARE
 
 import abc
+from typing import Any
 
 from discord.internal.dispatcher import Dispatcher
 from discord.state import ConnectionState
-from discord.traits import BotAppAware
 
 
 class Event(abc.ABC):
@@ -37,7 +37,7 @@ class Event(abc.ABC):
         self.process()
 
     @property
-    def app(self) -> BotAppAware.app:
+    def app(self) -> Any:
         return self.state.app
 
     # meant to be overridden.
