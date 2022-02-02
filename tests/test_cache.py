@@ -34,10 +34,10 @@ class TestCache:
 
     def test_a_cache(self):
         # caching a simple fake guild
-        self.state._guilds_cache["919060781969059961"] = self.json
+        self.state._guilds_cache["935701676948590642"] = self.json
 
     def get_cache(self):
-        assert self.state._guilds_cache["919060781969059961"] == self.json
+        assert self.state._guilds_cache["935701676948590642"] == self.json
 
     def intents(self):
         assert self.state._bot_intents == 1
