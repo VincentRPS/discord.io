@@ -27,5 +27,5 @@ from typing import Type
 
 
 def Dict() -> Type[BaseDict[str, Any]]:
-    """Represents widely used Dict format which RPD uses."""
+    """Represents the widely used Dict format which RPD uses."""
     return BaseDict[str, Any]
