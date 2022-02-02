@@ -29,9 +29,7 @@ from rpd.flags import MessageFlags
 from rpd.snowflake import Snowflakeish
 from rpd.state import ConnectionState
 from rpd.types import allowed_mentions
-
-if typing.TYPE_CHECKING:
-    from rpd.types.dict import Dict
+from rpd.types.dict import Dict
 
 __all__: typing.List[str] = [
     "RESTFactory",

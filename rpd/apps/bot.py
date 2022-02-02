@@ -92,13 +92,11 @@ class BotApp:
         mobile: Optional[bool] = False,
         proxy: Optional[str] = None,
         proxy_auth: Optional[str] = None,
-        command_prefix: Optional[str] = None,
         logs: Optional[Union[None, int, str, Dict]] = None,
         debug: Optional[bool] = False,
     ):
         print_banner(module)
         start_logging(logs, debug)
-        self.command_prefix = command_prefix
         self.state = ConnectionState(
             loop=loop,
             intents=intents,
@@ -106,7 +104,7 @@ class BotApp:
             shard_count=shards,
         )
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
-        self.factory = RESTFactory(state=self.state)
+        self.factory = RESTFactory(state=self.state, proxy=proxy, proxy_auth=proxy_auth)
         self.gateway = Gateway(
             state=self.state,
             dispatcher=self.dispatcher,

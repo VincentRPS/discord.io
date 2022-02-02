@@ -54,6 +54,7 @@ class VoiceClient:
         self.guild = guild
         self.channel = channel
         await self.gateway.connect(guild=guild, channel=channel)
+        _log.info("Connected to the Voice Server.")
 
     def speak_without_audio(self):
         return self.gateway.speaking
