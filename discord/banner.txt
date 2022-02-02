@@ -1,6 +1,6 @@
 
 
-      ${bold_red}888 d8b                                       888     d8b              ${reset}${bold_white}git sha1:   ${reset}${thin_white}${git_sha}${reset}
+      ${bold_red}888 d8b                                       888     d8b              ${reset}${bold_white}git sha1:  ${reset}${thin_white}${git_sha}${reset}
       ${red}888 Y8P                                       888     Y8P              ${reset}${bold_white}version:   ${reset}${thin_white}${version}${reset}
       ${yellow}888                                           888                      ${reset}${bold_white}copyright: ${reset}${thin_white}${copyright} | ${license} ${reset}
   ${green}.d88888 888 .d8888b   .d8888b .d88b.  888d888 .d88888     888  .d88b.      ${reset}${bold_white}date:      ${reset}${thin_white}${current_time} ${reset}
