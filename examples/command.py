@@ -18,7 +18,7 @@ async def ping_command(msg):
 # with embeds
 @bot.listen("on_message")
 async def embed_command(msg):
-    embed = rpd.Embed(title="bonk", description="boop")
+    embed = rpd.Embed(title="bonk", description="boop", color=rpd.Color.teal())
     if msg.content.startswith("!embed"):
         await msg.reply("here is your embed", embed)
 

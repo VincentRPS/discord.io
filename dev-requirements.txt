@@ -27,3 +27,7 @@ pytest~=6.2.5
 pytest-cov~=3.0.0
 pytest-asyncio~=0.17.2
 pytest-custom_exit_code~=0.3.0
+#######
+# nox #
+#######
+nox~=2022.1.7

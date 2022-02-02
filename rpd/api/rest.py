@@ -255,9 +255,7 @@ class RESTClient:
                             _log.error(r)
 
                 except Exception as exc:
-                    raise RESTError(
-                        f"{exc}"
-                    )
+                    raise RESTError(f"{exc}")
 
     async def cdn(self, url) -> bytes:
         async with self._session.get(url) as r:

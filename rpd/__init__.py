@@ -16,8 +16,6 @@ __version__: str = "0.6.0"
 import logging
 import typing
 
-# there are a lot of
-# problems with importing rpd.apps for some reason.
 from .api import *
 from .apps import *
 from .audio import *
@@ -26,7 +24,6 @@ from .color import *
 from .colour import *
 from .components import *
 from .events import *
-from .implements import *
 from .intents import *
 from .interactions import *
 from .internal.exceptions import *

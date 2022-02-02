@@ -8,7 +8,6 @@ from .color import *
 from .colour import *
 from .components import *
 from .events import *
-from .implements import *
 from .intents import *
 from .interactions import *
 from .internal.exceptions import *

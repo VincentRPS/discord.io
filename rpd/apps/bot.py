@@ -32,7 +32,6 @@ from typing import Any, Callable, Dict, List, Literal, Optional, TypeVar, Union
 from rpd.api.gateway import Gateway
 from rpd.api.rest_factory import RESTFactory
 from rpd.audio import VoiceClient, has_nacl
-from rpd.implements.core import implements
 from rpd.interactions.command import Command
 from rpd.internal import dispatcher
 from rpd.state import ConnectionState
@@ -90,6 +89,8 @@ class BotApp:
         module: Optional[str] = "rpd",
         shards: Optional[int] = None,
         mobile: Optional[bool] = False,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[str] = None,
         command_prefix: Optional[str] = None,
         logs: Optional[Union[None, int, str, Dict[str, Any]]] = None,
         debug: Optional[bool] = False,
@@ -139,12 +140,6 @@ class BotApp:
 
         await self.gateway.connect(token=token)
 
-    def implements(self, command_name: str, prefixed_command: bool = False):
-        _log.warning("bot.implements has been deprecated.")
-        return implements(
-            self, self.command_prefix, self.dispatcher, command_name, prefixed_command
-        )
-
     def run(self, token: str):
         """A blocking function to start your bot"""
 
@@ -171,7 +166,7 @@ class BotApp:
         type: int,
         status: Literal["online", "dnd", "idle", "invisible", "offline"] = "online",
         stream_url: Optional[str] = None,
-        afk: bool = False,
+        afk: Optional[bool] = False,
     ):
         if type == 1 and stream_url is None:
             raise NotImplementedError("Streams need to be provided a url!")

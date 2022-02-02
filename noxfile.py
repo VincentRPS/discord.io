@@ -19,4 +19,15 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from .core import *
+import os
+import runpy
+import sys
+
+CI_PATH = "pipelines"
+
+sys.path.append(os.getcwd())
+
+
+for f in os.listdir(CI_PATH):
+    if f.endswith(".nox.py"):
+        runpy.run_path(os.path.join(CI_PATH, f))

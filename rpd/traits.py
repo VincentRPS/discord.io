@@ -21,6 +21,11 @@
 # SOFTWARE
 """
 A system for traits, based off hikari.
+
+.. warning::
+
+    This module has a high chance of being removed cause of it's
+    useless ablilty.
 """
 import typing as t
 

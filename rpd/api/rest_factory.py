@@ -46,9 +46,9 @@ class RESTFactory:
         The RESTClient.
     """
 
-    def __init__(self, state=None):
+    def __init__(self, state=None, proxy=None, proxy_auth=None):
         self.state = state or ConnectionState()
-        self.rest = RESTClient(state=self.state)
+        self.rest = RESTClient(state=self.state, proxy=proxy, proxy_auth=proxy_auth)
 
     def login(self, token: typing.Optional[str] = None) -> None:
         self.token = token
@@ -322,18 +322,15 @@ class RESTFactory:
 
     # TODO: Edit and Delete followup message
 
-
     def get_audit_log_entry(
-        self, 
-        guild: Snowflakeish, 
-        user_id: typing.Optional[Snowflakeish] = None, 
+        self,
+        guild: Snowflakeish,
+        user_id: typing.Optional[Snowflakeish] = None,
         action_type: typing.Optional[int] = None,
         before: typing.Optional[Snowflakeish] = None,
-        limit: typing.Optional[int] = 50
+        limit: typing.Optional[int] = 50,
     ):
-        ret = {
-            "limit": limit
-        }
+        ret = {"limit": limit}
         if user_id:
             ret["user_id"] = user_id
         if action_type:
@@ -344,7 +341,9 @@ class RESTFactory:
             ret["limit"] = limit
         return self.rest.send(
             Route(
-                "GET", f"/guilds/{guild}/audit-logs", guild_id=guild,
+                "GET",
+                f"/guilds/{guild}/audit-logs",
+                guild_id=guild,
             ),
             json=ret,
         )
