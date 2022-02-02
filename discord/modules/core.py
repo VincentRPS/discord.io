@@ -19,20 +19,30 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from discord import Snowflakeish, SnowflakeishList
 
 
-class TestSnowflake:
-    def test_snowflakeish(self):
-        try:
-            assert Snowflakeish(1) == 1
-            assert Snowflakeish("2") == 2
-        except KeyError:
-            pass
+import abc
+from typing import TypeVar
 
-    def test_snowflakeish_list(self):
-        try:
-            assert SnowflakeishList([1, 2]) == [1, 2]
-            assert SnowflakeishList(["1", "2"]) == ["1", "2"]
-        except KeyError:
-            pass
+from discord.internal import dispatcher
+from discord.state import ConnectionState
+
+ModuleT = TypeVar("ModuleT", bound="Module")
+
+
+class Module(abc.ABC):
+    def __init__(self, state: ConnectionState, dispatcher: dispatcher.Dispatcher):
+        self.state = state
+        self.dispatcher = dispatcher
+
+        super().__init__()
+
+    @classmethod
+    def name(cls):
+        return f"{cls.__module__}.{cls.__name__}"
+
+    def listen(self, coro: dispatcher.Coro):
+        return self.dispatcher.listen(coro)
+
+    def _inject(self):
+        return self

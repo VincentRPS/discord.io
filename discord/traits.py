@@ -19,20 +19,51 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from discord import Snowflakeish, SnowflakeishList
+"""
+A system for traits, based off hikari.
+
+.. warning::
+
+    This module has a high chance of being removed cause of it's
+    useless ablilty.
+"""
+import typing as t
+
+from discord.api import gateway, rest, rest_factory
+from discord.apps import bot
 
 
-class TestSnowflake:
-    def test_snowflakeish(self):
-        try:
-            assert Snowflakeish(1) == 1
-            assert Snowflakeish("2") == 2
-        except KeyError:
-            pass
+class GWAware(t.Protocol):
+    """Represents a Gateway aware App."""
 
-    def test_snowflakeish_list(self):
-        try:
-            assert SnowflakeishList([1, 2]) == [1, 2]
-            assert SnowflakeishList(["1", "2"]) == ["1", "2"]
-        except KeyError:
-            pass
+    __slots__ = ()
+
+    @property
+    def app(self) -> gateway.Gateway:
+        """The Gateway instance to use for Gateway Interactions."""
+        raise NotImplementedError
+
+
+class RESTAware(t.Protocol):
+    """Represents a Rest aware App."""
+
+    __slots__ = ()
+
+    @property
+    def app(self) -> rest.RESTClient:
+        """The RESTClient instance to use for Rest Interactions."""
+        raise NotImplementedError
+
+    @property
+    def factory(self) -> rest_factory.RESTFactory:
+        """The RESTFactory instance to use for Rest Interactions."""
+        raise NotImplementedError
+
+
+class BotAppAware(t.Protocol):
+    """Represents a BotApp aware app"""
+
+    @property
+    def app(self) -> bot.BotApp:
+        """The BotApp instance to use."""
+        raise NotImplementedError

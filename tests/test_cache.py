@@ -19,13 +19,13 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from rpd.state import ConnectionState
+from discord.state import ConnectionState
 
 
 class TestCache:
     state = ConnectionState()
     json = {  # this isn't exactly what the payload would be.
-        "name": "RPD",
+        "name": "discord.io",
         "members": 0,
         "bots": 0,
         "shard": 0,

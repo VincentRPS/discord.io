@@ -1,6 +1,6 @@
 import asyncio
 
-from rpd.apps import WebhookApp  # import Webhook
+from discord.apps import WebhookApp  # import Webhook
 
 webhook = WebhookApp(
     "id",

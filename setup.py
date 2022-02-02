@@ -21,25 +21,25 @@
 # SOFTWARE.
 import setuptools
 
-__version__ = str("0.6.0")
+__version__ = str("0.6.2")
 
 requirements = []
 with open("requirements.txt") as f:
     requirements = f.read().splitlines()
 
 packages = [
-    "rpd",
-    "rpd.apps",
-    "rpd.events",
-    "rpd.api",
-    "rpd.util",
-    "rpd.internal",
-    "rpd.components",
-    "rpd.audio",
-    "rpd.cache",
-    "rpd.interactions",
-    "rpd.modules",
-    "rpd.types",
+    "discord",
+    "discord.apps",
+    "discord.events",
+    "discord.api",
+    "discord.util",
+    "discord.internal",
+    "discord.components",
+    "discord.audio",
+    "discord.cache",
+    "discord.interactions",
+    "discord.modules",
+    "discord.types",
 ]
 
 extra_requires = {
@@ -54,18 +54,18 @@ extra_requires = {
 }
 
 setuptools.setup(
-    name="RPD",
+    name="discord.io",
     version=__version__,
     packages=packages,
     package_data={
-        "rpd": ["banner.txt"],
+        "discord": ["banner.txt"],
     },
     project_urls={
-        "Documentation": "https://RPD.rtfd.io",
-        "Issue Tracker": "https://github.com/VincentRPS/RPD/issues",
-        "Pull Request Tracker": "https://github.com/VincentRPS/RPD/pulls",
+        "Documentation": "https://discordio.rtfd.io",
+        "Issue Tracker": "https://github.com/VincentRPS/discord.io/issues",
+        "Pull Request Tracker": "https://github.com/VincentRPS/discord.io/pulls",
     },
-    url="https://github.com/VincentRPS/RPD",
+    url="https://github.com/VincentRPS/discord.io",
     license="MIT",
     author="VincentRPS",
     long_description=open("README.md").read(),

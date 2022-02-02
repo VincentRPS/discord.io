@@ -19,20 +19,21 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from discord import Snowflakeish, SnowflakeishList
+from __future__ import annotations
+
+from typing import Any
+from typing import Dict as BaseDict
+from typing import Type
 
 
-class TestSnowflake:
-    def test_snowflakeish(self):
-        try:
-            assert Snowflakeish(1) == 1
-            assert Snowflakeish("2") == 2
-        except KeyError:
-            pass
-
-    def test_snowflakeish_list(self):
-        try:
-            assert SnowflakeishList([1, 2]) == [1, 2]
-            assert SnowflakeishList(["1", "2"]) == ["1", "2"]
-        except KeyError:
-            pass
+def Dict() -> Type[BaseDict[str, Any]]:
+    """Represents the widely used Dict format which discord.io uses.
+        dict() -> new empty dictionary dict(mapping) -> new dictionary initialized from a mapping object's
+        (key, value) pairs
+    dict(iterable) -> new dictionary initialized as if via:
+        d = {} for k, v in iterable:
+            d[k] = v
+    dict(**kwargs) -> new dictionary initialized with the name=value pairs
+        in the keyword argument list. For example: dict(one=1, two=2)
+    """
+    return BaseDict[str, Any]

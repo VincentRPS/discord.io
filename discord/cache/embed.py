@@ -19,20 +19,39 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from discord import Snowflakeish, SnowflakeishList
+"""Represents a Discord Embed.
+
+ref: https://discord.dev/resources/channel#embed-limits
+"""
+
+from typing import List, Optional, Union
+
+from discord.color import Color
+
+__all__: List[str] = ["Embed"]
 
 
-class TestSnowflake:
-    def test_snowflakeish(self):
-        try:
-            assert Snowflakeish(1) == 1
-            assert Snowflakeish("2") == 2
-        except KeyError:
-            pass
+def Embed(
+    title: Optional[str] = None,
+    description: Optional[str] = None,
+    url: Optional[str] = None,
+    date: Optional[str] = None,
+    color: Optional[Union[int, Color]] = None,
+):
+    """Generates a rich embed"""
+    ret = {
+        "type": "rich",
+    }
 
-    def test_snowflakeish_list(self):
-        try:
-            assert SnowflakeishList([1, 2]) == [1, 2]
-            assert SnowflakeishList(["1", "2"]) == ["1", "2"]
-        except KeyError:
-            pass
+    if title:
+        ret["title"] = title
+    if description:
+        ret["description"] = description
+    if url:
+        ret["url"] = url
+    if date:
+        ret["date"] = date
+    if color:
+        ret["color"] = color
+
+    return [ret]

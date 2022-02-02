@@ -1,17 +1,17 @@
 import os
 
 folders = [
-    "rpd/__init__.py",
-    "rpd/apps/__init__.py",
-    "rpd/api/__init__.py",
-    "rpd/audio/__init__.py",
-    "rpd/modules/__init__.py",
-    "rpd/cache/__init__.py",
-    "rpd/events/__init__.py",
-    "rpd/interactions/__init__.py",
-    "rpd/components/__init__.py",
-    "rpd/internal/__init__.py",
-    "rpd/types/__init__.py",
+    "discord/__init__.py",
+    "discord/apps/__init__.py",
+    "discord/api/__init__.py",
+    "discord/audio/__init__.py",
+    "discord/modules/__init__.py",
+    "discord/cache/__init__.py",
+    "discord/events/__init__.py",
+    "discord/interactions/__init__.py",
+    "discord/components/__init__.py",
+    "discord/internal/__init__.py",
+    "discord/types/__init__.py",
 ]
 
 for dir in folders:

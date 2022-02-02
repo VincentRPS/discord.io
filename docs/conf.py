@@ -19,12 +19,12 @@ sys.path.append(os.path.abspath("extensions"))
 
 # -- Project information -----------------------------------------------------
 
-project = "RPD"
+project = "discord.io"
 copyright = "2021-present, VincentRPS"
 author = "VincentRPS"
 
 # The full version, including alpha/beta/rc tags
-release = "0.5.0"
+release = "0.6.1"
 
 
 # -- General configuration ---------------------------------------------------
@@ -73,9 +73,9 @@ rst_prolog = """
 
 resource_links = {
     "discord": "https://discord.gg/cvCAwntVhm",
-    "issues": "https://github.com/VincentRPS/RPD/issues",
-    "discussions": "https://github.com/VincentRPS/RPD/discussions",
-    "examples": "https://github.com/VincentRPS/RPD/tree/master/examples",
+    "issues": "https://github.com/VincentRPS/discord.io/issues",
+    "discussions": "https://github.com/VincentRPS/discord.io/discussions",
+    "examples": "https://github.com/VincentRPS/discord.io/tree/master/examples",
 }
 
 # -- Options for intersphinx extension ---------------------------------------

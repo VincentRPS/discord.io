@@ -1,7 +1,7 @@
 import pytest
 
-from rpd.apps import BasicWebhook, WebhookApp
-from rpd.internal import Forbidden
+from discord.apps import BasicWebhook, WebhookApp
+from discord.internal import Forbidden
 
 
 class TestWebhookApp:

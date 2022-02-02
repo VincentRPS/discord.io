@@ -1,4 +1,4 @@
-from rpd import BotApp, Intents
+from discord import BotApp, Intents
 
 intents = Intents.default()  # type: ignore
 

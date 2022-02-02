@@ -19,20 +19,27 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from discord import Snowflakeish, SnowflakeishList
+
+import abc
+
+from discord.internal.dispatcher import Dispatcher
+from discord.state import ConnectionState
+from discord.traits import BotAppAware
 
 
-class TestSnowflake:
-    def test_snowflakeish(self):
-        try:
-            assert Snowflakeish(1) == 1
-            assert Snowflakeish("2") == 2
-        except KeyError:
-            pass
+class Event(abc.ABC):
+    """The base event class for all events."""
 
-    def test_snowflakeish_list(self):
-        try:
-            assert SnowflakeishList([1, 2]) == [1, 2]
-            assert SnowflakeishList(["1", "2"]) == ["1", "2"]
-        except KeyError:
-            pass
+    def __init__(self, data, dispatcher: Dispatcher, state: ConnectionState):
+        self.data = data
+        self.dispatch = dispatcher.dispatch
+        self.state = state
+        self.process()
+
+    @property
+    def app(self) -> BotAppAware.app:
+        return self.state.app
+
+    # meant to be overridden.
+    def process(self) -> None:
+        ...

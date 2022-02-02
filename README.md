@@ -1,4 +1,4 @@
-<h1 align='center'>RPD</h1>
+<h1 align='center'>discord.io</h1>
 
 A asynchronous Discord API Wrapper for Python
 
@@ -10,31 +10,31 @@ A asynchronous Discord API Wrapper for Python
 
 ## Installing
 
-To Install RPD Just run the following command:
+To Install discord.io Just run the following command:
 
 ```py
-pip install RPD
+pip install discord.io
 ```
 
 To install our speed requirements just run the following command:
 
 ```py
-pip install RPD[speed]
+pip install discord.io[speed]
 ```
 
 For voice support run the following command:
 
 ```py
-pip install RPD[audio]
+pip install discord.io[audio]
 ```
 
 ## Example
 This is a quick usecase example for the library!
 
 ```py
-import rpd
+import discord
 
-bot = rpd.BotApp()
+bot = discord.BotApp()
 
 @bot.event
 async def on_ready():
@@ -46,9 +46,9 @@ bot.run('my_bot_token')
 This is another example but with a prefixed command
 
 ```py
-import rpd
+import discord
 
-bot = rpd.BotApp()
+bot = discord.BotApp()
 
 @bot.event
 async def on_ready():
@@ -64,4 +64,4 @@ bot.run('my_bot_token')
 
 ## Useful Links
 
-The RPD [Discord Server](https://discord.gg/cvCAwntVhm)
+The discord.io [Discord Server](https://discord.gg/cvCAwntVhm)

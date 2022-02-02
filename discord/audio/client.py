@@ -19,20 +19,42 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from discord import Snowflakeish, SnowflakeishList
+"""The Voice Client."""
+import logging
+
+from discord.internal.dispatcher import Dispatcher
+
+from .gateway import VoiceGateway
+
+has_nacl: bool
+
+try:
+    import nacl.secret  # noqa: ignore
+except (ImportError, ModuleNotFoundError):
+    has_nacl = False
+else:
+    has_nacl = True
+
+_log = logging.getLogger(__name__)
 
 
-class TestSnowflake:
-    def test_snowflakeish(self):
-        try:
-            assert Snowflakeish(1) == 1
-            assert Snowflakeish("2") == 2
-        except KeyError:
-            pass
+class VoiceClient:
+    def __init__(self, state, dispatcher: Dispatcher, gateway):
+        self.ssrc: int = None
+        self.dispatcher = dispatcher
+        self.gateway = VoiceGateway(state, self.dispatcher, gateway)
+        self._supported = [
+            "xsalsa20_poly1305_lite",
+            "xsalsa20_poly1305_suffix",
+            "xsalsa20_poly1305",
+        ]
+        self.endpoint: str = None
 
-    def test_snowflakeish_list(self):
-        try:
-            assert SnowflakeishList([1, 2]) == [1, 2]
-            assert SnowflakeishList(["1", "2"]) == ["1", "2"]
-        except KeyError:
-            pass
+    async def connect(self, guild, channel):
+        self.guild = guild
+        self.channel = channel
+        await self.gateway.connect(guild=guild, channel=channel)
+        _log.info("Connected to the Voice Server.")
+
+    def speak_without_audio(self):
+        return self.gateway.speaking

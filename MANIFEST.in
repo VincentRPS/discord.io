@@ -1,6 +1,6 @@
 include requirements.txt
-include rpd/py.typed
-include rpd/banner.txt
-include rpd/apps
+include discord/py.typed
+include discord/banner.txt
+include discord/apps
 exclude pipelines
 exclude docs

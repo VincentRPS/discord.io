@@ -19,20 +19,46 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from discord import Snowflakeish, SnowflakeishList
+import random
+import string
+import typing
+
+from discord.state import ConnectionState
+
+__all__: typing.List[str] = ["Button"]
 
 
-class TestSnowflake:
-    def test_snowflakeish(self):
-        try:
-            assert Snowflakeish(1) == 1
-            assert Snowflakeish("2") == 2
-        except KeyError:
-            pass
+class Button:
+    def __init__(self, state: ConnectionState):
+        self.state = state
 
-    def test_snowflakeish_list(self):
-        try:
-            assert SnowflakeishList([1, 2]) == [1, 2]
-            assert SnowflakeishList(["1", "2"]) == ["1", "2"]
-        except KeyError:
-            pass
+    def create(
+        self,
+        label: str,
+        style: typing.Literal[1, 2, 3, 4, 5] = 1,
+        custom_id: str = None,
+        url: str = None,
+    ):
+        self.id = (
+            custom_id
+            if custom_id is not None
+            else "".join(
+                random.choice(string.ascii_letters)
+                for _ in range(random.randint(10, 100))
+            )
+        )
+
+        ret = {
+            "type": 1,
+            "components": [
+                {
+                    "type": 2,
+                    "label": label,
+                    "style": style,
+                    "url": url,
+                    "custom_id": custom_id,
+                }
+            ],
+        }
+
+        return [ret]

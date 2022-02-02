@@ -1,8 +1,8 @@
-.. currentmodule:: rpd
+.. currentmodule:: discord
 
 API Reference
 =============
-The full RPD API Reference.
+The full discord.io API Reference.
 
 Version Specific Details
 ------------------------
@@ -97,7 +97,7 @@ State
 Exceptions
 ----------
 
-.. autoexception:: RPDError
+.. autoexception:: DiscordError
     
 .. autoexception:: RESTError
     
@@ -113,7 +113,7 @@ Exception Hierarcy
 .. exception_hierarchy::
 
     - :exc:`Exception`
-        - :exc:`RPDError`
+        - :exc:`DiscordError`
             - :exc:`RESTError`
                 - :exc:`Forbidden`
                 - :exc:`NotFound`

@@ -19,20 +19,33 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from discord import Snowflakeish, SnowflakeishList
+
+import typing
+
+__all__: typing.List[str] = [
+    "DiscordError",
+    "RESTError",
+    "Forbidden",
+    "NotFound",
+    "ServerError",
+]
 
 
-class TestSnowflake:
-    def test_snowflakeish(self):
-        try:
-            assert Snowflakeish(1) == 1
-            assert Snowflakeish("2") == 2
-        except KeyError:
-            pass
+class DiscordError(Exception):
+    """The base exception class for discord.io"""
 
-    def test_snowflakeish_list(self):
-        try:
-            assert SnowflakeishList([1, 2]) == [1, 2]
-            assert SnowflakeishList(["1", "2"]) == ["1", "2"]
-        except KeyError:
-            pass
+
+class RESTError(DiscordError):
+    """REST Errors"""
+
+
+class Forbidden(RESTError):
+    """Forbidden from a URL"""
+
+
+class NotFound(RESTError):
+    """Endpoint Not Found"""
+
+
+class ServerError(RESTError):
+    """A Discord Server Error"""

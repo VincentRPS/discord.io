@@ -19,20 +19,19 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from discord import Snowflakeish, SnowflakeishList
+"""Cli processes."""
+import platform
+import sys
+
+import discord
 
 
-class TestSnowflake:
-    def test_snowflakeish(self):
-        try:
-            assert Snowflakeish(1) == 1
-            assert Snowflakeish("2") == 2
-        except KeyError:
-            pass
+def main() -> None:
+    version = discord.__version__  # type: ignore
+    python_version = platform.python_version()
+    sys.stderr.write(f"Running on discord.io Version {version},")
+    sys.stderr.write(f" with Python version {python_version}.")
 
-    def test_snowflakeish_list(self):
-        try:
-            assert SnowflakeishList([1, 2]) == [1, 2]
-            assert SnowflakeishList(["1", "2"]) == ["1", "2"]
-        except KeyError:
-            pass
+
+if __name__ == "__main__":
+    main()

@@ -1,12 +1,12 @@
-.. RPD documentation master file, created by
+.. discord.io documentation master file, created by
    sphinx-quickstart on Wed Dec 29 15:23:05 2021.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to RPD!
-===============
-Welcome to the documentation of the RPD Discord Library.
-RPD is a Python based discord library for Python, using aiohttp and asyncio.
+Welcome to discord.io
+=====================
+Welcome to the documentation of discord.io.
+discord.io is a Python based discord library, using aiohttp and asyncio.
 
 Getting Started
 ---------------

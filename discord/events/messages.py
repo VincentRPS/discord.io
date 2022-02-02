@@ -19,20 +19,35 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from discord import Snowflakeish, SnowflakeishList
+from discord.cache import Message
+
+from .core import Event
 
 
-class TestSnowflake:
-    def test_snowflakeish(self):
+class OnMessage(Event):
+    def process(self) -> None:
+        ret = Message(self.data, self.state.app)
+        self.state._sent_messages_cache[self.data["id"]] = self.data
+        self.dispatch("MESSAGE", ret)
+
+
+class OnMessageEdit(Event):
+    def process(self):
         try:
-            assert Snowflakeish(1) == 1
-            assert Snowflakeish("2") == 2
+            before = Message(
+                self.state._sent_messages_cache[self.data["id"]], self.state.app
+            )
         except KeyError:
-            pass
+            # if the message is not in the cache we cant really save it.
+            before = None
+        self.state._edited_messages_cache[self.data["id"]] = self.data
+        after = Message(self.data, self.state.app)
+        self.dispatch("MESSAGE_EDIT", before, after)
 
-    def test_snowflakeish_list(self):
-        try:
-            assert SnowflakeishList([1, 2]) == [1, 2]
-            assert SnowflakeishList(["1", "2"]) == ["1", "2"]
-        except KeyError:
-            pass
+
+class OnMessageDelete(Event):
+    def process(self):
+        message = Message(
+            self.state._sent_messages_cache[self.data["id"]], self.state.app
+        )
+        self.dispatch("MESSAGE_DELETE", message)
