@@ -50,12 +50,33 @@ url_extension = "?v=9&encoding=json&compress=zlib-stream"
 class Shard:
     """Represents a Discord Shard.
 
+    Parameters
+    ----------
+    state
+        The :class:`ConnectionState` cache to use.
+    dispatcher
+        The :class:`Dispatcher` to use.
+    shard_id :class:`int`
+        The shard number.
+    url :class:`str`
+        The URL to use.
+    mobile :class:`bool`
+        If to have a mobile presence or not.
+
     Attributes
     ----------
     buffer
         An array of bytes which buffers the connection.
-    dis
-        The dispatcher
+    remaining
+        The amount remaining
+    per
+        The times per
+    window
+        The window
+    max
+        The max
+    inflator
+        The inflator for this shard.
     """
 
     def __init__(
@@ -81,6 +102,20 @@ class Shard:
         self._ratelimit_lock: asyncio.Lock = asyncio.Lock()
 
     async def connect(self, token: str) -> None:
+        """Connects to the url specified, with the token
+
+        Parameters
+        ----------
+        token
+            Your bot token.
+        
+        Attributes
+        ----------
+        _session
+            The aiohttp ClientSession
+        ws
+            The WebSocket connection.
+        """
         self._session = aiohttp.ClientSession()
         self.ws = await self._session.ws_connect(self.url)
         self.token = token
@@ -93,12 +128,16 @@ class Shard:
 
     @property
     def is_ratelimited(self) -> bool:
+        """Returns a True if this shard is ratelimited 
+        and False if it isn't
+        """
         now = time()
         if now > self.window + self.per:
             return False
         return self.remaining == 0
 
     def delay(self) -> float:
+        """A float showing how long we should delay until retrying."""
         now = time()
 
         if now > self.window + self.per:
@@ -117,6 +156,7 @@ class Shard:
         return 0.0
 
     async def block(self) -> None:
+        """A function to block the connection tempoarily"""
         async with self._ratelimit_lock:
             delay = self.delay()
             if delay:
@@ -128,6 +168,13 @@ class Shard:
                 await asyncio.sleep(delay)
 
     async def send(self, data: Dict) -> None:
+        """Send a request to the Gateway via the shard
+        
+        Parameters
+        ----------
+        data :class:`Dict`
+            The data to send
+        """
         _log.debug("< %s", data)
         raw_payload = json.dumps(data)
 
@@ -297,6 +344,19 @@ class Shard:
 
 
 class Gateway:
+    """Represents a Gateway connection with Discord.
+    
+    Parameters
+    ----------
+    state
+        The :class:`ConnectionState` to use.
+    dispatcher
+        The :class:`Dispatcher` to use.
+    factory
+        The :class:`RESTFactory` to use.
+    mobile
+        If your bot should have a mobile presence or not.
+    """
     def __init__(
         self,
         state: ConnectionState,
@@ -312,6 +372,13 @@ class Gateway:
         self.shards: List[Shard] = []
 
     async def connect(self, token: str) -> None:
+        """Connects to the Gateway via WebSockets
+        
+        Parameters
+        ----------
+        token
+            Your bot token
+        """
         r = await self._f.get_gateway_bot()
         if self.count is None:
             shds = int(r["shards"])
@@ -332,11 +399,13 @@ class Gateway:
             _log.info("Shard %s has connected to Discord", shard)
 
     def send(self, payload: Dict) -> Coroutine[Any, Any, None]:
+        """Sends a request from a shard"""
         return self.s.send(payload)
 
     def gain_voice_access(
         self, guild: Snowflakeish, channel: Snowflakeish, mute: bool, deaf: bool
     ) -> Coroutine[Any, Any, None]:
+        """Gains the User access to a Voice Channel."""
         json = {
             "op": 4,
             "d": {

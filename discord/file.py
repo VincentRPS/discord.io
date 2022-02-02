@@ -29,8 +29,18 @@ from discord.internal.exceptions import DiscordError, Forbidden
 
 class File:
     """Represents a Discord file.
-
+    
     .. versionadded:: 0.4.0
+
+    Parameters
+    ----------
+    fp
+        The File path, can be :class:`str`, :class:`bytes`,
+        :class:`os.PathLike`, :class:`os.BufferedIOBase`.
+    filename
+        The filename, defaults `None`,
+    spoiler
+        If the file should be seeable or not.
     """
 
     def __init__(

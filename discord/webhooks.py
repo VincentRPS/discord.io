@@ -19,7 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-"""Implementation of Raw Discord Webhooks."""
+"""Implementation of Discord Webhooks."""
 
 import typing
 from logging import getLogger
@@ -42,6 +42,11 @@ class Webhook:
         The webhook id
     token
         The webhook token
+    
+    Attributes
+    ----------
+    rest
+        An instance of RESTClient.
     """
 
     def __init__(self, webhook_id, webhook_token):
@@ -50,11 +55,21 @@ class Webhook:
         self.rest = api.RESTClient()
 
     def fetch_webhook(self):
+        """Fetch the current Webhook from the API."""
         return self.request("GET", f"/{self.id}/{self.token}")
 
     def modify_webhook(
         self, name: typing.Optional[str] = None, avatar: typing.Optional[str] = None
     ):
+        """Modify the Webhook
+        
+        Parameters
+        ----------
+        name
+            Change the name
+        avatar
+            Change the avatar
+        """
         json = {}
         if name:
             json["name"] = name
@@ -71,6 +86,7 @@ class Webhook:
         )
 
     def delete_webhook(self):
+        """Deletes the Webhook"""
         return self.rest.send(
             Route(
                 "DELETE",
@@ -81,6 +97,7 @@ class Webhook:
         )
 
     def fetch_message(self, message: Snowflakeish):
+        """Fetches a Webhook message."""
         return self.rest.send(
             Route(
                 "GET",
@@ -96,6 +113,17 @@ class Webhook:
         content: typing.Optional[str] = None,
         allowed_mentions: typing.Optional[bool] = None,
     ):
+        """Edits a Webhook message
+        
+        Parameters
+        ----------
+        message
+            The Message ID
+        content
+            Change the content
+        allowed_mentions
+            A allowed mentions object
+        """
         json = {}
         if content:
             json["content"] = content
@@ -115,6 +143,13 @@ class Webhook:
         self,
         message: Snowflakeish,
     ):
+        """Deletes a message
+        
+        Parameters
+        ----------
+        message
+            The message to delete
+        """
         return self.rest.send(
             Route(
                 "DELETE",
@@ -124,7 +159,7 @@ class Webhook:
             )
         )
 
-    def send_message(
+    def execute(
         self,
         content: typing.Optional[str] = None,
         username: typing.Optional[str] = None,
@@ -132,6 +167,21 @@ class Webhook:
         tts: typing.Optional[bool] = None,
         allowed_mentions: typing.Optional[bool] = None,
     ):
+        """Execute the Webhook  
+        
+        Parameters
+        ----------
+        content :class:`str`
+            The content to send.
+        username :class:`str`
+            The username the Webhook should have
+        avatar_url :class:`str`
+            The avatar the Webhook should have
+        tts :class:`bool`
+            If the message should have tts enabled
+        allowed_mentions
+            A allowed mentions object
+        """
         json = {}
         if content:
             json["content"] = content

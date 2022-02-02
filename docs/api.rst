@@ -38,6 +38,9 @@ REST API
 Gateway's
 ---------
 
+.. autoclass:: Shard
+    :members:
+
 .. autoclass:: Gateway
     :members:
 
@@ -48,6 +51,12 @@ Opus
 ----
 
 .. autoclass:: Encoder
+    :members:
+
+Voice
+-----
+
+.. autoclass:: VoiceClient
     :members:
 
 Apps
@@ -62,6 +71,21 @@ Apps
 .. autoclass:: BotApp
     :members:
 
+Webhook
+-------
+
+.. autoclass:: Webhook
+    :members:
+
+Colors
+------
+
+.. autoclass:: Color
+    :members:
+
+.. autoclass:: Colour
+    :members:
+
 Webhooks
 --------
 
@@ -73,6 +97,27 @@ Dispatcher
 
 .. autoclass:: Dispatcher
     :members:
+
+Cache Parsers
+-------------
+
+.. autoclass:: Message
+    :members:
+
+.. autoclass:: User
+    :members:
+
+.. autoclass:: Guild
+    :members:
+
+Event Reference
+---------------
+
+.. autoclass:: OnMessage
+
+.. autoclass:: OnMessageEdit
+
+.. autoclass:: OnMessageDelete
 
 Snowflakes
 ----------
@@ -87,12 +132,24 @@ Snowflakes
 
 .. autoclass:: SnowflakeishOr
 
-    A Snowflake or object class.
+    A Snowflake or cache class.
 
 State
 -----
 
 .. autoclass:: ConnectionState
+
+File
+----
+
+.. autoclass:: File
+    :members:
+
+Intents
+-------
+
+.. autoclass:: Intents
+
 
 Exceptions
 ----------
