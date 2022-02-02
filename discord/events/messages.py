@@ -25,6 +25,7 @@ from .core import Event
 
 
 class OnMessage(Event):
+    """Returns a :class:`Message`"""
     def process(self) -> None:
         ret = Message(self.data, self.state.app)
         self.state._sent_messages_cache[self.data["id"]] = self.data
@@ -32,6 +33,7 @@ class OnMessage(Event):
 
 
 class OnMessageEdit(Event):
+    """Returns the new :class:`Message` and if cached the old :class:`Message`"""
     def process(self):
         try:
             before = Message(
@@ -46,6 +48,7 @@ class OnMessageEdit(Event):
 
 
 class OnMessageDelete(Event):
+    """Gives the deleted :class:`Message`"""
     def process(self):
         message = Message(
             self.state._sent_messages_cache[self.data["id"]], self.state.app
