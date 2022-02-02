@@ -1,6 +1,6 @@
 """
 discord.cache
-~~~~~~~~~
+~~~~~~~~~~~~~
 Cache handlers built upon the ConnectionState.
 """
 from .cdn import *

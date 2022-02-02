@@ -1,6 +1,6 @@
 """
 discord.api
-~~~~~~~
+~~~~~~~~~~~
 The internal api of discord.io.
 """
 from .gateway import *
