@@ -34,13 +34,13 @@ This is a quick usecase example for the library!
 ```py
 import discord
 
-bot = discord.Client()
+client = discord.Client()
 
-@bot.event
+@client.event
 async def on_ready():
     print('ready!')
 
-bot.run('my_bot_token')
+client.run('my_bot_token')
 ```
 
 This is another example but with a prefixed command
@@ -48,18 +48,18 @@ This is another example but with a prefixed command
 ```py
 import discord
 
-bot = discord.Client()
+client = discord.Client()
 
-@bot.event
+@client.event
 async def on_ready():
     print('ready!')
 
-@bot.event
+@client.event
 async def on_message(msg):
     if msg.content.startswith('!ping'):
         await msg.reply('pong!')
 
-bot.run('my_bot_token')
+client.run('my_bot_token')
 ```
 
 ## Useful Links
