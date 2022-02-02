@@ -23,7 +23,9 @@
 The ConnectionState Caches most things during connection.
 """
 import asyncio
-from typing import Any, Callable, Dict, List, Tuple
+from typing import Any, Callable, List, Tuple
+
+from rpd.types.dict import Dict
 
 
 class ConnectionState:
@@ -122,28 +124,16 @@ class ConnectionState:
         """The seq number"""
 
         self.app = options.get("bot", None)
-        """The bot app
-        
-        .. versionadded:: 0.5.0
-        """
+        """The bot app"""
 
         self._voice_seq: int = None
-        """The Voice Gateway seq
-        
-        .. versionadded:: 0.5.0
-        """
+        """The Voice Gateway seq"""
 
         self._voice_user_data: Dict = {}
-        """The Voice User Data given by the Voice Gateway.
-        
-        .. versionadded:: 0.5.0
-        """
+        """The Voice User Data given by the Voice Gateway."""
 
         self._speaking: bool = False
-        """If the bot is currently speaking
-        
-        .. versionadded:: 0.5.0
-        """
+        """If the bot is currently speaking"""
 
         self._said_hello: bool = False
         """If the Gateway got a hello or not."""
@@ -171,7 +161,7 @@ class ConnectionState:
 
         self.commands = {}
         """Stores commands
-        
+
         The basic idea of: ::
 
             self.commands = {

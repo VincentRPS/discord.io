@@ -33,14 +33,15 @@ import string
 import sys
 import time
 import warnings
-from typing import Any, Dict, Optional, Union
+from typing import Optional, Union
 
 import colorlog
 
 from rpd import __copyright__, __license__, __version__
+from rpd.types.dict import Dict
 
 
-def start_logging(flavor: Union[None, int, str, Dict[str, Any]], debug: bool = False):
+def start_logging(flavor: Union[None, int, str, Dict], debug: bool = False):
 
     if len(logging.root.handlers) != 0:
         return  # the user is most likely using logging.basicConfig or another alt.
@@ -65,7 +66,8 @@ def start_logging(flavor: Union[None, int, str, Dict[str, Any]], debug: bool = F
 
     colorlog.basicConfig(
         level=flavor,
-        format="%(log_color)s%(bold)s%(levelname)-1.1s%(thin)s %(asctime)23.23s %(bold)s%(name)s: %(thin)s%(message)s%(reset)s",
+        format="%(log_color)s%(bold)s%(levelname)-1.1s%(thin)s %(asctime)23.23s %(bold)s%(name)s: "
+        "%(thin)s%(message)s%(reset)s",
         stream=sys.stderr,
         log_colors={
             "DEBUG": "cyan",

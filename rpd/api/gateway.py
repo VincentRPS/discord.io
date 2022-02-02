@@ -30,12 +30,14 @@ import platform
 import zlib
 from random import random
 from time import time
-from typing import List
+from typing import Any, Coroutine, List
 
 import aiohttp
 
 from rpd.events import OnMessage, OnMessageDelete, OnMessageEdit
 from rpd.internal.dispatcher import Dispatcher
+from rpd.snowflake import Snowflakeish
+from rpd.types.dict import Dict
 
 from ..state import ConnectionState
 from .rest_factory import RESTFactory
@@ -78,7 +80,7 @@ class Shard:
         self._session_id = None
         self._ratelimit_lock: asyncio.Lock = asyncio.Lock()
 
-    async def connect(self, token):
+    async def connect(self, token: str) -> None:
         self._session = aiohttp.ClientSession()
         self.ws = await self._session.ws_connect(self.url)
         self.token = token
@@ -90,13 +92,13 @@ class Shard:
             _log.debug("Reconnected to the Gateway")
 
     @property
-    def is_ratelimited(self):
+    def is_ratelimited(self) -> bool:
         now = time()
         if now > self.window + self.per:
             return False
         return self.remaining == 0
 
-    def delay(self):
+    def delay(self) -> float:
         now = time()
 
         if now > self.window + self.per:
@@ -114,7 +116,7 @@ class Shard:
 
         return 0.0
 
-    async def block(self):
+    async def block(self) -> None:
         async with self._ratelimit_lock:
             delay = self.delay()
             if delay:
@@ -125,16 +127,16 @@ class Shard:
                 )
                 await asyncio.sleep(delay)
 
-    async def send(self, data: dict):
+    async def send(self, data: Dict) -> None:
         _log.debug("< %s", data)
-        payload = json.dumps(data)
+        raw_payload = json.dumps(data)
 
-        if isinstance(payload, str):
-            payload = payload.encode("utf-8")
+        if isinstance(raw_payload, str):
+            payload = raw_payload.encode("utf-8")
 
         await self.ws.send_bytes(payload)
 
-    async def recv(self):
+    async def recv(self) -> None:
         async for msg in self.ws:
             if msg.type == aiohttp.WSMsgType.BINARY:
                 self.buffer.extend(msg.data)
@@ -187,7 +189,7 @@ class Shard:
         else:
             await self.closed(code)
 
-    async def closed(self, code):
+    async def closed(self, code: int) -> None:
         if code == 4000:
             pass
 
@@ -240,25 +242,25 @@ class Shard:
 
         await self.connect(token=self.token)
 
-    async def heartbeat(self, interval: float):
+    async def heartbeat(self, interval: float) -> None:
         if self.is_ratelimited:
             await self.block()
         await self.send({"op": 1, "d": self._seq})
         await asyncio.sleep(interval)
         self.state.loop.create_task(self.heartbeat(interval))
 
-    async def close(self, code: int = 1000):
+    async def close(self, code: int = 1000) -> None:
         if self.ws:
             await self.ws.close(code=code)
         self.buffer.clear()
 
-    async def hello(self, data):
+    async def hello(self, data: Dict) -> None:
         interval = data["d"]["heartbeat_interval"] / 1000
         init = interval * random()
         await asyncio.sleep(init)
         self.state.loop.create_task(self.heartbeat(interval))
 
-    async def _ready(self, data):
+    async def _ready(self, data: Dict) -> None:
         self._session_id = data["d"]["session_id"]
         self.state._ready.set()
 
@@ -296,7 +298,7 @@ class Gateway:
     def __init__(
         self,
         state: ConnectionState,
-        dispatcher,
+        dispatcher: Dispatcher,
         factory: RESTFactory,
         mobile: bool = False,
     ):
@@ -307,7 +309,7 @@ class Gateway:
         self._f = factory
         self.shards: List[Shard] = []
 
-    async def connect(self, token):
+    async def connect(self, token: str) -> None:
         r = await self._f.get_gateway_bot()
         if self.count is None:
             shds = int(r["shards"])
@@ -327,10 +329,12 @@ class Gateway:
             self.shards.append(self.s)
             _log.info("Shard %s has connected to Discord", shard)
 
-    def send(self, payload):
+    def send(self, payload: Dict) -> Coroutine[Any, Any, None]:
         return self.s.send(payload)
 
-    def gain_voice_access(self, guild, channel, mute: bool, deaf: bool):
+    def gain_voice_access(
+        self, guild: Snowflakeish, channel: Snowflakeish, mute: bool, deaf: bool
+    ) -> Coroutine[Any, Any, None]:
         json = {
             "op": 4,
             "d": {
@@ -340,4 +344,4 @@ class Gateway:
                 "self_deaf": deaf,
             },
         }
-        return self.s.send(json)
+        return self.send(json)

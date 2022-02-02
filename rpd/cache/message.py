@@ -37,7 +37,7 @@ from .user import User
 __all__: List[str] = ["Message"]
 
 # makes message data readable.
-class Message:
+class Message:  # noqa: ignore
     """Represents a Discord Message
 
     .. versionadded:: 0.6.0

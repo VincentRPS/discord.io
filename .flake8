@@ -35,6 +35,8 @@ ignore =
     E402
     # CFQ002: Function has 7 arguments that exceeds max allowed 6
     CFQ002
+    # CFQ004: Function has 8 retuns that exceeds max allowed 3
+    CFQ004
     # E722: do not use bare 'except'
     E722
 

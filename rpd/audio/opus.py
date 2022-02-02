@@ -36,12 +36,14 @@ from ..internal.exceptions import RPDError
 __all__: List[str] = ["Encoder"]
 
 # structs
-class EncoderStruct(ctypes.Structure):
+class EncoderStruct(ctypes.Structure):  # noqa: ignore
+
     pass
 
 
 # if your curious, the 'decoder' handles, voice recv.
-class DecoderStuct(ctypes.Structure):
+class DecoderStuct(ctypes.Structure):  # noqa: ignore
+
     pass
 
 

@@ -33,6 +33,7 @@ import aiohttp
 from rpd.file import File
 from rpd.internal.exceptions import Forbidden, NotFound, RESTError, ServerError
 from rpd.state import ConnectionState
+from rpd.types.dict import Dict
 
 _log = logging.getLogger(__name__)
 
@@ -47,7 +48,7 @@ aiohttp.hdrs.WEBSOCKET = "websocket"
 
 async def parse_tj(
     response: aiohttp.ClientResponse,
-) -> typing.Union[typing.Dict[str, typing.Any], str]:
+) -> typing.Union[Dict, str]:
     text = await response.text(encoding="utf-8")
     try:
         if response.headers["content-type"] == "application/json":

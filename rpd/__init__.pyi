@@ -22,9 +22,9 @@ from .util import *
 from .webhooks import *
 
 class VersionInfo(typing.NamedTuple):
-    major: int
-    minor: int
-    micro: int
+    major: str
+    minor: str
+    micro: str
     releaselevel: typing.Literal["alpha", "beta", "candidate", "final"]
     serial: int
 

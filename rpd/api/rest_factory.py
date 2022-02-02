@@ -30,6 +30,9 @@ from rpd.snowflake import Snowflakeish
 from rpd.state import ConnectionState
 from rpd.types import allowed_mentions
 
+if typing.TYPE_CHECKING:
+    from rpd.types.dict import Dict
+
 __all__: typing.List[str] = [
     "RESTFactory",
 ]
@@ -46,11 +49,18 @@ class RESTFactory:
         The RESTClient.
     """
 
-    def __init__(self, state=None, proxy=None, proxy_auth=None):
+    def __init__(
+        self,
+        state: typing.Optional[ConnectionState] = None,
+        proxy: typing.Optional[str] = None,
+        proxy_auth: typing.Optional[str] = None,
+    ):
         self.state = state or ConnectionState()
         self.rest = RESTClient(state=self.state, proxy=proxy, proxy_auth=proxy_auth)
 
-    def login(self, token: typing.Optional[str] = None) -> None:
+    def login(
+        self, token: str
+    ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
         self.token = token
 
         if len(self.token) != 59:
@@ -60,12 +70,16 @@ class RESTFactory:
 
         return self.rest.send(Route("GET", "/users/@me"), token=self.token)  # Log's in
 
-    def logout(self) -> None:
+    def logout(
+        self,
+    ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
         return self.rest.send(
             Route("POST", "/auth/logout")
         )  # Log's you out of the bot.
 
-    def get_gateway_bot(self) -> None:
+    def get_gateway_bot(
+        self,
+    ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
         return self.rest.send(Route("GET", "/gateway/bot"))
 
     def create_message(
@@ -73,11 +87,11 @@ class RESTFactory:
         channel: Snowflakeish,
         content: typing.Optional[str] = None,
         tts: typing.Optional[bool] = False,
-        embeds: typing.List[typing.Dict[str, typing.Any]] = None,
+        embeds: typing.List[Dict] = None,
         allowed_mentions: typing.Optional[allowed_mentions.MentionObject] = None,
         message_reference: typing.Optional[dict] = None,
-        components: typing.Optional[list[dict]] = None,
-    ):
+        components: typing.Optional[list[Dict]] = None,
+    ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
         json = {
             "tts": tts,
             "allowed_mentions": allowed_mentions,
@@ -140,7 +154,7 @@ class RESTFactory:
         application_id: Snowflakeish,
         name: str,
         description: str,
-        options: typing.List[typing.Dict[str, typing.Any]],
+        options: typing.List[Dict],
         default_permission: typing.Optional[bool] = True,
         type: typing.Literal["CHAT_INPUT", "USER", "MESSAGE"] = "CHAT_INPUT",
     ):
@@ -168,7 +182,7 @@ class RESTFactory:
         command_id: Snowflakeish,
         name: str,
         description: str,
-        options: typing.List[typing.Dict[str, typing.Any]],
+        options: typing.List[Dict],
         default_permission: typing.Optional[bool] = True,
     ):
         json = {
@@ -190,7 +204,7 @@ class RESTFactory:
         guild_id: Snowflakeish,
         name: str,
         description: str,
-        options: typing.List[typing.Dict[str, typing.Any]],
+        options: typing.List[Dict],
         default_permission: typing.Optional[bool] = True,
         type: typing.Literal["CHAT_INPUT", "USER", "MESSAGE"] = "CHAT_INPUT",
     ):
@@ -226,7 +240,7 @@ class RESTFactory:
         guild_id: Snowflakeish,
         name: str,
         description: str,
-        options: typing.List[typing.Dict[str, typing.Any]],
+        options: typing.List[Dict],
         default_permission: typing.Optional[bool] = True,
     ):
         json = {
@@ -291,7 +305,7 @@ class RESTFactory:
         content: str,
         embeds: typing.Optional[typing.List[dict]] = None,
         allowed_mentions: typing.Optional[allowed_mentions.MentionObject] = None,
-        components: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = None,
+        components: typing.Optional[typing.List[Dict]] = None,
         flags: typing.Optional[MessageFlags] = None,
     ):
         json = {"content": content}

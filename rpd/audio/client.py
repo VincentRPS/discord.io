@@ -20,7 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 """The Voice Client."""
-import asyncio
 import logging
 
 from rpd.internal.dispatcher import Dispatcher
@@ -30,7 +29,7 @@ from .gateway import VoiceGateway
 has_nacl: bool
 
 try:
-    import nacl.secret
+    import nacl.secret  # noqa: ignore
 except (ImportError, ModuleNotFoundError):
     has_nacl = False
 else:

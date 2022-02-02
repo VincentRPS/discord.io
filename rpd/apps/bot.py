@@ -27,7 +27,7 @@ import logging
 import os
 from threading import Event
 from time import time
-from typing import Any, Callable, Dict, List, Literal, Optional, TypeVar, Union
+from typing import Callable, List, Literal, Optional, TypeVar, Union
 
 from rpd.api.gateway import Gateway
 from rpd.api.rest_factory import RESTFactory
@@ -35,6 +35,7 @@ from rpd.audio import VoiceClient, has_nacl
 from rpd.interactions.command import Command
 from rpd.internal import dispatcher
 from rpd.state import ConnectionState
+from rpd.types.dict import Dict
 from rpd.ui import print_banner, start_logging
 
 _log = logging.getLogger(__name__)
@@ -92,7 +93,7 @@ class BotApp:
         proxy: Optional[str] = None,
         proxy_auth: Optional[str] = None,
         command_prefix: Optional[str] = None,
-        logs: Optional[Union[None, int, str, Dict[str, Any]]] = None,
+        logs: Optional[Union[None, int, str, Dict]] = None,
         debug: Optional[bool] = False,
     ):
         print_banner(module)

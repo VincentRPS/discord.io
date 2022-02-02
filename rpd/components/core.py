@@ -39,13 +39,14 @@ class Button:
         custom_id: str = None,
         url: str = None,
     ):
-        if custom_id:
-            self.id = custom_id
-        else:
-            self.id = "".join(
+        self.id = (
+            custom_id
+            if custom_id is not None
+            else "".join(
                 random.choice(string.ascii_letters)
                 for _ in range(random.randint(10, 100))
             )
+        )
 
         ret = {
             "type": 1,
