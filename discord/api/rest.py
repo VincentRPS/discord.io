@@ -178,12 +178,12 @@ class RESTClient:
                 if files:
                     for f in files:
                         f.reset(seek=tries)
-                
+
                 if form:
                     form_data = aiohttp.FormData()
                     for kwargs in form:
                         form_data.add_field(**kwargs)
-                    
+
                     params["data"] = form_data
 
                 try:

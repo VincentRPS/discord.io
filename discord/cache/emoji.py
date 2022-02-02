@@ -24,6 +24,7 @@
 ref: https://discord.dev/resources/emoji
 """
 
+
 class Emoji:
     def __init__(self):
         ...

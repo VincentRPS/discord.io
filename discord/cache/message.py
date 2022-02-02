@@ -27,9 +27,9 @@ ref: https://discord.dev/resources/channel
 from typing import List, Optional, Sequence
 
 from discord.components.core import Button
+from discord.file import File
 from discord.snowflake import Snowflakeish
 from discord.types import allowed_mentions
-from discord.file import File
 
 from .embed import Embed
 from .guild import Guild

@@ -24,8 +24,9 @@
 
 import typing
 from json import dumps
-from discord.file import File
+
 from discord.api.rest import RESTClient, Route
+from discord.file import File
 from discord.flags import MessageFlags
 from discord.snowflake import Snowflakeish
 from discord.state import ConnectionState
@@ -110,30 +111,35 @@ class RESTFactory:
             form.append({"name": "payload_json", "value": dumps(json)})
             if len(files) == 1:
                 file = files[0]
-                form.append({
-                    "name": "file",
-                    "value": file.fp,
-                    "filename": file.filename,
-                    "content_type": "application/octet-stream",
-                })
-            else:
-                for index, file in enumerate(files):
-                    form.append({
-                        "name": f"file{index}",
+                form.append(
+                    {
+                        "name": "file",
                         "value": file.fp,
                         "filename": file.filename,
-                        "content_type": "application/octet-stream"
-                    })
+                        "content_type": "application/octet-stream",
+                    }
+                )
+            else:
+                for index, file in enumerate(files):
+                    form.append(
+                        {
+                            "name": f"file{index}",
+                            "value": file.fp,
+                            "filename": file.filename,
+                            "content_type": "application/octet-stream",
+                        }
+                    )
 
             return self.rest.send(
                 Route("POST", f"/channels/{channel}/messages", channel_id=channel),
-                json=json, form=form
+                json=json,
+                form=form,
             )
 
         return self.rest.send(
-                Route("POST", f"/channels/{channel}/messages", channel_id=channel),
-                json=json
-            )
+            Route("POST", f"/channels/{channel}/messages", channel_id=channel),
+            json=json,
+        )
 
     def get_channel(self, channel: typing.Optional[Snowflakeish] = None):
         return self.rest.send(Route("GET", f"/channels/{channel}"))
@@ -386,5 +392,5 @@ class RESTFactory:
             ),
             json=ret,
         )
-    
+
     # emojis

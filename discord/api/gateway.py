@@ -29,7 +29,7 @@ import logging
 import platform
 import zlib
 from random import random
-from time import time
+from time import time, perf_counter
 from typing import Any, Coroutine, List
 
 import aiohttp
@@ -98,6 +98,7 @@ class Shard:
         self.inflator = zlib.decompressobj()
         self.shard_id = shard_id
         self.buffer = bytearray()
+        self.last_recv = perf_counter()
         self._session_id = None
         self._ratelimit_lock: asyncio.Lock = asyncio.Lock()
 

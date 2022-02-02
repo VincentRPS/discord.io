@@ -58,5 +58,6 @@ class OnMessageDelete(Event):
         )
         self.dispatch("MESSAGE_DELETE", message)
 
+
 class OnMessageReactionAdd(Event):
     """Gives a :class:`Message` and a :class:`Emoji` that was added."""
