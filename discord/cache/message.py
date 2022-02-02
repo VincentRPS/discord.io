@@ -24,11 +24,12 @@
 ref: https://discord.dev/resources/channel
 """
 
-from typing import List, Optional
+from typing import List, Optional, Sequence
 
 from discord.components.core import Button
 from discord.snowflake import Snowflakeish
 from discord.types import allowed_mentions
+from discord.file import File
 
 from .embed import Embed
 from .guild import Guild
@@ -68,7 +69,8 @@ class Message:  # noqa: ignore
 
     async def send(
         self,
-        content: str,
+        content: Optional[str] = None,
+        files: Optional[Sequence[File]] = None,
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
@@ -78,6 +80,7 @@ class Message:  # noqa: ignore
         await self.app.factory.create_message(
             channel=self.channel,
             content=content,
+            files=files,
             embeds=embeds,
             tts=tts,
             allowed_mentions=allowed_mentions,
@@ -87,6 +90,7 @@ class Message:  # noqa: ignore
     async def reply(
         self,
         content: Optional[str] = None,
+        files: Optional[Sequence[File]] = None,
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
@@ -96,6 +100,7 @@ class Message:  # noqa: ignore
         await self.app.factory.create_message(
             channel=self.channel,
             content=content,
+            files=files,
             embeds=embeds,
             tts=tts,
             allowed_mentions=allowed_mentions,

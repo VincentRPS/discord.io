@@ -34,7 +34,7 @@ from typing import Any, Coroutine, List
 
 import aiohttp
 
-from discord.events import OnMessage, OnMessageDelete, OnMessageEdit
+from discord.events import catalog
 from discord.internal.dispatcher import Dispatcher
 from discord.snowflake import Snowflakeish
 from discord.types.dict import Dict
@@ -206,17 +206,9 @@ class Shard:
                     elif data["t"] == "GUILD_CREATE":
                         self.state._guilds_cache[data["d"]["id"]] = data["d"]
                         self.dis.dispatch("RAW_GUILD_CREATE", data["d"])
-                    elif data["t"] == "MESSAGE_CREATE":
-                        self.dis.dispatch("RAW_MESSAGE", data["d"])
-                        OnMessage(data["d"], self.dis, self.state)
-                    elif data["t"] == "MESSAGE_DELETE":
-                        self.dis.dispatch("RAW_MESSAGE_DELETE", data["d"])
-                        OnMessageDelete(data["d"], self.dis, self.state)
-                    elif data["t"] == "MESSAGE_UPDATE":
-                        self.dis.dispatch("RAW_MESSAGE_EDIT", data["d"])
-                        OnMessageEdit(data["d"], self.dis, self.state)
                     else:
                         self.dis.dispatch("RAW_{}".format(data["t"]), data["d"])
+                        catalog.Cataloger(data, self.dis, self.state)
                 elif data["op"] == 9:
                     await self.ws.close(code=1008)
                     await self.resume()

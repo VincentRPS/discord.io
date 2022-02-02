@@ -23,7 +23,8 @@
 # Most requests are done here, except for log-ins and outs since they change the header.
 
 import typing
-
+from json import dumps
+from discord.file import File
 from discord.api.rest import RESTClient, Route
 from discord.flags import MessageFlags
 from discord.snowflake import Snowflakeish
@@ -84,12 +85,14 @@ class RESTFactory:
         self,
         channel: Snowflakeish,
         content: typing.Optional[str] = None,
+        files: typing.Optional[typing.Sequence[File]] = None,
         tts: typing.Optional[bool] = False,
         embeds: typing.List[Dict] = None,
         allowed_mentions: typing.Optional[allowed_mentions.MentionObject] = None,
         message_reference: typing.Optional[dict] = None,
         components: typing.Optional[list[Dict]] = None,
     ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
+        form = []
         json = {
             "tts": tts,
             "allowed_mentions": allowed_mentions,
@@ -103,10 +106,34 @@ class RESTFactory:
         if embeds is not None:
             json["embeds"] = embeds
 
+        if files:
+            form.append({"name": "payload_json", "value": dumps(json)})
+            if len(files) == 1:
+                file = files[0]
+                form.append({
+                    "name": "file",
+                    "value": file.fp,
+                    "filename": file.filename,
+                    "content_type": "application/octet-stream",
+                })
+            else:
+                for index, file in enumerate(files):
+                    form.append({
+                        "name": f"file{index}",
+                        "value": file.fp,
+                        "filename": file.filename,
+                        "content_type": "application/octet-stream"
+                    })
+
+            return self.rest.send(
+                Route("POST", f"/channels/{channel}/messages", channel_id=channel),
+                json=json, form=form
+            )
+
         return self.rest.send(
-            Route("POST", f"/channels/{channel}/messages", channel_id=channel),
-            json=json,
-        )
+                Route("POST", f"/channels/{channel}/messages", channel_id=channel),
+                json=json
+            )
 
     def get_channel(self, channel: typing.Optional[Snowflakeish] = None):
         return self.rest.send(Route("GET", f"/channels/{channel}"))
@@ -359,3 +386,5 @@ class RESTFactory:
             ),
             json=ret,
         )
+    
+    # emojis

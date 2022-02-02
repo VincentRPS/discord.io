@@ -131,6 +131,7 @@ class RESTClient:
         self,
         route: Route,
         files: typing.Optional[typing.Sequence[File]] = None,
+        form: typing.Optional[typing.Iterable[Dict]] = None,
         **params: typing.Any,
     ):
         """Sends a request to discord
@@ -177,6 +178,13 @@ class RESTClient:
                 if files:
                     for f in files:
                         f.reset(seek=tries)
+                
+                if form:
+                    form_data = aiohttp.FormData()
+                    for kwargs in form:
+                        form_data.add_field(**kwargs)
+                    
+                    params["data"] = form_data
 
                 try:
                     async with self._session.request(method, url, **params) as r:

@@ -57,3 +57,6 @@ class OnMessageDelete(Event):
             self.state._sent_messages_cache[self.data["id"]], self.state.app
         )
         self.dispatch("MESSAGE_DELETE", message)
+
+class OnMessageReactionAdd(Event):
+    """Gives a :class:`Message` and a :class:`Emoji` that was added."""
