@@ -2,7 +2,6 @@ import os
 
 folders = [
     "discord/__init__.py",
-    "discord/apps/__init__.py",
     "discord/api/__init__.py",
     "discord/audio/__init__.py",
     "discord/modules/__init__.py",

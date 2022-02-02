@@ -3,6 +3,7 @@ import typing
 from .api import *
 from .audio import *
 from .cache import *
+from .client import *
 from .color import *
 from .colour import *
 from .components import *
