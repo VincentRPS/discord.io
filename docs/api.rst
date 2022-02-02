@@ -68,7 +68,7 @@ Apps
 .. autoclass:: WebhookApp
     :members:
 
-.. autoclass:: BotApp
+.. autoclass:: Client
     :members:
 
 Webhook

@@ -79,7 +79,7 @@ class Color:
     @classmethod
     def purple(self) -> int:
         """A factory color method which returns `0x9b59b6`"""
-        return int(0x9b59b6)
+        return int(0x9B59B6)
 
     @classmethod
     def dark_purple(self) -> int:

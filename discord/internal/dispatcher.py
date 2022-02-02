@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 """
-Dispatches raw OpCode events to Event classes.
+Dispatches raw Opcode events to Event classes.
 """
 
 import asyncio

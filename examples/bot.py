@@ -1,9 +1,9 @@
-from discord import BotApp, Intents
+from discord import Client, Intents
 
 intents = Intents.default()  # type: ignore
 
 # the instance of your bot
-bot = BotApp(intents=intents)
+bot = Client(intents=intents)
 
 
 @bot.event  # type: ignore

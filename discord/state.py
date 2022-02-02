@@ -56,7 +56,7 @@ class ConnectionState:
     _seq :class:`int`
         The Gateway seq number, can be None.
 
-    app :class:`BotApp` or :class:`WebhookApp`
+    app :class:`Client`
         The bot app
 
         .. versionadded:: 0.5.0

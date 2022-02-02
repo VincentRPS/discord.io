@@ -34,7 +34,7 @@ This is a quick usecase example for the library!
 ```py
 import discord
 
-bot = discord.BotApp()
+bot = discord.Client()
 
 @bot.event
 async def on_ready():
@@ -48,7 +48,7 @@ This is another example but with a prefixed command
 ```py
 import discord
 
-bot = discord.BotApp()
+bot = discord.Client()
 
 @bot.event
 async def on_ready():

@@ -1,6 +1,6 @@
 import discord
 
-bot = discord.BotApp()
+bot = discord.Client()
 
 
 @bot.event  # type: ignore

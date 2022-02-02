@@ -19,7 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-"""The bot app"""
+"""The Client powering discord.io's bots."""
 
 import asyncio
 import importlib
@@ -39,11 +39,11 @@ from discord.types.dict import Dict
 from discord.ui import print_banner, start_logging
 
 _log = logging.getLogger(__name__)
-__all__: List[str] = ["BotApp"]
+__all__: List[str] = ["Client"]
 CFT = TypeVar("CFT", bound="dispatcher.CoroFunc")
 
 
-class BotApp:
+class Client:
     """Represents a Discord bot.
 
     .. versionadded:: 0.4.0
