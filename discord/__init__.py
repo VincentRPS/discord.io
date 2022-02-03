@@ -25,6 +25,7 @@ from .color import *
 from .colour import *
 from .components import *
 from .events import *
+from .file import *
 from .intents import *
 from .interactions import *
 from .internal.exceptions import *
@@ -36,7 +37,6 @@ from .types import *
 from .ui import *
 from .util import *
 from .webhooks import *
-from .file import *
 
 
 class VersionInfo(typing.NamedTuple):

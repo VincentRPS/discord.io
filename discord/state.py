@@ -46,7 +46,7 @@ class Hold:
 
     def get(self, name: str):
         return self.__cache.get(name)
-    
+
     def pop(self, name: str):
         return self.__cache.pop(name)
 
@@ -128,8 +128,12 @@ class ConnectionState:
     def __init__(self, **options):
         self._guilds_cache = options.get("guild_cache_hold") or Hold()
         self._sent_messages_cache = options.get("sent_messages_cache_hold") or Hold()
-        self._edited_messages_cache = options.get("edited_messages_cache_hold") or Hold()
-        self._deleted_messages_cache = options.get("deleted_messages_cache_hold") or Hold()
+        self._edited_messages_cache = (
+            options.get("edited_messages_cache_hold") or Hold()
+        )
+        self._deleted_messages_cache = (
+            options.get("deleted_messages_cache_hold") or Hold()
+        )
         self._ready: asyncio.Event = asyncio.Event()
 
         self._bot_intents: int = options.get("intents", 0)

@@ -84,7 +84,7 @@ class Client:
     debug
         To show debug logs or not.
     state :class:`ConnectionState`
-        Allowes for custom ConnectionStates, 
+        Allowes for custom ConnectionStates,
         and soforth custom db caches.
     """
 
