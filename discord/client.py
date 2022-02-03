@@ -83,6 +83,9 @@ class Client:
         A :class:`int`, :class:`str` or :class:`dict`.
     debug
         To show debug logs or not.
+    state :class:`ConnectionState`
+        Allowes for custom ConnectionStates, 
+        and soforth custom db caches.
     """
 
     def __init__(
@@ -97,10 +100,11 @@ class Client:
         voice: Optional[bool] = False,
         logs: Optional[Union[None, int, str, Dict]] = None,
         debug: Optional[bool] = False,
+        state: Optional[ConnectionState] = None,
     ):
         print_banner(module)
         start_logging(logs, debug)
-        self.state = ConnectionState(
+        self.state = state or ConnectionState(
             loop=loop,
             intents=intents,
             bot=self,

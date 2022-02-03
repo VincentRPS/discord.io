@@ -23,13 +23,38 @@
 The ConnectionState Caches most things during connection.
 """
 import asyncio
-from typing import Any, Callable, List, Tuple
+from collections import OrderedDict
+from typing import Any, Callable, List, Tuple, Union
 
 from discord.types.dict import Dict
 
 
+class Hold:
+    """A hold of cache, easily swapable with a db."""
+
+    def __init__(self):
+        self.__cache = OrderedDict()
+
+    def view(self) -> List[Dict]:
+        return [value._json for value in self.__cache.values()]
+
+    def new(self, name: str, data: Union[str, int, Dict, Any]):
+        self.__cache[name] = data
+
+    def edit(self, name: str, data: Union[str, int, Dict, Any]):
+        self.__cache[name] = data
+
+    def get(self, name: str):
+        return self.__cache.get(name)
+    
+    def pop(self, name: str):
+        return self.__cache.pop(name)
+
+
 class ConnectionState:
     """The Connection State
+
+    .. versionadded:: 0.4.0
 
     .. note::
 
@@ -94,23 +119,17 @@ class ConnectionState:
     listeners :class:`dict`
         The bot listeners
 
-    all :class:`dict`
-        The appendix of all cache.
-
     shard_count :class:`int`
         the number of shards.
 
         .. versionadded:: 0.6.0
-
-    .. versionadded:: 0.4.0
-
     """
 
     def __init__(self, **options):
-        self._guilds_cache = {}
-        self._sent_messages_cache = {}
-        self._edited_messages_cache = {}
-        self._deleted_messages_cache = {}
+        self._guilds_cache = options.get("guild_cache_hold") or Hold()
+        self._sent_messages_cache = options.get("sent_messages_cache_hold") or Hold()
+        self._edited_messages_cache = options.get("edited_messages_cache_hold") or Hold()
+        self._deleted_messages_cache = options.get("deleted_messages_cache_hold") or Hold()
         self._ready: asyncio.Event = asyncio.Event()
 
         self._bot_intents: int = options.get("intents", 0)
@@ -153,13 +172,10 @@ class ConnectionState:
         self.listeners: Dict[str, List[Tuple[asyncio.Future, Callable[..., bool]]]] = {}
         """The listeners"""
 
-        self.all = {}
-        """The appendix of all cache."""
-
         self.shard_count: int = options.get("shard_count")
         """The shard count"""
 
-        self.commands = {}
+        self.commands = Hold()
         """Stores commands
 
         The basic idea of: ::
@@ -175,42 +191,3 @@ class ConnectionState:
         """
 
         self.components = {}
-
-    async def update(self):
-        """Updates the cache appendix."""
-        self.all["status"] = self._bot_status
-        self.all["presences"] = self._bot_presences
-        self.all["gateway_seq"] = self._seq
-        self.all["listeners"] = self.listeners
-        self.all["intents"] = self._bot_intents
-        self.all["token"] = self._bot_token
-        self.all["presence_type"] = self._bot_presence_type
-        self.all["guilds"] = self._guilds_cache
-        self.all["ready"] = self._ready.is_set()
-        self.all["sent_messages"] = self._sent_messages_cache
-        self.all["deleted_messages"] = self._deleted_messages_cache
-        self.loop.create_task(self.update())
-
-    def create(self):
-        """Creates a cache appendix."""
-        # yes this is very very slow, nothing i can do about it.
-        self.all["status"] = self._bot_status
-        self.all["presences"] = self._bot_presences
-        self.all["gateway_seq"] = self._seq
-        self.all["listeners"] = self.listeners
-        self.all["intents"] = self._bot_intents
-        self.all["token"] = self._bot_token
-        self.all["presence_type"] = self._bot_presence_type
-        self.all["guilds"] = self._guilds_cache
-        self.all["ready"] = self._ready.is_set()
-        self.all["sent_messages"] = self._sent_messages_cache
-        self.all["deleted_messages"] = self._deleted_messages_cache
-        self.all["voice"] = {
-            "session_id": self._voice_session_id,
-            "seq": self._voice_seq,
-            "user_data": self._voice_user_data,
-        }
-        self.loop.create_task(self.update(), name="discord.io Full Connection Cache")
-
-    def list(self) -> Dict:
-        return self.all

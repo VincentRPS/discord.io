@@ -31,7 +31,8 @@ from urllib.parse import quote
 import aiohttp
 
 from discord.file import File
-from discord.internal.exceptions import Forbidden, NotFound, RESTError, ServerError
+from discord.internal.exceptions import (Forbidden, NotFound, RESTError,
+                                         ServerError)
 from discord.state import ConnectionState
 from discord.types.dict import Dict
 

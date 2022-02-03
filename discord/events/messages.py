@@ -29,7 +29,7 @@ class OnMessage(Event):
 
     def process(self) -> None:
         ret = Message(self.data, self.state.app)
-        self.state._sent_messages_cache[self.data["id"]] = self.data
+        self.state._sent_messages_cache.new(self.data["id"], self.data)
         self.dispatch("MESSAGE", ret)
 
 
@@ -44,7 +44,7 @@ class OnMessageEdit(Event):
         except KeyError:
             # if the message is not in the cache we cant really save it.
             before = None
-        self.state._edited_messages_cache[self.data["id"]] = self.data
+        self.state._edited_messages_cache.new(self.data["id"], self.data)
         after = Message(self.data, self.state.app)
         self.dispatch("MESSAGE_EDIT", before, after)
 
@@ -54,8 +54,9 @@ class OnMessageDelete(Event):
 
     def process(self):
         message = Message(
-            self.state._sent_messages_cache[self.data["id"]], self.state.app
+            self.state._sent_messages_cache.pop(self.data["id"]), self.state.app
         )
+        self.state._deleted_messages_cache.new(self.data["id"], self.data)
         self.dispatch("MESSAGE_DELETE", message)
 
 

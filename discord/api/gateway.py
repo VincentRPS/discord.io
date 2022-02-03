@@ -29,7 +29,7 @@ import logging
 import platform
 import zlib
 from random import random
-from time import time, perf_counter
+from time import perf_counter, time
 from typing import Any, Coroutine, List
 
 import aiohttp
@@ -205,7 +205,7 @@ class Shard:
                         await self._ready(data)
                         self.dis.dispatch("READY")
                     elif data["t"] == "GUILD_CREATE":
-                        self.state._guilds_cache[data["d"]["id"]] = data["d"]
+                        self.state._guilds_cache.new(data["d"]["id"], data["d"])
                         self.dis.dispatch("RAW_GUILD_CREATE", data["d"])
                     else:
                         self.dis.dispatch("RAW_{}".format(data["t"]), data["d"])
