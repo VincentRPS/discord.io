@@ -29,7 +29,6 @@ with open("requirements.txt") as f:
 
 packages = [
     "discord",
-    "discord.apps",
     "discord.events",
     "discord.api",
     "discord.util",
