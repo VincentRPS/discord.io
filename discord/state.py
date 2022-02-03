@@ -36,7 +36,7 @@ class Hold:
         self.__cache = OrderedDict()
 
     def view(self) -> List[Dict]:
-        return [value._json for value in self.__cache.values()]
+        return [value for value in self.__cache.values()]
 
     def new(self, name: str, data: Union[str, int, Dict, Any]):
         self.__cache[name] = data
