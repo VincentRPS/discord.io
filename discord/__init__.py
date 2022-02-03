@@ -36,6 +36,7 @@ from .types import *
 from .ui import *
 from .util import *
 from .webhooks import *
+from .file import *
 
 
 class VersionInfo(typing.NamedTuple):

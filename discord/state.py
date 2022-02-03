@@ -42,7 +42,7 @@ class Hold:
         self.__cache[name] = data
 
     def edit(self, name: str, data: Union[str, int, Dict, Any]):
-        self.__cache[name] = data
+        self.__cache.update({name: data})
 
     def get(self, name: str):
         return self.__cache.get(name)
