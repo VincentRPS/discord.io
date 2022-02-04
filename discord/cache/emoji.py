@@ -23,8 +23,15 @@
 
 ref: https://discord.dev/resources/emoji
 """
+from discord.types import Dict
 
 
 class Emoji:
-    def __init__(self):
-        ...
+    """Represents a Discord Emoji.
+    
+    .. versionadded:: 0.7.0
+    """
+    def __init__(self, data: Dict):
+        self.from_dict = data
+        """The data in dict format."""
+    

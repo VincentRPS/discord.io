@@ -34,21 +34,21 @@ class User:
     """Represents a Discord User"""
 
     def __init__(self, usr: dict):
-        self._d = usr
+        self.from_dict = usr
 
     def username(self) -> str:
         """The users username"""
-        return self._d["username"]
+        return self.from_dict["username"]
 
     def discriminator(self) -> int:
         """The users discriminator id"""
-        return self._d["discriminator"]
+        return self.from_dict["discriminator"]
 
     @property
     def id(self) -> int:
         """The users snowflake id"""
-        return self._d["id"]
+        return self.from_dict["id"]
 
     def public_flags(self):
         """The users public flags."""
-        return self._d["public_flags"]
+        return self.from_dict["public_flags"]

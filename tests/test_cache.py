@@ -37,10 +37,11 @@ class TestCache:
         self.state._guilds_cache.new("935701676948590642", self.json)
 
     def get_cache(self):
-        assert self.state._guilds_cache.new("935701676948590642", self.json)
+        assert self.state._guilds_cache.get("935701676948590642") == self.json
 
     def intents(self):
-        assert self.state._bot_intents == 1
+        r = self.state._guilds_cache.pop("935701676948590642")
+        assert r == self.json
 
     def not_ready(self):
-        assert self.state._ready.is_set() is False
+        assert self.state._ready.is_set() == False

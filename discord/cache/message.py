@@ -45,10 +45,10 @@ class Message:  # noqa: ignore
     """
 
     def __init__(self, msg: dict, app):
-        self._message = msg
+        self.from_dict = msg
         self.app = app
         try:
-            self.content: str = self._message["content"]
+            self.content: str = self.from_dict["content"]
         except KeyError:
             # can error out for embed only/link only messages.
             self.content: str = ""
@@ -57,15 +57,15 @@ class Message:  # noqa: ignore
     @property
     def id(self):
         """Returns the message id"""
-        return self._message["id"]
+        return self.from_dict["id"]
 
     def guild(self):
         """Returns the :class:`Guild` of the message"""
-        return Guild(id=self._message["guild_id"])
+        return Guild(id=self.from_dict["guild_id"])
 
     def author(self) -> User:
         """Returns the :class:`User` of the message"""
-        return User(usr=self._message["author"])
+        return User(usr=self.from_dict["author"])
 
     async def send(
         self,
