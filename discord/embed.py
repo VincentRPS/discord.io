@@ -33,7 +33,25 @@ __all__: List[str] = ["Embed"]
 
 
 class Embed:
-    """Represents a Discord Embed."""
+    """Represents a Discord Embed.
+    
+    Parameters
+    ----------
+    title
+        The embed title
+    description
+        The embed description
+    url
+        The embed url
+    date
+        The embed date
+    color
+        The embed color
+    colour
+        The embed colour
+    timestamp
+        The embed timestamp
+    """
 
     def __init__(
         self,
@@ -65,24 +83,59 @@ class Embed:
             self.obj["timestamp"] = timestamp
 
     def to_dict(self):
+        """Gives the dictionary which the embed is within
+        
+        Returns
+        -------
+        obj :class:`dict`
+            The dict
+        """
         return self.obj
 
     def set_footer(self, text: str = None, icon_url: str = None):
+        """Sets the footer
+        
+        Parameters
+        ----------
+        text
+            A text footer
+        icon_url
+            The icon url of the footer
+        """
         if text:
             self.obj["footer"]["text"] = text
         if icon_url:
             self.obj["footer"]["icon_url"] = icon_url
 
     def remove_footer(self):
+        """Removes the footer"""
         del self.obj["footer"]
 
     def set_thumbnail(self, url: str = None):
+        """Sets a thumbnail on the embed
+        
+        Parameters
+        ----------
+        url
+            The thumbnail url
+        """
         if url is None:
             del self.obj["thumbnail"]
         else:
             self.obj["thumbnail"]["url"] = url
 
     def set_author(self, name: str, url: str = None, icon_url: str = None):
+        """Sets the embed author
+        
+        Parameters
+        ----------
+        name
+            The author name
+        url
+            The author's url
+        icon_url
+            The author's icon_url
+        """
         self.obj["author"] = name
 
         if url:
@@ -91,9 +144,21 @@ class Embed:
             self.obj["author"]["icon_url"] = icon_url
 
     def remove_author(self):
+        """Removes the author from the embed"""
         del self.obj["author"]
 
     def add_field(self, name: str, value: str, inline: bool = True):
+        """Adds a field to the embed
+        
+        Parameters
+        ----------
+        name
+            The field name
+        value
+            The field value
+        inline
+            If the field shuld be inline
+        """
         field = {"name": name, "value": value, "inline": inline}
 
         try:
@@ -102,4 +167,11 @@ class Embed:
             self.obj["fields"] = [field]
 
     def remove_field(self, name: str):
+        """Removes the field
+        
+        Parameters
+        ----------
+        name
+            The field to remove
+        """
         del self.obj["fields"][name]

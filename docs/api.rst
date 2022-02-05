@@ -153,6 +153,12 @@ Intents
 
 .. autoclass:: Intents
 
+Embed
+-----
+
+.. autoclass:: Embed
+    :members:
+
 
 Exceptions
 ----------
