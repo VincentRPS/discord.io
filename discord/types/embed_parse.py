@@ -19,23 +19,21 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from discord.types import Dict
 
-from .interactions import OnInteraction
-from .messages import OnMessage, OnMessageDelete, OnMessageEdit
+from typing import Dict, List, Union
+
+from ..embed import Embed
 
 
-class Cataloger:
-    def __init__(self, data: Dict, dis, state):
-        if data["t"] == "MESSAGE_CREATE":
-            dis.dispatch("RAW_MESSAGE", data["d"])
-            OnMessage(data["d"], dis, state)
-        elif data["t"] == "MESSAGE_DELETE":
-            dis.dispatch("RAW_MESSAGE_DELETE", data["d"])
-            OnMessageDelete(data["d"], dis, state)
-        elif data["t"] == "MESSAGE_UPDATE":
-            dis.dispatch("RAW_MESSAGE_EDIT", data["d"])
-            OnMessageEdit(data["d"], dis, state)
-        elif data["t"] == "INTERACTION_CREATE":
-            dis.dispatch("RAW_INTERACTION", dis, state)
-            OnInteraction(data["d"], dis, state)
+def parse_embed(embed: Union[Dict, Embed]):
+    if isinstance(embed, Embed):
+        return [embed.obj]
+    else:
+        return embed
+
+
+def parse_embeds(embeds: List[Union[Dict, Embed]]):
+    if isinstance(embeds, Embed):
+        return [embed.obj for embed in embeds]
+    else:
+        return embeds

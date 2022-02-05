@@ -64,7 +64,9 @@ class CommandDispatcher:
         **kwargs: Any,
     ) -> asyncio.Task:
         wrap = self.run(coro, name, *args, **kwargs)
-        return self.state.loop.create_task(wrap, name=f"discord.io|command_dispatcher: {name}")
+        return self.state.loop.create_task(
+            wrap, name=f"discord.io|command_dispatcher: {name}"
+        )
 
     def dispatch(self, name: str, *args, **kwargs) -> None:
         _log.debug("Dispatching Command: %s", name)

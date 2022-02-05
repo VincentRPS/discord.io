@@ -12,6 +12,8 @@
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 
+import asyncio
+
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,16 +24,33 @@
 import random
 import string
 import typing
+from typing import Any, Callable, Coroutine
 
-from discord.state import ConnectionState
+from ..interactions import Interaction
+from ..internal.dispatcher import Coro
+from ..state import ConnectionState
 
 __all__: typing.List[str] = ["Button"]
 
 
 class Button:
-    def create(
+    def __init__(self, state: ConnectionState):
+        self.state = state
+
+    async def _run_callback(
+        self, coro: Callable[..., Coroutine[Any, Any, Any]], data, state
+    ) -> None:
+        try:
+            await coro(Interaction(data, state))
+        except asyncio.CancelledError:
+            pass
+        except Exception:
+            raise
+
+    async def create(
         self,
         label: str,
+        callback: Coro,
         style: typing.Literal[1, 2, 3, 4, 5] = 1,
         custom_id: str = None,
         url: str = None,
@@ -53,9 +72,18 @@ class Button:
                     "label": label,
                     "style": style,
                     "url": url,
-                    "custom_id": custom_id,
+                    "custom_id": self.id,
                 }
             ],
         }
 
-        return [ret]
+        self.callback = callback
+
+        self.state.components[self] = {
+            "self": self,
+            "callback": self.callback,
+            "data": ret,
+            "id": self.id,
+        }
+
+        return ret

@@ -19,10 +19,14 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List, Optional
 
+from discord.types import allowed_mentions
+
+from ..api.rest import Route
+from ..embed import Embed
 from ..member import Member
-from ..types import Dict
+from ..types import Dict, embed_parse
 from ..webhooks import Webhook
 
 if TYPE_CHECKING:
@@ -39,11 +43,58 @@ class Interaction:
     def collect_children(self, data):
         self.token: str = data["token"]
         self.type: int = data["type"]
-        self.id: int = data["id"]
         self.guild_id: int = data["guild_id"]
         self.channel_id: int = data["channel_id"]
         self.data: Dict = data["data"]
-        self.name = self.data["name"]
+        self.id: int = data["id"]
+
+        try:
+            # buttons will give this data
+            self.message = data["message"]
+        except KeyError:
+            pass
+
+    def followup(
+        self,
+        content: Optional[str] = None,
+        tts: bool = False,
+        embed: Optional[Embed] = None,
+        embeds: Optional[List[Embed]] = None,
+    ):
+        return self.webhook.execute(
+            content=content, tts=tts, embed=embed, embeds=embeds
+        )
+
+    def respond(
+        self,
+        content: Optional[str] = None,
+        tts: bool = False,
+        embed: Optional[Embed] = None,
+        embeds: Optional[List[Embed]] = None,
+        allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
+    ):
+        ret = {"type": 4, "data": {}}
+        if content:
+            ret["data"]["content"] = content
+        ret["data"]["tts"] = tts
+        if embed:
+            emb = embed_parse.parse_embed(embed)
+        if embeds:
+            emb = embed_parse.parse_embeds(embeds)
+
+        if not embeds and not embed:
+            emb = []
+
+        if allowed_mentions:
+            ret["data"]["allowed_mentions"] = allowed_mentions
+        else:
+            ret["data"]["allowed_mentions"] = {"parse": []}
+
+        ret["data"]["embeds"] = emb
+
+        return self.webhook.rest.send(
+            Route("POST", f"/interactions/{self.id}/{self.token}/callback"), json=ret
+        )
 
     @property
     def member(self):

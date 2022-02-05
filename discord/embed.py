@@ -34,7 +34,7 @@ __all__: List[str] = ["Embed"]
 
 class Embed:
     """Represents a Discord Embed.
-    
+
     Parameters
     ----------
     title
@@ -84,7 +84,7 @@ class Embed:
 
     def to_dict(self):
         """Gives the dictionary which the embed is within
-        
+
         Returns
         -------
         obj :class:`dict`
@@ -94,7 +94,7 @@ class Embed:
 
     def set_footer(self, text: str = None, icon_url: str = None):
         """Sets the footer
-        
+
         Parameters
         ----------
         text
@@ -113,7 +113,7 @@ class Embed:
 
     def set_thumbnail(self, url: str = None):
         """Sets a thumbnail on the embed
-        
+
         Parameters
         ----------
         url
@@ -126,7 +126,7 @@ class Embed:
 
     def set_author(self, name: str, url: str = None, icon_url: str = None):
         """Sets the embed author
-        
+
         Parameters
         ----------
         name
@@ -149,7 +149,7 @@ class Embed:
 
     def add_field(self, name: str, value: str, inline: bool = True):
         """Adds a field to the embed
-        
+
         Parameters
         ----------
         name
@@ -168,7 +168,7 @@ class Embed:
 
     def remove_field(self, name: str):
         """Removes the field
-        
+
         Parameters
         ----------
         name

@@ -20,9 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import List, Optional, Sequence
+from typing import Any, List, Optional, Sequence
 
-from discord.components import Button
 from discord.embed import Embed
 from discord.file import File
 from discord.message import Message
@@ -43,7 +42,8 @@ class Context:
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
-        components: List[Button] = None,
+        components: List[dict[str, Any]] = None,
+        component: List[dict[str, Any]] = None,
     ):
         if embed and not embeds:
             if isinstance(embed, Embed):
@@ -57,6 +57,12 @@ class Context:
                 emb = [embed.obj for embed in embeds]
             else:
                 emb = embeds
+        if component:
+            cm = [component]
+        elif components:
+            cm = components
+        else:
+            cm = None
         await self.message.app.factory.create_message(
             channel=self.message.channel,
             content=content,
@@ -64,7 +70,7 @@ class Context:
             embeds=emb,
             tts=tts,
             allowed_mentions=allowed_mentions,
-            components=components,
+            components=cm,
         )
 
     async def reply(
@@ -75,7 +81,8 @@ class Context:
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
-        components: List[Button] = None,
+        components: List[dict[str, Any]] = None,
+        component: List[dict[str, Any]] = None,
     ):
         if embed and not embeds:
             if isinstance(embed, Embed):
@@ -89,6 +96,12 @@ class Context:
                 emb = [embed.obj for embed in embeds]
             else:
                 emb = embeds
+        if component:
+            cm = [component]
+        elif components:
+            cm = components
+        else:
+            cm = None
         await self.message.app.factory.create_message(
             channel=self.message.channel,
             content=content,
@@ -99,7 +112,7 @@ class Context:
             message_reference={
                 "message_id": self.message.id,
             },
-            components=components,
+            components=cm,
         )
 
     @property

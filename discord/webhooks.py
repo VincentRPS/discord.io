@@ -25,6 +25,7 @@ import typing
 from logging import getLogger
 
 from .api.rest import RESTClient, Route
+from .embed import Embed
 from .file import *
 from .snowflake import Snowflakeish
 
@@ -166,6 +167,8 @@ class Webhook:
         avatar_url: typing.Optional[str] = None,
         tts: typing.Optional[bool] = None,
         allowed_mentions: typing.Optional[bool] = None,
+        embed: typing.Optional[Embed] = None,
+        embeds: typing.Optional[typing.List[Embed]] = None,
     ):
         """Execute the Webhook
 
@@ -185,14 +188,27 @@ class Webhook:
         json = {}
         if content:
             json["content"] = content
-        elif username:
+        if username:
             json["username"] = username
-        elif avatar_url:
+        if avatar_url:
             json["avatar_url"] = avatar_url
-        elif tts:
+        if tts:
             json["tts"] = tts
-        elif allowed_mentions:
+        if allowed_mentions:
             json["allowed_mentions"] = allowed_mentions
+        if embed:
+            if isinstance(embed, Embed):
+                emb = [embed.obj]
+            else:
+                emb = [embed]
+        if embeds:
+            if isinstance(embeds, Embed):
+                emb = [embed.obj for embed in embeds]
+            else:
+                emb = embeds
+        if embed or embeds:
+            json["embeds"] = emb
+
         return self.rest.send(
             Route(
                 "POST",

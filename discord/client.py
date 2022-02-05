@@ -38,6 +38,8 @@ from discord.types.dict import Dict
 from discord.ui import print_banner, start_logging
 from discord.user import User
 
+from .components import Button, Coro
+
 _log = logging.getLogger(__name__)
 __all__: List[str] = ["Client"]
 CFT = TypeVar("CFT", bound="dispatcher.CoroFunc")
@@ -115,6 +117,7 @@ class Client:
             shard_count=shards,
             prefix=command_prefix,
         )
+        self.command_prefix = command_prefix
         self.cmd_dispatch = command_dispatcher.CommandDispatcher(self.state)
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
         self.factory = RESTFactory(state=self.state, proxy=proxy, proxy_auth=proxy_auth)
@@ -163,6 +166,16 @@ class Client:
 
         self.state.loop.create_task(runner())
         self.state.loop.run_forever()
+
+    def create_button(
+        self,
+        label: str,
+        callback: Coro,
+        style: Literal[1, 2, 3, 4, 5] = 1,
+        custom_id: str = None,
+        url: str = None,
+    ):
+        return Button(self.state).create(label, callback, style, custom_id, url)
 
     @property
     async def is_ready(self):
@@ -225,9 +238,7 @@ class Client:
 
         return decorator
 
-    def command(
-        self, name: str = None
-    ) -> Callable[[CFT], CFT]:
+    def command(self, name: str = None) -> Callable[[CFT], CFT]:
         """Registers a prefixed command"""
 
         def decorator(func: CFT) -> CFT:

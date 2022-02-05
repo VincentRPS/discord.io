@@ -24,9 +24,8 @@
 ref: https://discord.dev/resources/channel
 """
 
-from typing import List, Optional, Sequence
+from typing import Any, List, Optional, Sequence
 
-from discord.components.core import Button
 from discord.file import File
 from discord.snowflake import Snowflakeish
 from discord.types import allowed_mentions
@@ -77,7 +76,7 @@ class Message:  # noqa: ignore
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
-        components: List[Button] = None,
+        components: List[dict[str, Any]] = None,
     ):
         """Sends a message."""
         if embed and not embeds:
@@ -110,7 +109,7 @@ class Message:  # noqa: ignore
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
-        components: List[Button] = None,
+        components: List[dict[str, Any]] = None,
     ):
         """Replys to the certain message."""
         if embed and not embeds:

@@ -19,23 +19,15 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from discord.types import Dict
-
-from .interactions import OnInteraction
-from .messages import OnMessage, OnMessageDelete, OnMessageEdit
+from .core import Event
 
 
-class Cataloger:
-    def __init__(self, data: Dict, dis, state):
-        if data["t"] == "MESSAGE_CREATE":
-            dis.dispatch("RAW_MESSAGE", data["d"])
-            OnMessage(data["d"], dis, state)
-        elif data["t"] == "MESSAGE_DELETE":
-            dis.dispatch("RAW_MESSAGE_DELETE", data["d"])
-            OnMessageDelete(data["d"], dis, state)
-        elif data["t"] == "MESSAGE_UPDATE":
-            dis.dispatch("RAW_MESSAGE_EDIT", data["d"])
-            OnMessageEdit(data["d"], dis, state)
-        elif data["t"] == "INTERACTION_CREATE":
-            dis.dispatch("RAW_INTERACTION", dis, state)
-            OnInteraction(data["d"], dis, state)
+class OnInteraction(Event):
+    def process(self):
+        for component in self.state.components.values():
+            if component["id"] == self.data["data"]["custom_id"]:
+                self.state.loop.create_task(
+                    component["self"]._run_callback(
+                        component["callback"], self.data, self.state
+                    )
+                )
