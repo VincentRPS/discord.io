@@ -84,8 +84,11 @@ class Client:
     debug
         To show debug logs or not.
     state :class:`ConnectionState`
-        Allowes for custom ConnectionStates,
+        Allow's for custom ConnectionStates,
         and soforth custom db caches.
+    command_prefix :class:`str`
+        The prefix for prefixed commands,
+        defaults to "".
     """
 
     def __init__(

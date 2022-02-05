@@ -181,8 +181,7 @@ class Shard:
             await self.ws.close(code=4000)
         elif self.latency > 10:
             _log.warning(f"Shard {self.shard_id} is behind by {self.latency}")
-        else:
-            self.state.loop.create_task(self.check_connection())
+        self.state.loop.create_task(self.check_connection())
 
     async def send(self, data: Dict) -> None:
         """Send a request to the Gateway via the shard
@@ -397,7 +396,7 @@ class Gateway:
         """
         r = await self._f.get_gateway_bot()
         if self.count is None:
-            shds = int(r["shards"])
+            shds = r["shards"]
             self._s.shard_count = shds
         else:
             shds = self.count
@@ -416,7 +415,8 @@ class Gateway:
 
     def send(self, payload: Dict) -> Coroutine[Any, Any, None]:
         """Sends a request from a shard"""
-        return self.s.send(payload)
+        for shard in self.shards:
+            return shard.send(payload)
 
     def gain_voice_access(
         self, guild: Snowflakeish, channel: Snowflakeish, mute: bool, deaf: bool

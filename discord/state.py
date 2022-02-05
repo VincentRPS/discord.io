@@ -186,7 +186,7 @@ class ConnectionState:
         self.listeners: Dict[str, List[Tuple[asyncio.Future, Callable[..., bool]]]] = {}
         """The listeners"""
 
-        self.shard_count: int = options.get("shard_count")
+        self.shard_count: int = options.get("shard_count", None)
         """The shard count"""
 
         self.components = {}
