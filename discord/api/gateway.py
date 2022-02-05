@@ -176,9 +176,10 @@ class Shard:
         await asyncio.sleep(20)
         if self.last_recv + 60.0 < perf_counter():
             _log.warning(
-                "Shard {self.shard_id} has stopped receiving from the gateway, reconnecting"
+                f"Shard {self.shard_id} has stopped receiving from the gateway, reconnecting"
             )
             await self.ws.close(code=4000)
+            await self.closed(4000)
         elif self.latency > 10:
             _log.warning(f"Shard {self.shard_id} is behind by {self.latency}")
         self.state.loop.create_task(self.check_connection())
@@ -229,8 +230,8 @@ class Shard:
                         self.dis.dispatch("RAW_{}".format(data["t"]), data["d"])
                         catalog.Cataloger(data, self.dis, self.state)
                 elif data["op"] == 9:
-                    await self.ws.close(code=1008)
-                    await self.resume()
+                    await self.ws.close(code=4000)
+                    await self.closed(4000)
                 elif data["op"] == 10:
                     await self.hello(data)
                 elif data["op"] == 11:
@@ -249,6 +250,7 @@ class Shard:
             await self.closed(code)
 
     async def closed(self, code: int) -> None:
+        _log.error(f"Gateway connected closed with code {code}")
         if code == 4000:
             pass
 
@@ -281,6 +283,7 @@ class Shard:
         elif code == 4009:
             # try to resume.
             await self.resume()
+            return
 
         elif code == 4010:
             raise  # this doesn't really happen, unless you are dumb
@@ -308,7 +311,7 @@ class Shard:
         await asyncio.sleep(interval)
         self.state.loop.create_task(self.heartbeat(interval))
 
-    async def close(self, code: int = 1000) -> None:
+    async def close(self, code: int = 4000) -> None:
         if self.ws:
             await self.ws.close(code=code)
         self.buffer.clear()

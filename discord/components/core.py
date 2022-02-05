@@ -29,9 +29,6 @@ __all__: typing.List[str] = ["Button"]
 
 
 class Button:
-    def __init__(self, state: ConnectionState):
-        self.state = state
-
     def create(
         self,
         label: str,

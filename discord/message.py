@@ -73,17 +73,30 @@ class Message:  # noqa: ignore
         self,
         content: Optional[str] = None,
         files: Optional[Sequence[File]] = None,
+        embed: Optional[Embed] = None,
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
         components: List[Button] = None,
     ):
         """Sends a message."""
+        if embed and not embeds:
+            if isinstance(embed, Embed):
+                emb = [embed.obj]
+            else:
+                emb = [embed]
+        elif embed and embed:
+            raise TypeError("Used both `embed` and `embed` only 1 is allowed.")
+        elif embeds and not embed:
+            if isinstance(embeds, Embed):
+                emb = [embed.obj for embed in embeds]
+            else:
+                emb = embeds
         await self.app.factory.create_message(
             channel=self.channel,
             content=content,
             files=files,
-            embeds=embeds,
+            embeds=emb,
             tts=tts,
             allowed_mentions=allowed_mentions,
             components=components,
@@ -93,17 +106,30 @@ class Message:  # noqa: ignore
         self,
         content: Optional[str] = None,
         files: Optional[Sequence[File]] = None,
+        embed: Optional[Embed] = None,
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
         components: List[Button] = None,
     ):
         """Replys to the certain message."""
+        if embed and not embeds:
+            if isinstance(embed, Embed):
+                emb = [embed.obj]
+            else:
+                emb = [embed]
+        elif embed and embed:
+            raise TypeError("Used both `embed` and `embed` only 1 is allowed.")
+        elif embeds and not embed:
+            if isinstance(embeds, Embed):
+                emb = [embed.obj for embed in embeds]
+            else:
+                emb = embeds
         await self.app.factory.create_message(
             channel=self.channel,
             content=content,
             files=files,
-            embeds=embeds,
+            embeds=emb,
             tts=tts,
             allowed_mentions=allowed_mentions,
             message_reference={

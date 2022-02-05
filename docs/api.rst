@@ -137,6 +137,9 @@ Snowflakes
 State
 -----
 
+.. autoclass:: Hold
+    :members:
+
 .. autoclass:: ConnectionState
 
 File

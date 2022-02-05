@@ -28,6 +28,8 @@ from discord.file import File
 from discord.message import Message
 from discord.types import allowed_mentions
 
+from .embed import Embed
+
 
 class Context:
     def __init__(self, data: Message):
@@ -37,16 +39,29 @@ class Context:
         self,
         content: Optional[str] = None,
         files: Optional[Sequence[File]] = None,
+        embed: Optional[Embed] = None,
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
         components: List[Button] = None,
     ):
+        if embed and not embeds:
+            if isinstance(embed, Embed):
+                emb = [embed.obj]
+            else:
+                emb = [embed]
+        elif embed and embed:
+            raise TypeError("Used both `embed` and `embed` only 1 is allowed.")
+        elif embeds and not embed:
+            if isinstance(embeds, Embed):
+                emb = [embed.obj for embed in embeds]
+            else:
+                emb = embeds
         await self.message.app.factory.create_message(
             channel=self.message.channel,
             content=content,
             files=files,
-            embeds=embeds,
+            embeds=emb,
             tts=tts,
             allowed_mentions=allowed_mentions,
             components=components,
@@ -56,16 +71,29 @@ class Context:
         self,
         content: Optional[str] = None,
         files: Optional[Sequence[File]] = None,
+        embed: Optional[Embed] = None,
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
         components: List[Button] = None,
     ):
+        if embed and not embeds:
+            if isinstance(embed, Embed):
+                emb = [embed.obj]
+            else:
+                emb = [embed]
+        elif embed and embed:
+            raise TypeError("Used both `embed` and `embed` only 1 is allowed.")
+        elif embeds and not embed:
+            if isinstance(embeds, Embed):
+                emb = [embed.obj for embed in embeds]
+            else:
+                emb = embeds
         await self.message.app.factory.create_message(
             channel=self.message.channel,
             content=content,
             files=files,
-            embeds=embeds,
+            embeds=emb,
             tts=tts,
             allowed_mentions=allowed_mentions,
             message_reference={

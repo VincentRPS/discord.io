@@ -23,35 +23,83 @@
 
 ref: https://discord.dev/resources/channel#embed-limits
 """
-
-from typing import List, Optional, Union
+import datetime
+from typing import Any, List, Optional, Union
 
 from discord.color import Color
+from discord.colour import Colour
 
 __all__: List[str] = ["Embed"]
 
 
-def Embed(
-    title: Optional[str] = None,
-    description: Optional[str] = None,
-    url: Optional[str] = None,
-    date: Optional[str] = None,
-    color: Optional[Union[int, Color]] = None,
-):
-    """Generates a rich embed"""
-    ret = {
-        "type": "rich",
-    }
+class Embed:
+    """Represents a Discord Embed."""
 
-    if title:
-        ret["title"] = title
-    if description:
-        ret["description"] = description
-    if url:
-        ret["url"] = url
-    if date:
-        ret["date"] = date
-    if color:
-        ret["color"] = color
+    def __init__(
+        self,
+        title: Optional[str] = None,
+        description: Optional[str] = None,
+        url: Optional[str] = None,
+        date: Optional[str] = None,
+        color: Optional[Union[int, Color]] = None,
+        colour: Optional[Union[int, Colour]] = None,
+        timestamp: datetime.datetime = None,
+    ):
+        self.obj: dict[str, Any] = {
+            "type": "rich",
+        }
 
-    return [ret]
+        if title:
+            self.obj["title"] = title
+        if description:
+            self.obj["description"] = description
+        if url:
+            self.obj["url"] = url
+        if date:
+            self.obj["date"] = date
+        if color:
+            self.obj["color"] = color
+        if colour:
+            self.obj["color"] = colour
+        if timestamp:
+            self.obj["timestamp"] = timestamp
+
+    def to_dict(self):
+        return self.obj
+
+    def set_footer(self, text: str = None, icon_url: str = None):
+        if text:
+            self.obj["footer"]["text"] = text
+        if icon_url:
+            self.obj["footer"]["icon_url"] = icon_url
+
+    def remove_footer(self):
+        del self.obj["footer"]
+
+    def set_thumbnail(self, url: str = None):
+        if url is None:
+            del self.obj["thumbnail"]
+        else:
+            self.obj["thumbnail"]["url"] = url
+
+    def set_author(self, name: str, url: str = None, icon_url: str = None):
+        self.obj["author"] = name
+
+        if url:
+            self.obj["author"]["url"] = url
+        if icon_url:
+            self.obj["author"]["icon_url"] = icon_url
+
+    def remove_author(self):
+        del self.obj["author"]
+
+    def add_field(self, name: str, value: str, inline: bool = True):
+        field = {"name": name, "value": value, "inline": inline}
+
+        try:
+            self.obj["fields"].append(field)
+        except KeyError:
+            self.obj["fields"] = [field]
+
+    def remove_field(self, name: str):
+        del self.obj["fields"][name]
