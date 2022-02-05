@@ -80,7 +80,8 @@ class Button:
 
             .. note::
 
-                can only be used in buttons
+                can only be used in buttons, 
+                with style type 5
         """
         self.id = (
             custom_id
