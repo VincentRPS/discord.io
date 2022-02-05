@@ -38,6 +38,8 @@ from .types import *
 from .ui import *
 from .util import *
 from .webhooks import *
+from .guild import *
+from .user import *
 
 
 class VersionInfo(typing.NamedTuple):

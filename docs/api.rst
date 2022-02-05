@@ -59,14 +59,8 @@ Voice
 .. autoclass:: VoiceClient
     :members:
 
-Apps
-----
-
-.. autoclass:: BasicWebhook
-    :members:
-
-.. autoclass:: WebhookApp
-    :members:
+Client
+------
 
 .. autoclass:: Client
     :members:
