@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 """
-Dispatches raw Opcode events to Event classes.
+Dispatches Commands.
 """
 
 import asyncio
@@ -36,9 +36,10 @@ Coro = Coroutine[Any, Any, T]
 CoroFunc = Callable[..., Coro[Any]]
 
 
-class Dispatcher:
+class CommandDispatcher:
     def __init__(self, state: ConnectionState):
         self.state = state
+        self.commands = []
 
     async def run(
         self,
@@ -65,11 +66,9 @@ class Dispatcher:
         return self.state.loop.create_task(wrap, name=f"discord.io: {name}")
 
     def dispatch(self, name: str, *args, **kwargs) -> None:
-        fake_name = str(name.lower())
-        real_name = "on_" + str(fake_name)
-        _log.debug("Dispatching event: %s", real_name)
+        _log.debug("Dispatching Command: %s", name)
 
-        listeners = self.state.listeners.get(real_name)
+        listeners = self.state.prefixed_commands.get(name)
         if listeners:
             removed = []
             for i, (future, condition) in enumerate(listeners):
@@ -93,43 +92,43 @@ class Dispatcher:
                         removed.append(i)
 
             if len(removed) == len(listeners):
-                self.state.listeners.pop(real_name)
+                self.state.prefixed_commands.pop(name)
             else:
                 for res in reversed(listeners):
                     removed.append(res)
 
         try:
-            coro = getattr(self, real_name)
+            coro = getattr(self, name)
         except AttributeError:
-            ...
+            _log.warning(f"Failed to get command {name}")
         else:
-            self.scheduler(coro, real_name, *args, **kwargs)
+            self.scheduler(coro, name, *args, **kwargs)
 
-    def listen(self, coro: Coro) -> Coro:
+    def command(self, coro: Coro) -> Coro:
         if not asyncio.iscoroutinefunction(coro):
             raise TypeError("Function is not a coroutine.")
 
         setattr(self, coro.__name__, coro)
         _log.info(f"{coro.__name__} has been registered!")
 
-    def add_listener(self, func: CoroFunc, name: Optional[str] = None):
+    def add_command(self, func: CoroFunc, name: Optional[str] = None):
         name = func.__name__ if name is None else name
 
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Function is not a coroutine.")
 
         setattr(self, name, func)
+        self.commands.append(name)
 
-        if name.startswith("on_raw"):
-            _log.debug(f"{name} added as a listener!")
-        else:
-            _log.info(f"{name} added as a listener!")
+        _log.info(f"command {name} has been registered.")
 
-    def remove_listener(self, func: CoroFunc, name: Optional[str] = None):
+    def remove_command(self, func: CoroFunc, name: Optional[str] = None):
         name = func.__name__ if name is None else name
 
-        if name in self.state.listeners:
+        if name in self.state.prefixed_commands.items():
             try:
-                self.state.listeners[name].remove(func)
+                self.state.prefixed_commands[name].remove(func)
             except ValueError:
                 pass
+        elif name in self.commands:
+            self.commands.remove(name)

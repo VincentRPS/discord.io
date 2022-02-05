@@ -12,6 +12,8 @@
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 
+from discord.context import Context
+
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,7 +21,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from discord.cache import Message
+from discord.message import Message
 
 from .core import Event
 
@@ -31,6 +33,11 @@ class OnMessage(Event):
         ret = Message(self.data, self.state.app)
         self.state._sent_messages_cache.new(self.data["id"], self.data)
         self.dispatch("MESSAGE", ret)
+        for command in (
+            self.state.prefixed_commands.items() or self.state.app.cmd_dispatch.commands
+        ):
+            if ret.content.startswith(self.state.prefix + command):
+                self.state.app.cmd_dispatch.dispatch(command, Context(ret))
 
 
 class OnMessageEdit(Event):
@@ -39,7 +46,7 @@ class OnMessageEdit(Event):
     def process(self):
         try:
             before = Message(
-                self.state._sent_messages_cache[self.data["id"]], self.state.app
+                self.state._sent_messages_cache.get(self.data["id"]), self.state.app
             )
         except KeyError:
             # if the message is not in the cache we cant really save it.

@@ -24,9 +24,13 @@ The ConnectionState Caches most things during connection.
 """
 import asyncio
 from collections import OrderedDict
-from typing import Any, Callable, List, Tuple, Union
+from typing import Any, Callable, Coroutine, List, Tuple, TypeVar, Union
 
 from discord.types.dict import Dict
+
+T = TypeVar("T")
+Coro = Coroutine[Any, Any, T]
+CoroFunc = Callable[..., Coro[Any]]
 
 
 class Hold:
@@ -37,6 +41,9 @@ class Hold:
 
     def view(self) -> List[Dict]:
         return [value for value in self.__cache.values()]
+
+    def list(self):
+        return self.__cache.items()
 
     def new(self, name: str, data: Union[str, int, Dict, Any]):
         self.__cache[name] = data
@@ -49,6 +56,9 @@ class Hold:
 
     def pop(self, name: str):
         return self.__cache.pop(name)
+
+    def reset(self) -> None:
+        del self.__cache
 
 
 class ConnectionState:
@@ -195,3 +205,7 @@ class ConnectionState:
         """
 
         self.components = {}
+
+        self.prefixed_commands: dict[str, List[CoroFunc]] = {}
+
+        self.prefix = options.get("prefix")

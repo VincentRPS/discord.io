@@ -99,6 +99,9 @@ class Shard:
         self.shard_id = shard_id
         self.buffer = bytearray()
         self.last_recv = perf_counter()
+        self.last_send = perf_counter()
+        self.last_ack = perf_counter()
+        self.latency = self.last_ack - self.last_send
         self._session_id = None
         self._ratelimit_lock: asyncio.Lock = asyncio.Lock()
 
@@ -123,6 +126,7 @@ class Shard:
         if self._session_id is None:
             await self.identify()
             self.state.loop.create_task(self.recv())
+            self.state.loop.create_task(self.check_connection())
         else:
             await self.resume()
             _log.debug("Reconnected to the Gateway")
@@ -168,6 +172,18 @@ class Shard:
                 )
                 await asyncio.sleep(delay)
 
+    async def check_connection(self):
+        await asyncio.sleep(20)
+        if self.last_recv + 60.0 < perf_counter():
+            _log.warning(
+                "Shard {self.shard_id} has stopped receiving from the gateway, reconnecting"
+            )
+            await self.ws.close(code=4000)
+        elif self.latency > 10:
+            _log.warning(f"Shard {self.shard_id} is behind by {self.latency}")
+        else:
+            self.state.loop.create_task(self.check_connection())
+
     async def send(self, data: Dict) -> None:
         """Send a request to the Gateway via the shard
 
@@ -176,6 +192,7 @@ class Shard:
         data :class:`Dict`
             The data to send
         """
+        self.last_send = perf_counter()
         _log.debug("< %s", data)
         raw_payload = json.dumps(data)
 
@@ -198,6 +215,8 @@ class Shard:
                 self._seq = data["s"]
                 self.dis.dispatch("RAW_SOCKET_RECEIVE")
 
+                self.last_recv = perf_counter()
+
                 if data["op"] == 0:
                     if (
                         data["t"] == "READY"
@@ -216,6 +235,7 @@ class Shard:
                 elif data["op"] == 10:
                     await self.hello(data)
                 elif data["op"] == 11:
+                    self.last_ack = perf_counter()
                     _log.debug("> %s", data)
                 else:
                     self.dis.dispatch(data["op"], data)
@@ -319,6 +339,8 @@ class Shard:
                         "$device": "discord.io",
                     },
                     "shard": (self.shard_id, self.state.shard_count),
+                    "v": 9,
+                    "compress": True,
                 },
             }
         )

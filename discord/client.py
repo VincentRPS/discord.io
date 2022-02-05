@@ -32,11 +32,11 @@ from typing import Callable, List, Literal, Optional, TypeVar, Union
 from discord.api.gateway import Gateway
 from discord.api.rest_factory import RESTFactory
 from discord.audio import VoiceClient, has_nacl
-from discord.interactions.command import Command
-from discord.internal import dispatcher
+from discord.internal import command_dispatcher, dispatcher
 from discord.state import ConnectionState
 from discord.types.dict import Dict
 from discord.ui import print_banner, start_logging
+from discord.user import User
 
 _log = logging.getLogger(__name__)
 __all__: List[str] = ["Client"]
@@ -101,6 +101,7 @@ class Client:
         logs: Optional[Union[None, int, str, Dict]] = None,
         debug: Optional[bool] = False,
         state: Optional[ConnectionState] = None,
+        command_prefix: Optional[str] = "",
     ):
         print_banner(module)
         start_logging(logs, debug)
@@ -109,7 +110,9 @@ class Client:
             intents=intents,
             bot=self,
             shard_count=shards,
+            prefix=command_prefix,
         )
+        self.cmd_dispatch = command_dispatcher.CommandDispatcher(self.state)
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
         self.factory = RESTFactory(state=self.state, proxy=proxy, proxy_auth=proxy_auth)
         self.gateway = Gateway(
@@ -219,16 +222,15 @@ class Client:
 
         return decorator
 
-    def command(
-        self,
-        slash_command: bool = False,
-        user_command: bool = False,
-        message_command: bool = False,
-    ):
-        return Command(
-            self.state,
-            self.factory,
-            slash_command=slash_command,
-            message_command=message_command,
-            user_command=user_command,
-        )
+    def command(self, name: str = None) -> Callable[[CFT], CFT]:
+        """Registers a prefixed command"""
+
+        def decorator(func: CFT) -> CFT:
+            self.cmd_dispatch.add_command(func, name)
+            return func
+
+        return decorator
+
+    @property
+    def user(self):
+        return User(self.state.bot_info[self])

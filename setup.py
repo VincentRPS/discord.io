@@ -35,7 +35,6 @@ packages = [
     "discord.internal",
     "discord.components",
     "discord.audio",
-    "discord.cache",
     "discord.interactions",
     "discord.modules",
     "discord.types",

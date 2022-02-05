@@ -25,6 +25,8 @@ ref: https://discord.dev/resources/guild
 """
 from typing import Any, Dict, List
 
+from discord.member import Member
+
 __all__: List[str] = ["Guild"]
 
 
@@ -35,8 +37,9 @@ class Guild:
     """
 
     # cache helpers for guilds.
-    def __init__(self, guild: dict):
+    def __init__(self, guild: dict, rest_factory):
         self.from_dict = guild
+        self._factory = rest_factory
 
     def joined_at(self) -> str:
         return self.from_dict["joined_at"]
@@ -67,3 +70,10 @@ class Guild:
             this will just return a dict of all emojis.
         """
         return self.from_dict["emojis"]
+
+    def id(self) -> int:
+        return self.from_dict["id"]
+
+    async def get_member(self, id: int):
+        unparsed = await self._factory.get_guild_member(self.id(), id)
+        return Member(unparsed, self._factory)

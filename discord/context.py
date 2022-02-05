@@ -19,55 +19,19 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-"""Represents a Discord Message
-
-ref: https://discord.dev/resources/channel
-"""
 
 from typing import List, Optional, Sequence
 
-from discord.components.core import Button
+from discord.components import Button
+from discord.embed import Embed
 from discord.file import File
-from discord.snowflake import Snowflakeish
+from discord.message import Message
 from discord.types import allowed_mentions
 
-from .embed import Embed
-from .guild import Guild
-from .user import User
 
-__all__: List[str] = ["Message"]
-
-# makes message data readable.
-class Message:  # noqa: ignore
-    """Represents a Discord Message
-
-    .. versionadded:: 0.6.0
-    """
-
-    def __init__(self, msg: dict, app):
-        self.from_dict = msg
-        self.app = app
-        try:
-            self.content: str = self.from_dict["content"]
-        except KeyError:
-            # can error out for embed only/link only messages.
-            self.content: str = ""
-        self.channel: Snowflakeish = msg["channel_id"]
-
-    @property
-    def id(self):
-        """Returns the message id"""
-        return self.from_dict["id"]
-
-    @property
-    def guild(self):
-        """Returns the :class:`Guild` of the message"""
-        return Guild(id=self.from_dict["guild_id"], rest_factory=self.app.factory)
-
-    @property
-    def author(self) -> User:
-        """Returns the :class:`User` of the message"""
-        return User(usr=self.from_dict["author"])
+class Context:
+    def __init__(self, data: Message):
+        self.message = data
 
     async def send(
         self,
@@ -78,9 +42,8 @@ class Message:  # noqa: ignore
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
         components: List[Button] = None,
     ):
-        """Sends a message."""
-        await self.app.factory.create_message(
-            channel=self.channel,
+        await self.message.app.factory.create_message(
+            channel=self.message.channel,
             content=content,
             files=files,
             embeds=embeds,
@@ -98,9 +61,8 @@ class Message:  # noqa: ignore
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
         components: List[Button] = None,
     ):
-        """Replys to the certain message."""
-        await self.app.factory.create_message(
-            channel=self.channel,
+        await self.message.app.factory.create_message(
+            channel=self.message.channel,
             content=content,
             files=files,
             embeds=embeds,
@@ -111,3 +73,11 @@ class Message:  # noqa: ignore
             },
             components=components,
         )
+
+    @property
+    def author(self):
+        return self.message.author
+
+    @property
+    def guild(self):
+        return self.message.guild

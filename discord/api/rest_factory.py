@@ -68,7 +68,7 @@ class RESTFactory:
         else:
             pass
 
-        return self.rest.send(Route("GET", "/users/@me"), token=self.token)  # Log's in
+        return self.rest.send(Route("GET", "/users/@me"), token=self.token)
 
     def logout(
         self,
@@ -394,3 +394,24 @@ class RESTFactory:
         )
 
     # emojis
+
+    ...
+
+    # guilds
+
+    def get_guild_member(self, guild_id, user):
+        return self.rest.send(
+            Route("GET", f"/guilds/{guild_id}/members/{user}", guild_id=guild_id)
+        )
+
+    def get_guild_members(
+        self, guild_id, limit: typing.Optional[int] = 1, after: typing.Optional[int] = 0
+    ):
+        ret = {"limit": limit, "after": after}
+        return self.rest.send(
+            Route("GET", "/guilds/{guild_id}/members", guild_id=guild_id), json=ret
+        )
+
+    # users
+    def get_user(self, user: int):
+        return self.rest.send(Route("GET", f"/users/{user}"))

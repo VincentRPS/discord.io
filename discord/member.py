@@ -19,19 +19,56 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-"""Represents a partial Discord Emoji.
+"""Represents a Discord Member
 
-ref: https://discord.dev/resources/emoji
+ref: https://discord.dev/resources/guild#guild-member-object
 """
-from discord.types import Dict
+from typing import List
+
+from .user import User
+
+__all__: List[str] = ["Member"]
 
 
-class Emoji:
-    """Represents a Discord Emoji.
+class Member:
+    """Represents a Discord Guild Member
 
     .. versionadded:: 0.7.0
     """
 
-    def __init__(self, data: Dict):
+    def __init__(self, data: dict, factory):
         self.from_dict = data
-        """The data in dict format."""
+        self._factory = factory
+
+    def user(self):
+        return User(self.from_dict["user"])
+
+    def nick(self) -> str:
+        return self.from_dict["nick"]
+
+    def avatar(self) -> str:
+        raise NotImplementedError
+
+    def roles(self):
+        raise NotImplementedError
+
+    def joined_at(self) -> str:
+        return self.from_dict["joined_at"]
+
+    def premium_since(self):
+        return self.from_dict["premium_since"]
+
+    def deaf(self) -> bool:
+        return self.from_dict["deaf"]
+
+    def mute(self) -> bool:
+        return self.from_dict["mute"]
+
+    def pending(self) -> bool:
+        return self.from_dict["pending"]
+
+    def permissions(self):
+        return self.from_dict["permissions"]
+
+    def communication_disabled_until(self):
+        return self.from_dict["communication_disabled_until"]

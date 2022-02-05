@@ -54,10 +54,9 @@ client = discord.Client()
 async def on_ready():
     print('ready!')
 
-@client.event
-async def on_message(msg):
-    if msg.content.startswith('!ping'):
-        await msg.reply('pong!')
+@client.command()
+async def ping(ctx):
+    await ctx.send('pong!')
 
 client.run('my_bot_token')
 ```
