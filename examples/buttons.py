@@ -1,10 +1,10 @@
 import discord
 
-client = discord.Client()
+client = discord.Client(command_prefix=">")
 
 
 @client.command()
-async def press(ctx):
+async def boop(ctx):
     button = await client.create_button("booper button", booper_button_callback)
     await ctx.send("boop", component=button)
 

@@ -48,7 +48,7 @@ This is another example but with a prefixed command
 ```py
 import discord
 
-client = discord.Client()
+client = discord.Client(command_prefix=">")
 
 @client.event
 async def on_ready():

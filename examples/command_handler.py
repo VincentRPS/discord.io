@@ -1,6 +1,6 @@
 import discord
 
-client = discord.Client()
+client = discord.Client(command_prefix=">")
 
 
 @client.command()
