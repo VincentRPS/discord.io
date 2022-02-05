@@ -180,7 +180,7 @@ class Webhook:
             The username the Webhook should have
         avatar_url: :class:`str`
             The avatar the Webhook should have
-        tts :class:`bool`
+        tts: :class:`bool`
             If the message should have tts enabled
         allowed_mentions
             A allowed mentions object
