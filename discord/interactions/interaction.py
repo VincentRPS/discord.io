@@ -41,6 +41,7 @@ class Interaction:
         self.collect_children(data)
 
     def collect_children(self, data):
+        # collects the data
         self.token: str = data["token"]
         self.type: int = data["type"]
         self.guild_id: int = data["guild_id"]
@@ -61,6 +62,21 @@ class Interaction:
         embed: Optional[Embed] = None,
         embeds: Optional[List[Embed]] = None,
     ):
+        """Followup and interaction.
+        
+        Parameters
+        ----------
+        content
+            The message content
+        tts
+            Text-To-Speach
+        embed
+            A :class:`Embed` object or :class:`dict`
+        embeds
+            A :class:`list` of :class:`Embed` or :class:`dict`
+        allowed_mentions
+            A allowed mentions object
+        """
         return self.webhook.execute(
             content=content, tts=tts, embed=embed, embeds=embeds
         )
@@ -73,6 +89,21 @@ class Interaction:
         embeds: Optional[List[Embed]] = None,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
     ):
+        """Send a initial response to a interaction
+
+        Parameters
+        ----------
+        content
+            The message content
+        tts
+            Text-To-Speach
+        embed
+            A :class:`Embed` object or :class:`dict`
+        embeds
+            A :class:`list` of :class:`Embed` or :class:`dict`
+        allowed_mentions
+            A allowed mentions object
+        """
         ret = {"type": 4, "data": {}}
         if content:
             ret["data"]["content"] = content
@@ -98,4 +129,5 @@ class Interaction:
 
     @property
     def member(self):
+        """Returns the member object of the invoker."""
         return Member(self.data["member"], self.state.app.factory)

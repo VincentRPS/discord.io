@@ -159,6 +159,12 @@ Embed
 .. autoclass:: Embed
     :members:
 
+Interaction
+-----------
+
+.. autoclass:: Interaction
+    :members:
+
 
 Exceptions
 ----------
