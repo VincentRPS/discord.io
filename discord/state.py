@@ -79,57 +79,57 @@ class ConnectionState:
 
     Attributes
     ----------
-    _bot_intents :class:`int`
+    _bot_intents: :class:`int`
         The cached bot intents, used for Gateway
 
-    _session_id :class:`int`
+    _session_id: :class:`int`
         The Gateway, session id
 
-    _voice_session_id :class:`int`
+    _voice_session_id: :class:`int`
         The Voice Gateway Session ID
 
-    _seq :class:`int`
+    _seq: :class:`int`
         The Gateway seq number, can be None.
 
-    app :class:`Client`
+    app: :class:`Client`
         The bot app
 
         .. versionadded:: 0.5.0
 
-    _voice_seq :class:`int`
+    _voice_seq: :class:`int`
         The Voice Gateway seq
 
         .. versionadded:: 0.5.0
 
-    _voice_user_data :class:`dict`
+    _voice_user_data: :class:`dict`
         The Voice User Data given by the Voice Gateway.
 
         .. versionadded:: 0.5.0
 
-    _speaking :class:`bool`
+    _speaking: :class:`bool`
         If the bot is currently speaking, defaults False
 
         .. versionadded:: 0.5.0
 
-    _said_hello :class:`bool`
+    _said_hello: :class:`bool`
         If the Gateway got a hello or not.
 
     loop :class:`asyncio.AbstractEventLoop`
         The current loop
 
-    _bot_presences :class:`list`
+    _bot_presences: :class:`list`
         A list of the bots presences
 
-    _bot_status :class:`str`
+    _bot_status: :class:`str`
         The bot status, e.g. online
 
-    _bot_presence_type :class:`int`
+    _bot_presence_type: :class:`int`
         The bot presence type, defaults to 0
 
-    listeners :class:`dict`
+    listeners: :class:`dict`
         The bot listeners
 
-    shard_count :class:`int`
+    shard_count: :class:`int`
         the number of shards.
 
         .. versionadded:: 0.6.0

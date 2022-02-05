@@ -174,11 +174,11 @@ class Webhook:
 
         Parameters
         ----------
-        content :class:`str`
+        content: :class:`str`
             The content to send.
-        username :class:`str`
+        username: :class:`str`
             The username the Webhook should have
-        avatar_url :class:`str`
+        avatar_url: :class:`str`
             The avatar the Webhook should have
         tts :class:`bool`
             If the message should have tts enabled

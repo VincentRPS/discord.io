@@ -56,9 +56,9 @@ class Shard:
         The :class:`ConnectionState` cache to use.
     dispatcher
         The :class:`Dispatcher` to use.
-    shard_id :class:`int`
+    shard_id: :class:`int`
         The shard number.
-    url :class:`str`
+    url: :class:`str`
         The URL to use.
     mobile :class:`bool`
         If to have a mobile presence or not.
