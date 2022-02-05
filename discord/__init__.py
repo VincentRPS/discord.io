@@ -31,7 +31,6 @@ from .interactions import *
 from .internal.exceptions import *
 from .internal.warnings import *
 from .member import *
-from .modules import *
 from .snowflake import *
 from .state import *
 from .types import *

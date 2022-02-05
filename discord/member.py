@@ -34,6 +34,18 @@ class Member:
     """Represents a Discord Guild Member
 
     .. versionadded:: 0.7.0
+
+    Parameters
+    ----------
+    data
+        The member data, a :class:`dict`
+    factory
+        The current instance of :class:`RESTFactory`
+    
+    Attributes
+    ----------
+    from_dict
+        The raw :class:`dict` object of the Member.
     """
 
     def __init__(self, data: dict, factory):
@@ -41,9 +53,22 @@ class Member:
         self._factory = factory
 
     def user(self):
+        """Returns the members :class:`User` object
+        
+        Returns
+        -------
+        :class:`User`
+        """
         return User(self.from_dict["user"])
 
     def nick(self) -> str:
+        """Returns the members nick name, if any
+        
+        Returns
+        -------
+        :class:`str`
+        :class:`None`
+        """
         return self.from_dict["nick"]
 
     def avatar(self) -> str:
@@ -53,22 +78,65 @@ class Member:
         raise NotImplementedError
 
     def joined_at(self) -> str:
+        """Gives a timestamp of when the member joined the server
+        
+        Returns
+        -------
+        :class:`str`
+        """
         return self.from_dict["joined_at"]
 
     def premium_since(self) -> str:
+        """Gives a timestamp of when the member started boosting
+        
+        Returns
+        -------
+        :class:`str`
+        :class:`None`
+        """
         return self.from_dict["premium_since"]
 
     def deaf(self) -> bool:
+        """Returns a bool if the member is deaf in a voice channel or not.
+        
+        Returns
+        -------
+        :class:`bool`
+        """
         return self.from_dict["deaf"]
 
     def mute(self) -> bool:
+        """Returns if the member it muted from a channel
+        
+        Returns
+        -------
+        :class:`bool`
+        """
         return self.from_dict["mute"]
 
     def pending(self) -> bool:
+        """Returns if the user is pending verification or not
+        
+        Returns
+        -------
+        :class:`bool`
+        """
         return self.from_dict["pending"]
 
     def permissions(self) -> dict[str, Any]:
+        """Returns a dict of the users permissions
+        
+        Returns
+        -------
+        :class:`dict`
+        """
         return self.from_dict["permissions"]
 
     def communication_disabled_until(self):
+        """Returns a `communication_disabled_until` dict object
+        
+        Returns
+        -------
+        :class:`dict`
+        """
         return self.from_dict["communication_disabled_until"]

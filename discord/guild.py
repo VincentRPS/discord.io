@@ -34,6 +34,13 @@ class Guild:
     """Represents a Discord Guild.
 
     .. versionadded:: 0.6.0
+
+    Parameters
+    ----------
+    guild
+        The raw guild object
+    rest_factory
+        The current :class:`RESTFactory`
     """
 
     # cache helpers for guilds.
@@ -45,19 +52,39 @@ class Guild:
         return self.from_dict["joined_at"]
 
     def vanity(self) -> str:
-        """The vanity url, if None returns None"""
+        """The vanity url, if None returns None
+        
+        Returns
+        -------
+        :class:`str`
+        """
         return self.from_dict["vanity_url_code"]
 
     def splash(self) -> str:
-        """The splash screen, if None returns None"""
+        """The splash screen, if None returns None
+        
+        Returns
+        -------
+        :class:`str`
+        """
         return self.from_dict["splash"]
 
     def discovery_splash(self) -> str:
-        """The discovery splash, if None returns None"""
+        """The discovery splash, if None returns None
+        
+        Returns
+        -------
+        :class:`str`
+        """
         return self.from_dict["discovery_splash"]
 
     def sub_count(self) -> int:
-        """The subscription count, returns a int"""
+        """The subscription count, returns a int
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["premium_subscription_count"]
 
     def emojis(self) -> List[Dict[str, Any]]:
@@ -72,8 +99,25 @@ class Guild:
         return self.from_dict["emojis"]
 
     def id(self) -> int:
+        """The guild id
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["id"]
 
     async def get_member(self, id: int):
+        """Gets a member and returns a :class:`Member` object
+        
+        Parameters
+        ----------
+        id
+            The members id
+
+        Returns
+        -------
+        :class:`Member`
+        """
         unparsed = await self._factory.get_guild_member(self.id(), id)
         return Member(unparsed, self._factory)

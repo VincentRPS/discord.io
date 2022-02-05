@@ -22,6 +22,10 @@
 
 
 class MessageFlags:
+    """Represents a discord message flag object
+    
+    .. versionadded:: 0.7.0
+    """
     @classmethod
     def CROSSPOSTED(self):
         return 1 << 0

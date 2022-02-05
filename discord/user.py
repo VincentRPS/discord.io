@@ -29,7 +29,15 @@ __all__: List[str] = ["User"]
 
 
 class User:
-    """Represents a Discord User"""
+    """Represents a Discord User
+    
+    .. versionadded:: 0.6.0
+
+    Parameters
+    ----------
+    usr
+        The user in dict format
+    """
 
     def __init__(self, usr: dict):
         self.from_dict = usr

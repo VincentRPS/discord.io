@@ -41,6 +41,22 @@ class Message:  # noqa: ignore
     """Represents a Discord Message
 
     .. versionadded:: 0.6.0
+
+    Parameters
+    ----------
+    msg
+        The message in dict format
+    app
+        The current :class:`Client`
+
+    Attributes
+    ----------
+    from_dict
+        A dict object of the message
+    content
+        The message content in string format
+    channel
+        The channel where the message happened
     """
 
     def __init__(self, msg: dict, app):
@@ -54,18 +70,33 @@ class Message:  # noqa: ignore
         self.channel: Snowflakeish = msg["channel_id"]
 
     @property
-    def id(self):
-        """Returns the message id"""
+    def id(self) -> int:
+        """Returns the message id
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["id"]
 
     @property
     def guild(self):
-        """Returns the :class:`Guild` of the message"""
+        """Returns the :class:`Guild` of the message
+        
+        Returns
+        -------
+        :class:`Guild`
+        """
         return Guild(id=self.from_dict["guild_id"], rest_factory=self.app.factory)
 
     @property
     def author(self) -> User:
-        """Returns the :class:`User` of the message"""
+        """Returns the :class:`User` of the message
+        
+        Returns
+        -------
+        :class:`User`
+        """
         return User(usr=self.from_dict["author"])
 
     async def send(
@@ -78,7 +109,25 @@ class Message:  # noqa: ignore
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
         components: List[dict[str, Any]] = None,
     ):
-        """Sends a message."""
+        """Sends a message to the channel currently active in
+        
+        Parameters
+        ----------
+        content
+            The message content
+        files
+            The message files
+        embed
+            A :class:`Embed`
+        embeds
+            A :class:`list` of :class:`Embed`
+        tts
+            A :class:`bool` of if tts should be on in this message
+        allowed_mentions
+            A allowed mentions object
+        components
+            A :class:`list` of components
+        """
         if embed and not embeds:
             if isinstance(embed, Embed):
                 emb = [embed.obj]
@@ -111,7 +160,25 @@ class Message:  # noqa: ignore
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
         components: List[dict[str, Any]] = None,
     ):
-        """Replys to the certain message."""
+        """Replys to the current message
+        
+        Parameters
+        ----------
+        content
+            The message content
+        files
+            The message files
+        embed
+            A :class:`Embed`
+        embeds
+            A :class:`list` of :class:`Embed`
+        tts
+            A :class:`bool` of if tts should be on in this message
+        allowed_mentions
+            A allowed mentions object
+        components
+            A :class:`list` of components
+        """
         if embed and not embeds:
             if isinstance(embed, Embed):
                 emb = [embed.obj]

@@ -35,6 +35,13 @@ __all__: typing.List[str] = ["Button"]
 
 
 class Button:
+    """Represents a Discord button interaction.
+    
+    Parameters
+    ----------
+    state
+        The connection state
+    """
     def __init__(self, state: ConnectionState):
         self.state = state
 
@@ -56,6 +63,25 @@ class Button:
         custom_id: str = None,
         url: str = None,
     ):
+        """Creates a button
+        
+        Parameters
+        ----------
+        label
+            The button label
+        callback
+            The button callback
+        style
+            The button style to use
+        custom_id
+            A custom_id
+        url
+            A url
+
+            .. note::
+
+                can only be used in buttons
+        """
         self.id = (
             custom_id
             if custom_id is not None

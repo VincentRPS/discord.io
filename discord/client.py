@@ -85,10 +85,10 @@ class Client:
         A :class:`int`, :class:`str` or :class:`dict`.
     debug
         To show debug logs or not.
-    state :class:`ConnectionState`
+    state: :class:`ConnectionState`
         Allow's for custom ConnectionStates,
         and soforth custom db caches.
-    command_prefix :class:`str`
+    command_prefix: :class:`str`
         The prefix for prefixed commands,
         defaults to "".
     """
@@ -175,6 +175,25 @@ class Client:
         custom_id: str = None,
         url: str = None,
     ):
+        """Creates a button
+        
+        Parameters
+        ----------
+        label
+            The button label
+        callback
+            The button callback
+        style
+            The button style to use
+        custom_id
+            A custom_id
+        url
+            A url
+
+            .. note::
+
+                can only be used in buttons
+        """
         return Button(self.state).create(label, callback, style, custom_id, url)
 
     @property
@@ -194,6 +213,26 @@ class Client:
         stream_url: Optional[str] = None,
         afk: Optional[bool] = False,
     ):
+        """Changes the bot's presence
+        
+        Parameters
+        ----------
+        name
+            The presence name
+        type
+            The presence type
+        status
+            The presence status
+
+            .. note::
+                
+                can be "online", "dnd", 
+                invisable and offline.
+        stream_url
+            Used with the streaming presence type
+        afk
+            If to be afk or not
+        """
         if type == 1 and stream_url is None:
             raise NotImplementedError("Streams need to be provided a url!")
         elif type == 1 and stream_url is not None:
@@ -222,6 +261,7 @@ class Client:
         return self.gateway.send(json)
 
     def event(self, coro: dispatcher.Coro) -> dispatcher.Coro:
+        """Register an event"""
         return self.dispatcher.listen(coro)
 
     def load_module(self, location, package):
@@ -232,6 +272,15 @@ class Client:
             self.load_module(file)
 
     def listen(self, name: str = None) -> Callable[[CFT], CFT]:
+        """Listen to a event
+        
+        like :meth:`Client.event` but you can have a event split into multiple coroutines.
+
+        Parameters
+        ----------
+        name
+            The event to listen to
+        """
         def decorator(func: CFT) -> CFT:
             self.dispatcher.add_listener(func, name)
             return func
@@ -239,7 +288,13 @@ class Client:
         return decorator
 
     def command(self, name: str = None) -> Callable[[CFT], CFT]:
-        """Registers a prefixed command"""
+        """Registers a prefixed command
+        
+        Parameters
+        ----------
+        name
+            The command name, defaults to the function name.
+        """
 
         def decorator(func: CFT) -> CFT:
             self.cmd_dispatch.add_command(func, name)
@@ -249,4 +304,10 @@ class Client:
 
     @property
     def user(self):
+        """Returns the bot user
+        
+        Returns
+        -------
+        :class:`User`
+        """
         return User(self.state.bot_info[self])

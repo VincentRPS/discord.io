@@ -73,13 +73,23 @@ class Intents:
             intents = self.default()
 
     @staticmethod
-    def default():
-        """Gives every non-privledged Intent"""
+    def default() -> int:
+        """Gives every non-privledged Intent
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return 32509
 
     @staticmethod
-    def all():
-        """Gives every Intent"""
+    def all() -> int:
+        """Gives every Intent
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return 32767
 
     def GUILDS(self):

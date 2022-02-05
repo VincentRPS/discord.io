@@ -34,6 +34,38 @@ if TYPE_CHECKING:
 
 
 class Interaction:
+    """Represents a Discord Interaction & Interaction Response
+    
+    Parameters
+    ----------
+    data
+        The interaction data
+    state
+        The connection state
+    
+    Attributes
+    ----------
+    webhook
+        A :class:`Webhook`
+    token
+        The interaction token
+    type
+        The interaction type
+    guild_id
+        The interaction guild id
+    channel_id
+        The interaction channel id
+    data
+        The interaction data
+    id
+        The interaction id
+    message
+        The interaction message
+
+        .. note::
+
+            This only appears on Component interactions.
+    """
     def __init__(self, data: Dict, state):
         self.data = data
         self.state: ConnectionState = state
@@ -76,6 +108,10 @@ class Interaction:
             A :class:`list` of :class:`Embed` or :class:`dict`
         allowed_mentions
             A allowed mentions object
+
+        Returns
+        -------
+        :meth:`Webhook.execute`
         """
         return self.webhook.execute(
             content=content, tts=tts, embed=embed, embeds=embeds
@@ -129,5 +165,10 @@ class Interaction:
 
     @property
     def member(self):
-        """Returns the member object of the invoker."""
+        """Returns the member object of the invoker.
+        
+        Returns
+        -------
+        :class:`Member`
+        """
         return Member(self.data["member"], self.state.app.factory)

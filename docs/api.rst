@@ -92,7 +92,7 @@ Dispatcher
 .. autoclass:: Dispatcher
     :members:
 
-Cache Parsers
+Data Objects
 -------------
 
 .. autoclass:: Message
@@ -104,6 +104,9 @@ Cache Parsers
 .. autoclass:: Guild
     :members:
 
+.. autoclass:: Member
+    :members:
+
 Event Reference
 ---------------
 
@@ -112,6 +115,8 @@ Event Reference
 .. autoclass:: OnMessageEdit
 
 .. autoclass:: OnMessageDelete
+
+.. autoclass:: OnInteraction
 
 Snowflakes
 ----------
@@ -157,6 +162,12 @@ Interaction
 -----------
 
 .. autoclass:: Interaction
+    :members:
+
+Context
+-------
+
+.. autoclass:: Context
     :members:
 
 

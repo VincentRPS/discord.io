@@ -29,7 +29,17 @@ from discord.types import Dict
 class Emoji:
     """Represents a Discord Emoji.
 
-    .. versionadded:: 0.7.0
+    .. versionadded:: 0.8.0
+
+    Parameters
+    ----------
+    data
+        The raw emoji data
+    
+    Attributes
+    ----------
+    from_dict
+        The raw emoji data
     """
 
     def __init__(self, data: Dict):

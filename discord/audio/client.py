@@ -39,6 +39,17 @@ _log = logging.getLogger(__name__)
 
 
 class VoiceClient:
+    """Used to interact with the discord voice api
+    
+    Parameters
+    ----------
+    state
+        The :class:`ConnectionState`
+    dispatcher
+        The :class:`Dispatcher`
+    gateway
+        The :class:`Gateway`
+    """
     def __init__(self, state, dispatcher: Dispatcher, gateway):
         self.ssrc: int = None
         self.dispatcher = dispatcher
@@ -51,6 +62,15 @@ class VoiceClient:
         self.endpoint: str = None
 
     async def connect(self, guild, channel):
+        """Connects to a voice channel
+        
+        Parameters
+        ----------
+        guild
+            The guild the channel is in
+        channel
+            The channel id
+        """
         self.guild = guild
         self.channel = channel
         await self.gateway.connect(guild=guild, channel=channel)

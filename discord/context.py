@@ -31,6 +31,15 @@ from .embed import Embed
 
 
 class Context:
+    """Represents a command context
+    
+    .. versionadded:: 0.7.0
+
+    Parameters
+    ----------
+    data
+        A :class:`Message`
+    """
     def __init__(self, data: Message):
         self.message = data
 
@@ -45,6 +54,26 @@ class Context:
         components: List[dict[str, Any]] = None,
         component: List[dict[str, Any]] = None,
     ):
+        """Sends a message to the channel which the command was invoked
+
+        Parameters
+        ----------
+        content
+            The message content
+        files
+            A :class:`Sequence` of :class:`File`
+        embed
+            A :class:`Embed`
+        embeds
+            A :class:`list` of :class:`Embed`
+        tts
+            Text-To-Speach
+        allowed_mentions
+            A allowed mentions object
+        components
+            A list of component :class:`dict`s
+            or :class:`Button`
+        """
         if embed and not embeds:
             if isinstance(embed, Embed):
                 emb = [embed.obj]
