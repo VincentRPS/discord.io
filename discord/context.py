@@ -69,7 +69,7 @@ class Context:
             tts=tts,
             allowed_mentions=allowed_mentions,
             message_reference={
-                "message_id": self.id,
+                "message_id": self.message.id,
             },
             components=components,
         )
