@@ -38,7 +38,7 @@ from discord.types.dict import Dict
 from discord.ui import print_banner, start_logging
 from discord.user import User
 
-from .components import Button, Coro
+from .components import Button
 
 _log = logging.getLogger(__name__)
 __all__: List[str] = ["Client"]
@@ -170,7 +170,7 @@ class Client:
     def create_button(
         self,
         label: str,
-        callback: Coro,
+        callback: dispatcher.Coro,
         style: Literal[1, 2, 3, 4, 5] = 1,
         custom_id: str = None,
         url: str = None,
