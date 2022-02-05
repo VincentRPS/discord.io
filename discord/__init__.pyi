@@ -1,11 +1,10 @@
-import typing
-
 from .api import *
 from .audio import *
 from .client import *
 from .color import *
 from .colour import *
 from .components import *
+from .context import *
 from .events import *
 from .file import *
 from .intents import *
@@ -20,12 +19,13 @@ from .types import *
 from .ui import *
 from .util import *
 from .webhooks import *
+import typing
 
 class VersionInfo(typing.NamedTuple):
     major: str
     minor: str
     micro: str
-    releaselevel: typing.Literal["alpha", "beta", "candidate", "final"]
+    releaselevel: typing.Literal['alpha', 'beta', 'candidate', 'final']
     serial: int
 
 version_info: VersionInfo
