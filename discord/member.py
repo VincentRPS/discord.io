@@ -23,7 +23,7 @@
 
 ref: https://discord.dev/resources/guild#guild-member-object
 """
-from typing import List
+from typing import Any, List
 
 from .user import User
 
@@ -55,7 +55,7 @@ class Member:
     def joined_at(self) -> str:
         return self.from_dict["joined_at"]
 
-    def premium_since(self):
+    def premium_since(self) -> str:
         return self.from_dict["premium_since"]
 
     def deaf(self) -> bool:
@@ -67,7 +67,7 @@ class Member:
     def pending(self) -> bool:
         return self.from_dict["pending"]
 
-    def permissions(self):
+    def permissions(self) -> dict[str, Any]:
         return self.from_dict["permissions"]
 
     def communication_disabled_until(self):

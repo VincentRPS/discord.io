@@ -189,23 +189,10 @@ class ConnectionState:
         self.shard_count: int = options.get("shard_count")
         """The shard count"""
 
-        self.commands = Hold()
-        """Stores commands
-
-        The basic idea of: ::
-
-            self.commands = {
-                "command_name": {
-                    "id": "interaction.id",
-                    "options": {
-                        ...
-                    }
-                }
-            }
-        """
-
         self.components = {}
 
         self.prefixed_commands: dict[str, List[CoroFunc]] = {}
+
+        self.application_commands: dict[str, List[CoroFunc]] = {}
 
         self.prefix = options.get("prefix")

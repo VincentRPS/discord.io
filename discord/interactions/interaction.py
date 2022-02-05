@@ -19,4 +19,32 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-"""Represents a Chat Input command."""
+from typing import TYPE_CHECKING
+
+from ..member import Member
+from ..types import Dict
+from ..webhooks import Webhook
+
+if TYPE_CHECKING:
+    from ..state import ConnectionState
+
+
+class Interaction:
+    def __init__(self, data: Dict, state):
+        self.data = data
+        self.state: ConnectionState = state
+        self.webhook = Webhook(data["id"], data["token"])
+        self.collect_children(data)
+
+    def collect_children(self, data):
+        self.token: str = data["token"]
+        self.type: int = data["type"]
+        self.id: int = data["id"]
+        self.guild_id: int = data["guild_id"]
+        self.channel_id: int = data["channel_id"]
+        self.data: Dict = data["data"]
+        self.name = self.data["name"]
+
+    @property
+    def member(self):
+        return Member(self.data["member"], self.state.app.factory)

@@ -24,9 +24,9 @@
 import typing
 from logging import getLogger
 
-from discord import api
-from discord.api.rest import Route
-from discord.snowflake import Snowflakeish
+from .api.rest import RESTClient, Route
+from .file import *
+from .snowflake import Snowflakeish
 
 log = getLogger(__name__)
 
@@ -52,7 +52,7 @@ class Webhook:
     def __init__(self, webhook_id, webhook_token):
         self.id = webhook_id
         self.token = webhook_token
-        self.rest = api.RESTClient()
+        self.rest = RESTClient()
 
     def fetch_webhook(self):
         """Fetch the current Webhook from the API."""

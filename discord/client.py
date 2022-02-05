@@ -222,11 +222,13 @@ class Client:
 
         return decorator
 
-    def command(self, name: str = None) -> Callable[[CFT], CFT]:
+    def command(
+        self, name: str = None, application: bool = False
+    ) -> Callable[[CFT], CFT]:
         """Registers a prefixed command"""
 
         def decorator(func: CFT) -> CFT:
-            self.cmd_dispatch.add_command(func, name)
+            self.cmd_dispatch.add_command(func, application, name)
             return func
 
         return decorator

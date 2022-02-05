@@ -227,6 +227,9 @@ class RESTFactory:
             json=json,
         )
 
+    def get_global_application_commands(self, application_id: Snowflakeish):
+        return self.rest.send(Route("GET", f"/applications/{application_id}/commands"))
+
     # Guild Commands
 
     def create_guild_application_command(

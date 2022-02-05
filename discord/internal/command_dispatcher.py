@@ -40,6 +40,7 @@ class CommandDispatcher:
     def __init__(self, state: ConnectionState):
         self.state = state
         self.commands = []
+        self.application_commands = []
 
     async def run(
         self,
@@ -65,34 +66,64 @@ class CommandDispatcher:
         wrap = self.run(coro, name, *args, **kwargs)
         return self.state.loop.create_task(wrap, name=f"discord.io: {name}")
 
-    def dispatch(self, name: str, *args, **kwargs) -> None:
+    def dispatch(self, name: str, application: bool = False, *args, **kwargs) -> None:
         _log.debug("Dispatching Command: %s", name)
 
-        listeners = self.state.prefixed_commands.get(name)
-        if listeners:
-            removed = []
-            for i, (future, condition) in enumerate(listeners):
-                if future.cancelled():
-                    removed.append(i)
-                    continue
-
-                try:
-                    result = condition(*args)
-                except Exception as exc:
-                    future.set_exception(exc)
-                    removed.append(i)
-                else:
-                    if result:
-                        if len(args) == 0:
-                            future.set_result(None)
-                        elif len(args) == 1:
-                            future.set_result(args[0])
-                        else:
-                            future.set_result(args)
+        if not application:
+            listeners = self.state.prefixed_commands.get(name)
+            if listeners:
+                removed = []
+                for i, (future, condition) in enumerate(listeners):
+                    if future.cancelled():
                         removed.append(i)
+                        continue
+
+                    try:
+                        result = condition(*args)
+                    except Exception as exc:
+                        future.set_exception(exc)
+                        removed.append(i)
+                    else:
+                        if result:
+                            if len(args) == 0:
+                                future.set_result(None)
+                            elif len(args) == 1:
+                                future.set_result(args[0])
+                            else:
+                                future.set_result(args)
+                            removed.append(i)
 
             if len(removed) == len(listeners):
                 self.state.prefixed_commands.pop(name)
+            else:
+                for res in reversed(listeners):
+                    removed.append(res)
+        else:
+            listeners = self.state.application_commands.get(name)
+            if listeners:
+                removed = []
+                for i, (future, condition) in enumerate(listeners):
+                    if future.cancelled():
+                        removed.append(i)
+                        continue
+
+                    try:
+                        result = condition(*args)
+                    except Exception as exc:
+                        future.set_exception(exc)
+                        removed.append(i)
+                    else:
+                        if result:
+                            if len(args) == 0:
+                                future.set_result(None)
+                            elif len(args) == 1:
+                                future.set_result(args[0])
+                            else:
+                                future.set_result(args)
+                            removed.append(i)
+
+            if len(removed) == len(listeners):
+                self.state.application_commands.pop(name)
             else:
                 for res in reversed(listeners):
                     removed.append(res)
@@ -111,24 +142,40 @@ class CommandDispatcher:
         setattr(self, coro.__name__, coro)
         _log.info(f"{coro.__name__} has been registered!")
 
-    def add_command(self, func: CoroFunc, name: Optional[str] = None):
+    def add_command(
+        self, func: CoroFunc, application: bool = False, name: Optional[str] = None
+    ):
         name = func.__name__ if name is None else name
 
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Function is not a coroutine.")
 
-        setattr(self, name, func)
-        self.commands.append(name)
+        if not application:
+            self.commands.append(name)
+        else:
+            self.application_commands.append(name)
 
         _log.info(f"command {name} has been registered.")
 
-    def remove_command(self, func: CoroFunc, name: Optional[str] = None):
+    def remove_command(
+        self, func: CoroFunc, name: Optional[str] = None, application: bool = False
+    ):
         name = func.__name__ if name is None else name
 
-        if name in self.state.prefixed_commands.items():
-            try:
-                self.state.prefixed_commands[name].remove(func)
-            except ValueError:
-                pass
-        elif name in self.commands:
+        if name in self.commands:
             self.commands.remove(name)
+
+        if application:
+            if name in self.state.application_commands.items():
+                try:
+                    self.state.application_commands[name].remove(func)
+                except ValueError:
+                    pass
+        else:
+            if name in self.state.prefixed_commands.items():
+                try:
+                    self.state.prefixed_commands[name].remove(func)
+                except ValueError:
+                    pass
+            elif name in self.commands:
+                self.commands.remove(name)
