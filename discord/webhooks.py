@@ -81,7 +81,7 @@ class WebhookAdapter:
         return self.rest.send(
             Route(
                 "PATCH",
-                f"/webhooks/{id}/{self.token}",
+                f"/webhooks/{id}/{token}",
                 webhook_id=id,
                 webhook_token=token,
             ),
