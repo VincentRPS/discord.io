@@ -83,9 +83,9 @@ class Context:
         elif embed and embed:
             raise TypeError("Used both `embed` and `embed` only 1 is allowed.")
         elif embeds and not embed:
-            if isinstance(embeds, Embed):
+            try:
                 emb = [embed.obj for embed in embeds]
-            else:
+            except:
                 emb = embeds
         if component:
             cm = [component]
@@ -142,9 +142,9 @@ class Context:
         elif embed and embed:
             raise TypeError("Used both `embed` and `embed` only 1 is allowed.")
         elif embeds and not embed:
-            if isinstance(embeds, Embed):
+            try:
                 emb = [embed.obj for embed in embeds]
-            else:
+            except:
                 emb = embeds
         if component:
             cm = [component]
