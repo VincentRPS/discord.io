@@ -25,7 +25,7 @@ import typing
 
 from .api.rest import RESTClient, Route
 from .embed import Embed
-from .file import *
+from .file import File
 from .snowflake import Snowflakeish
 
 __all__: typing.List[str] = ["Webhook"]
@@ -169,6 +169,7 @@ class Webhook:
         embed: typing.Optional[Embed] = None,
         embeds: typing.Optional[typing.List[Embed]] = None,
         flags: typing.Optional[typing.Any] = None,
+        files: typing.Optional[typing.Sequence[File]] = None,
     ):
         """Execute the Webhook
 
@@ -220,4 +221,5 @@ class Webhook:
                 webhook_token=self.token,
             ),
             json=json,
+            files=files
         )
