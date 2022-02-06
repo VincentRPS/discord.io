@@ -12,8 +12,6 @@
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 
-import asyncio
-
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,6 +19,8 @@ import asyncio
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
+
+import asyncio
 from typing import Any, Callable, Coroutine, List, Optional
 
 from discord.types.dict import Dict
@@ -39,7 +39,7 @@ class ApplicationCommandRegistry:
         self.factory = rest_factory
         self.state = state
         self.dispatcher = Dispatcher(state=self.state)
-        # self.dispatcher.add_listener(self.on_ready)
+        self.state.loop.create_task(self.on_ready())
 
     async def run(
         self, coro: Callable[..., Coroutine[Any, Any, Any]], data, state
@@ -53,12 +53,25 @@ class ApplicationCommandRegistry:
             raise
 
     async def on_ready(self):
+        await asyncio.sleep(20)
         glob = await self.factory.get_global_application_commands(self.state._bot_id)
-        guild = await self.factory.get_guild_application_commands(self.state._bot_id)
-        self.check_application_commands(glob, guild)
 
-    def check_application_commands(self, _global, _guild, /):
-        ...
+        for guild in self.state._guilds_cache._cache.values():
+            commands = await self.factory.get_guild_application_commands(
+                self.state._bot_id, guild["id"]
+            )
+            async for command in commands:
+                await self.factory.delete_guild_application_command(
+                    self.state._bot_id, guild["id"], command
+                )
+
+        await self.check_application_commands(glob)
+
+    async def check_application_commands(self, rglobal):
+        for command in rglobal:
+            await self.factory.delete_global_application_command(
+                self.state._bot_id, command["id"]
+            )
 
     async def register_guild_slash_command(
         self,

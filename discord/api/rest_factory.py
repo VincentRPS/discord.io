@@ -231,6 +231,18 @@ class RESTFactory:
     def get_global_application_commands(self, application_id: Snowflakeish):
         return self.rest.send(Route("GET", f"/applications/{application_id}/commands"))
 
+    def delete_global_application_command(
+        self,
+        application_id: int,
+        command: int,
+    ):
+        return self.rest.send(
+            Route(
+                "DELETE",
+                f"/applications/{application_id}/commands/{command}",
+            )
+        )
+
     # Guild Commands
 
     def create_guild_application_command(
@@ -280,6 +292,20 @@ class RESTFactory:
             Route(
                 "GET",
                 f"/applications/{application_id}/guilds/{guild_id}/commands/",
+            )
+        )
+
+    def delete_guild_application_command(
+        self,
+        application_id: int,
+        guild_id: int,
+        command: int,
+    ):
+        return self.rest.send(
+            Route(
+                "DELETE",
+                f"/applications/{application_id}/guilds/{guild_id}/commands/{command}",
+                guild_id=guild_id,
             )
         )
 

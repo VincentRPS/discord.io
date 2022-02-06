@@ -255,7 +255,7 @@ class Shard:
             await self.closed(code)
 
     async def closed(self, code: int) -> None:
-        _log.error(f"Gateway connected closed with code {code}")
+        _log.error(f"Shard {self.shard_id} closed with code {code}")
         if code == 4000:
             pass
 

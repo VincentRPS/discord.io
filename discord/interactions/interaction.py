@@ -72,7 +72,7 @@ class Interaction:
     def __init__(self, data: Dict, state):
         self.data = data
         self.state: ConnectionState = state
-        self.webhook = Webhook(data["id"], data["token"])
+        self.webhook = Webhook(self.state._bot_id, data["token"])
         self.collect_children(data)
 
     def collect_children(self, data):
@@ -122,7 +122,7 @@ class Interaction:
         :meth:`Webhook.execute`
         """
         return self.webhook.execute(
-            content=content, tts=tts, embed=embed, embeds=embeds
+            content=content, tts=tts, embed=embed, embeds=embeds, flags=self.invisable
         )
 
     def respond(
@@ -133,6 +133,7 @@ class Interaction:
         embeds: Optional[List[Embed]] = None,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
         type: Optional[int] = 4,
+        invisable: Optional[bool] = False,
     ):
         """Send a initial response to a interaction
 
@@ -150,6 +151,8 @@ class Interaction:
             A allowed mentions object
         type
             The interaction type
+        invisable
+            If the interaction should only be seeable by the invoker.
         """
         ret = {"type": type, "data": {}}
         if content:
@@ -168,13 +171,19 @@ class Interaction:
         else:
             ret["data"]["allowed_mentions"] = {"parse": []}
 
+        if invisable:
+            ret["data"]["flags"] = 1 << 6
+            self.invisable = 1 << 6
+        else:
+            self.invisable = None
+
         ret["data"]["embeds"] = emb
 
         return self.webhook.rest.send(
             Route("POST", f"/interactions/{self.id}/{self.token}/callback"), json=ret
         )
 
-    def defer(self):
+    def defer(self, invisable: bool = False):
         """defers an interaction response
 
         Returns
@@ -182,7 +191,7 @@ class Interaction:
         An empty :meth:`Interaction.respond`
         """
 
-        return self.respond(type=5)
+        return self.respond(type=5, invisable=invisable)
 
     @property
     def member(self):

@@ -56,7 +56,7 @@ class Webhook:
 
     def fetch_webhook(self):
         """Fetch the current Webhook from the API."""
-        return self.request("GET", f"/{self.id}/{self.token}")
+        return self.request("GET", f"/webhooks/{self.id}/{self.token}")
 
     def modify_webhook(
         self, name: typing.Optional[str] = None, avatar: typing.Optional[str] = None
@@ -78,7 +78,7 @@ class Webhook:
         return self.rest.send(
             Route(
                 "PATCH",
-                f"/{self.id}/{self.token}",
+                f"/webhooks/{self.id}/{self.token}",
                 webhook_id=self.id,
                 webhook_token=self.token,
             ),
@@ -90,7 +90,7 @@ class Webhook:
         return self.rest.send(
             Route(
                 "DELETE",
-                f"/{self.id}/{self.token}",
+                f"/webhooks/{self.id}/{self.token}",
                 webhook_id=self.id,
                 webhook_token=self.token,
             )
@@ -101,7 +101,7 @@ class Webhook:
         return self.rest.send(
             Route(
                 "GET",
-                f"/{self.id}/{self.token}/messages/{message}",
+                f"/webhooks/{self.id}/{self.token}/messages/{message}",
                 webhook_id=self.id,
                 webhook_token=self.token,
             )
@@ -132,7 +132,7 @@ class Webhook:
         return self.rest.send(
             Route(
                 "POST",
-                f"/{self.id}/{self.token}/messages/{message}",
+                f"/webhooks/{self.id}/{self.token}/messages/{message}",
                 webhook_id=self.id,
                 webhook_token=self.token,
             ),
@@ -153,7 +153,7 @@ class Webhook:
         return self.rest.send(
             Route(
                 "DELETE",
-                f"/{self.id}/{self.token}/messages/{message}",
+                f"/webhooks/{self.id}/{self.token}/messages/{message}",
                 webhook_id=self.id,
                 webhook_token=self.token,
             )
@@ -168,6 +168,7 @@ class Webhook:
         allowed_mentions: typing.Optional[bool] = None,
         embed: typing.Optional[Embed] = None,
         embeds: typing.Optional[typing.List[Embed]] = None,
+        flags: typing.Optional[typing.Any] = None,
     ):
         """Execute the Webhook
 
@@ -208,10 +209,13 @@ class Webhook:
         if embed or embeds:
             json["embeds"] = emb
 
+        if flags:
+            json["flags"] = flags
+
         return self.rest.send(
             Route(
                 "POST",
-                f"/{self.id}/{self.token}",
+                f"/webhooks/{self.id}/{self.token}",
                 webhook_id=self.id,
                 webhook_token=self.token,
             ),

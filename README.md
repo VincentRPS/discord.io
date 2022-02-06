@@ -39,6 +39,10 @@ client = discord.Client()
 @client.event
 async def on_ready():
     print('ready!')
+    client.slash_command(bonk_callback, 'bonk')
+
+async def bonk_callback(interaction):
+    await interaction.respond('Bonk!')
 
 client.run('my_bot_token')
 ```

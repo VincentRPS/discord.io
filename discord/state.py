@@ -40,28 +40,28 @@ class Hold:
     """A hold of cache, easily swapable with a db."""
 
     def __init__(self):
-        self.__cache = OrderedDict()
+        self._cache = OrderedDict()
 
     def view(self) -> List[Dict]:
-        return [value for value in self.__cache.values()]
+        self._cache.values()
 
     def list(self):
-        return self.__cache.items()
+        return self._cache.items()
 
     def new(self, name: str, data: Union[str, int, Dict, Any]):
-        self.__cache[name] = data
+        self._cache[name] = data
 
     def edit(self, name: str, data: Union[str, int, Dict, Any]):
-        self.__cache.update({name: data})
+        self._cache.update({name: data})
 
     def get(self, name: str):
-        return self.__cache.get(name)
+        return self._cache.get(name)
 
     def pop(self, name: str):
-        return self.__cache.pop(name)
+        return self._cache.pop(name)
 
     def reset(self) -> None:
-        del self.__cache
+        del self._cache
 
 
 class ConnectionState:

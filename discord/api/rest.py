@@ -212,9 +212,6 @@ class RESTClient:
                             )
                             self.state.loop.call_later(float(reset_after), lock.release)
 
-                        elif remains == "1":
-                            await asyncio.sleep(float("0.111"))
-
                         if r.status == 429:
                             if not r.headers.get("via") or isinstance(d, str):
                                 # handles couldflare bans
