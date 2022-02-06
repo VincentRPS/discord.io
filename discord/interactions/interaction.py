@@ -163,6 +163,16 @@ class Interaction:
             Route("POST", f"/interactions/{self.id}/{self.token}/callback"), json=ret
         )
 
+    def defer(self):
+        """defers an interaction response
+
+        Returns
+        -------
+        An empty :meth:`Interaction.respond`
+        """
+
+        return self.respond()
+
     @property
     def member(self):
         """Returns the member object of the invoker.
