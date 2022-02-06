@@ -21,7 +21,6 @@
 # SOFTWARE
 import inspect
 import datetime
-from tempfile import TemporaryFile
 from typing import Any, Callable, TypeVar, overload, Optional
 
 T = TypeVar("T")
