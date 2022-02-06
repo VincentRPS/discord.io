@@ -19,81 +19,11 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from collections import namedtuple
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, List
 
 
-def _new_value_cls(name):
-    cls = namedtuple("_EnumValue_" + name, "name value")
-    cls.__repr__ = lambda self: f"<{name}.{self.name}: {self.value!r}>"
-    cls.__str__ = lambda self: f"{name}.{self.name}"
-    return cls
-
-
-def _descriptor(obj):
-    return (
-        hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
-    )
-
-
-class EnumMeta(type):
-    if TYPE_CHECKING:
-        __name__: ClassVar[str]
-        _enum_member_names_: ClassVar[List[str]]
-        _enum_member_map_: ClassVar[Dict[str, Any]]
-        _enum_value_map_: ClassVar[Dict[Any, Any]]
-
-    def __new__(cls, name, bases, attrs):
-        value_mapping = {}
-        member_mapping = {}
-        member_names = []
-
-        val = _new_value_cls(name)
-        for item, value in list(attrs.items()):
-            desc = _descriptor(value)
-            if item[0] == "_" and not desc:
-                continue
-
-            if isinstance(value, classmethod):
-                continue
-
-            if desc:
-                setattr(value, item, value)
-                del attrs[item]
-                continue
-
-            try:
-                new_value = value_mapping[value]
-            except KeyError:
-                new_value = val(name=item, value=value)
-                value_mapping[value] = new_value
-                member_names.append(item)
-
-            member_mapping[item] = new_value
-            attrs[item] = new_value
-
-        attrs["_enum_value_map_"] = value_mapping
-        attrs["_enum_member_map_"] = member_mapping
-        attrs["_enum_member_names_"] = member_names
-        attrs["_enum_value_cls"] = value
-        real_cls = super().__new__(cls, name, bases, attrs)
-        val._real_cls_ = real_cls
-        return real_cls
-
-    def __getitem__(cls, item):
-        return cls._enum_member_map_[item]
-
-    def __repr__(cls) -> str:
-        return f"<emum {cls.__name__}>"
-
-
-class Enum(metaclass=EnumMeta):
-    @classmethod
-    def try_value(cls, value):
-        try:
-            return cls._enum_value_map_[value]
-        except (KeyError, TypeError):
-            return value
+class Enum:
+    def __new__(self, name, value):
+        setattr(self, name, value)
 
 
 class ButtonStyle(Enum):

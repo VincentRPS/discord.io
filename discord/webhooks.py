@@ -221,5 +221,5 @@ class Webhook:
                 webhook_token=self.token,
             ),
             json=json,
-            files=files
+            files=files,
         )

@@ -4,7 +4,6 @@ folders = [
     "discord/__init__.py",
     "discord/api/__init__.py",
     "discord/audio/__init__.py",
-    "discord/modules/__init__.py",
     "discord/events/__init__.py",
     "discord/interactions/__init__.py",
     "discord/components/__init__.py",
