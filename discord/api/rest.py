@@ -30,6 +30,7 @@ from urllib.parse import quote
 
 import aiohttp
 
+from discord import utils
 from discord.file import File
 from discord.internal.exceptions import Forbidden, NotFound, RESTError, ServerError
 from discord.state import ConnectionState
@@ -126,6 +127,7 @@ class RESTClient:
         self.state = state or ConnectionState()
         self.proxy = proxy
         self.proxy_auth = proxy_auth
+        self._session: aiohttp.ClientSession = utils.MISSING
 
     async def send(  # noqa: ignore
         self,

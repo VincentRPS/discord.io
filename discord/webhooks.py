@@ -22,8 +22,9 @@
 """Implementation of Discord Webhooks."""
 
 import typing
-
 from contextvars import ContextVar
+
+from discord import utils
 from .api.rest import RESTClient, Route
 from .embed import Embed
 from .file import File
@@ -239,12 +240,14 @@ webhook_context: ContextVar[WebhookAdapter] = ContextVar(
 )
 
 
+@utils.copy_doc(WebhookAdapter)
 class Webhook:
     def __init__(self, id, token):
         self.id = id
         self.token = token
         self.adapter = webhook_context.get()
 
+    @utils.copy_doc(WebhookAdapter.execute)
     def execute(
         self,
         content: typing.Optional[str] = None,

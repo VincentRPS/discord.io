@@ -122,12 +122,13 @@ class Interaction:
         """
         adapter = webhook_context.get()
         return adapter.execute(
-            id=self.state._bot_id, 
-            token=self.token, 
-            content=content, 
-            tts=tts, embed=embed, 
-            embeds=embeds, 
-            flags=self.invisable
+            id=self.state._bot_id,
+            token=self.token,
+            content=content,
+            tts=tts,
+            embed=embed,
+            embeds=embeds,
+            flags=self.invisable,
         )
 
     def respond(

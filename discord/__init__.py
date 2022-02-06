@@ -38,7 +38,7 @@ from .state import *
 from .types import *
 from .ui import *
 from .user import *
-from .util import *
+from .utils import *
 from .webhooks import *
 
 

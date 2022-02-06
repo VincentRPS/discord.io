@@ -1,3 +1,5 @@
+import typing
+
 from .api import *
 from .audio import *
 from .client import *
@@ -19,9 +21,8 @@ from .state import *
 from .types import *
 from .ui import *
 from .user import *
-from .util import *
+from .utils import *
 from .webhooks import *
-import typing
 
 class VersionInfo(typing.NamedTuple):
     major: str
