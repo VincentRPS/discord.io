@@ -157,7 +157,7 @@ class Embed:
         value
             The field value
         inline
-            If the field shuld be inline
+            If the field should be inline
         """
         field = {"name": name, "value": value, "inline": inline}
 
