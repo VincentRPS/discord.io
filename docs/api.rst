@@ -68,8 +68,10 @@ Client
 Webhook
 -------
 
-.. autoclass:: Webhook
+.. autoclass:: WebhookAdapter
     :members:
+
+.. autoclass:: Webhook
 
 Colors
 ------
