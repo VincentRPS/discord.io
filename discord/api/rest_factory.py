@@ -20,8 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-# Most requests are done here, except for log-ins and outs since they change the header.
-
 import typing
 from json import dumps
 
