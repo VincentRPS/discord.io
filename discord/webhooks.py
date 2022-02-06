@@ -23,6 +23,7 @@
 
 import typing
 
+from contextvars import ContextVar
 from .api.rest import RESTClient, Route
 from .embed import Embed
 from .file import File
@@ -31,7 +32,7 @@ from .snowflake import Snowflakeish
 __all__: typing.List[str] = ["Webhook"]
 
 
-class Webhook:
+class WebhookAdapter:
     """The base class for interperting Webhooks
 
     .. versionadded:: 0.3.0
@@ -49,17 +50,19 @@ class Webhook:
         An instance of RESTClient.
     """
 
-    def __init__(self, webhook_id, webhook_token):
-        self.id = webhook_id
-        self.token = webhook_token
+    def __init__(self):
         self.rest = RESTClient()
 
-    def fetch_webhook(self):
+    def fetch_webhook(self, id, token):
         """Fetch the current Webhook from the API."""
-        return self.request("GET", f"/webhooks/{self.id}/{self.token}")
+        return self.request("GET", f"/webhooks/{id}/{token}")
 
     def modify_webhook(
-        self, name: typing.Optional[str] = None, avatar: typing.Optional[str] = None
+        self,
+        id,
+        token,
+        name: typing.Optional[str] = None,
+        avatar: typing.Optional[str] = None,
     ):
         """Modify the Webhook
 
@@ -78,37 +81,39 @@ class Webhook:
         return self.rest.send(
             Route(
                 "PATCH",
-                f"/webhooks/{self.id}/{self.token}",
-                webhook_id=self.id,
-                webhook_token=self.token,
+                f"/webhooks/{id}/{self.token}",
+                webhook_id=id,
+                webhook_token=token,
             ),
             json=json,
         )
 
-    def delete_webhook(self):
+    def delete_webhook(self, id, token):
         """Deletes the Webhook"""
         return self.rest.send(
             Route(
                 "DELETE",
-                f"/webhooks/{self.id}/{self.token}",
-                webhook_id=self.id,
-                webhook_token=self.token,
+                f"/webhooks/{id}/{self.token}",
+                webhook_id=id,
+                webhook_token=token,
             )
         )
 
-    def fetch_message(self, message: Snowflakeish):
+    def fetch_message(self, id, token, message: Snowflakeish):
         """Fetches a Webhook message."""
         return self.rest.send(
             Route(
                 "GET",
-                f"/webhooks/{self.id}/{self.token}/messages/{message}",
-                webhook_id=self.id,
-                webhook_token=self.token,
+                f"/webhooks/{id}/{token}/messages/{message}",
+                webhook_id=id,
+                webhook_token=token,
             )
         )
 
     def edit_message(
         self,
+        id,
+        token,
         message: Snowflakeish,
         content: typing.Optional[str] = None,
         allowed_mentions: typing.Optional[bool] = None,
@@ -132,15 +137,17 @@ class Webhook:
         return self.rest.send(
             Route(
                 "POST",
-                f"/webhooks/{self.id}/{self.token}/messages/{message}",
-                webhook_id=self.id,
-                webhook_token=self.token,
+                f"/webhooks/{id}/{token}/messages/{message}",
+                webhook_id=id,
+                webhook_token=token,
             ),
             json=json,
         )
 
     def delete_message(
         self,
+        id,
+        token,
         message: Snowflakeish,
     ):
         """Deletes a message
@@ -153,14 +160,16 @@ class Webhook:
         return self.rest.send(
             Route(
                 "DELETE",
-                f"/webhooks/{self.id}/{self.token}/messages/{message}",
-                webhook_id=self.id,
-                webhook_token=self.token,
+                f"/webhooks/{id}/{token}/messages/{message}",
+                webhook_id=id,
+                webhook_token=token,
             )
         )
 
     def execute(
         self,
+        id,
+        token,
         content: typing.Optional[str] = None,
         username: typing.Optional[str] = None,
         avatar_url: typing.Optional[str] = None,
@@ -216,10 +225,48 @@ class Webhook:
         return self.rest.send(
             Route(
                 "POST",
-                f"/webhooks/{self.id}/{self.token}",
-                webhook_id=self.id,
-                webhook_token=self.token,
+                f"/webhooks/{id}/{token}",
+                webhook_id=id,
+                webhook_token=token,
             ),
             json=json,
+            files=files,
+        )
+
+
+webhook_context: ContextVar[WebhookAdapter] = ContextVar(
+    "webhook_context", default=WebhookAdapter()
+)
+
+
+class Webhook:
+    def __init__(self, id, token):
+        self.id = id
+        self.token = token
+        self.adapter = webhook_context.get()
+
+    def execute(
+        self,
+        content: typing.Optional[str] = None,
+        username: typing.Optional[str] = None,
+        avatar_url: typing.Optional[str] = None,
+        tts: typing.Optional[bool] = None,
+        allowed_mentions: typing.Optional[bool] = None,
+        embed: typing.Optional[Embed] = None,
+        embeds: typing.Optional[typing.List[Embed]] = None,
+        flags: typing.Optional[typing.Any] = None,
+        files: typing.Optional[typing.Sequence[File]] = None,
+    ):
+        return self.adapter.execute(
+            id=self.id,
+            token=self.token,
+            content=content,
+            username=username,
+            avatar_url=avatar_url,
+            tts=tts,
+            allowed_mentions=allowed_mentions,
+            embed=embed,
+            embeds=embeds,
+            flags=flags,
             files=files,
         )

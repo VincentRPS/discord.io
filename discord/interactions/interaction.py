@@ -27,7 +27,7 @@ from ..api.rest import Route
 from ..embed import Embed
 from ..member import Member
 from ..types import Dict, embed_parse
-from ..webhooks import Webhook
+from ..webhooks import webhook_context
 
 if TYPE_CHECKING:
     from ..state import ConnectionState
@@ -72,7 +72,6 @@ class Interaction:
     def __init__(self, data: Dict, state):
         self.data = data
         self.state: ConnectionState = state
-        self.webhook = Webhook(self.state._bot_id, data["token"])
         self.collect_children(data)
 
     def collect_children(self, data):
@@ -121,8 +120,14 @@ class Interaction:
         -------
         :meth:`Webhook.execute`
         """
-        return self.webhook.execute(
-            content=content, tts=tts, embed=embed, embeds=embeds, flags=self.invisable
+        adapter = webhook_context.get()
+        return adapter.execute(
+            id=self.state._bot_id, 
+            token=self.token, 
+            content=content, 
+            tts=tts, embed=embed, 
+            embeds=embeds, 
+            flags=self.invisable
         )
 
     def respond(
@@ -179,7 +184,8 @@ class Interaction:
 
         ret["data"]["embeds"] = emb
 
-        return self.webhook.rest.send(
+        adapter = webhook_context.get()
+        return adapter.rest.send(
             Route("POST", f"/interactions/{self.id}/{self.token}/callback"), json=ret
         )
 
