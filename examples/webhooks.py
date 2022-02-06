@@ -1,15 +1,12 @@
 import asyncio
 
-from discord.apps import WebhookApp  # import Webhook
+import discord
 
-webhook = WebhookApp(
-    "id",
-    "token",
-)  # The webhook id and token.
+webhook = discord.Webhook("id", "token")
 
 
-async def connection():
-    await webhook.send("Hello!")  # Send a message.
+async def send():
+    await webhook.execute("i am alive!")
 
 
-asyncio.run(connection())
+asyncio.run(send())

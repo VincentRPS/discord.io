@@ -20,6 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
+from typing import List
+
+__all__: List[str] = ["MessageFlags"]
+
 
 class MessageFlags:
     """Represents a discord message flag object

@@ -21,6 +21,10 @@
 # SOFTWARE
 """Implementation of Colors."""
 
+from typing import List
+
+__all__: List[str] = ["Color"]
+
 
 class Color:
     """Represents the default discord colors

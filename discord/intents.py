@@ -20,6 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import List
+
+__all__: List[str] = ["Intents"]
+
 
 class Intents:
     """Helps defining your Intents

@@ -32,6 +32,8 @@ from ..webhooks import Webhook
 if TYPE_CHECKING:
     from ..state import ConnectionState
 
+__all__: List[str] = ["Interaction"]
+
 
 class Interaction:
     """Represents a Discord Interaction & Interaction Response

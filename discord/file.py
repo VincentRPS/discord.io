@@ -26,6 +26,8 @@ import typing as t
 
 from discord.internal.exceptions import DiscordError, Forbidden
 
+__all__: t.List[str] = ["File"]
+
 
 class File:
     """Represents a Discord file.

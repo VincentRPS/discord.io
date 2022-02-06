@@ -29,6 +29,8 @@ from discord.types import allowed_mentions
 
 from .embed import Embed
 
+__all__: List[str] = ["Context"]
+
 
 class Context:
     """Represents a command context

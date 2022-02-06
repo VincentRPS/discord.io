@@ -28,6 +28,8 @@ from typing import Any, Callable, Coroutine, List, Tuple, TypeVar, Union
 
 from discord.types.dict import Dict
 
+__all__: List = ["Hold", "ConnectionState"]
+
 T = TypeVar("T")
 Coro = Coroutine[Any, Any, T]
 CoroFunc = Callable[..., Coro[Any]]

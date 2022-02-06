@@ -22,14 +22,13 @@
 """Implementation of Discord Webhooks."""
 
 import typing
-from logging import getLogger
 
 from .api.rest import RESTClient, Route
 from .embed import Embed
 from .file import *
 from .snowflake import Snowflakeish
 
-log = getLogger(__name__)
+__all__: typing.List[str] = ["Webhook"]
 
 
 class Webhook:
