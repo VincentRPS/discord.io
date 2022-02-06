@@ -25,8 +25,8 @@ import asyncio
 import importlib
 import logging
 import os
+import time
 from threading import Event
-from time import time
 from typing import Callable, List, Literal, Optional, TypeVar, Union
 
 from discord.api.gateway import Gateway
@@ -39,6 +39,7 @@ from discord.ui import print_banner, start_logging
 from discord.user import User
 
 from .components import Button
+from .interactions import ApplicationCommandRegistry
 
 _log = logging.getLogger(__name__)
 __all__: List[str] = ["Client"]
@@ -121,6 +122,7 @@ class Client:
         self.cmd_dispatch = command_dispatcher.CommandDispatcher(self.state)
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
         self.factory = RESTFactory(state=self.state, proxy=proxy, proxy_auth=proxy_auth)
+        self.application = ApplicationCommandRegistry(self.factory, self.state)
         self.gateway = Gateway(
             state=self.state,
             dispatcher=self.dispatcher,
@@ -197,7 +199,7 @@ class Client:
         return Button(self.state).create(label, callback, style, custom_id, url)
 
     @property
-    async def is_ready(self):
+    def is_ready(self):
         """Returns if the bot is ready or not."""
         return self.state._ready.is_set()
 
@@ -312,3 +314,58 @@ class Client:
         :class:`User`
         """
         return User(self.state.bot_info[self])
+
+    def slash_command(
+        self,
+        callback,
+        name: str = None,
+        options: List[dict] = None,
+        guild_ids: List[int] = None,
+        description: str = None,
+        default_permission: bool = True,
+    ):
+        """Creates a slash command
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The slash command name
+        callback
+            The slash command callback
+        options: :class:`List`
+            A list of slash command options
+        guild_ids: :class:`List`[:class:`int`]
+            A list of guild ids
+        description: :class:`str`
+            The application command description
+        default_permission: :class:`bool`
+            If this slash command should have default permissions
+        """
+
+        name = callback.__name__ if name is None else name
+
+        if description is None:
+            if callback.__doc__ is not None:
+                description = callback.__doc__
+        if guild_ids is not None:
+            for guild in guild_ids:
+                self.state.loop.create_task(
+                    self.application.register_guild_slash_command(
+                        guild_id=guild,
+                        name=name,
+                        description=description,
+                        callback=callback,
+                        options=options,
+                        default_permission=default_permission,
+                    )
+                )
+        else:
+            self.state.loop.create_task(
+                self.application.register_global_slash_command(
+                    name=name,
+                    description=description,
+                    callback=callback,
+                    options=options,
+                    default_permission=default_permission,
+                )
+            )

@@ -20,10 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 """Snowflake implementation"""
-from typing import TYPE_CHECKING, TypeVar, Union
-
-if TYPE_CHECKING:
-    from typing import List
+from typing import List, TypeVar, Union
 
 __all__: List[str] = [
     "Snowflakeish",

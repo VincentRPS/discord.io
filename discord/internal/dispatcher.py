@@ -25,12 +25,9 @@ Dispatches raw Opcode events to Event classes.
 
 import asyncio
 import logging
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, Optional, TypeVar
+from typing import Any, Callable, Coroutine, List, Optional, TypeVar
 
 from discord.state import ConnectionState
-
-if TYPE_CHECKING:
-    from typing import List
 
 __all__: List[str] = ["Dispatcher"]
 _log = logging.getLogger(__name__)

@@ -23,13 +23,13 @@
 import typing
 from json import dumps
 
-from discord.api.rest import RESTClient, Route
-from discord.file import File
-from discord.flags import MessageFlags
-from discord.snowflake import Snowflakeish
-from discord.state import ConnectionState
-from discord.types import allowed_mentions
-from discord.types.dict import Dict
+from ..file import File
+from ..flags import MessageFlags
+from ..snowflake import Snowflakeish
+from ..state import ConnectionState
+from ..types import allowed_mentions
+from ..types.dict import Dict
+from .rest import RESTClient, Route
 
 __all__: typing.List[str] = [
     "RESTFactory",
@@ -183,17 +183,19 @@ class RESTFactory:
         application_id: Snowflakeish,
         name: str,
         description: str,
-        options: typing.List[Dict],
+        options: typing.Optional[typing.List[Dict]] = None,
         default_permission: typing.Optional[bool] = True,
-        type: typing.Literal["CHAT_INPUT", "USER", "MESSAGE"] = "CHAT_INPUT",
+        type: int = 1,
     ):
         json = {
             "name": name,
             "description": description,
-            "options": options,
-            "default_permission": default_permission,
             "type": type,
         }
+        if default_permission is False:
+            json["default_permission"] = False
+        if options:
+            json["options"] = options
         return self.rest.send(
             Route("POST", f"/applications/{application_id}/commands"), json=json
         )
@@ -211,15 +213,16 @@ class RESTFactory:
         command_id: Snowflakeish,
         name: str,
         description: str,
-        options: typing.List[Dict],
+        options: typing.Optional[typing.List[Dict]] = None,
         default_permission: typing.Optional[bool] = True,
     ):
         json = {
             "name": name,
             "description": description,
-            "options": options,
             "default_permission": default_permission,
         }
+        if options:
+            json["options"] = options
         return self.rest.send(
             Route("PATCH", f"/applications/{application_id}/commands/{command_id}"),
             json=json,
@@ -236,17 +239,20 @@ class RESTFactory:
         guild_id: Snowflakeish,
         name: str,
         description: str,
-        options: typing.List[Dict],
+        options: typing.Optional[typing.List[Dict]],
         default_permission: typing.Optional[bool] = True,
-        type: typing.Literal["CHAT_INPUT", "USER", "MESSAGE"] = "CHAT_INPUT",
+        type: int = 1,
     ):
         json = {
             "name": name,
             "description": description,
-            "options": options,
             "default_permission": default_permission,
             "type": type,
         }
+        if default_permission is False:
+            json["default_permission"] = False
+        if options:
+            json["options"] = options
         return self.rest.send(
             Route("POST", f"/applications/{application_id}/guilds/{guild_id}/commands"),
             json=json,
@@ -265,6 +271,18 @@ class RESTFactory:
             )
         )
 
+    def get_guild_application_commands(
+        self,
+        application_id: Snowflakeish,
+        guild_id: Snowflakeish,
+    ):
+        return self.rest.send(
+            Route(
+                "GET",
+                f"/applications/{application_id}/guilds/{guild_id}/commands/",
+            )
+        )
+
     def edit_guild_application_command(
         self,
         application_id: Snowflakeish,
@@ -272,15 +290,16 @@ class RESTFactory:
         guild_id: Snowflakeish,
         name: str,
         description: str,
-        options: typing.List[Dict],
+        options: typing.Optional[typing.List[Dict]] = None,
         default_permission: typing.Optional[bool] = True,
     ):
         json = {
             "name": name,
             "description": description,
-            "options": options,
             "default_permission": default_permission,
         }
+        if options:
+            json["options"] = options
         return self.rest.send(
             Route(
                 "PATCH",

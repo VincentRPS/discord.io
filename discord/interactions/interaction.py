@@ -85,6 +85,11 @@ class Interaction:
         self.id: int = data["id"]
 
         try:
+            self.options = data["data"]["options"]
+        except KeyError:
+            self.options = None
+
+        try:
             # buttons will give this data
             self.message = data["message"]
         except KeyError:

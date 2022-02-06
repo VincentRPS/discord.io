@@ -20,14 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import TYPE_CHECKING
+
+from typing import List
 
 from ..context import Context
 from ..message import Message
 from .core import Event
-
-if TYPE_CHECKING:
-    from typing import List
 
 __all__: List[str] = ["OnMessage", "OnMessageEdit", "OnMessageDelete"]
 

@@ -23,6 +23,7 @@
 The ConnectionState Caches most things during connection.
 """
 import asyncio
+import threading
 from collections import OrderedDict
 from typing import Any, Callable, Coroutine, List, Tuple, TypeVar, Union
 
@@ -195,6 +196,6 @@ class ConnectionState:
 
         self.prefixed_commands: dict[str, List[CoroFunc]] = {}
 
-        self.application_commands: dict[str, List[CoroFunc]] = {}
+        self.application_commands: dict[str, Any] = {}
 
         self.prefix = options.get("prefix")

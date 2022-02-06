@@ -48,7 +48,7 @@ class EnumMeta(type):
         member_mapping = {}
         member_names = []
 
-        value = _new_value_cls(name)
+        val = _new_value_cls(name)
         for item, value in list(attrs.items()):
             desc = _descriptor(value)
             if item[0] == "_" and not desc:
@@ -65,7 +65,7 @@ class EnumMeta(type):
             try:
                 new_value = value_mapping[value]
             except KeyError:
-                new_value = value(name=item, value=value)
+                new_value = val(name=item, value=value)
                 value_mapping[value] = new_value
                 member_names.append(item)
 
@@ -77,7 +77,7 @@ class EnumMeta(type):
         attrs["_enum_member_names_"] = member_names
         attrs["_enum_value_cls"] = value
         real_cls = super().__new__(cls, name, bases, attrs)
-        value._real_cls_ = real_cls
+        val._real_cls_ = real_cls
         return real_cls
 
     def __getitem__(cls, item):
@@ -107,6 +107,7 @@ class ButtonStyle(Enum):
     GREEN = 3
     RED = 4
 
+
 class ChannelType(Enum):
     GUILD_TEXT = 0
     DM = 1
@@ -120,6 +121,13 @@ class ChannelType(Enum):
     GUILD_PRIVATE_THREAD = 12
     GUILD_STAGE_VOICE = 13
 
+
 class VideoQuality(Enum):
     AUTO = 1
     FULL = 2
+
+
+class ApplicationCommandType(Enum):
+    CHAT_INPUT = 1
+    USER = 2
+    MESSAGE = 3
