@@ -26,6 +26,7 @@ from .components import *
 from .context import *
 from .events import *
 from .file import *
+from .guild import *
 from .intents import *
 from .interactions import *
 from .internal.exceptions import *
@@ -35,10 +36,9 @@ from .snowflake import *
 from .state import *
 from .types import *
 from .ui import *
+from .user import *
 from .util import *
 from .webhooks import *
-from .guild import *
-from .user import *
 
 
 class VersionInfo(typing.NamedTuple):

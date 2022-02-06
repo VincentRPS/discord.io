@@ -72,7 +72,7 @@ class Message:  # noqa: ignore
     @property
     def id(self) -> int:
         """Returns the message id
-        
+
         Returns
         -------
         :class:`int`
@@ -82,7 +82,7 @@ class Message:  # noqa: ignore
     @property
     def guild(self):
         """Returns the :class:`Guild` of the message
-        
+
         Returns
         -------
         :class:`Guild`
@@ -92,7 +92,7 @@ class Message:  # noqa: ignore
     @property
     def author(self) -> User:
         """Returns the :class:`User` of the message
-        
+
         Returns
         -------
         :class:`User`
@@ -110,7 +110,7 @@ class Message:  # noqa: ignore
         components: List[dict[str, Any]] = None,
     ):
         """Sends a message to the channel currently active in
-        
+
         Parameters
         ----------
         content
@@ -161,7 +161,7 @@ class Message:  # noqa: ignore
         components: List[dict[str, Any]] = None,
     ):
         """Replys to the current message
-        
+
         Parameters
         ----------
         content

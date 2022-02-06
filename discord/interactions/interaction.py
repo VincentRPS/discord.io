@@ -35,14 +35,14 @@ if TYPE_CHECKING:
 
 class Interaction:
     """Represents a Discord Interaction & Interaction Response
-    
+
     Parameters
     ----------
     data
         The interaction data
     state
         The connection state
-    
+
     Attributes
     ----------
     webhook
@@ -66,6 +66,7 @@ class Interaction:
 
             This only appears on Component interactions.
     """
+
     def __init__(self, data: Dict, state):
         self.data = data
         self.state: ConnectionState = state
@@ -95,7 +96,7 @@ class Interaction:
         embeds: Optional[List[Embed]] = None,
     ):
         """Followup and interaction.
-        
+
         Parameters
         ----------
         content
@@ -124,6 +125,7 @@ class Interaction:
         embed: Optional[Embed] = None,
         embeds: Optional[List[Embed]] = None,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
+        type: Optional[int] = 4,
     ):
         """Send a initial response to a interaction
 
@@ -139,8 +141,10 @@ class Interaction:
             A :class:`list` of :class:`Embed` or :class:`dict`
         allowed_mentions
             A allowed mentions object
+        type
+            The interaction type
         """
-        ret = {"type": 4, "data": {}}
+        ret = {"type": type, "data": {}}
         if content:
             ret["data"]["content"] = content
         ret["data"]["tts"] = tts
@@ -171,12 +175,12 @@ class Interaction:
         An empty :meth:`Interaction.respond`
         """
 
-        return self.respond()
+        return self.respond(type=5)
 
     @property
     def member(self):
         """Returns the member object of the invoker.
-        
+
         Returns
         -------
         :class:`Member`

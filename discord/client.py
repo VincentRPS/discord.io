@@ -176,7 +176,7 @@ class Client:
         url: str = None,
     ):
         """Creates a button
-        
+
         Parameters
         ----------
         label
@@ -214,7 +214,7 @@ class Client:
         afk: Optional[bool] = False,
     ):
         """Changes the bot's presence
-        
+
         Parameters
         ----------
         name
@@ -225,8 +225,8 @@ class Client:
             The presence status
 
             .. note::
-                
-                can be "online", "dnd", 
+
+                can be "online", "dnd",
                 invisable and offline.
         stream_url
             Used with the streaming presence type
@@ -273,7 +273,7 @@ class Client:
 
     def listen(self, name: str = None) -> Callable[[CFT], CFT]:
         """Listen to a event
-        
+
         like :meth:`Client.event` but you can have a event split into multiple coroutines.
 
         Parameters
@@ -281,6 +281,7 @@ class Client:
         name
             The event to listen to
         """
+
         def decorator(func: CFT) -> CFT:
             self.dispatcher.add_listener(func, name)
             return func
@@ -289,7 +290,7 @@ class Client:
 
     def command(self, name: str = None) -> Callable[[CFT], CFT]:
         """Registers a prefixed command
-        
+
         Parameters
         ----------
         name
@@ -305,7 +306,7 @@ class Client:
     @property
     def user(self):
         """Returns the bot user
-        
+
         Returns
         -------
         :class:`User`

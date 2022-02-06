@@ -415,6 +415,32 @@ class RESTFactory:
             Route("GET", "/guilds/{guild_id}/members", guild_id=guild_id), json=ret
         )
 
+    def modify_guild_member(
+        self,
+        guild_id: int,
+        member: int,
+        nick: typing.Optional[str] = None,
+        roles: typing.Optional[typing.List[int]] = None,
+        mute: typing.Optional[bool] = False,
+        deaf: typing.Optional[bool] = False,
+        channel_id: typing.Optional[int] = None,
+        timeout: typing.Optional[str] = None,
+        reason: typing.Optional[str] = None,
+    ):
+        ret = {
+            "nick": nick,
+            "roles": roles,
+            "mute": mute,
+            "deaf": deaf,
+            "channel_id": channel_id,
+            "communication_disabled_until": timeout,
+        }
+        return self.rest.send(
+            Route("PATCH", f"/guilds/{guild_id}/members/{member}", guild_id=guild_id),
+            reason=reason,
+            json=ret,
+        )
+
     # users
     def get_user(self, user: int):
         return self.rest.send(Route("GET", f"/users/{user}"))

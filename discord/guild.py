@@ -53,7 +53,7 @@ class Guild:
 
     def vanity(self) -> str:
         """The vanity url, if None returns None
-        
+
         Returns
         -------
         :class:`str`
@@ -62,7 +62,7 @@ class Guild:
 
     def splash(self) -> str:
         """The splash screen, if None returns None
-        
+
         Returns
         -------
         :class:`str`
@@ -71,7 +71,7 @@ class Guild:
 
     def discovery_splash(self) -> str:
         """The discovery splash, if None returns None
-        
+
         Returns
         -------
         :class:`str`
@@ -80,7 +80,7 @@ class Guild:
 
     def sub_count(self) -> int:
         """The subscription count, returns a int
-        
+
         Returns
         -------
         :class:`int`
@@ -98,9 +98,10 @@ class Guild:
         """
         return self.from_dict["emojis"]
 
+    @property
     def id(self) -> int:
         """The guild id
-        
+
         Returns
         -------
         :class:`int`
@@ -109,7 +110,7 @@ class Guild:
 
     async def get_member(self, id: int):
         """Gets a member and returns a :class:`Member` object
-        
+
         Parameters
         ----------
         id
@@ -120,4 +121,4 @@ class Guild:
         :class:`Member`
         """
         unparsed = await self._factory.get_guild_member(self.id(), id)
-        return Member(unparsed, self._factory)
+        return Member(unparsed, self.id, self._factory)

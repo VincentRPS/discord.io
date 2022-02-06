@@ -23,7 +23,8 @@ from .core import Event
 
 
 class OnInteraction(Event):
-    """A event which processes interactions, not to be normally useds"""
+    """A event which processes interactions, not to be normally used"""
+
     def process(self):
         for component in self.state.components.values():
             if component["id"] == self.data["data"]["custom_id"]:

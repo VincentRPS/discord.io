@@ -75,7 +75,7 @@ class Intents:
     @staticmethod
     def default() -> int:
         """Gives every non-privledged Intent
-        
+
         Returns
         -------
         :class:`int`
@@ -85,7 +85,7 @@ class Intents:
     @staticmethod
     def all() -> int:
         """Gives every Intent
-        
+
         Returns
         -------
         :class:`int`

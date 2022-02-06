@@ -32,7 +32,7 @@ from .embed import Embed
 
 class Context:
     """Represents a command context
-    
+
     .. versionadded:: 0.7.0
 
     Parameters
@@ -40,6 +40,7 @@ class Context:
     data
         A :class:`Message`
     """
+
     def __init__(self, data: Message):
         self.message = data
 

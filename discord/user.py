@@ -30,7 +30,7 @@ __all__: List[str] = ["User"]
 
 class User:
     """Represents a Discord User
-    
+
     .. versionadded:: 0.6.0
 
     Parameters

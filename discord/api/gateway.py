@@ -102,7 +102,7 @@ class Shard:
         self.last_send = perf_counter()
         self.last_ack = perf_counter()
         self.latency = self.last_ack - self.last_send
-        self._session_id = None
+        self._session_id: int = None
         self._ratelimit_lock: asyncio.Lock = asyncio.Lock()
 
     async def connect(self, token: str) -> None:
@@ -173,7 +173,7 @@ class Shard:
                 await asyncio.sleep(delay)
 
     async def check_connection(self):
-        await asyncio.sleep(20)
+        await asyncio.sleep(50)
         if self.last_recv + 60.0 < perf_counter():
             _log.warning(
                 f"Shard {self.shard_id} has stopped receiving from the gateway, reconnecting"
@@ -205,9 +205,14 @@ class Shard:
         async for msg in self.ws:
             if msg.type == aiohttp.WSMsgType.BINARY:
                 self.buffer.extend(msg.data)
-                raw = self.inflator.decompress(self.buffer).decode("utf-8")
+                try:
+                    raw = self.inflator.decompress(self.buffer).decode("utf-8")
+                except:
+                    # probably corrupted data
+                    self.buffer = bytearray()
+                    return
                 if len(msg.data) < 4 or msg.data[-4:] != ZLIB_SUFFIX:
-                    raise
+                    raise RuntimeError
                 self.buffer = bytearray()  # clean buffer
                 data = json.loads(raw)
                 _log.debug("> %s", data)
@@ -307,9 +312,10 @@ class Shard:
     async def heartbeat(self, interval: float) -> None:
         if self.is_ratelimited:
             await self.block()
-        await self.send({"op": 1, "d": self._seq})
-        await asyncio.sleep(interval)
-        self.state.loop.create_task(self.heartbeat(interval))
+        while not self.ws.closed:
+            await self.send({"op": 1, "d": self._seq})
+            await asyncio.sleep(interval)
+            self.state.loop.create_task(self.heartbeat(interval))
 
     async def close(self, code: int = 4000) -> None:
         if self.ws:
@@ -418,8 +424,7 @@ class Gateway:
 
     def send(self, payload: Dict) -> Coroutine[Any, Any, None]:
         """Sends a request from a shard"""
-        for shard in self.shards:
-            return shard.send(payload)
+        return self.s.send(payload)
 
     def gain_voice_access(
         self, guild: Snowflakeish, channel: Snowflakeish, mute: bool, deaf: bool

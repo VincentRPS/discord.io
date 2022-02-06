@@ -35,7 +35,7 @@ class Emoji:
     ----------
     data
         The raw emoji data
-    
+
     Attributes
     ----------
     from_dict

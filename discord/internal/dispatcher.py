@@ -38,12 +38,13 @@ CoroFunc = Callable[..., Coro[Any]]
 
 class Dispatcher:
     """Dispatches raw and non-raw events
-    
+
     Parameters
     ----------
     state
         The :class:`ConnectionState`
     """
+
     def __init__(self, state: ConnectionState):
         self.state = state
 

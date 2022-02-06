@@ -158,6 +158,7 @@ class Opus:
 # encoder
 class Encoder(Opus):
     """A class used to encode `.pcm` data into opus data for the discord voice gateway"""
+
     EXP = {
         "opus_encoder_get_size": ([ctypes.c_int], ctypes.c_int, None),
         "opus_encoder_create": (
