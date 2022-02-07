@@ -61,3 +61,22 @@ class ApplicationCommandType(Enum):
     CHAT_INPUT = 1
     USER = 2
     MESSAGE = 3
+
+
+class StickerType(Enum):
+    STANDARD = 1
+    GUILD = 2
+
+
+class StickerFormatType(Enum):
+    PNG = 1
+    APNG = 2
+    LOTTIE = 3
+
+
+class FormatType(Enum):
+    JPEG = ".jpeg"
+    PNG = ".png"
+    WEBP = ".webp"
+    GIF = ".gif"
+    LOTTIE = ".json"

@@ -71,5 +71,14 @@ class OnMessageDelete(Event):
         self.dispatch("MESSAGE_DELETE", message)
 
 
+class BulkMessageDelete(Event):
+    def process(self):
+        messages = [Message(msg, self.state.app) for msg in self.data["ids"]]
+        # channel = TextChannel(...)
+        guild = self.state._guilds_cache.get(self.data["guild_id"])
+
+        self.dispatch("MESSAGE_BULK_DELETE", messages, guild)
+
+
 class OnMessageReactionAdd(Event):
     """Gives a :class:`Message` and a :class:`Emoji` that was added."""

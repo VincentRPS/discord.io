@@ -23,9 +23,10 @@
 
 ref: https://discord.dev/resources/guild
 """
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
-from discord.member import Member
+from .enums import FormatType
+from .member import Member
 
 __all__: List[str] = ["Guild"]
 
@@ -122,3 +123,56 @@ class Guild:
         """
         unparsed = await self._factory.get_guild_member(self.id(), id)
         return Member(unparsed, self.id, self._factory)
+
+
+def parse_role_icon(format: FormatType, role_id: int, role_icon: str) -> str:
+    return f"https://cdn.discordapp.com/role-icons/{role_id}/{role_icon}.{format}"
+
+
+def _parse_tags(data: dict):
+    return data.get("bot_id") or data.get("integration_id") or ""
+
+
+class Role:
+    def __init__(self, data: dict):
+        self.from_dict = data
+
+    @property
+    def id(self) -> int:
+        return self.from_dict["id"]
+
+    @property
+    def name(self) -> str:
+        return self.from_dict["name"]
+
+    @property
+    def color(self) -> int:
+        return self.from_dict["color"]
+
+    def hoist(self) -> bool:
+        return self.from_dict["hoist"]
+
+    def icon(self, format: Optional[FormatType] = FormatType.PNG) -> str:
+        return parse_role_icon(
+            format=format, role_id=self.id, role_icon=self.from_dict["icon"]
+        )
+
+    def unicode_emoji(self) -> str:
+        return self.from_dict["unicode_emoji"]
+
+    @property
+    def position(self) -> int:
+        return self.from_dict["position"]
+
+    def permissions(self) -> str:
+        # TODO: Replace with a Permission class?
+        return self.from_dict["permissions"]
+
+    def managed(self) -> bool:
+        return self.from_dict["managed"]
+
+    def mentionable(self) -> bool:
+        return self.from_dict["mentionable"]
+
+    def tags(self):
+        _parse_tags(self.from_dict)

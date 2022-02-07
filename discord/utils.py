@@ -12,6 +12,8 @@
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 
+import datetime
+
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,8 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 import inspect
-import datetime
-from typing import Any, Callable, TypeVar, overload, Optional
+from typing import Any, Callable, Optional, TypeVar, overload
 
 T = TypeVar("T")
 
@@ -30,40 +31,40 @@ Epoch = 1420070400000
 
 # probably missing some keys here?
 class _Missing:
-
     @overload
     def __str__() -> str:
         ...
-    
+
     @overload
     def __str__(self):
         ...
-    
+
     @overload
     def __str__():
         return None
-    
+
     @overload
     def __int__() -> int:
         ...
-    
+
     @overload
     def __int__(self):
         ...
-    
+
     @overload
     def __int__(self):
         return None
-    
+
     def __bool__(self):
         return False
-    
+
     def __repr__(self):
         return "..."
-    
+
     def __eq__(self):
         return False
-    
+
+
 MISSING: Any = _Missing()
 
 # i am too lazy to just copy/paste the docstrings, this is a better way
@@ -75,30 +76,33 @@ def copy_doc(original: Callable) -> Callable[[T], T]:
 
     return decorator
 
+
 def utcnow():
     """Gives the current time in utc
-    
+
     Returns
     -------
     :class:`int`
     """
     return datetime.datetime.now(datetime.timezone.utc)
 
+
 def create_snowflake(time: Optional[datetime.datetime] = None) -> int:
     """Creates a Discord snowflake via the epoch and some simple math
-    
+
     Parameters
     ----------
     time: :class:`datetime.datetime`
         The time this snowflake should've been created at,
         defaults to the current time.
-    
+
     Returns
     -------
     :class:`int`
     """
     time = time or utcnow()
-    return int(time.timestamp() *1000 - Epoch) << 22 | 0x3fffff
+    return int(time.timestamp() * 1000 - Epoch) << 22 | 0x3FFFFF
+
 
 async def getch(fetch, get):
     try:

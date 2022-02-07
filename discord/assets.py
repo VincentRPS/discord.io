@@ -23,7 +23,11 @@
 
 ref: https://discord.dev/resources/emoji
 """
-from discord.types import Dict
+from .enums import StickerFormatType, StickerType
+from .guild import Guild
+from .state import ConnectionState
+from .types import Dict
+from .user import User
 
 
 class Emoji:
@@ -45,3 +49,99 @@ class Emoji:
     def __init__(self, data: Dict):
         self.from_dict = data
         """The data in dict format."""
+
+    @property
+    def id(self) -> int:
+        return self.from_dict["id"]
+
+    @property
+    def name(self) -> str:
+        return self.from_dict["name"]
+
+    # def roles(self) -> Role:
+
+    @property
+    def creator(self) -> User:
+        return User(self.from_dict["user"])
+
+    def require_colons(self) -> bool:
+        return self.from_dict["require_colons"]
+
+    def managed(self) -> bool:
+        return self.from_dict["managed"]
+
+    def animated(self) -> bool:
+        return self.from_dict["animated"]
+
+    def available(self) -> bool:
+        return self.from_dict["available"]
+
+
+class Sticker:
+    """Represents a Discord Sticker.
+
+    .. versionadded:: 0.8.0
+
+    Parameters
+    ----------
+    data: :class:`dict`
+        The raw Sticker data
+    state: :class:`ConnectionState`
+        The connection state
+
+    Attributes
+    ----------
+    from_dict
+        The raw Sticker data
+    """
+
+    def __init__(self, data: dict, state: ConnectionState):
+        self.from_dict = data
+        self.state = state
+
+    @property
+    def id(self) -> int:
+        return self.from_dict["id"]
+
+    @property
+    def pack(self) -> int:
+        return self.from_dict["pack_id"]
+
+    @property
+    def name(self) -> str:
+        return self.from_dict["name"]
+
+    def description(self) -> str:
+        return self.from_dict["description"]
+
+    def tags(self) -> str:
+        return self.from_dict["tags"]
+
+    def type(self) -> StickerType:
+        if self.from_dict["type"] == 1:
+            return StickerType.STANDARD
+        else:
+            return StickerType.GUILD
+
+    def format(self) -> StickerFormatType:
+        if self.from_dict["format_type"] == 1:
+            return StickerFormatType.PNG
+        elif self.from_dict["format_type"] == 2:
+            return StickerFormatType.APNG
+        else:
+            return StickerFormatType.LOTTIE
+
+    def available(self) -> bool:
+        return self.from_dict["available"]
+
+    def guild(self) -> Guild:
+        try:
+            return Guild(self.state._guilds_cache.get(self.from_dict["guild_id"]))
+        except KeyError:
+            return None
+
+    def creator(self) -> User:
+        return User(self.from_dict["user"])
+
+    def sort_value(self) -> int:
+        return int(self.from_dict["sort_value"])

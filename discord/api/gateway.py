@@ -228,9 +228,6 @@ class Shard:
                     ):  # only fire up getting the session_id on a ready event.
                         await self._ready(data)
                         self.dis.dispatch("READY")
-                    elif data["t"] == "GUILD_CREATE":
-                        self.state._guilds_cache.new(data["d"]["id"], data["d"])
-                        self.dis.dispatch("RAW_GUILD_CREATE", data["d"])
                     else:
                         self.dis.dispatch("RAW_{}".format(data["t"]), data["d"])
                         catalog.Cataloger(data, self.dis, self.state)
@@ -425,6 +422,13 @@ class Gateway:
     def send(self, payload: Dict) -> Coroutine[Any, Any, None]:
         """Sends a request from a shard"""
         return self.s.send(payload)
+
+    async def _chunk_members(self):
+        for guild in self._s._guilds_cache._cache.items():
+            shard_id = (guild["id"] >> 22) % self._s.shard_count
+            self.shards[shard_id].send(
+                {"op": 8, "d": {"guild_id": guild["id"], "query": "", "limit": 0}}
+            )
 
     def gain_voice_access(
         self, guild: Snowflakeish, channel: Snowflakeish, mute: bool, deaf: bool

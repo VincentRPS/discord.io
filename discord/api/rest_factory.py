@@ -455,7 +455,7 @@ class RESTFactory:
     ):
         ret = {"limit": limit, "after": after}
         return self.rest.send(
-            Route("GET", "/guilds/{guild_id}/members", guild_id=guild_id), json=ret
+            Route("GET", f"/guilds/{guild_id}/members", guild_id=guild_id), json=ret
         )
 
     def modify_guild_member(

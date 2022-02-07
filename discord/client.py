@@ -92,6 +92,10 @@ class Client:
     command_prefix: :class:`str`
         The prefix for prefixed commands,
         defaults to "".
+    chunk_guild_members
+        If to cache guild members,
+        this allowes the before argument on member events,
+        aswell as faster fetching times.
     """
 
     def __init__(
@@ -108,6 +112,7 @@ class Client:
         debug: Optional[bool] = False,
         state: Optional[ConnectionState] = None,
         command_prefix: Optional[str] = "",
+        chunk_guild_members: Optional[bool] = False,
     ):
         print_banner(module)
         start_logging(logs, debug)
@@ -133,6 +138,7 @@ class Client:
             self.voice = VoiceClient(self.state, self.dispatcher, self.gateway)
         self._got_gateway_bot: Event = Event()
         self.cogs = {}
+        self.chunk_guild_members = chunk_guild_members
 
         if not has_nacl:
             _log.warning(
@@ -157,6 +163,11 @@ class Client:
         """
 
         await self.gateway.connect(token=token)
+        if self.chunk_guild_members is not False:
+            # this makes sure we are already
+            # connected when asking for the chunk
+            await asyncio.sleep(30)
+            await self.gateway._chunk_members()
 
     def run(self, token: str):
         """A blocking function to start your bot"""

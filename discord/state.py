@@ -23,7 +23,6 @@
 The ConnectionState Caches most things during connection.
 """
 import asyncio
-import threading
 from collections import OrderedDict
 from typing import Any, Callable, Coroutine, List, Tuple, TypeVar, Union
 
@@ -140,6 +139,8 @@ class ConnectionState:
 
     def __init__(self, **options):
         self._guilds_cache = options.get("guild_cache_hold") or Hold()
+        self.members = Hold()
+        self.roles = Hold()
         self._sent_messages_cache = options.get("sent_messages_cache_hold") or Hold()
         self._edited_messages_cache = (
             options.get("edited_messages_cache_hold") or Hold()
@@ -199,3 +200,9 @@ class ConnectionState:
         self.application_commands: dict[str, Any] = {}
 
         self.prefix = options.get("prefix")
+
+
+def member_cacher(state: ConnectionState, data, guild, member_class):
+    for member in data:
+        mem = member_class(member, guild, state.app.factory)
+        state.members.new(mem.id, mem)
