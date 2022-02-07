@@ -34,6 +34,11 @@ class Cataloger:
         # guilds
         if data["t"] == "GUILD_CREATE":
             state._guilds_cache.new(data["d"]["id"], data["d"])
+            # roles, channels
+            for channel in data["d"]["channels"]:
+                state.channels.new(channel["id"], channel)
+            for role in data["d"]["roles"]:
+                state.roles.new(role["id"], role)
             dis.dispatch("RAW_GUILD_CREATE", data["d"])
             OnGuildJoin(data["d"], dis, state)
 

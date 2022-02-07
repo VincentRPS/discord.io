@@ -139,8 +139,9 @@ class ConnectionState:
 
     def __init__(self, **options):
         self._guilds_cache = options.get("guild_cache_hold") or Hold()
-        self.members = Hold()
-        self.roles = Hold()
+        self.members = options.get("members_cache_hold") or Hold()
+        self.roles = options.get("roles_cache_hold") or Hold()
+        self.channels = options.get("channel_cache_hold") or Hold()
         self._sent_messages_cache = options.get("sent_messages_cache_hold") or Hold()
         self._edited_messages_cache = (
             options.get("edited_messages_cache_hold") or Hold()

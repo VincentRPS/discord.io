@@ -60,10 +60,11 @@ class ApplicationCommandRegistry:
             commands = await self.factory.get_guild_application_commands(
                 self.state._bot_id, guild["id"]
             )
-            async for command in commands:
-                await self.factory.delete_guild_application_command(
-                    self.state._bot_id, guild["id"], command
-                )
+            for command in commands:
+                if command not in self.state.application_commands.items():
+                    await self.factory.delete_guild_application_command(
+                        self.state._bot_id, guild["id"], command["id"]
+                    )
 
         await self.check_application_commands(glob)
 

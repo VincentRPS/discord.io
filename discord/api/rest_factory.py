@@ -291,7 +291,7 @@ class RESTFactory:
         return self.rest.send(
             Route(
                 "GET",
-                f"/applications/{application_id}/guilds/{guild_id}/commands/",
+                f"/applications/{application_id}/guilds/{guild_id}/commands",
             )
         )
 
