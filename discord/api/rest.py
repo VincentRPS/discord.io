@@ -155,17 +155,17 @@ class RESTClient:
         if self.proxy is not None:
             params["proxy"] = self.proxy
 
-        elif self.proxy_auth is not None:
+        if self.proxy_auth is not None:
             params["proxy_auth"] = self.proxy_auth
 
         if "json" in params:
             self.header["Content-Type"] = "application/json"  # Only json.
             params["data"] = json.dumps(params.pop("json"))
 
-        elif "token" in params:
+        if "token" in params:
             self.header["Authorization"] = "Bot " + params.pop("token")
 
-        elif "reason" in params:
+        if "reason" in params:
             self.header["X-Audit-Log-Reason"] = quote(params.pop("reason"), "/ ")
 
         params["headers"] = self.header
@@ -278,3 +278,9 @@ class RESTClient:
     async def close(self) -> None:
         if self._session:
             await self._session.close()  # Closes the session
+    
+    async def create_if_not_exists(self):
+        if self._session is None or utils.MISSING:
+            self._session = aiohttp.ClientSession()
+        else:
+            pass

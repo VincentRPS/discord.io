@@ -24,7 +24,7 @@ import io
 import os
 import typing as t
 
-from discord.internal.exceptions import DiscordError, Forbidden
+from .internal.exceptions import DiscordError, Forbidden
 
 __all__: t.List[str] = ["File"]
 

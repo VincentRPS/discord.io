@@ -25,6 +25,7 @@ from ..state import ConnectionState, member_cacher
 from .guilds import *
 from .interactions import OnInteraction
 from .messages import OnMessage, OnMessageDelete, OnMessageEdit
+from ..guild import ScheduledEvent
 
 
 # https://discord.dev/topics/gateway#commands-and-events-gateway-events
@@ -39,6 +40,9 @@ class Cataloger:
                 state.channels.new(channel["id"], channel)
             for role in data["d"]["roles"]:
                 state.roles.new(role["id"], role)
+            for event in data["d"]["guild_scheduled_events"]:
+                even = ScheduledEvent(event)
+                state.guild_events.new(even.id, even)
             dis.dispatch("RAW_GUILD_CREATE", data["d"])
             OnGuildJoin(data["d"], dis, state)
 

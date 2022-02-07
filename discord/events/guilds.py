@@ -134,6 +134,7 @@ class OnMemberLeave(Event):
 
 class OnMemberUpdate(Event):
     def process(self):
+        before = None
         for member in self.state.members._cache.values():
             if member.user.id == self.data["user"]["id"]:
                 before = member

@@ -77,6 +77,7 @@ class Context:
             A list of component :class:`dict`s
             or :class:`Button`
         """
+        emb = None
         if embed and not embeds:
             if isinstance(embed, Embed):
                 emb = [embed.obj]
@@ -136,6 +137,7 @@ class Context:
             A list of component :class:`dict`s
             or :class:`Button`
         """
+        emb = None
         if embed and not embeds:
             if isinstance(embed, Embed):
                 emb = [embed.obj]

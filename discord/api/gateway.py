@@ -424,9 +424,10 @@ class Gateway:
         return self.s.send(payload)
 
     async def _chunk_members(self):
-        for guild in self._s._guilds_cache._cache.items():
-            shard_id = (guild["id"] >> 22) % self._s.shard_count
-            self.shards[shard_id].send(
+        await asyncio.sleep(20)
+        for guild in self._s._guilds_cache._cache.values():
+            shard_id = (int(guild["id"]) >> 22) % self._s.shard_count
+            await self.shards[shard_id].send(
                 {"op": 8, "d": {"guild_id": guild["id"], "query": "", "limit": 0}}
             )
 

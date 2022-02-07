@@ -35,6 +35,9 @@ Coro = Coroutine[Any, Any, T]
 CoroFunc = Callable[..., Coro[Any]]
 
 
+# so there are 2 pretty big problems with this right now,
+# 1 it's not async so the db would have to be blocking
+# 2 it's repetitive to switch out since you need to switch all cache objects.
 class Hold:
     """A hold of cache, easily swapable with a db."""
 
@@ -141,6 +144,7 @@ class ConnectionState:
         self._guilds_cache = options.get("guild_cache_hold") or Hold()
         self.members = options.get("members_cache_hold") or Hold()
         self.roles = options.get("roles_cache_hold") or Hold()
+        self.guild_events = options.get("guild_events_cache_hold") or Hold()
         self.channels = options.get("channel_cache_hold") or Hold()
         self._sent_messages_cache = options.get("sent_messages_cache_hold") or Hold()
         self._edited_messages_cache = (
@@ -206,4 +210,4 @@ class ConnectionState:
 def member_cacher(state: ConnectionState, data, guild, member_class):
     for member in data:
         mem = member_class(member, guild, state.app.factory)
-        state.members.new(mem.id, mem)
+        state.members.new(mem.user.id, mem)

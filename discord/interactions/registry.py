@@ -40,6 +40,7 @@ class ApplicationCommandRegistry:
         self.state = state
         self.dispatcher = Dispatcher(state=self.state)
         self.state.loop.create_task(self.on_ready())
+        self.unregistered_commands: asyncio.Event = asyncio.Event()
 
     async def run(
         self, coro: Callable[..., Coroutine[Any, Any, Any]], data, state
@@ -56,6 +57,10 @@ class ApplicationCommandRegistry:
         await asyncio.sleep(20)
         glob = await self.factory.get_global_application_commands(self.state._bot_id)
 
+        await self.check_application_commands(glob)
+
+        await asyncio.sleep(10)
+
         for guild in self.state._guilds_cache._cache.values():
             commands = await self.factory.get_guild_application_commands(
                 self.state._bot_id, guild["id"]
@@ -65,8 +70,7 @@ class ApplicationCommandRegistry:
                     await self.factory.delete_guild_application_command(
                         self.state._bot_id, guild["id"], command["id"]
                     )
-
-        await self.check_application_commands(glob)
+        self.unregistered_commands.set()
 
     async def check_application_commands(self, rglobal):
         for command in rglobal:
@@ -83,6 +87,8 @@ class ApplicationCommandRegistry:
         options: Optional[List[Dict]] = None,
         default_permission: bool = True,
     ) -> dict:
+        if not self.unregistered_commands.is_set():
+            await self.unregistered_commands.wait()
         r = await self.factory.create_guild_application_command(
             self.state._bot_id,
             guild_id,
@@ -107,6 +113,8 @@ class ApplicationCommandRegistry:
         options: Optional[List[Dict]] = None,
         default_permission: bool = True,
     ) -> dict:
+        if not self.unregistered_commands.is_set():
+            await self.unregistered_commands.wait()
         r = await self.factory.create_global_application_command(
             self.state._bot_id, name, description, options, default_permission, type=1
         )

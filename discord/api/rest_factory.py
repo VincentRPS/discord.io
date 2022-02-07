@@ -22,6 +22,7 @@
 
 import typing
 from json import dumps
+from typing import Optional
 
 from ..file import File
 from ..flags import MessageFlags
@@ -91,7 +92,6 @@ class RESTFactory:
         message_reference: typing.Optional[dict] = None,
         components: typing.Optional[list[Dict]] = None,
     ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
-        form = []
         json = {
             "tts": tts,
             "allowed_mentions": allowed_mentions,
@@ -106,6 +106,7 @@ class RESTFactory:
             json["embeds"] = embeds
 
         if files:
+            form = []
             form.append({"name": "payload_json", "value": dumps(json)})
             if len(files) == 1:
                 file = files[0]
@@ -132,6 +133,7 @@ class RESTFactory:
                 Route("POST", f"/channels/{channel}/messages", channel_id=channel),
                 json=json,
                 form=form,
+                files=files
             )
 
         return self.rest.send(
@@ -483,7 +485,32 @@ class RESTFactory:
             reason=reason,
             json=ret,
         )
+    
+    def get_guild(self, guild_id: int):
+        return self.rest.send(Route("GET", f"/guilds/{guild_id}", guild_id=guild_id))
+    
+    def modify_guild(
+        self, 
+        guild_id: int,
+        reason: Optional[str] = None,
+        name: Optional[str] = None,
+        verification_level: Optional[int] = None,
+        default_message_notifications: Optional[int] = None,
+        explicit_content_filter: Optional[int] = None,
+        afk_channel_id: Optional[int] = None,
+        afk_timeout: Optional[int] = None,
+
+    ):
+        ...
 
     # users
     def get_user(self, user: int):
         return self.rest.send(Route("GET", f"/users/{user}"))
+
+    # scheduled events
+    def get_scheduled_events(self, guild_id: int):
+        return self.rest.send(Route(
+            "GET", f"/guilds/{guild_id}/scheduled-events", guild_id=guild_id
+        ))
+    
+

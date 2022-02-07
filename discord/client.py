@@ -29,14 +29,15 @@ import time
 from threading import Event
 from typing import Callable, List, Literal, Optional, TypeVar, Union
 
-from discord.api.gateway import Gateway
-from discord.api.rest_factory import RESTFactory
-from discord.audio import VoiceClient, has_nacl
-from discord.internal import command_dispatcher, dispatcher
-from discord.state import ConnectionState
-from discord.types.dict import Dict
-from discord.ui import print_banner, start_logging
-from discord.user import User
+from .api.gateway import Gateway
+from .api.rest_factory import RESTFactory
+from .audio import VoiceClient, has_nacl
+from .internal import command_dispatcher, dispatcher
+from .state import ConnectionState
+from .types.dict import Dict
+from .ui import print_banner, start_logging
+from .user import User
+from .guild import Guild
 
 from .components import Button
 from .interactions import ApplicationCommandRegistry
@@ -179,6 +180,14 @@ class Client:
 
         self.state.loop.create_task(runner())
         self.state.loop.run_forever()
+    
+    def fetch_guild(self, guild_id):
+        raw = self.state._guilds_cache.get(guild_id)
+        return Guild(raw, self.factory)
+    
+    async def get_guild(self, guild_id):
+        raw = await self.factory.get_guild(guild_id=guild_id)
+        return Guild(raw, self.factory)
 
     def create_button(
         self,
