@@ -101,7 +101,7 @@ class Interaction:
         embed: Optional[Embed] = None,
         embeds: Optional[List[Embed]] = None,
     ):
-        """Followup and interaction.
+        """Followup a defered interaction.
 
         Parameters
         ----------
