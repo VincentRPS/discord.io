@@ -38,6 +38,7 @@ from discord.events import catalog
 from discord.internal.dispatcher import Dispatcher
 from discord.snowflake import Snowflakeish
 from discord.types.dict import Dict
+from discord import utils
 
 from ..state import ConnectionState
 from .rest_factory import RESTFactory
@@ -392,14 +393,8 @@ class Gateway:
         self._f = factory
         self.shards: List[Shard] = []
 
+    @utils.copy_doc(Shard.connect)
     async def connect(self, token: str) -> None:
-        """Connects to the Gateway via WebSockets
-
-        Parameters
-        ----------
-        token
-            Your bot token
-        """
         r = await self._f.get_gateway_bot()
         if self.count is None:
             shds = r["shards"]
@@ -419,8 +414,9 @@ class Gateway:
             self.shards.append(self.s)
             _log.info("Shard %s has connected to Discord", shard)
 
+
+    @utils.copy_doc(Shard.send)
     def send(self, payload: Dict) -> Coroutine[Any, Any, None]:
-        """Sends a request from a shard"""
         return self.s.send(payload)
 
     async def _chunk_members(self):

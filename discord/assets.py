@@ -24,7 +24,6 @@
 ref: https://discord.dev/resources/emoji
 """
 from .enums import StickerFormatType, StickerType
-from .guild import Guild
 from .state import ConnectionState
 from .types import Dict
 from .user import User
@@ -134,11 +133,8 @@ class Sticker:
     def available(self) -> bool:
         return self.from_dict["available"]
 
-    def guild(self) -> Guild:
-        try:
-            return Guild(self.state._guilds_cache.get(self.from_dict["guild_id"]))
-        except KeyError:
-            return None
+    def guild_id(self) -> int:
+        return int(self.from_dict["guild_id"])
 
     def creator(self) -> User:
         return User(self.from_dict["user"])

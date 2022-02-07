@@ -23,11 +23,12 @@
 
 ref: https://discord.dev/resources/guild
 """
-from typing import Any, Dict, List, Optional, Union
+from typing import List, Optional, Union
 
 from .enums import FormatType, ScheduledEventStatusType, ScheduledEventType
 from .member import Member
 from .user import User
+from .assets import Emoji
 
 __all__: List[str] = ["Guild"]
 
@@ -89,16 +90,14 @@ class Guild:
         """
         return self.from_dict["premium_subscription_count"]
 
-    def emojis(self) -> List[Dict[str, Any]]:
-        """A list of emojis
+    def emojis(self) -> List[Emoji]:
+        """A list of :class:`Emoji`
 
-        .. note::
-
-            we are currently working on making a emoji class
-            to return a list of them, but while that is being made
-            this will just return a dict of all emojis.
+        Returns
+        -------
+        List[:class:`Emoji`]
         """
-        return self.from_dict["emojis"]
+        return [Emoji(emoji) for emoji in self.from_dict["emojis"]]
 
     @property
     def id(self) -> int:
