@@ -31,7 +31,7 @@ from .embed import Embed
 from .file import File
 from .snowflake import Snowflakeish
 
-__all__: typing.List[str] = ["Webhook"]
+__all__: typing.List[str] = ["Webhook", "WebhookAdapter"]
 
 
 class WebhookAdapter:
