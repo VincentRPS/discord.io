@@ -72,6 +72,7 @@ Webhook
     :members:
 
 .. autoclass:: Webhook
+    :members:
 
 Colors
 ------
@@ -80,12 +81,6 @@ Colors
     :members:
 
 .. autoclass:: Colour
-    :members:
-
-Webhooks
---------
-
-.. autoclass:: Webhook
     :members:
 
 Dispatcher
