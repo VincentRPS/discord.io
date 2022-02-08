@@ -58,7 +58,7 @@ class User:
     def public_flags(self):
         """The users public flags."""
         return self.from_dict["public_flags"]
-    
+
     @property
     def bot(self) -> bool:
         return self.from_dict["bot"]

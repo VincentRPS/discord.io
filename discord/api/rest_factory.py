@@ -25,6 +25,8 @@ import typing
 from json import dumps
 from typing import Any, Optional
 
+import aiohttp
+
 from discord import utils
 
 from ..enums import ScheduledEventType
@@ -58,10 +60,12 @@ class RESTFactory:
         proxy: typing.Optional[str] = None,
         proxy_auth: typing.Optional[str] = None,
     ):
+        self.proxy = proxy
+        self.proxy_auth = proxy_auth
         self.state = state or ConnectionState()
         self.rest = RESTClient(state=self.state, proxy=proxy, proxy_auth=proxy_auth)
 
-    def login(
+    async def login(
         self, token: str
     ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
         self.token = token
@@ -71,7 +75,11 @@ class RESTFactory:
         else:
             pass
 
-        return self.rest.send(Route("GET", "/users/@me"), token=self.token)
+        r = await self.rest.send(Route("GET", "/users/@me"), token=self.token)
+
+        self.state.bot_info[self.state.app] = r
+
+        return r
 
     def logout(
         self,
@@ -613,3 +621,20 @@ class RESTFactory:
             files=[file],
             reason=reason,
         )
+
+    # if your wondering why this is here, it's because it's used in the voice gateway.
+    async def ws_connect(self, url: str, *, compress: int = 0) -> Any:
+        kwargs = {
+            "proxy_auth": self.proxy_auth,
+            "proxy": self.proxy,
+            "max_msg_size": 0,
+            "timeout": 30.0,
+            "autoclose": False,
+            "headers": {
+                "User-Agent": self.rest.user_agent,
+            },
+            "compress": compress,
+        }
+
+        sesh = aiohttp.ClientSession()
+        return await sesh.ws_connect(url, **kwargs)

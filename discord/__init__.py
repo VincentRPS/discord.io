@@ -18,7 +18,6 @@ import logging
 import typing
 
 from .api import *
-from .audio import *
 from .client import *
 from .color import *
 from .colour import *
@@ -38,6 +37,7 @@ from .types import *
 from .ui import *
 from .user import *
 from .utils import *
+from .voice import *
 from .webhooks import *
 
 

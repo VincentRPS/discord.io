@@ -425,10 +425,9 @@ class Gateway:
                 {"op": 8, "d": {"guild_id": guild["id"], "query": "", "limit": 0}}
             )
 
-    def gain_voice_access(
-        self, guild: Snowflakeish, channel: Snowflakeish, mute: bool, deaf: bool
+    async def voice_state(
+        self, guild: int, channel: Snowflakeish, mute: bool, deaf: bool
     ) -> Coroutine[Any, Any, None]:
-        """Gains the User access to a Voice Channel."""
         json = {
             "op": 4,
             "d": {
@@ -438,4 +437,5 @@ class Gateway:
                 "self_deaf": deaf,
             },
         }
-        return self.send(json)
+        shard_id = (int(guild) >> 22) % self._s.shard_count
+        await self.shards[shard_id].send(json)

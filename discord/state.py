@@ -160,6 +160,8 @@ class ConnectionState:
 
         self._bot_id: int = None
 
+        self.bot_info = {}
+
         self._voice_session_id: int = None
 
         self._seq: int = None

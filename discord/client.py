@@ -31,9 +31,10 @@ import time
 from threading import Event
 from typing import Callable, List, Literal, Optional, TypeVar, Union
 
+from discord.channels import VoiceChannel
+
 from .api.gateway import Gateway
 from .api.rest_factory import RESTFactory
-from .audio import VoiceClient, has_nacl
 from .components import Button
 from .ext.cogs import Cog, ExtensionLoadError
 from .guild import Guild
@@ -43,6 +44,7 @@ from .state import ConnectionState
 from .types.dict import Dict
 from .ui import print_banner, start_logging
 from .user import User
+from .voice import VoiceClient, has_nacl
 
 _log = logging.getLogger(__name__)
 __all__: List[str] = ["Client"]
@@ -110,7 +112,6 @@ class Client:
         mobile: Optional[bool] = False,
         proxy: Optional[str] = None,
         proxy_auth: Optional[str] = None,
-        voice: Optional[bool] = False,
         logs: Optional[Union[None, int, str, Dict]] = None,
         debug: Optional[bool] = False,
         state: Optional[ConnectionState] = None,
@@ -133,8 +134,6 @@ class Client:
             factory=self.factory,
             mobile=mobile,
         )
-        if voice is True:
-            self.voice = VoiceClient(self.state, self.dispatcher, self.gateway)
         self._got_gateway_bot: Event = Event()
         self.cogs = {}
         self._extensions = {}
@@ -155,6 +154,9 @@ class Client:
         r = await self.factory.login(token)
         self.state._bot_id = r["id"]
         return r
+
+    def voice(self, channel: VoiceChannel):
+        return VoiceClient(self.state, channel)
 
     async def connect(self, token: str):
         """Starts the WebSocket(Gateway) connection with Discord.
@@ -183,10 +185,17 @@ class Client:
     def fetch_guild(self, guild_id):
         raw = self.state._guilds_cache.get(guild_id)
         return Guild(raw, self.factory)
+    
+    def fetch_raw_guild(self, guild_id):
+        return self.state._guilds_cache.get(guild_id)
 
     async def get_guild(self, guild_id):
         raw = await self.factory.get_guild(guild_id=guild_id)
         return Guild(raw, self.factory)
+    
+    async def get_voice_channel(self, channel_id: int):
+        raw = await self.factory.get_channel(channel=channel_id)
+        return VoiceChannel(raw, self.state)
 
     def create_button(
         self,

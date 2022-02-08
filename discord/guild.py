@@ -124,12 +124,21 @@ class Guild:
         unparsed = await self._factory.get_guild_member(self.id(), id)
         return Member(unparsed, self.id, self._factory)
 
+    async def change_voice_state(
+        self,
+        *,
+        channel: Optional[int] = None,
+        self_mute: Optional[bool] = False,
+        self_deaf: Optional[bool] = False,
+    ):
+        await self._factory.state.app.gateway.voice_state(guild=self.id, channel=channel, mute=self_mute, deaf=self_deaf)
+
 
 def parse_role_icon(format: FormatType, role_id: int, role_icon: str) -> str:
     return f"https://cdn.discordapp.com/role-icons/{role_id}/{role_icon}.{format}"
 
 
-def _parse_tags(data: dict):
+def _parse_tags(data: dict) -> str:
     return data.get("bot_id") or data.get("integration_id") or ""
 
 

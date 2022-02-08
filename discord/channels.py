@@ -22,6 +22,7 @@
 from typing import Union
 
 from .enums import FormatType
+from .guild import Guild
 from .state import ConnectionState
 from .user import User
 
@@ -97,8 +98,11 @@ class VoiceChannel:
     def id(self) -> int:
         return self.from_dict["id"]
 
-    def guild_id(self) -> int:
-        return self.from_dict["guild_id"]
+    @property
+    def guild(self) -> Guild:
+        id = self.from_dict["guild_id"]
+        raw = self.state.app.fetch_raw_guild(guild_id=id)
+        return Guild(raw, self.state.app.factory)
 
     @property
     def name(self) -> str:

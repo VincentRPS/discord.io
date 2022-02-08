@@ -49,7 +49,7 @@ extra_requires = {
         "cchardet~=2.1.7",  # included in aiohttp speed.
         "ciso8601~=2.2.0",  # Faster datetime parsing.
     ],
-    "audio": ["PyNaCl~=1.5.0"],
+    "voice": ["PyNaCl~=1.5.0"],
 }
 
 setuptools.setup(

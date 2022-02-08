@@ -107,3 +107,6 @@ class Cataloger:
         elif data["t"] == "INTERACTION_CREATE":
             dis.dispatch("RAW_INTERACTION", dis, state)
             OnInteraction(data["d"], dis, state)
+        
+        else:
+            dis.dispatch(f"RAW_{data['t']}", data["d"])

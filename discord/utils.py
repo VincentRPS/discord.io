@@ -20,9 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
+import asyncio
 import datetime
 import inspect
-from typing import Any, Callable, Optional, TypeVar, overload
+import random
+import time
+from typing import Any, Callable, Generic, Optional, TypeVar, overload
 
 T = TypeVar("T")
 
@@ -125,3 +128,38 @@ def img_mime_type(data: bytes):
         return "image/webp"
     else:
         raise TypeError("Image given is not supported")
+
+
+async def wait_for(futures, *, timeout):
+    ensured = [asyncio.ensure_future(fut) for fut in futures]
+    done, pending = await asyncio.wait(
+        ensured, timeout=timeout, return_when=asyncio.ALL_COMPLETED
+    )
+
+    if len(pending) != 0:
+        raise asyncio.TimeoutError()
+
+    return done
+
+
+class ExponentialBackoff(Generic[T]):
+    # an exponantial backoff api based off how discord.py implemented theres.
+    def __init__(self, base: int = 1, *, integral: T = False):
+        self.base = base
+        self.exp = 0
+        self.max = 10
+        self.reset_time = base * 2 ** 11
+        self.last_invoke = time.monotonic()
+        rand = random.Random()
+        rand.seed()
+        self.rand = rand.randrange() if integral else rand.uniform
+
+    def delay(self):
+        invoke = time.monotonic
+        interval = invoke - self.last_invoke
+
+        if interval > self.reset_time:
+            self.exp = 0
+
+        self.exp = min(self.exp + 1, self.max)
+        return self.rand(0, self.base * 2 ** self.exp)

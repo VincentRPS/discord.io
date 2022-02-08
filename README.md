@@ -25,7 +25,7 @@ pip install discord.io[speed]
 For voice support run the following command:
 
 ```py
-pip install discord.io[audio]
+pip install discord.io[voice]
 ```
 
 ## Example
