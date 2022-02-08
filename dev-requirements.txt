@@ -25,7 +25,7 @@ types-orjson~=3.6.2
 coverage~=6.3
 pytest~=7.0.0
 pytest-cov~=3.0.0
-pytest-asyncio~=0.17.2
+pytest-asyncio~=0.18.0
 pytest-custom_exit_code~=0.3.0
 #######
 # nox #
