@@ -23,7 +23,6 @@
 
 from typing import List
 
-from ..context import Context
 from ..message import Message
 from .core import Event
 
@@ -37,11 +36,6 @@ class OnMessage(Event):
         ret = Message(self.data, self.state.app)
         self.state._sent_messages_cache.new(self.data["id"], self.data)
         self.dispatch("MESSAGE", ret)
-        for command in (
-            self.state.prefixed_commands.items() or self.state.app.cmd_dispatch.commands
-        ):
-            if ret.content.startswith(self.state.prefix + command):
-                self.state.app.cmd_dispatch.dispatch(command, Context(ret))
 
 
 class OnMessageEdit(Event):

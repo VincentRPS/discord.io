@@ -23,7 +23,6 @@ from .client import *
 from .color import *
 from .colour import *
 from .components import *
-from .context import *
 from .enums import *
 from .events import *
 from .file import *

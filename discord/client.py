@@ -38,7 +38,7 @@ from .components import Button
 from .ext.cogs import Cog, ExtensionLoadError
 from .guild import Guild
 from .interactions import ApplicationCommandRegistry
-from .internal import command_dispatcher, dispatcher
+from .internal import dispatcher
 from .state import ConnectionState
 from .types.dict import Dict
 from .ui import print_banner, start_logging
@@ -114,7 +114,6 @@ class Client:
         logs: Optional[Union[None, int, str, Dict]] = None,
         debug: Optional[bool] = False,
         state: Optional[ConnectionState] = None,
-        command_prefix: Optional[str] = "",
         chunk_guild_members: Optional[bool] = False,
     ):
         print_banner(module)
@@ -124,10 +123,7 @@ class Client:
             intents=intents,
             bot=self,
             shard_count=shards,
-            prefix=command_prefix,
         )
-        self.command_prefix = command_prefix
-        self.cmd_dispatch = command_dispatcher.CommandDispatcher(self.state)
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
         self.factory = RESTFactory(state=self.state, proxy=proxy, proxy_auth=proxy_auth)
         self.application = ApplicationCommandRegistry(self.factory, self.state)
@@ -302,21 +298,6 @@ class Client:
 
         def decorator(func: CFT) -> CFT:
             self.dispatcher.add_listener(func, name)
-            return func
-
-        return decorator
-
-    def command(self, name: str = None) -> Callable[[CFT], CFT]:
-        """Registers a prefixed command
-
-        Parameters
-        ----------
-        name
-            The command name, defaults to the function name.
-        """
-
-        def decorator(func: CFT) -> CFT:
-            self.cmd_dispatch.add_command(func, name)
             return func
 
         return decorator
