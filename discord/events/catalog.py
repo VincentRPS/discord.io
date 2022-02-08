@@ -21,11 +21,11 @@
 # SOFTWARE
 from discord.types import Dict
 
+from ..guild import ScheduledEvent
 from ..state import ConnectionState, member_cacher
 from .guilds import *
 from .interactions import OnInteraction
 from .messages import OnMessage, OnMessageDelete, OnMessageEdit
-from ..guild import ScheduledEvent
 
 
 # https://discord.dev/topics/gateway#commands-and-events-gateway-events

@@ -29,6 +29,8 @@ from typing import Any, Callable, Coroutine, List, Optional, TypeVar
 
 from discord.state import ConnectionState
 
+from ..ext import cogs
+
 __all__: List[str] = ["Dispatcher"]
 _log = logging.getLogger(__name__)
 CoroT = TypeVar("CoroT", bound=Callable[..., Coroutine[Any, Any, Any]])
@@ -57,7 +59,10 @@ class Dispatcher:
         **kwargs: Any,
     ) -> None:
         try:
-            await coro(*args, **kwargs)
+            if hasattr(coro, "self"):
+                await coro(*args, **kwargs)
+            else:
+                await coro(*args, **kwargs)
         except asyncio.CancelledError:
             pass
         except Exception:

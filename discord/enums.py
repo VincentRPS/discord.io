@@ -81,11 +81,13 @@ class FormatType(Enum):
     GIF = ".gif"
     LOTTIE = ".json"
 
+
 class ScheduledEventStatusType(Enum):
     SCHEDULED = 1
     ACTIVE = 2
     COMPLETED = 3
     CANCELED = 4
+
 
 class ScheduledEventType(Enum):
     STAGE_INSTANCE = 1

@@ -128,6 +128,7 @@ class Message:  # noqa: ignore
         components
             A :class:`list` of components
         """
+        emb = None
         if embed and not embeds:
             if isinstance(embed, Embed):
                 emb = [embed.obj]
@@ -179,6 +180,7 @@ class Message:  # noqa: ignore
         components
             A :class:`list` of components
         """
+        emb = None
         if embed and not embeds:
             if isinstance(embed, Embed):
                 emb = [embed.obj]

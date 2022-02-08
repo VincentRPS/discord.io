@@ -25,10 +25,10 @@ ref: https://discord.dev/resources/guild
 """
 from typing import List, Optional, Union
 
+from .assets import Emoji
 from .enums import FormatType, ScheduledEventStatusType, ScheduledEventType
 from .member import Member
 from .user import User
-from .assets import Emoji
 
 __all__: List[str] = ["Guild"]
 
@@ -177,38 +177,40 @@ class Role:
     def tags(self):
         _parse_tags(self.from_dict)
 
+
 def parse_event_banner(format: FormatType, event_id: int, event_hash: str) -> str:
     return f"https://cdn.discordapp.com/guild-events/{event_id}/{event_hash}.{format}"
+
 
 class ScheduledEvent:
     def __init__(self, data: dict):
         self.from_dict = data
-    
+
     @property
     def id(self):
         return self.from_dict["id"]
-    
+
     def guild_id(self):
         return self.from_dict["guild_id"]
-    
+
     def channel_id(self) -> Union[int, None]:
         return self.from_dict.get("channel_id")
-    
+
     @property
     def creator(self) -> User:
         return User(self.from_dict["creator"])
-    
+
     @property
     def name(self) -> str:
         return self.from_dict["name"]
-    
+
     @property
     def description(self) -> str:
         return self.from_dict["description"]
-    
+
     def start_time(self) -> str:
         return self.from_dict["scheduled_start_time"]
-    
+
     def status(self) -> ScheduledEventStatusType:
         if self.from_dict["status"] == ScheduledEventStatusType.ACTIVE:
             return ScheduledEventStatusType.ACTIVE
@@ -218,10 +220,10 @@ class ScheduledEvent:
             return ScheduledEventStatusType.SCHEDULED
         elif self.from_dict["status"] == ScheduledEventStatusType.CANCELED:
             return ScheduledEventStatusType.CANCELED
-    
+
     def end_time(self) -> str:
         return self.from_dict["scheduled_end_time"]
-    
+
     def type(self) -> ScheduledEventType:
         if self.from_dict["entity_type"] == ScheduledEventType.STAGE_INSTANCE:
             return ScheduledEventType.STAGE_INSTANCE
@@ -229,25 +231,27 @@ class ScheduledEvent:
             return ScheduledEventType.VOICE
         elif self.from_dict["entity_type"] == ScheduledEventType.EXTERNAL:
             return ScheduledEventType.EXTERNAL
-    
+
     def entity_id(self) -> int:
         return self.from_dict["entity_id"]
-    
+
     @property
     def metadata(self) -> "ScheduledEventMetadata":
         return ScheduledEventMetadata(self.from_dict["entity_metadata"])
-    
+
     def joined(self) -> int:
         return self.from_dict["user_count"]
-    
+
     def image(self, format: FormatType = FormatType.PNG):
-        return parse_event_banner(format=format, event_id=self.id, event_hash=self.from_dict["image"])
+        return parse_event_banner(
+            format=format, event_id=self.id, event_hash=self.from_dict["image"]
+        )
 
 
 class ScheduledEventMetadata:
     def __init__(self, data: dict):
         self.from_dict = data
-    
+
     def location(self) -> Union[str, None]:
         return self.from_dict["location"]
 
@@ -255,26 +259,29 @@ class ScheduledEventMetadata:
 class WelcomeScreen:
     def __init__(self, data: dict):
         self.from_dict = data
-    
+
     def description(self) -> str:
         return self.from_dict["description"]
-    
+
     def channels(self) -> list["WelcomeChannel"]:
-        return [WelcomeChannel(channel) for channel in self.from_dict["welcome_channels"]]
-    
+        return [
+            WelcomeChannel(channel) for channel in self.from_dict["welcome_channels"]
+        ]
+
 
 class WelcomeChannel:
     def __init__(self, data: dict):
         self.from_dict = data
-    
+
+    @property
     def channel_id(self) -> int:
         return self.from_dict["channel_id"]
-    
+
     def description(self) -> str:
         return self.from_dict["description"]
-    
+
     def emoji_id(self) -> Union[int, None]:
         return self.from_dict.get("emoji_id")
-    
+
     def emoji_name(self) -> Union[str, None]:
         return self.from_dict.get("emoji_name")

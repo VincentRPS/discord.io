@@ -1,5 +1,6 @@
 include requirements.txt
 include discord/py.typed
 include discord/banner.txt
+include discord/bin/*.dll
 exclude pipelines
 exclude docs

@@ -278,7 +278,7 @@ class RESTClient:
     async def close(self) -> None:
         if self._session:
             await self._session.close()  # Closes the session
-    
+
     async def create_if_not_exists(self):
         if self._session is None or utils.MISSING:
             self._session = aiohttp.ClientSession()

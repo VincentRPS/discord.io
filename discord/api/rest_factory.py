@@ -20,10 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
+import datetime
 import typing
 from json import dumps
-from typing import Optional
+from typing import Any, Optional
 
+from discord import utils
+
+from ..enums import ScheduledEventType
 from ..file import File
 from ..flags import MessageFlags
 from ..snowflake import Snowflakeish
@@ -133,7 +137,7 @@ class RESTFactory:
                 Route("POST", f"/channels/{channel}/messages", channel_id=channel),
                 json=json,
                 form=form,
-                files=files
+                files=files,
             )
 
         return self.rest.send(
@@ -485,12 +489,12 @@ class RESTFactory:
             reason=reason,
             json=ret,
         )
-    
+
     def get_guild(self, guild_id: int):
         return self.rest.send(Route("GET", f"/guilds/{guild_id}", guild_id=guild_id))
-    
+
     def modify_guild(
-        self, 
+        self,
         guild_id: int,
         reason: Optional[str] = None,
         name: Optional[str] = None,
@@ -499,7 +503,6 @@ class RESTFactory:
         explicit_content_filter: Optional[int] = None,
         afk_channel_id: Optional[int] = None,
         afk_timeout: Optional[int] = None,
-
     ):
         ...
 
@@ -509,8 +512,104 @@ class RESTFactory:
 
     # scheduled events
     def get_scheduled_events(self, guild_id: int):
-        return self.rest.send(Route(
-            "GET", f"/guilds/{guild_id}/scheduled-events", guild_id=guild_id
-        ))
-    
+        return self.rest.send(
+            Route("GET", f"/guilds/{guild_id}/scheduled-events", guild_id=guild_id)
+        )
 
+    def create_scheduled_event(
+        self,
+        guild_id: int,
+        name: str,
+        start_time: datetime.datetime,
+        type: ScheduledEventType,
+        end_time: Optional[datetime.datetime] = None,
+        description: Optional[str] = None,
+        privacy_level: Optional[int] = 2,
+        channel_id: Optional[int] = None,
+        metadata: Optional[Any] = None,
+        image: Optional[File] = None,
+    ):
+        form = []
+        json = {
+            "name": name,
+            "entity_type": type,
+            "scheduled_start_time": start_time,
+            "privacy_level": privacy_level,
+        }
+        if end_time:
+            json["scheduled_end_time"] = end_time
+        if description:
+            json["description"]
+        if channel_id:
+            json["channel_id"] = channel_id
+        if metadata:
+            json["entity_metadata"] = metadata
+
+        raw = image.fp.read(16)
+        if image:
+            try:
+                mime = utils.img_mime_type(raw)
+            except TypeError:
+                mime = "application-octet-stream"
+            form.append(
+                {
+                    "name": "image",
+                    "value": image.fp,
+                    "filename": image.filename,
+                    "content_type": mime,
+                }
+            )
+
+        return self.rest.send(
+            Route("POST", f"/guilds/{guild_id}/scheduled-events", guild_id=guild_id),
+            json=json,
+            form=form,
+            files=[image],
+        )
+
+    # assets
+
+    def create_guild_sticker(
+        self,
+        guild_id: int,
+        name: str,
+        tags: str,
+        file: File,
+        reason: Optional[str] = None,
+        description: Optional[str] = None,
+    ):
+        raw = file.fp.read(16)
+
+        try:
+            mime = utils.img_mime_type(raw)
+        except TypeError:
+            if raw.startswith(b"{"):
+                mime = "application/json"
+            else:
+                mime = "application/octet-stream"
+
+        finally:
+            file.reset()
+
+        form = [
+            {
+                "name": "file",
+                "value": file.fp,
+                "filename": file.filename,
+                "content_type": mime,
+            }
+        ]
+
+        if name:
+            form.append({"name": "name", "value": name})
+        if tags:
+            form.append({"name": "tags", "value": tags})
+        if description:
+            form.append({"name": "description", "value": description})
+
+        return self.rest.send(
+            Route("POST", f"/guilds/{guild_id}/stickers", guild_id=guild_id),
+            form=form,
+            files=[file],
+            reason=reason,
+        )

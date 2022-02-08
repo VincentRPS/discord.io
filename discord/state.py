@@ -192,7 +192,7 @@ class ConnectionState:
         self._bot_presence_type: int = 0
         """Precense type"""
 
-        self.listeners: Dict[str, List[Tuple[asyncio.Future, Callable[..., bool]]]] = {}
+        self.listeners: dict[str, List[Tuple[asyncio.Future, Callable[..., bool]]]] = {}
         """The listeners"""
 
         self.shard_count: int = options.get("shard_count", None)

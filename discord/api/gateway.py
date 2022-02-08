@@ -34,11 +34,11 @@ from typing import Any, Coroutine, List
 
 import aiohttp
 
+from discord import utils
 from discord.events import catalog
 from discord.internal.dispatcher import Dispatcher
 from discord.snowflake import Snowflakeish
 from discord.types.dict import Dict
-from discord import utils
 
 from ..state import ConnectionState
 from .rest_factory import RESTFactory
@@ -230,7 +230,6 @@ class Shard:
                         await self._ready(data)
                         self.dis.dispatch("READY")
                     else:
-                        self.dis.dispatch("RAW_{}".format(data["t"]), data["d"])
                         catalog.Cataloger(data, self.dis, self.state)
                 elif data["op"] == 9:
                     await self.ws.close(code=4000)
@@ -413,7 +412,6 @@ class Gateway:
             self._s.loop.create_task(self.s.connect(token))
             self.shards.append(self.s)
             _log.info("Shard %s has connected to Discord", shard)
-
 
     @utils.copy_doc(Shard.send)
     def send(self, payload: Dict) -> Coroutine[Any, Any, None]:

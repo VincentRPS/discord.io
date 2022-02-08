@@ -23,8 +23,10 @@
 
 import asyncio
 import importlib
+import importlib.machinery
+import importlib.util
 import logging
-import os
+import sys
 import time
 from threading import Event
 from typing import Callable, List, Literal, Optional, TypeVar, Union
@@ -32,15 +34,15 @@ from typing import Callable, List, Literal, Optional, TypeVar, Union
 from .api.gateway import Gateway
 from .api.rest_factory import RESTFactory
 from .audio import VoiceClient, has_nacl
+from .components import Button
+from .ext.cogs import Cog, ExtensionLoadError
+from .guild import Guild
+from .interactions import ApplicationCommandRegistry
 from .internal import command_dispatcher, dispatcher
 from .state import ConnectionState
 from .types.dict import Dict
 from .ui import print_banner, start_logging
 from .user import User
-from .guild import Guild
-
-from .components import Button
-from .interactions import ApplicationCommandRegistry
 
 _log = logging.getLogger(__name__)
 __all__: List[str] = ["Client"]
@@ -139,6 +141,7 @@ class Client:
             self.voice = VoiceClient(self.state, self.dispatcher, self.gateway)
         self._got_gateway_bot: Event = Event()
         self.cogs = {}
+        self._extensions = {}
         self.chunk_guild_members = chunk_guild_members
 
         if not has_nacl:
@@ -180,11 +183,11 @@ class Client:
 
         self.state.loop.create_task(runner())
         self.state.loop.run_forever()
-    
+
     def fetch_guild(self, guild_id):
         raw = self.state._guilds_cache.get(guild_id)
         return Guild(raw, self.factory)
-    
+
     async def get_guild(self, guild_id):
         raw = await self.factory.get_guild(guild_id=guild_id)
         return Guild(raw, self.factory)
@@ -286,13 +289,6 @@ class Client:
         """Register an event"""
         return self.dispatcher.listen(coro)
 
-    def load_module(self, location, package):
-        importlib.import_module(location, package)
-
-    def load_modules(self, folder):
-        for file in os.listdir(folder):
-            self.load_module(file)
-
     def listen(self, name: str = None) -> Callable[[CFT], CFT]:
         """Listen to a event
 
@@ -389,3 +385,74 @@ class Client:
                     default_permission=default_permission,
                 )
             )
+
+    def add_cog(self, cog: Cog, *, override: bool = False):
+        if not isinstance(cog, Cog):
+            raise TypeError("ALL cog's must subclass Cog.")
+
+        name = cog.__cog_name__
+        current = self.cogs.get(name)
+
+        if current is not None:
+            if not override:
+                raise TypeError("There is already another Cog with this name!")
+            self.remove_cog(current)
+
+        cog = cog._inject(self)
+
+        for name, func in cog.listeners.items():
+            self.dispatcher.add_listener(func, name)
+        self.cogs[name] = cog
+
+    def remove_cog(self, cog: Cog):
+        self.cogs.pop(cog.__cog_name__)
+        cog._eject(self)
+
+    def _resolver(self, name: str, *, package: str):
+        try:
+            return importlib.util.resolve_name(name=name, package=package)
+        except ImportError:
+            raise TypeError("Cog is not found!")
+
+    def _extension_loader(self, spec: importlib.machinery.ModuleSpec, key: str):
+        lib = importlib.util.module_from_spec(spec)
+        sys.modules[key] = lib
+        try:
+            spec.loader.exec_module(lib)
+        except Exception as exc:
+            del sys.modules[key]
+            raise ExtensionLoadError(key, exc) from exc
+
+        try:
+            setup = getattr(lib, "setup")
+        except Exception as exc:
+            del sys.modules[key]
+            raise TypeError("There is no setup function inside your cog file!")
+
+        try:
+            setup(self)
+        except Exception as exc:
+            del sys.modules[key]
+            raise ExtensionLoadError(key, exc) from exc
+        else:
+            self._extensions[key] = lib
+
+    def add_extension(self, name: str, *, package: Optional[str] = None):
+        name = self._resolver(name=name, package=package)
+        if name in self._extensions.items():
+            raise TypeError("Module is already loaded")
+
+        spec = importlib.util.find_spec(name)
+        if spec is None:
+            raise TypeError(f"Extension {name} is not found!")
+
+        self._extension_loader(spec, name)
+
+    def remove_extension(self, name: str, *, package: Optional[str] = None):
+        name = self._resolver(name=name, package=package)
+        lib = self._extensions.get(name)
+        if lib is None:
+            raise TypeError("That Module isn't loaded")
+        else:
+            self.remove_cog(name)
+            self._extensions.pop(lib)

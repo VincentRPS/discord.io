@@ -38,6 +38,7 @@ packages = [
     "discord.interactions",
     "discord.modules",
     "discord.types",
+    "discord.ext",
 ]
 
 extra_requires = {
@@ -56,7 +57,7 @@ setuptools.setup(
     version=__version__,
     packages=packages,
     package_data={
-        "discord": ["banner.txt"],
+        "discord": ["banner.txt", "bin/*.dll"],
     },
     project_urls={
         "Documentation": "https://discordio.rtfd.io",
