@@ -114,13 +114,6 @@ async def getch(fetch, get):
         await get
 
 
-def find(one, two):
-    for element in two:
-        if one(element):
-            return element
-    return None
-
-
 def img_mime_type(data: bytes):
     if data.startswith(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A"):
         return "image/png"
