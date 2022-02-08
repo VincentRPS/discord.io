@@ -71,7 +71,10 @@ MISSING: Any = _Missing()
 def copy_doc(original: Callable) -> Callable[[T], T]:
     def decorator(overridden: T) -> T:
         overridden.__doc__ = original.__doc__
-        overridden.__signature__ = inspect.signature(original)
+        try:
+            overridden.__signature__ = inspect.signature(original)
+        except TypeError:
+            pass
         return overridden
 
     return decorator
@@ -109,6 +112,13 @@ async def getch(fetch, get):
         await fetch
     except KeyError:
         await get
+
+
+def find(one, two):
+    for element in two:
+        if one(element):
+            return element
+    return None
 
 
 def img_mime_type(data: bytes):

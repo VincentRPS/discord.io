@@ -8,18 +8,18 @@ from typing import Any, Callable, List, TypeVar
 from ...internal import dispatcher
 from ...internal.exceptions import DiscordError
 
-__all__: List[str] = [
-    "Cog",
-    "ExtensionLoadError"
-]
+__all__: List[str] = ["Cog", "ExtensionLoadError"]
 
 CFT = TypeVar("CFT", bound="dispatcher.CoroFunc")
+
 
 class ExtensionLoadError(DiscordError):
     ...
 
+
 class Cog:
     listeners: dict[str, Any] = {}
+
     def __init__(self, bot):
         self.bot = bot
 

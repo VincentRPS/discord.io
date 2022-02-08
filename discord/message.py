@@ -27,9 +27,9 @@ ref: https://discord.dev/resources/channel
 from typing import Any, List, Optional, Sequence
 
 from discord.file import File
-from discord.snowflake import Snowflakeish
 from discord.types import allowed_mentions
 
+from .channels import TextChannel
 from .embed import Embed
 from .guild import Guild
 from .user import User
@@ -67,7 +67,17 @@ class Message:  # noqa: ignore
         except KeyError:
             # can error out for embed only/link only messages.
             self.content: str = ""
-        self.channel: Snowflakeish = msg["channel_id"]
+
+    @property
+    def channel(self):
+        """Returns the channel which this message took place in.
+
+        Returns
+        -------
+        :class:`TextChannel`
+        """
+        raw = self.app.state.channels.get(self.from_dict["channel_id"])
+        return TextChannel(raw, self.app.state)
 
     @property
     def id(self) -> int:
@@ -108,6 +118,7 @@ class Message:  # noqa: ignore
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
         components: List[dict[str, Any]] = None,
+        component=None,
     ):
         """Sends a message to the channel currently active in
 
@@ -129,6 +140,7 @@ class Message:  # noqa: ignore
             A :class:`list` of components
         """
         emb = None
+        com = None
         if embed and not embeds:
             if isinstance(embed, Embed):
                 emb = [embed.obj]
@@ -141,6 +153,10 @@ class Message:  # noqa: ignore
                 emb = [embed.obj for embed in embeds]
             else:
                 emb = embeds
+        if component:
+            com = [component]
+        if components:
+            com = components
         await self.app.factory.create_message(
             channel=self.channel,
             content=content,
@@ -148,7 +164,7 @@ class Message:  # noqa: ignore
             embeds=emb,
             tts=tts,
             allowed_mentions=allowed_mentions,
-            components=components,
+            components=com,
         )
 
     async def reply(
@@ -160,6 +176,7 @@ class Message:  # noqa: ignore
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
         components: List[dict[str, Any]] = None,
+        component: dict[str, Any] = None,
     ):
         """Replys to the current message
 
@@ -181,6 +198,7 @@ class Message:  # noqa: ignore
             A :class:`list` of components
         """
         emb = None
+        com = None
         if embed and not embeds:
             if isinstance(embed, Embed):
                 emb = [embed.obj]
@@ -193,6 +211,10 @@ class Message:  # noqa: ignore
                 emb = [embed.obj for embed in embeds]
             else:
                 emb = embeds
+        if component:
+            com = [component]
+        if components:
+            com = components
         await self.app.factory.create_message(
             channel=self.channel,
             content=content,
@@ -203,5 +225,5 @@ class Message:  # noqa: ignore
             message_reference={
                 "message_id": self.id,
             },
-            components=components,
+            components=com,
         )
