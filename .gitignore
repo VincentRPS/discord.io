@@ -13,4 +13,3 @@ test.py
 .pytest_cache/
 .mypy_cache/
 .nox/
-cogs/
