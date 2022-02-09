@@ -1,8 +1,7 @@
+from ...internal.exceptions import DiscordError
 from typing import Any, Callable, TypeVar
 
-from ...internal.exceptions import DiscordError
-
-CFT = TypeVar("CFT", bound="dispatcher.CoroFunc")
+CFT = TypeVar('CFT', bound='dispatcher.CoroFunc')
 
 class ExtensionLoadError(DiscordError): ...
 
