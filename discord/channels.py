@@ -27,7 +27,7 @@ from .state import ConnectionState
 from .user import User
 
 
-def channel_parse(type: int, data: dict, state: ConnectionState):
+def channel_parse(type, data: dict, state: ConnectionState):
     if type == 0:
         return TextChannel(data, state)
 
@@ -128,6 +128,10 @@ class TextChannel:
 
     Parameters
     ----------
+    data: :class:`dict`
+        The raw json data
+    state: :class:`ConnectionState`
+        The connection state
     """
 
     def __init__(self, data: dict, state: ConnectionState):

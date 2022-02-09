@@ -187,6 +187,10 @@ class Client:
 
         self.state.loop.create_task(runner())
         self.state.loop.run_forever()
+    
+    def close(self):
+        self.state.loop.stop()
+        self.state.loop.close()
 
     def fetch_guild(self, guild_id):
         """Fetches the guild from the cache
@@ -373,16 +377,26 @@ class Client:
         default_permission: :class:`bool`
             If this slash command should have default permissions
         """
-            
+
         def decorator(func: CFT) -> CFT:
-            name = func.__name__ # if name is None else name # fix this somehow?
+            name = func.__name__  # if name is None else name # fix this somehow?
             description = func.__doc__
-            
+
             if guild_ids is not None:
                 for guild in guild_ids:
                     self.state.loop.create_task(
                         self.application.register_guild_slash_command(
-                        guild_id=guild,
+                            guild_id=guild,
+                            name=name,
+                            description=description,
+                            callback=func,
+                            options=options,
+                            default_permission=default_permission,
+                        )
+                    )
+            else:
+                self.state.loop.create_task(
+                    self.application.register_global_slash_command(
                         name=name,
                         description=description,
                         callback=func,
@@ -390,17 +404,7 @@ class Client:
                         default_permission=default_permission,
                     )
                 )
-            else:
-                self.state.loop.create_task(
-                    self.application.register_global_slash_command(
-                    name=name,
-                    description=description,
-                    callback=func,
-                    options=options,
-                    default_permission=default_permission,
-                )
-            )
-            
+
             return func
 
         return decorator

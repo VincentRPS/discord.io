@@ -141,3 +141,111 @@ class Sticker:
 
     def sort_value(self) -> int:
         return int(self.from_dict["sort_value"])
+
+
+class Attachment:
+    """Represents a Discord Attachment
+
+    .. versionadded:: 0.8.0
+
+    Parameters
+    ----------
+    data: :class:`dict`
+        The raw attachment data
+    """
+
+    def __init__(self, data: dict):
+        self.from_dict = data
+
+    @property
+    def id(self) -> int:
+        """Gives the attachment' id
+
+        Returns
+        -------
+        :class:`int`
+        """
+        return self.from_dict["id"]
+
+    @property
+    def name(self) -> str:
+        """Gives the attachments name
+
+        Returns
+        -------
+        :class:`str`
+        """
+        return self.from_dict["filename"]
+
+    @property
+    def description(self) -> str:
+        """Gives the attachments description
+
+        Returns
+        -------
+        :class:`str`
+        """
+        return self.from_dict["description"]
+
+    def type(self) -> str:
+        """Gives the content type, i.e 'image/png' or 'image/jpeg'
+
+        Returns
+        -------
+        :class:`str`
+        """
+        return self.from_dict["content_type"]
+
+    def size(self) -> int:
+        """Gives the size of the attachment
+
+        Returns
+        -------
+        :class:`int`
+        """
+        return self.from_dict["size"]
+
+    def url(self) -> str:
+        """Gives the attachment' url
+
+        Returns
+        -------
+        :class:`str`
+        """
+        return self.from_dict["url"]
+
+    def proxy_url(self) -> str:
+        """Gives the proxied url of the attachment
+
+        Returns
+        -------
+        :class:`str`
+        """
+        return self.from_dict["proxy_url"]
+
+    def height(self) -> int:
+        """Gives the height of the attachment
+
+        Returns
+        -------
+        :class:`int`
+        """
+        return self.from_dict["height"]
+
+    def width(self) -> int:
+        """Gives the width of the attachment
+
+        Returns
+        -------
+        :class:`int`
+        """
+        return self.from_dict["width"]
+
+    def invisable(self) -> bool:
+        """If the attachment is normally seeable or not
+
+        Returns
+        -------
+        :class:`bool`
+        """
+        return self.from_dict["ephemeral"]

@@ -28,7 +28,6 @@ from typing import Any, Optional
 import aiohttp
 
 from .. import utils
-
 from ..enums import ScheduledEventType
 from ..file import File
 from ..flags import MessageFlags

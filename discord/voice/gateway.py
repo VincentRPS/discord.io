@@ -155,7 +155,7 @@ class VoiceGateway:
             await self.hook(self, data)
 
     async def heartbeat(self, interval: float):
-        while not self.ws.closed:
+        if not self.ws.closed:
             await self.send_json({"op": 1, "d": int(time.time() * 1000)})
             await asyncio.sleep(interval)
             self.client._state.loop.create_task(self.heartbeat(interval))

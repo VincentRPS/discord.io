@@ -105,6 +105,7 @@ class Shard:
         self.latency = self.last_ack - self.last_send
         self._session_id: int = None
         self._ratelimit_lock: asyncio.Lock = asyncio.Lock()
+        self.ws: aiohttp.ClientWebSocketResponse = None
 
     async def connect(self, token: str) -> None:
         """Connects to the url specified, with the token
@@ -123,6 +124,7 @@ class Shard:
         """
         self._session = aiohttp.ClientSession()
         self.ws = await self._session.ws_connect(self.url)
+
         self.token = token
         if self._session_id is None:
             await self.identify()
@@ -309,7 +311,7 @@ class Shard:
     async def heartbeat(self, interval: float) -> None:
         if self.is_ratelimited:
             await self.block()
-        while not self.ws.closed:
+        if not self.ws.closed:
             await self.send({"op": 1, "d": self._seq})
             await asyncio.sleep(interval)
             self.state.loop.create_task(self.heartbeat(interval))
