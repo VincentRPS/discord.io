@@ -28,6 +28,7 @@ from ..embed import Embed
 from ..member import Member
 from ..types import Dict, embed_parse
 from ..webhooks import webhook_context
+from ..components import modal
 
 if TYPE_CHECKING:
     from ..state import ConnectionState
@@ -134,6 +135,7 @@ class Interaction:
     def respond(
         self,
         content: Optional[str] = None,
+        modal: Optional[modal.Modal] = None,
         tts: bool = False,
         embed: Optional[Embed] = None,
         embeds: Optional[List[Embed]] = None,
@@ -184,6 +186,9 @@ class Interaction:
             self.invisable = None
 
         ret["data"]["embeds"] = emb
+
+        if modal:
+            ret["data"]["components"] = modal
 
         adapter = webhook_context.get()
         return adapter.rest.send(

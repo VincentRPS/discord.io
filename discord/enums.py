@@ -93,3 +93,7 @@ class ScheduledEventType(Enum):
     STAGE_INSTANCE = 1
     VOICE = 2
     EXTERNAL = 3
+
+class ModalStyle(Enum):
+    SHORT = 1
+    PARAGRAPH = 2
