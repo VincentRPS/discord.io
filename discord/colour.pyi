@@ -1,3 +1,0 @@
-from .color import Color
-
-class Colour(Color): ...
