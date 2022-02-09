@@ -9,8 +9,7 @@ A asynchronous Discord API Wrapper for Python
 ## Features
 
 - Sane Handling of 429s
-- Customizable
-- Gateway Support
+- User friendly interface
 
 ## Installing
 
@@ -32,7 +31,7 @@ For voice support run the following command:
 pip install discord.io[voice]
 ```
 
-## Example
+## Examples
 This is a quick usecase example for the library!
 
 ```py
@@ -43,10 +42,10 @@ client = discord.Client()
 @client.event
 async def on_ready():
     print('ready!')
-    client.slash_command(bonk_callback, 'bonk')
 
-async def bonk_callback(interaction):
-    await interaction.respond('Bonk!')
+@client.slash_command()
+async def ping(interaction):
+    await interaction.respond("pong!")
 
 client.run('my_bot_token')
 ```
@@ -62,13 +61,17 @@ client = discord.Client(command_prefix=">")
 async def on_ready():
     print('ready!')
 
-@client.command()
-async def ping(ctx):
-    await ctx.send('pong!')
+@client.event
+async def on_message(msg):
+    if msg.author.bot:
+        return
+    
+    if msg.content.startswith("!ping"):
+        await msg.send("Pong!")
 
 client.run('my_bot_token')
 ```
 
 ## Useful Links
 
-The discord.io [Discord Server](https://discord.gg/cvCAwntVhm)
+The discord.io [discord server](https://discord.gg/cvCAwntVhm)

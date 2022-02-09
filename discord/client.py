@@ -351,11 +351,9 @@ class Client:
 
     def slash_command(
         self,
-        callback,
         name: str = None,
         options: List[dict] = None,
         guild_ids: List[int] = None,
-        description: str = None,
         default_permission: bool = True,
     ):
         """Creates a slash command
@@ -375,34 +373,37 @@ class Client:
         default_permission: :class:`bool`
             If this slash command should have default permissions
         """
-
-        name = callback.__name__ if name is None else name
-
-        if description is None:
-            if callback.__doc__ is not None:
-                description = callback.__doc__
-        if guild_ids is not None:
-            for guild in guild_ids:
-                self.state.loop.create_task(
-                    self.application.register_guild_slash_command(
+            
+        def decorator(func: CFT) -> CFT:
+            name = func.__name__ # if name is None else name # fix this somehow?
+            description = func.__doc__
+            
+            if guild_ids is not None:
+                for guild in guild_ids:
+                    self.state.loop.create_task(
+                        self.application.register_guild_slash_command(
                         guild_id=guild,
                         name=name,
                         description=description,
-                        callback=callback,
+                        callback=func,
                         options=options,
                         default_permission=default_permission,
                     )
                 )
-        else:
-            self.state.loop.create_task(
-                self.application.register_global_slash_command(
+            else:
+                self.state.loop.create_task(
+                    self.application.register_global_slash_command(
                     name=name,
                     description=description,
-                    callback=callback,
+                    callback=func,
                     options=options,
                     default_permission=default_permission,
                 )
             )
+            
+            return func
+
+        return decorator
 
     def add_cog(self, cog: Cog, *, override: bool = False):
         if not isinstance(cog, Cog):
