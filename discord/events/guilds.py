@@ -21,7 +21,7 @@
 # SOFTWARE
 
 from ..assets import Emoji, Sticker
-from ..guild import Guild, Role
+from ..guild import Guild, Role, ScheduledEvent
 from ..member import Member
 from ..user import User
 from .core import Event
@@ -178,3 +178,52 @@ class OnRoleDelete(Event):
         )
 
         self.dispatch("ROLE_DELETE", role, guild)
+
+class OnScheduledEventCreate(Event):
+    def process(self):
+        ret = ScheduledEvent(self.data)
+        self.state.guild_events.new(ret.id, self.data)
+        self.dispatch("scheduled_event", ret)
+
+class OnScheduledEventUpdate(Event):
+    def process(self):
+        after = ScheduledEvent(self.data)
+        raw_before = self.state.guild_events.get(after.id)
+        before = raw_before
+
+        self.dispatch("scheduled_event_edit", before, after)
+        self.state.guild_events.edit(after.id, self.data)
+
+class OnScheduledEventDelete(Event):
+    def process(self):
+        event = ScheduledEvent(self.data)
+        self.dispatch("scheduled_event_delete", event)
+        self.state.guild_events.pop(event)
+
+class OnScheduledEventJoin(Event):
+    def process(self):
+        raw_event_id = self.data["guild_scheduled_event_id"]
+        raw_user_id = self.data["user_id"]
+        raw_guild_id = self.data["guild_id"]
+        raw_event = self.state.guild_events.get(raw_event_id)  
+        raw_user = self.state.members.get(raw_user_id)
+        raw_guild = self.state._guilds_cache.get(raw_guild_id)
+        event = ScheduledEvent(raw_event)
+        user = User(raw_user)
+        guild = Guild(raw_guild)
+
+        self.dispatch("scheduled_event_join", event, user, guild)
+
+class OnScheduledEventLeave(Event):
+    def process(self):
+        raw_event_id = self.data["guild_scheduled_event_id"]
+        raw_user_id = self.data["user_id"]
+        raw_guild_id = self.data["guild_id"]
+        raw_event = self.state.guild_events.get(raw_event_id)  
+        raw_user = self.state.members.get(raw_user_id)
+        raw_guild = self.state._guilds_cache.get(raw_guild_id)
+        event = ScheduledEvent(raw_event)
+        user = Member(raw_user)
+        guild = Guild(raw_guild)
+
+        self.dispatch("scheduled_event_join", event, user, guild)  

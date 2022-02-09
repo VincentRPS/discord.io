@@ -26,6 +26,33 @@ from .guild import Guild
 from .state import ConnectionState
 from .user import User
 
+def channel_parse(type: int, data: dict, state: ConnectionState):
+    if type == 0:
+        return TextChannel(data, state)
+    
+    elif type == 1:
+        return DMChannel(data, state)
+    
+    elif type == 2:
+        return VoiceChannel(data, state)
+    
+    elif type == 3:
+        return GroupDMChannel(data, state)
+    
+    elif type == 4:
+        return Category(data, state)
+    
+    elif type == 5:
+        return TextChannel(data, state)
+    
+    elif type in (10, 11, 12):
+        return Thread(data, state)
+    
+    elif type == 13:
+        return VoiceChannel(data, state)
+    
+    else:
+        raise NotImplementedError("Channel is not a currently provided type")
 
 class Category:
     """Represents a Discord Category
