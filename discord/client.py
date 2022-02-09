@@ -172,7 +172,13 @@ class Client:
             await self.gateway._chunk_members()
 
     def run(self, token: str):
-        """A blocking function to start your bot"""
+        """A blocking function to start your bot
+        
+        Parameters
+        ----------
+        token: :class:`str`
+            Your bot token
+        """
 
         async def runner():
             await self.login(token=token)
@@ -183,6 +189,17 @@ class Client:
         self.state.loop.run_forever()
 
     def fetch_guild(self, guild_id):
+        """Fetches the guild from the cache
+        
+        Parameters
+        ----------
+        guild_id: :class:`int`
+            The guild to fetch
+
+        Returns
+        -------
+        :class:`Guild`
+        """
         raw = self.state._guilds_cache.get(guild_id)
         return Guild(raw, self.factory)
     
@@ -190,6 +207,17 @@ class Client:
         return self.state._guilds_cache.get(guild_id)
 
     async def get_guild(self, guild_id):
+        """Gets a guild by requesting to the API
+
+        Parameters
+        ----------
+        guild_id: :class:`int`
+            The guild to get
+        
+        Returns
+        -------
+        :class:`Guild`
+        """
         raw = await self.factory.get_guild(guild_id=guild_id)
         return Guild(raw, self.factory)
     
@@ -340,7 +368,7 @@ class Client:
             The slash command callback
         options: :class:`List`
             A list of slash command options
-        guild_ids: :class:`List`[:class:`int`]
+        guild_ids: List[:class:`int`]
             A list of guild ids
         description: :class:`str`
             The application command description

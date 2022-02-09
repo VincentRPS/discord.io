@@ -77,6 +77,7 @@ class Member:
         raise NotImplementedError
 
     def roles(self):
+        # i need to somehow make this not be a circular import?
         raise NotImplementedError
 
     def joined_at(self) -> str:
@@ -134,12 +135,12 @@ class Member:
         """
         return self.from_dict["permissions"]
 
-    def communication_disabled_until(self):
-        """Returns a `communication_disabled_until` dict object
+    def communication_disabled_until(self) -> str:
+        """Gives the time communication is disabled
 
         Returns
         -------
-        :class:`dict`
+        :class:`str`
         """
         return self.from_dict["communication_disabled_until"]
 
@@ -157,20 +158,20 @@ class Member:
 
         Parameters
         ----------
-        nick: :class:`Optional`[:class:`str`]
+        nick: Optional[:class:`str`]
             Change the members nickname
-        roles: :class:`Optional`[:class:`list`[:class:`int`]]
+        roles: Optional[:class:`list`[:class:`int`]]
             Chaneg the members roles
-        mute: :class:`Optional`[:class:`bool`]
+        mute: Optional[:class:`bool`]
             If the member should be muted
-        deaf: :class:`Optional`[:class:`bool`]
+        deaf: Optional[:class:`bool`]
             If the member should be deafend
-        channel_id: :class:`Optional`[:class:`int`]
+        channel_id: Optional[:class:`int`]
             The channel id to move the member to
-        timeout: :class:`Optional`[:class:`str`]
+        timeout: Optional[:class:`str`]
             Set a timeout for the member,
             has to be a ISO8601 timestanp
-        reason: :class:`Optional`[:class:`str`]
+        reason: Optional[:class:`str`]
             A reason why you are editing this member
 
         Returns

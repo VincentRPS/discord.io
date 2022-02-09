@@ -98,11 +98,56 @@ Data Objects
 .. autoclass:: User
     :members:
 
+.. autoclass:: Member
+    :members:
+
+Guild
+-----
+
 .. autoclass:: Guild
     :members:
 
-.. autoclass:: Member
+.. autoclass:: Role
     :members:
+
+.. autoclass:: ScheduledEvent
+    :members:
+
+
+.. autoclass:: ScheduledEventMetadata
+    :members:
+
+
+.. autoclass:: WelcomeScreen
+    :members:
+
+.. autoclass:: WelcomeChannel
+    :members:
+
+Channels
+--------
+
+.. autoclass:: Category
+    :members:
+
+.. autoclass:: TextChannel
+    :members:
+
+.. autoclass:: VoiceChannel
+    :members:
+
+.. autoclass:: DMChannel
+    :members:
+
+.. autoclass:: GroupDMChannel
+    :members:
+
+.. autoclass:: Thread
+    :members:
+
+.. autoclass:: ThreadMetadata
+    :members:
+
 
 Event Reference
 ---------------

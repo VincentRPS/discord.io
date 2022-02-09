@@ -43,16 +43,31 @@ class User:
         self.from_dict = usr
 
     def username(self) -> str:
-        """The users username"""
+        """The users username
+        
+        Returns
+        -------
+        :class:`str`
+        """
         return self.from_dict["username"]
 
     def discriminator(self) -> int:
-        """The users discriminator id"""
+        """The users discriminator id
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["discriminator"]
 
     @property
     def id(self) -> int:
-        """The users snowflake id"""
+        """The users snowflake id
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["id"]
 
     def public_flags(self):
@@ -61,4 +76,10 @@ class User:
 
     @property
     def bot(self) -> bool:
+        """If the User is a bot or not
+        
+        Returns
+        -------
+        :class:`bool`
+        """
         return self.from_dict["bot"]

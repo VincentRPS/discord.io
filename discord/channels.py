@@ -28,64 +28,160 @@ from .user import User
 
 
 class Category:
+    """Represents a Discord Category
+    
+    .. versionadded:: 0.8.0
+
+    Parameters
+    ----------
+    data: :class:`dict`
+        The raw category data
+    state: :class:`state`
+        The connection state
+    """
     def __init__(self, data: dict, state: ConnectionState):
         self.from_dict = data
         self.state = state
 
     def permission_overwrites(self) -> list[str, Union[int, str]]:
+        """Gives a list of permission overwrites
+        
+        Returns
+        -------
+        list[:class:`str`]
+        list[:class:`int`]
+        """
         return self.from_dict["permission_overwrites"]
 
     @property
     def position(self) -> int:
+        """Gives the category position
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["position"]
 
     @property
     def id(self) -> int:
+        """Gives the snowflake id of the channel
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["id"]
 
     @property
     def name(self) -> str:
+        """Gives the name of the category
+        
+        Returns
+        -------
+        :class:`str`
+        """
         return self.from_dict["name"]
 
-    def guild_id(self) -> str:
+    def guild_id(self) -> int:
+        """Gives the guild' snowflake id
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["guild_id"]
 
 
 class TextChannel:
+    """Represents a Discord Text Channel
+    
+    Parameters
+    ----------
+    """
     def __init__(self, data: dict, state: ConnectionState):
         self.from_dict = data
         self.state = state
 
     @property
     def id(self) -> int:
+        """Gives the channel' id
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["id"]
 
     @property
     def guild_id(self) -> int:
+        """Gives the guild id of the channel
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["guild_id"]
 
     @property
     def name(self) -> str:
+        """Gives the name of the channel
+        
+        Returns
+        -------
+        :class:`str`
+        """
         return self.from_dict["name"]
 
     @property
     def position(self) -> int:
+        """Gives the position of the channel
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["position"]
 
     def permission_overwrites(self) -> list[str, Union[int, str]]:
+        """Gives the permission overwrites of the channel"""
         return self.from_dict["permission_overwrites"]
 
     @property
     def nsfw(self) -> bool:
+        """If the channel is nsfw
+        
+        Returns
+        -------
+        :class:`bool`
+        """
         return self.from_dict["nsfw"]
 
     def topic(self) -> str:
+        """Gives the channel' topic
+        
+        Returns
+        -------
+        :class:`str`
+        """
         return self.from_dict["topic"]
 
     def last_message_id(self) -> int:
+        """Gives the snowflake id of the last message
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["last_message_id"]
 
-    def category_id(self):
+    def category_id(self) -> int:
+        """Gives the id of the category this channel is in
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["parent_id"]
 
 
@@ -191,14 +287,18 @@ class ThreadMetadata:
     def __init__(self, data: dict):
         self.from_dict = data
 
+    @property
     def archived(self) -> bool:
         return self.from_dict["archived"]
 
+    @property
     def auto_archive_duration(self) -> int:
         return self.from_dict["auto_archive_duration"]
 
+    @property
     def archive_timestamp(self) -> str:
         return self.from_dict["archive_timestamp"]
 
+    @property
     def locked(self) -> bool:
         return self.from_dict["locked"]
