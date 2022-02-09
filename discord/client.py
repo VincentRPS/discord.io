@@ -187,7 +187,7 @@ class Client:
 
         self.state.loop.create_task(runner())
         self.state.loop.run_forever()
-    
+
     def close(self):
         self.state.loop.stop()
         self.state.loop.close()
