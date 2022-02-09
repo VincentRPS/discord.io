@@ -1,12 +1,10 @@
-from typing import Any, List, Tuple
-
-from discord import utils as utils
-
 from ..channels import VoiceChannel as VoiceChannel
 from ..state import ConnectionState as ConnectionState
 from .gateway import VoiceGateway as VoiceGateway
 from .opus import Encoder as Encoder
 from .players import AudioPlayer as AudioPlayer
+from discord import utils as utils
+from typing import Any, List, Tuple
 
 has_nacl: bool
 

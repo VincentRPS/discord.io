@@ -1,9 +1,7 @@
-from typing import Any, List, Optional
-
-from discord.types import allowed_mentions
-
 from ..embed import Embed
 from ..types import Dict
+from discord.types import allowed_mentions
+from typing import Any, List, Optional
 
 class Interaction:
     data: Any
@@ -17,24 +15,9 @@ class Interaction:
     options: Any
     message: Any
     def collect_children(self, data) -> None: ...
-    def followup(
-        self,
-        content: Optional[str] = ...,
-        tts: bool = ...,
-        embed: Optional[Embed] = ...,
-        embeds: Optional[List[Embed]] = ...,
-    ): ...
+    def followup(self, content: Optional[str] = ..., tts: bool = ..., embed: Optional[Embed] = ..., embeds: Optional[List[Embed]] = ...): ...
     invisable: Any
-    def respond(
-        self,
-        content: Optional[str] = ...,
-        tts: bool = ...,
-        embed: Optional[Embed] = ...,
-        embeds: Optional[List[Embed]] = ...,
-        allowed_mentions: Optional[allowed_mentions.MentionObject] = ...,
-        type: Optional[int] = ...,
-        invisable: Optional[bool] = ...,
-    ): ...
+    def respond(self, content: Optional[str] = ..., tts: bool = ..., embed: Optional[Embed] = ..., embeds: Optional[List[Embed]] = ..., allowed_mentions: Optional[allowed_mentions.MentionObject] = ..., type: Optional[int] = ..., invisable: Optional[bool] = ...): ...
     def defer(self, invisable: bool = ...): ...
     @property
     def member(self): ...

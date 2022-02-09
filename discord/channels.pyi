@@ -1,9 +1,8 @@
-from typing import Any, Union
-
 from .enums import FormatType as FormatType
 from .guild import Guild as Guild
 from .state import ConnectionState as ConnectionState
 from .user import User as User
+from typing import Any, Union
 
 def channel_parse(type: int, data: dict, state: ConnectionState): ...
 
@@ -62,9 +61,7 @@ class DMChannel:
     def id(self) -> int: ...
     def recipients(self): ...
 
-def parse_groupdm_icon(
-    format: FormatType, group_id: int, group_icon_hash: str
-) -> str: ...
+def parse_groupdm_icon(format: FormatType, group_id: int, group_icon_hash: str) -> str: ...
 
 class GroupDMChannel(DMChannel):
     def name(self) -> str: ...

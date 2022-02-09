@@ -1,8 +1,7 @@
+from discord.types.dict import Dict
 from typing import Any, Callable, Coroutine, List, TypeVar, Union
 
-from discord.types.dict import Dict
-
-T = TypeVar("T")
+T = TypeVar('T')
 Coro = Coroutine[Any, Any, T]
 CoroFunc = Callable[..., Coro[Any]]
 

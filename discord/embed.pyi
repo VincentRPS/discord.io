@@ -1,21 +1,11 @@
 import datetime
-from typing import Any, Optional, Union
-
 from discord.color import Color
 from discord.colour import Colour
+from typing import Any, Optional, Union
 
 class Embed:
     obj: Any
-    def __init__(
-        self,
-        title: Optional[str] = ...,
-        description: Optional[str] = ...,
-        url: Optional[str] = ...,
-        date: Optional[str] = ...,
-        color: Optional[Union[int, Color]] = ...,
-        colour: Optional[Union[int, Colour]] = ...,
-        timestamp: datetime.datetime = ...,
-    ) -> None: ...
+    def __init__(self, title: Optional[str] = ..., description: Optional[str] = ..., url: Optional[str] = ..., date: Optional[str] = ..., color: Optional[Union[int, Color]] = ..., colour: Optional[Union[int, Colour]] = ..., timestamp: datetime.datetime = ...) -> None: ...
     def to_dict(self): ...
     def set_footer(self, text: str = ..., icon_url: str = ...): ...
     def remove_footer(self) -> None: ...
