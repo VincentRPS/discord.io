@@ -12,6 +12,8 @@
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 
+from ..channels import Thread, channel_parse
+
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,14 +22,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 from .core import Event
-from ..channels import channel_parse, Thread
+
 
 class OnChannelCreate(Event):
     def process(self):
         channel = channel_parse(self.data["type"], self.data, self.state)
         self.state.channels.new(channel.id, self.data)
         self.dispatch("channel_create", channel)
-    
+
+
 class OnChannelUpdate(Event):
     def process(self):
         before_raw = self.state.channels.get(self.data["id"])
@@ -35,7 +38,8 @@ class OnChannelUpdate(Event):
         after = channel_parse(self.data["type"], self.data, self.state)
         self.dispatch("channel_edit", before, after)
         self.state.channels.edit(before.id, self.data)
-    
+
+
 class OnChannelDelete(Event):
     def process(self):
         raw = self.state.channels.get(self.data["id"])
@@ -43,10 +47,12 @@ class OnChannelDelete(Event):
         self.dispatch("channel_delete", channel)
         self.state.channels.pop(self.data["id"])
 
+
 class OnThreadCreate(Event):
     def process(self):
         thread = Thread(self.data, self.state)
         self.dispatch("thread_create", thread)
+
 
 class OnThreadUpdate(Event):
     def process(self):
@@ -55,7 +61,8 @@ class OnThreadUpdate(Event):
         after = Thread(self.data, self.state)
         self.dispatch("thread_edit", before, after)
         self.state.channels.edit(before.id, self.data)
-    
+
+
 class OnThreadDelete(Event):
     def process(self):
         thread_raw = self.state.channels.get(self.data["id"])
@@ -63,6 +70,6 @@ class OnThreadDelete(Event):
         self.dispatch("thread_delete", thread)
         self.state.channels.pop(self.data["id"])
 
+
 class OnThreadListSync(Event):
     ...
-

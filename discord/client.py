@@ -173,7 +173,7 @@ class Client:
 
     def run(self, token: str):
         """A blocking function to start your bot
-        
+
         Parameters
         ----------
         token: :class:`str`
@@ -190,7 +190,7 @@ class Client:
 
     def fetch_guild(self, guild_id):
         """Fetches the guild from the cache
-        
+
         Parameters
         ----------
         guild_id: :class:`int`
@@ -202,7 +202,7 @@ class Client:
         """
         raw = self.state._guilds_cache.get(guild_id)
         return Guild(raw, self.factory)
-    
+
     def fetch_raw_guild(self, guild_id):
         return self.state._guilds_cache.get(guild_id)
 
@@ -213,14 +213,14 @@ class Client:
         ----------
         guild_id: :class:`int`
             The guild to get
-        
+
         Returns
         -------
         :class:`Guild`
         """
         raw = await self.factory.get_guild(guild_id=guild_id)
         return Guild(raw, self.factory)
-    
+
     async def get_voice_channel(self, channel_id: int):
         raw = await self.factory.get_channel(channel=channel_id)
         return VoiceChannel(raw, self.state)

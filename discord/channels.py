@@ -26,37 +26,39 @@ from .guild import Guild
 from .state import ConnectionState
 from .user import User
 
+
 def channel_parse(type: int, data: dict, state: ConnectionState):
     if type == 0:
         return TextChannel(data, state)
-    
+
     elif type == 1:
         return DMChannel(data, state)
-    
+
     elif type == 2:
         return VoiceChannel(data, state)
-    
+
     elif type == 3:
         return GroupDMChannel(data, state)
-    
+
     elif type == 4:
         return Category(data, state)
-    
+
     elif type == 5:
         return TextChannel(data, state)
-    
+
     elif type in (10, 11, 12):
         return Thread(data, state)
-    
+
     elif type == 13:
         return VoiceChannel(data, state)
-    
+
     else:
         raise NotImplementedError("Channel is not a currently provided type")
 
+
 class Category:
     """Represents a Discord Category
-    
+
     .. versionadded:: 0.8.0
 
     Parameters
@@ -66,13 +68,14 @@ class Category:
     state: :class:`state`
         The connection state
     """
+
     def __init__(self, data: dict, state: ConnectionState):
         self.from_dict = data
         self.state = state
 
     def permission_overwrites(self) -> list[str, Union[int, str]]:
         """Gives a list of permission overwrites
-        
+
         Returns
         -------
         list[:class:`str`]
@@ -83,7 +86,7 @@ class Category:
     @property
     def position(self) -> int:
         """Gives the category position
-        
+
         Returns
         -------
         :class:`int`
@@ -93,7 +96,7 @@ class Category:
     @property
     def id(self) -> int:
         """Gives the snowflake id of the channel
-        
+
         Returns
         -------
         :class:`int`
@@ -103,7 +106,7 @@ class Category:
     @property
     def name(self) -> str:
         """Gives the name of the category
-        
+
         Returns
         -------
         :class:`str`
@@ -112,7 +115,7 @@ class Category:
 
     def guild_id(self) -> int:
         """Gives the guild' snowflake id
-        
+
         Returns
         -------
         :class:`int`
@@ -122,10 +125,11 @@ class Category:
 
 class TextChannel:
     """Represents a Discord Text Channel
-    
+
     Parameters
     ----------
     """
+
     def __init__(self, data: dict, state: ConnectionState):
         self.from_dict = data
         self.state = state
@@ -133,7 +137,7 @@ class TextChannel:
     @property
     def id(self) -> int:
         """Gives the channel' id
-        
+
         Returns
         -------
         :class:`int`
@@ -143,7 +147,7 @@ class TextChannel:
     @property
     def guild_id(self) -> int:
         """Gives the guild id of the channel
-        
+
         Returns
         -------
         :class:`int`
@@ -153,7 +157,7 @@ class TextChannel:
     @property
     def name(self) -> str:
         """Gives the name of the channel
-        
+
         Returns
         -------
         :class:`str`
@@ -163,7 +167,7 @@ class TextChannel:
     @property
     def position(self) -> int:
         """Gives the position of the channel
-        
+
         Returns
         -------
         :class:`int`
@@ -177,7 +181,7 @@ class TextChannel:
     @property
     def nsfw(self) -> bool:
         """If the channel is nsfw
-        
+
         Returns
         -------
         :class:`bool`
@@ -186,7 +190,7 @@ class TextChannel:
 
     def topic(self) -> str:
         """Gives the channel' topic
-        
+
         Returns
         -------
         :class:`str`
@@ -195,7 +199,7 @@ class TextChannel:
 
     def last_message_id(self) -> int:
         """Gives the snowflake id of the last message
-        
+
         Returns
         -------
         :class:`int`
@@ -204,7 +208,7 @@ class TextChannel:
 
     def category_id(self) -> int:
         """Gives the id of the category this channel is in
-        
+
         Returns
         -------
         :class:`int`
@@ -214,7 +218,7 @@ class TextChannel:
 
 class VoiceChannel:
     """Represents a Discord Voice Channel
-    
+
     .. versionadded:: 0.8.0
 
     Parameters
@@ -224,6 +228,7 @@ class VoiceChannel:
     state: :class:`ConnectionState`
         The connection state
     """
+
     def __init__(self, data: dict, state: ConnectionState):
         self.state = state
         self.from_dict = data
@@ -231,7 +236,7 @@ class VoiceChannel:
     @property
     def id(self) -> int:
         """Gives the Voice Channel' Snowflake ID
-        
+
         Returns
         -------
         :class:`int`
@@ -241,7 +246,7 @@ class VoiceChannel:
     @property
     def guild(self) -> Guild:
         """The guild this channel is in
-        
+
         Returns
         -------
         :class:`Guild`
@@ -276,7 +281,7 @@ class VoiceChannel:
 
 class DMChannel:
     """Represents a Discord DM Channel
-    
+
     .. versionadded:: 0.8.0
 
     Parameters
@@ -286,13 +291,14 @@ class DMChannel:
     state: :class:`ConnectionState`
         The connection state
     """
+
     def __init__(self, data: dict, state: ConnectionState):
         self.from_dict = data
         self.state = state
 
     def last_message_id(self) -> int:
         """The snowflake id of the last message
-        
+
         Returns
         -------
         :class:`int`
@@ -302,7 +308,7 @@ class DMChannel:
     @property
     def id(self) -> int:
         """The snowflake id of the channel
-        
+
         Returns
         -------
         :class:`int`
@@ -311,7 +317,7 @@ class DMChannel:
 
     def recipients(self):
         """The list of users in the channel
-        
+
         Returns
         -------
         List[:class:`User`]
@@ -325,16 +331,17 @@ def parse_groupdm_icon(format: FormatType, group_id: int, group_icon_hash: str) 
 
 class GroupDMChannel(DMChannel):
     """Represents a Discord Group DM Channel
-    
+
     .. versionadded:: 0.8.0
 
     Parameters
     -----------
     data: :class:`dict`
     """
+
     def name(self) -> str:
         """Gives the name of the Group DM
-        
+
         Returns
         -------
         :class:`str`
@@ -343,7 +350,7 @@ class GroupDMChannel(DMChannel):
 
     def icon(self, format: FormatType = FormatType.PNG) -> str:
         """Gives the link of the channel' icon
-        
+
         Returns
         -------
         :class:`str`
@@ -352,7 +359,7 @@ class GroupDMChannel(DMChannel):
 
     def owner(self) -> User:
         """Returns the User which is the owner of this Group DM
-        
+
         Returns
         -------
         :class:`User`
@@ -363,7 +370,7 @@ class GroupDMChannel(DMChannel):
 
 class Thread:
     """Represents a Discord Thread
-    
+
     .. versionadded:: 0.8.0
 
     Parameters
@@ -373,6 +380,7 @@ class Thread:
     state: :class:`ConnectionState`
         The connection state
     """
+
     def __init__(self, data: dict, state: ConnectionState):
         self.from_dict = data
         self.state = state
@@ -380,7 +388,7 @@ class Thread:
     @property
     def id(self) -> int:
         """The thread' snowflake id
-        
+
         Returns
         -------
         :class:`int`
@@ -390,7 +398,7 @@ class Thread:
     @property
     def guild_id(self) -> int:
         """The guild id of the thread
-        
+
         Returns
         -------
         :class:`int`
@@ -400,7 +408,7 @@ class Thread:
     @property
     def channel_id(self) -> int:
         """The channel id of the thread
-        
+
         Returns
         -------
         :class:`int`
@@ -410,7 +418,7 @@ class Thread:
     @property
     def owner_id(self) -> int:
         """Gives the owner id of the Thread
-        
+
         Returns
         -------
         :class:`int`
@@ -420,7 +428,7 @@ class Thread:
     @property
     def name(self) -> str:
         """Gives the name of the thread
-        
+
         Returns
         -------
         :class:`str`
@@ -429,7 +437,7 @@ class Thread:
 
     def last_message_id(self) -> int:
         """Gives the last message id in the thread
-        
+
         Returns
         -------
         :class:`int`
@@ -438,7 +446,7 @@ class Thread:
 
     def message_count(self) -> int:
         """Gives the amount of messages in the thread
-        
+
         Returns
         -------
         :class:`int`
@@ -447,7 +455,7 @@ class Thread:
 
     def member_count(self) -> int:
         """Gives the thread' member count
-        
+
         Returns
         -------
         :class:`int`
@@ -457,7 +465,7 @@ class Thread:
     @property
     def metadata(self) -> "ThreadMetadata":
         """Gives the thread' metadata
-        
+
         Returns
         -------
         :class:`ThreadMetadata`
@@ -467,7 +475,7 @@ class Thread:
 
 class ThreadMetadata:
     """Represents a Thread' metadata
-    
+
     .. versionadded:: 0.8.0
 
     Parameters
@@ -475,13 +483,14 @@ class ThreadMetadata:
     data: :class:`dict`
         The metadata
     """
+
     def __init__(self, data: dict):
         self.from_dict = data
 
     @property
     def archived(self) -> bool:
         """If the thread is archived
-        
+
         Returns
         -------
         :class:`bool`
@@ -491,7 +500,7 @@ class ThreadMetadata:
     @property
     def auto_archive_duration(self) -> int:
         """The archived duration
-        
+
         Returns
         -------
         :class:`int`
@@ -501,7 +510,7 @@ class ThreadMetadata:
     @property
     def archive_timestamp(self) -> str:
         """The archived timestamp
-        
+
         Returns
         -------
         :class:`str`
@@ -511,7 +520,7 @@ class ThreadMetadata:
     @property
     def locked(self) -> bool:
         """If the thread is locked or not
-        
+
         Returns
         -------
         :class:`bool`

@@ -22,29 +22,29 @@
 from discord.types import Dict
 
 from ..guild import ScheduledEvent
+from ..member import Member
 from ..state import ConnectionState, member_cacher
 from .guilds import (
-    OnGuildJoin,
-    OnGuildLeave,
-    OnGuildUpdate,
     OnGuildBan,
-    OnGuildIntegrationsUpdate,
     OnGuildBanRemove,
     OnGuildEmojisUpdate,
+    OnGuildIntegrationsUpdate,
+    OnGuildJoin,
+    OnGuildLeave,
     OnGuildStickersUpdate,
+    OnGuildUpdate,
     OnMemberJoin,
     OnMemberLeave,
     OnMemberUpdate,
     OnRoleCreate,
-    OnRoleUpdate,
     OnRoleDelete,
+    OnRoleUpdate,
     OnScheduledEventCreate,
-    OnScheduledEventUpdate,
     OnScheduledEventDelete,
     OnScheduledEventJoin,
-    OnScheduledEventLeave
+    OnScheduledEventLeave,
+    OnScheduledEventUpdate,
 )
-from ..member import Member
 from .interactions import OnInteraction
 from .messages import OnMessage, OnMessageDelete, OnMessageEdit
 
@@ -110,11 +110,11 @@ class Cataloger:
         elif data["t"] == "GUILD_MEMBERS_CHUNK":
             dis.dispatch("RAW_GUILD_MEMBERS_CHUNK", data["d"])
             member_cacher(state, data["d"]["members"], data["d"]["guild_id"], Member)
-        
+
         elif data["t"] == "ROLE_CREATE":
             dis.dispatch("RAW_ROLE_CREATE", data["d"])
             OnRoleCreate(data["d"], dis, state)
-        
+
         elif data["t"] == "ROLE_UPDATE":
             dis.dispatch("RAW_ROLE_UPDATE", data["d"])
             OnRoleUpdate(data["d"], dis, state)
@@ -122,26 +122,26 @@ class Cataloger:
         elif data["t"] == "ROLE_DELETE":
             dis.dispatch("RAW_ROLE_DELETE", data["d"])
             OnRoleDelete(data["d"], dis, state)
-        
+
         elif data["t"] == "SCHEDULED_EVENT_CREATE":
             dis.dispatch("RAW_SCHEDULED_EVENT_CREATE", data["d"])
             OnScheduledEventCreate(data["d"], dis, state)
-        
+
         elif data["t"] == "SCHEDULED_EVENT_UPDATE":
             dis.dispatch("RAW_SCHEDULED_EVENT_UPDATE", data["d"])
             OnScheduledEventUpdate(data["d"], dis, state)
-        
+
         elif data["t"] == "SCHEDULED_EVENT_DELETE":
             dis.dispatch("RAW_SCHEDULED_EVENT_DELETE", data["d"])
             OnScheduledEventDelete(data["d"], dis, state)
-        
+
         elif data["t"] == "SCHEDULED_EVENT_JOIN":
             dis.dispatch("RAW_SCHEDULED_EVENT_JOIN", data["d"])
             OnScheduledEventJoin(data["d"], dis, state)
-        
+
         elif data["t"] == "SCHEDULED_EVENT_LEAVE":
             dis.dispatch("RAW_SCHEDULED_EVENT_LEAVE", data["d"])
-            OnScheduledEventLeave(data['d'], dis, state)
+            OnScheduledEventLeave(data["d"], dis, state)
 
         # messages
         elif data["t"] == "MESSAGE_CREATE":
@@ -160,6 +160,6 @@ class Cataloger:
         elif data["t"] == "INTERACTION_CREATE":
             dis.dispatch("RAW_INTERACTION", dis, state)
             OnInteraction(data["d"], dis, state)
-        
+
         else:
             dis.dispatch(f"RAW_{data['t']}", data["d"])

@@ -134,7 +134,7 @@ class Guild:
         """Changes the bot's voice state in a guild
 
         .. versionadded:: 0.8.0
-        
+
         Parameters
         ----------
         channel: :class:`int`
@@ -144,7 +144,9 @@ class Guild:
         self_deaf
             Should the bot be deaf?
         """
-        await self._factory.state.app.gateway.voice_state(guild=self.id, channel=channel, mute=self_mute, deaf=self_deaf)
+        await self._factory.state.app.gateway.voice_state(
+            guild=self.id, channel=channel, mute=self_mute, deaf=self_deaf
+        )
 
 
 def parse_role_icon(format: FormatType, role_id: int, role_icon: str) -> str:
@@ -157,7 +159,7 @@ def _parse_tags(data: dict) -> str:
 
 class Role:
     """Represents a Discord Role
-    
+
     .. versionadded:: 0.8.0
 
     Parameters
@@ -165,13 +167,14 @@ class Role:
     data: :class:`dict`
         The raw role data
     """
+
     def __init__(self, data: dict):
         self.from_dict = data
 
     @property
     def id(self) -> int:
         """Gives the snowflake id of the role
-        
+
         Returns
         -------
         :class:`int`
@@ -181,7 +184,7 @@ class Role:
     @property
     def name(self) -> str:
         """Gives the name of the role
-        
+
         Returns
         -------
         :class:`str`
@@ -191,7 +194,7 @@ class Role:
     @property
     def color(self) -> int:
         """Returns the roles color
-        
+
         Returns
         -------
         :class:`int`
@@ -200,7 +203,7 @@ class Role:
 
     def hoist(self) -> bool:
         """If the role is hoisted or not
-        
+
         Returns
         -------
         :class:`bool`
@@ -209,7 +212,7 @@ class Role:
 
     def icon(self, format: Optional[FormatType] = FormatType.PNG) -> str:
         """Gives the role icon's link, if any.
-        
+
         Returns
         -------
         :class:`str`
@@ -220,7 +223,7 @@ class Role:
 
     def unicode_emoji(self) -> str:
         """Gives the roles unicode emoji
-        
+
         Returns
         -------
         :class:`str`
@@ -230,7 +233,7 @@ class Role:
     @property
     def position(self) -> int:
         """Gives the current role position
-        
+
         Returns
         -------
         :class:`int`
@@ -239,7 +242,7 @@ class Role:
 
     def permissions(self) -> str:
         """Gives the role permissions
-        
+
         Returns
         -------
         :class:`str`
@@ -249,7 +252,7 @@ class Role:
 
     def managed(self) -> bool:
         """If the role is managed or not
-        
+
         Returns
         -------
         :class:`bool`
@@ -258,7 +261,7 @@ class Role:
 
     def mentionable(self) -> bool:
         """If the role is publicly mentionable
-        
+
         Returns
         -------
         :class:`bool`
@@ -267,7 +270,7 @@ class Role:
 
     def tags(self) -> str:
         """The current role' tags
-        
+
         Returns
         -------
         :class:`str`
@@ -281,7 +284,7 @@ def parse_event_banner(format: FormatType, event_id: int, event_hash: str) -> st
 
 class ScheduledEvent:
     """Represents a Discord Guild Scheduled Event
-    
+
     .. versionadded:: 0.8.0
 
     Parameters
@@ -289,13 +292,14 @@ class ScheduledEvent:
     data: :class:`dict`
         The raw event data
     """
+
     def __init__(self, data: dict):
         self.from_dict = data
 
     @property
     def id(self) -> int:
         """Gives the scheduled events snowflake id
-        
+
         Returns
         -------
         :class:`int`
@@ -304,7 +308,7 @@ class ScheduledEvent:
 
     def guild_id(self) -> int:
         """Gives the scheduled event' current guild
-        
+
         Returns
         -------
         :class:`int`
@@ -313,7 +317,7 @@ class ScheduledEvent:
 
     def channel_id(self) -> Union[int, None]:
         """Gives the scheduled events current channel, if any
-        
+
         Returns
         -------
         :class:`int`
@@ -324,7 +328,7 @@ class ScheduledEvent:
     @property
     def creator(self) -> User:
         """Gives a :class:`User` of the creator of this scheduled event
-        
+
         Returns
         -------
         :class:`User`
@@ -334,7 +338,7 @@ class ScheduledEvent:
     @property
     def name(self) -> str:
         """Gives the scheduled event' name
-        
+
         Returns
         -------
         :class:`str`
@@ -344,7 +348,7 @@ class ScheduledEvent:
     @property
     def description(self) -> str:
         """Gives the description of the scheduled event
-        
+
         Returns
         -------
         :class:`str`
@@ -353,7 +357,7 @@ class ScheduledEvent:
 
     def start_time(self) -> str:
         """Gives the start time of the scheduled event
-        
+
         Returns
         -------
         :class:`str`
@@ -362,7 +366,7 @@ class ScheduledEvent:
 
     def status(self) -> ScheduledEventStatusType:
         """Gives the current event' status
-        
+
         Returns
         -------
         :class:`int`
@@ -378,7 +382,7 @@ class ScheduledEvent:
 
     def end_time(self) -> Union[None, str]:
         """Gives the endtime of the scheduled event
-        
+
         Returns
         -------
         :class:`str`
@@ -388,7 +392,7 @@ class ScheduledEvent:
 
     def type(self) -> ScheduledEventType:
         """Gives the type of scheduled event
-        
+
         Returns
         -------
         :class:`int`
@@ -402,7 +406,7 @@ class ScheduledEvent:
 
     def entity_id(self) -> int:
         """Gives the current entity id
-        
+
         Returns
         -------
         :class:`int`
@@ -412,7 +416,7 @@ class ScheduledEvent:
     @property
     def metadata(self) -> "ScheduledEventMetadata":
         """Gives the scheduled event metadata
-        
+
         Returns
         -------
         :class:`ScheduledEventMetadata`
@@ -421,7 +425,7 @@ class ScheduledEvent:
 
     def joined(self) -> int:
         """Gives the amount of users which joined the event
-        
+
         Returns
         -------
         :class:`int`
@@ -430,7 +434,7 @@ class ScheduledEvent:
 
     def image(self, format: FormatType = FormatType.PNG):
         """Gives the url of the scheduled event' banner
-        
+
         Returns
         -------
         :class:`str`
@@ -442,7 +446,7 @@ class ScheduledEvent:
 
 class ScheduledEventMetadata:
     """Represents a Discord Scheduled event metadata
-    
+
     .. versionadded:: 0.8.0
 
     Parameters
@@ -450,13 +454,14 @@ class ScheduledEventMetadata:
     data: :class:`dict`
         The raw metadata' data
     """
+
     def __init__(self, data: dict):
         self.from_dict = data
 
     @property
     def location(self) -> Union[str, None]:
         """Gives the location the event is happening in
-        
+
         Returns
         -------
         :class:`str`
@@ -469,18 +474,19 @@ class WelcomeScreen:
     """Represents a Discord Guild WelcomeScreen
 
     .. versionadded:: 0.8.0
-    
+
     Parameters
     ----------
     data: :class:`dict`
     """
+
     def __init__(self, data: dict):
         self.from_dict = data
 
     @property
     def description(self) -> str:
         """Gives the WelcomeScreen' description
-        
+
         Returns
         -------
         :class:`str`
@@ -489,7 +495,7 @@ class WelcomeScreen:
 
     def channels(self) -> list["WelcomeChannel"]:
         """Gives a list of :class:`WelcomeChannel`
-        
+
         Returns
         -------
         list[:class:`WelcomeChannel`]
@@ -503,19 +509,20 @@ class WelcomeChannel:
     """Represents a Discord WelcomeScreen Channel
 
     .. versionadded:: 0.8.0
-    
+
     Parameters
     ----------
     data: :class:`dict`
         The raw WelcomeChannel data
     """
+
     def __init__(self, data: dict):
         self.from_dict = data
 
     @property
     def channel_id(self) -> int:
         """Gives the Channel' id
-        
+
 
         Returns
         -------
@@ -526,7 +533,7 @@ class WelcomeChannel:
     @property
     def description(self) -> str:
         """Gives the description of the channel
-        
+
         Returns
         -------
         :class:`str`
@@ -535,7 +542,7 @@ class WelcomeChannel:
 
     def emoji_id(self) -> Union[int, None]:
         """Gives the Emoji id, if any
-        
+
         Returns
         -------
         :class:`int`
@@ -545,7 +552,7 @@ class WelcomeChannel:
 
     def emoji_name(self) -> Union[str, None]:
         """Gives the Emoji name, if any
-        
+
         Returns
         -------
         :class:`str`

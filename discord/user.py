@@ -44,7 +44,7 @@ class User:
 
     def username(self) -> str:
         """The users username
-        
+
         Returns
         -------
         :class:`str`
@@ -53,7 +53,7 @@ class User:
 
     def discriminator(self) -> int:
         """The users discriminator id
-        
+
         Returns
         -------
         :class:`int`
@@ -63,7 +63,7 @@ class User:
     @property
     def id(self) -> int:
         """The users snowflake id
-        
+
         Returns
         -------
         :class:`int`
@@ -77,7 +77,7 @@ class User:
     @property
     def bot(self) -> bool:
         """If the User is a bot or not
-        
+
         Returns
         -------
         :class:`bool`

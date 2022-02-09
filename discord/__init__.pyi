@@ -1,13 +1,17 @@
 import typing
 
 from .api import *
+from .assets import *
+from .channels import *
 from .client import *
 from .color import *
 from .colour import *
 from .components import *
+from .embed import *
 from .enums import *
 from .events import *
 from .file import *
+from .flags import *
 from .guild import *
 from .intents import *
 from .interactions import *
