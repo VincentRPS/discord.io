@@ -213,26 +213,61 @@ class TextChannel:
 
 
 class VoiceChannel:
+    """Represents a Discord Voice Channel
+    
+    .. versionadded:: 0.8.0
+
+    Parameters
+    ----------
+    data: :class:`dict`
+        The raw channel data
+    state: :class:`ConnectionState`
+        The connection state
+    """
     def __init__(self, data: dict, state: ConnectionState):
         self.state = state
         self.from_dict = data
 
     @property
     def id(self) -> int:
+        """Gives the Voice Channel' Snowflake ID
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["id"]
 
     @property
     def guild(self) -> Guild:
+        """The guild this channel is in
+        
+        Returns
+        -------
+        :class:`Guild`
+        """
         id = self.from_dict["guild_id"]
         raw = self.state.app.fetch_raw_guild(guild_id=id)
         return Guild(raw, self.state.app.factory)
 
     @property
     def name(self) -> str:
+        """The name of the voice channel
+
+        Returns
+        -------
+        :class:`str`
+        """
         return self.from_dict["name"]
 
     @property
     def position(self) -> int:
+        """The voice channel' position
+
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["position"]
 
     def permission_overwrites(self) -> list[str, Union[int, str]]:
@@ -240,18 +275,47 @@ class VoiceChannel:
 
 
 class DMChannel:
+    """Represents a Discord DM Channel
+    
+    .. versionadded:: 0.8.0
+
+    Parameters
+    ----------
+    data: :class:`dict`
+        The raw data
+    state: :class:`ConnectionState`
+        The connection state
+    """
     def __init__(self, data: dict, state: ConnectionState):
         self.from_dict = data
         self.state = state
 
     def last_message_id(self) -> int:
+        """The snowflake id of the last message
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["last_message_id"]
 
     @property
     def id(self) -> int:
+        """The snowflake id of the channel
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["id"]
 
     def recipients(self):
+        """The list of users in the channel
+        
+        Returns
+        -------
+        List[:class:`User`]
+        """
         return [User(user_data) for user_data in self.from_dict["recipients"]]
 
 
@@ -260,72 +324,196 @@ def parse_groupdm_icon(format: FormatType, group_id: int, group_icon_hash: str) 
 
 
 class GroupDMChannel(DMChannel):
+    """Represents a Discord Group DM Channel
+    
+    .. versionadded:: 0.8.0
+
+    Parameters
+    -----------
+    data: :class:`dict`
+    """
     def name(self) -> str:
+        """Gives the name of the Group DM
+        
+        Returns
+        -------
+        :class:`str`
+        """
         return self.from_dict["name"]
 
     def icon(self, format: FormatType = FormatType.PNG) -> str:
-        parse_groupdm_icon(format, self.id, self.from_dict["icon"])
+        """Gives the link of the channel' icon
+        
+        Returns
+        -------
+        :class:`str`
+        """
+        return parse_groupdm_icon(format, self.id, self.from_dict["icon"])
 
     def owner(self) -> User:
+        """Returns the User which is the owner of this Group DM
+        
+        Returns
+        -------
+        :class:`User`
+        """
         user = self.state.app.factory.get_user(self.from_dict["owner"])
         return User(user)
 
 
 class Thread:
+    """Represents a Discord Thread
+    
+    .. versionadded:: 0.8.0
+
+    Parameters
+    ----------
+    data: :class:`dict`
+        The raw thread data
+    state: :class:`ConnectionState`
+        The connection state
+    """
     def __init__(self, data: dict, state: ConnectionState):
         self.from_dict = data
         self.state = state
 
     @property
     def id(self) -> int:
+        """The thread' snowflake id
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["id"]
 
     @property
     def guild_id(self) -> int:
+        """The guild id of the thread
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["guild_id"]
 
     @property
     def channel_id(self) -> int:
+        """The channel id of the thread
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["parent_id"]
 
     @property
     def owner_id(self) -> int:
+        """Gives the owner id of the Thread
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["owner_id"]
 
     @property
     def name(self) -> str:
+        """Gives the name of the thread
+        
+        Returns
+        -------
+        :class:`str`
+        """
         return self.from_dict["name"]
 
     def last_message_id(self) -> int:
+        """Gives the last message id in the thread
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["last_message_id"]
 
     def message_count(self) -> int:
+        """Gives the amount of messages in the thread
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["message_count"]
 
     def member_count(self) -> int:
+        """Gives the thread' member count
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["member_count"]
 
     @property
     def metadata(self) -> "ThreadMetadata":
+        """Gives the thread' metadata
+        
+        Returns
+        -------
+        :class:`ThreadMetadata`
+        """
         return ThreadMetadata(self.from_dict["thread_metadata"])
 
 
 class ThreadMetadata:
+    """Represents a Thread' metadata
+    
+    .. versionadded:: 0.8.0
+
+    Parameters
+    ----------
+    data: :class:`dict`
+        The metadata
+    """
     def __init__(self, data: dict):
         self.from_dict = data
 
     @property
     def archived(self) -> bool:
+        """If the thread is archived
+        
+        Returns
+        -------
+        :class:`bool`
+        """
         return self.from_dict["archived"]
 
     @property
     def auto_archive_duration(self) -> int:
+        """The archived duration
+        
+        Returns
+        -------
+        :class:`int`
+        """
         return self.from_dict["auto_archive_duration"]
 
     @property
     def archive_timestamp(self) -> str:
+        """The archived timestamp
+        
+        Returns
+        -------
+        :class:`str`
+        """
         return self.from_dict["archive_timestamp"]
 
     @property
     def locked(self) -> bool:
+        """If the thread is locked or not
+        
+        Returns
+        -------
+        :class:`bool`
+        """
         return self.from_dict["locked"]
