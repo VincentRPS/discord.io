@@ -1,8 +1,10 @@
-![d.io banner](https://raw.githubusercontent.com/VincentRPS/discord.io/master/docs/assets/discord.io-small.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/VincentRPS/discord.io/master/docs/assets/discord.io-small.png" />
+</p>
 
-<h1 align='center'>discord.io</h1>
-
+<p align="center">
 A asynchronous Discord API Wrapper for Python
+</p>
 
 ## Features
 
