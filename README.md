@@ -1,3 +1,5 @@
+[![d.io banner](https://raw.githubusercontent.com/VincentRPS/discord.io/master/docs/assets/discord.io.png)]
+
 <h1 align='center'>discord.io</h1>
 
 A asynchronous Discord API Wrapper for Python

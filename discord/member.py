@@ -26,6 +26,7 @@ ref: https://discord.dev/resources/guild#guild-member-object
 from typing import Any, List, Optional, Union
 
 from .user import User
+from .api.rest_factory import RESTFactory
 
 __all__: List[str] = ["Member"]
 
@@ -48,7 +49,7 @@ class Member:
         The raw :class:`dict` object of the Member.
     """
 
-    def __init__(self, data: dict, guild: Union[int, Any], factory):
+    def __init__(self, data: dict, guild: Union[int, Any], factory: RESTFactory):
         self.from_dict = data
         self.guild_id = guild
         self._factory = factory

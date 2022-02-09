@@ -27,7 +27,7 @@ from typing import Any, Optional
 
 import aiohttp
 
-from discord import utils
+from .. import utils
 
 from ..enums import ScheduledEventType
 from ..file import File
