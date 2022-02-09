@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/VincentRPS/discord.io/master/docs/assets/discord.io-small.png" />
+  <img src="https://raw.githubusercontent.com/VincentRPS/discord.io/master/docs/assets/discord.io.png" />
 </p>
 
 <p align="center">
