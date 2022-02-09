@@ -1,4 +1,4 @@
-[![d.io banner](https://raw.githubusercontent.com/VincentRPS/discord.io/master/docs/assets/discord.io.png)]
+![d.io banner](https://raw.githubusercontent.com/VincentRPS/discord.io/master/docs/assets/discord.io-small.png)
 
 <h1 align='center'>discord.io</h1>
 
