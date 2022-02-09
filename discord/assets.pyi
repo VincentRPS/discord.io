@@ -1,8 +1,10 @@
-from .enums import StickerFormatType as StickerFormatType, StickerType as StickerType
+from typing import Any
+
+from .enums import StickerFormatType as StickerFormatType
+from .enums import StickerType as StickerType
 from .state import ConnectionState as ConnectionState
 from .types import Dict as Dict
 from .user import User as User
-from typing import Any
 
 class Emoji:
     from_dict: Any

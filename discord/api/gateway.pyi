@@ -1,11 +1,13 @@
-from ..state import ConnectionState as ConnectionState
-from .rest_factory import RESTFactory as RESTFactory
+from typing import Any, Coroutine
+
 from discord import utils as utils
 from discord.events import catalog as catalog
 from discord.internal.dispatcher import Dispatcher as Dispatcher
 from discord.snowflake import Snowflakeish as Snowflakeish
 from discord.types.dict import Dict as Dict
-from typing import Any, Coroutine
+
+from ..state import ConnectionState as ConnectionState
+from .rest_factory import RESTFactory as RESTFactory
 
 ZLIB_SUFFIX: bytes
 url_extension: str
@@ -26,7 +28,14 @@ class Shard:
     last_send: Any
     last_ack: Any
     latency: Any
-    def __init__(self, state: ConnectionState, dispatcher: Dispatcher, shard_id: int, url: str, mobile: bool = ...) -> None: ...
+    def __init__(
+        self,
+        state: ConnectionState,
+        dispatcher: Dispatcher,
+        shard_id: int,
+        url: str,
+        mobile: bool = ...,
+    ) -> None: ...
     ws: Any
     token: Any
     async def connect(self, token: str) -> None: ...
@@ -48,8 +57,16 @@ class Gateway:
     mobile: Any
     count: Any
     shards: Any
-    def __init__(self, state: ConnectionState, dispatcher: Dispatcher, factory: RESTFactory, mobile: bool = ...) -> None: ...
+    def __init__(
+        self,
+        state: ConnectionState,
+        dispatcher: Dispatcher,
+        factory: RESTFactory,
+        mobile: bool = ...,
+    ) -> None: ...
     s: Any
     async def connect(self, token: str) -> None: ...
     def send(self, payload: Dict) -> Coroutine[Any, Any, None]: ...
-    async def voice_state(self, guild: int, channel: Snowflakeish, mute: bool, deaf: bool) -> Coroutine[Any, Any, None]: ...
+    async def voice_state(
+        self, guild: int, channel: Snowflakeish, mute: bool, deaf: bool
+    ) -> Coroutine[Any, Any, None]: ...

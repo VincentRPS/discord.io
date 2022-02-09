@@ -1,7 +1,8 @@
+from typing import Any, List, Optional, Union
+
 from .assets import Emoji
 from .enums import FormatType, ScheduledEventStatusType, ScheduledEventType
 from .user import User
-from typing import Any, List, Optional, Union
 
 class Guild:
     from_dict: Any
@@ -15,7 +16,13 @@ class Guild:
     @property
     def id(self) -> int: ...
     async def get_member(self, id: int): ...
-    async def change_voice_state(self, *, channel: Optional[int] = ..., self_mute: Optional[bool] = ..., self_deaf: Optional[bool] = ...): ...
+    async def change_voice_state(
+        self,
+        *,
+        channel: Optional[int] = ...,
+        self_mute: Optional[bool] = ...,
+        self_deaf: Optional[bool] = ...
+    ): ...
 
 class Role:
     from_dict: Any
@@ -70,7 +77,7 @@ class WelcomeScreen:
     def __init__(self, data: dict) -> None: ...
     @property
     def description(self) -> str: ...
-    def channels(self) -> list['WelcomeChannel']: ...
+    def channels(self) -> list["WelcomeChannel"]: ...
 
 class WelcomeChannel:
     from_dict: Any

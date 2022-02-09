@@ -1,4 +1,5 @@
-from ..channels import Thread as Thread, channel_parse as channel_parse
+from ..channels import Thread as Thread
+from ..channels import channel_parse as channel_parse
 from .core import Event as Event
 
 class OnChannelCreate(Event):

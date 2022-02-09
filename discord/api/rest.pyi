@@ -1,8 +1,9 @@
 import asyncio
 import typing
+from typing import Any
+
 from discord.file import File
 from discord.types.dict import Dict
-from typing import Any
 
 class Route:
     method: Any
@@ -30,8 +31,20 @@ class RESTClient:
     state: Any
     proxy: Any
     proxy_auth: Any
-    def __init__(self, *, state: Any | None = ..., proxy: Any | None = ..., proxy_auth: Any | None = ...) -> None: ...
-    async def send(self, route: Route, files: typing.Optional[typing.Sequence[File]] = ..., form: typing.Optional[typing.Iterable[Dict]] = ..., **params: typing.Any): ...
+    def __init__(
+        self,
+        *,
+        state: Any | None = ...,
+        proxy: Any | None = ...,
+        proxy_auth: Any | None = ...
+    ) -> None: ...
+    async def send(
+        self,
+        route: Route,
+        files: typing.Optional[typing.Sequence[File]] = ...,
+        form: typing.Optional[typing.Iterable[Dict]] = ...,
+        **params: typing.Any
+    ): ...
     async def cdn(self, url) -> bytes: ...
     async def close(self) -> None: ...
     async def create_if_not_exists(self) -> None: ...

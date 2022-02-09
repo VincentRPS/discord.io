@@ -1,5 +1,8 @@
-from ..assets import Emoji as Emoji, Sticker as Sticker
-from ..guild import Guild as Guild, Role as Role, ScheduledEvent as ScheduledEvent
+from ..assets import Emoji as Emoji
+from ..assets import Sticker as Sticker
+from ..guild import Guild as Guild
+from ..guild import Role as Role
+from ..guild import ScheduledEvent as ScheduledEvent
 from ..member import Member as Member
 from ..user import User as User
 from .core import Event as Event

@@ -1,7 +1,7 @@
 import datetime
 from typing import Any, Callable, Optional, TypeVar, overload
 
-T = TypeVar('T')
+T = TypeVar("T")
 Epoch: int
 
 class _Missing:

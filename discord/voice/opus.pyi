@@ -1,7 +1,8 @@
 import ctypes.util
-from ..internal.exceptions import DiscordError
 from enum import Enum
 from typing import Any
+
+from ..internal.exceptions import DiscordError
 
 class EncoderStruct(ctypes.Structure): ...
 class DecoderStuct(ctypes.Structure): ...
