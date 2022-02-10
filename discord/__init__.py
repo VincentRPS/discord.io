@@ -11,7 +11,7 @@ __title__: str = "discord.io"
 __author__: str = "VincentRPS"
 __license__: str = "MIT"
 __copyright__: str = "Copyright 2021-present VincentRPS"
-__version__: str = "0.8.0"
+__version__: str = "0.8.1"
 __git_sha1__: str = "HEAD"
 
 import logging
@@ -55,7 +55,7 @@ class VersionInfo(typing.NamedTuple):
 
 
 version_info: VersionInfo = VersionInfo(
-    major=0, minor=8, micro=0, releaselevel="final", serial=0
+    major=0, minor=8, micro=1, releaselevel="final", serial=0
 )
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

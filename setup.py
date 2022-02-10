@@ -21,7 +21,7 @@
 # SOFTWARE.
 import setuptools
 
-__version__ = str("0.7.0")
+__version__ = str("0.8.1")
 
 requirements = []
 with open("requirements.txt") as f:
@@ -31,14 +31,12 @@ packages = [
     "discord",
     "discord.events",
     "discord.api",
-    "discord.util",
     "discord.internal",
     "discord.components",
-    "discord.audio",
+    "discord.voice",
     "discord.interactions",
-    "discord.modules",
     "discord.types",
-    "discord.ext",
+    "discord.ext.cogs",
 ]
 
 extra_requires = {
@@ -74,7 +72,7 @@ setuptools.setup(
     description="Asynchronous Discord API Wrapper For Python",
     python_requires=">=3.8",
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
         "Natural Language :: English",

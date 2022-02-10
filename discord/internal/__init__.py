@@ -5,3 +5,4 @@ Internal processes for discord.io.
 """
 from .exceptions import *
 from .warnings import *
+from .dispatcher import *
