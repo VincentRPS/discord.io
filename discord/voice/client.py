@@ -167,8 +167,7 @@ class VoiceClient:
     async def ws_connect(self) -> VoiceGateway:
         ws = await VoiceGateway.voice_client_entry(self)
         self._connected.clear()
-        while ws.secret_key is None:
-            await ws.recv()
+        await ws.connect()
         self._connected.set()
         return ws
 
@@ -204,30 +203,6 @@ class VoiceClient:
                     continue
                 else:
                     raise
-
-        if self._runner is None:
-            self._runner = self._state.loop.create_task(self.watch_voice_ws(reconnect))
-
-    async def watch_voice_ws(self, reconnect: bool):
-        backoff = utils.ExponentialBackoff()
-        while True:
-            try:
-                await self.ws.recv()
-            except (asyncio.TimeoutError):
-                if not reconnect:
-                    await self.disconnect()
-                    raise
-
-                retry = backoff.delay()
-                _log.debug("Voice was disconnnected, reconnecting in %s seconds", retry)
-                self._connected.clear()
-                await asyncio.sleep(retry)
-                await self.voice_disconnect()
-                try:
-                    await self.connect(reconnect=True, timeout=self.timeout)
-                except asyncio.TimeoutError:
-                    _log.error("Could not connect back, retrying...")
-                    continue
 
     async def disconnect(self, *, force: bool = False):
         if not force and not self.is_connected():

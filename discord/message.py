@@ -24,6 +24,7 @@
 ref: https://discord.dev/resources/channel
 """
 
+import asyncio
 from typing import Any, List, Optional, Sequence
 
 from discord.file import File
@@ -67,6 +68,10 @@ class Message:  # noqa: ignore
         except KeyError:
             # can error out for embed only/link only messages.
             self.content: str = ""
+    
+
+    def __repr__(self):
+        return f"<Message id={self.id!r}, Channel id={self.channel.id!r}>"
 
     @property
     def channel(self):
@@ -107,7 +112,7 @@ class Message:  # noqa: ignore
         -------
         :class:`User`
         """
-        return User(usr=self.from_dict["author"])
+        return User(self.from_dict["author"])
 
     async def send(
         self,
@@ -158,7 +163,7 @@ class Message:  # noqa: ignore
         if components:
             com = components
         await self.app.factory.create_message(
-            channel=self.channel,
+            channel=self.channel.id,
             content=content,
             files=files,
             embeds=emb,
@@ -216,7 +221,7 @@ class Message:  # noqa: ignore
         if components:
             com = components
         await self.app.factory.create_message(
-            channel=self.channel,
+            channel=self.channel.id,
             content=content,
             files=files,
             embeds=emb,

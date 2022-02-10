@@ -31,18 +31,20 @@ from random import random
 import aiohttp
 
 from ..state import ConnectionState
+from ..utils import create_snowflake
 
 _log = logging.getLogger(__name__)
 
 
 class VoiceGateway:
-    def __init__(self, ws, state: ConnectionState, guild_id: int, hook):
+    def __init__(self, state: ConnectionState, guild_id: int, hook):
         self.state = state
         self.hook = hook
-        self.ws = ws
         self.server_id = guild_id
         self.session_id: int = None
         self.secret_key: str = None
+        self.kept_alive: bool = False
+        self.ws: aiohttp.ClientWebSocketResponse = None
 
     async def hook(self, *args):
         pass
@@ -60,7 +62,7 @@ class VoiceGateway:
             "d": {
                 "token": self.state.app.token,
                 "server_id": str(self.server_id),
-                "session_id": self.session_id,
+                "session_id": self.client.session_id,
             },
         }
         await self.send_json(payload)
@@ -71,29 +73,33 @@ class VoiceGateway:
             "d": {
                 "server_id": str(self.server_id),
                 "user_id": self.state.app.user.id,
-                "session_id": self.session_id,
+                "session_id": self.client.session_id,
                 "token": self.state.app.token,
             },
         }
         await self.send_json(payload)
 
+    async def connect(self, resume: bool = False):
+        self.ws = await self.client._state.app.factory.ws_connect(
+            self.gateway, compress=15
+        )
+
+        if not resume:
+            await self.identify()
+            self.client._state.loop.create_task(self.recv())
+        else:
+            await self.resume()
+            self.client.start.loop.create_task(self.recv())
+
     # i know this is a loss of customization here but doing this makes,
     # the development experience so much easier and since i wouldn't guess people are customizing here
     # it's ok.
     @classmethod
-    async def voice_client_entry(cls, client, *, resume: bool = False, hook=None):
+    async def voice_client_entry(cls, client, *, hook=None):
         gateway = "wss://" + client.endpoint + "/?v=4"
-        rest = client._state.app.factory
-        ws = await rest.ws_connect(gateway, compress=15)
-        self = cls(ws, client._state, client.guild_id, hook=hook)
+        self = cls(client._state, client.guild_id, hook=hook)
         self.gateway = gateway
         self.client = client
-        self.ws = ws
-
-        if resume:
-            await self.resume()
-        else:
-            await self.identify()
 
         return self
 
@@ -127,38 +133,41 @@ class VoiceGateway:
 
     async def recv(self):
         async for msg in self.ws:
-            data = json.loads(msg.data)
-            op: int = data["op"]
-            d: dict = data["d"]
-            _log.debug("> %s", data)
+            if msg.type == aiohttp.WSMsgType.TEXT:
+                data = json.loads(msg.data)
+                op: int = data["op"]
+                d: dict = data["d"]
+                _log.debug("> %s", data)
 
-            if op == 2:
-                await self.ready(d)
+                if op == 2:
+                    await self.ready(d)
 
-            elif op == 6:
-                _log.debug("> %s", d)
+                elif op == 6:
+                    self.kept_alive = True
+                    _log.debug("> %s, kept the connection alive", d)
 
-            elif op == 9:
-                _log.info("Resumed connection successfully")
+                elif op == 9:
+                    _log.info("Resumed connection successfully")
 
-            elif op == 4:
-                _log.info("Received session description")
-                self.client.mode = d["mode"]
-                self.secret_key = self.client.secret_key = d.get("secret_key")
-                await self.speak()
-                await self.speak(False)
+                elif op == 4:
+                    _log.info("Received session description")
+                    self.client.mode = d["mode"]
+                    self.secret_key = self.client.secret_key = d.get("secret_key")
+                    await self.speak()
+                    await self.speak(False)
 
-            elif op == 8:
-                interval = d["heartbeat_interval"] / 1000
-                await self.hello(interval=interval)
-
-            await self.hook(self, data)
+                elif op == 8:
+                    interval: int = d["heartbeat_interval"] / 1000
+                    await self.hello(interval=interval)
 
     async def heartbeat(self, interval: float):
-        if not self.ws.closed:
-            await self.send_json({"op": 1, "d": int(time.time() * 1000)})
+        while not self.ws.closed:
+            if not self.kept_alive:
+                await self.close(1008)
+                await self.connect(resume=True)
+            self.kept_alive = False
+            await self.send_json({"op": 3, "d": create_snowflake()})
             await asyncio.sleep(interval)
-            self.client._state.loop.create_task(self.heartbeat(interval))
 
     async def ready(self, data: dict):
         client = self.client
@@ -190,7 +199,10 @@ class VoiceGateway:
     async def hello(self, interval: float):
         init = interval * random()
         await asyncio.sleep(init)
-        await self.client._state.loop.create_task(self.heartbeat(interval))
+        self.kept_alive = (
+            True  # exception to not kill the connection when saying hello.
+        )
+        await self.heartbeat(interval)
 
     async def close(self, code: int):
         await self.ws.close(code=code)

@@ -87,7 +87,7 @@ class Interaction:
             self.options = data["data"]["options"]
         except KeyError:
             self.options = None
-        
+
         try:
             self.modals = data["data"]["components"]
         except KeyError:

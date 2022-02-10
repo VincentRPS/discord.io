@@ -55,12 +55,13 @@ class Dispatcher:
         self,
         coro: Callable[..., Coroutine[Any, Any, Any]],
         name: str,
+        cog,
         *args: Any,
         **kwargs: Any,
     ) -> None:
         try:
-            if hasattr(coro, "self"):
-                await coro(*args, **kwargs)
+            if cog:
+                await coro(cog, *args, **kwargs)
             else:
                 await coro(*args, **kwargs)
         except asyncio.CancelledError:
@@ -72,10 +73,11 @@ class Dispatcher:
         self,
         coro: Callable[..., Coroutine[Any, Any, Any]],
         name: str,
+        cog: Any,
         *args: Any,
         **kwargs: Any,
     ) -> asyncio.Task:
-        wrap = self.run(coro, name, *args, **kwargs)
+        wrap = self.run(coro, name, cog, *args, **kwargs)
         return self.state.loop.create_task(wrap, name=f"discord.io: {name}")
 
     def dispatch(self, name: str, *args, **kwargs) -> None:
@@ -117,7 +119,7 @@ class Dispatcher:
         except AttributeError:
             ...
         else:
-            self.scheduler(coro, real_name, *args, **kwargs)
+            self.scheduler(coro["main"], real_name, coro["cog"], *args, **kwargs)
 
     def listen(self, coro: Coro) -> Coro:
         if not asyncio.iscoroutinefunction(coro):
@@ -126,13 +128,13 @@ class Dispatcher:
         setattr(self, coro.__name__, coro)
         _log.info(f"{coro.__name__} has been registered!")
 
-    def add_listener(self, func: CoroFunc, name: Optional[str] = None):
+    def add_listener(self, func: CoroFunc, name: Optional[str] = None, cog=None):
         name = func.__name__ if name is None else name
 
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Function is not a coroutine.")
 
-        setattr(self, name, func)
+        setattr(self, name, {"main": func, "cog": cog})
 
         if name.startswith("on_raw"):
             _log.debug(f"{name} added as a listener!")

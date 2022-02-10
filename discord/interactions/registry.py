@@ -43,11 +43,15 @@ class ApplicationCommandRegistry:
         self.unregistered_commands: asyncio.Event = asyncio.Event()
 
     async def run(
-        self, coro: Callable[..., Coroutine[Any, Any, Any]], data, state
+        self, coro: Callable[..., Coroutine[Any, Any, Any]], data, state, cog=None
     ) -> None:
         try:
-            i = Interaction(data, state)
-            await coro(i)
+            if cog:
+                i = Interaction(data, state)
+                await coro(cog, i)
+            else:
+                i = Interaction(data, state)
+                await coro(i)
         except asyncio.CancelledError:
             pass
         except Exception:
@@ -84,6 +88,7 @@ class ApplicationCommandRegistry:
         name,
         description,
         callback,
+        cog: Any = None,
         options: Optional[List[Dict]] = None,
         default_permission: bool = True,
     ) -> dict:
@@ -102,6 +107,7 @@ class ApplicationCommandRegistry:
             "d": r,
             "callback": callback,
             "self": self,
+            "cog": cog,
         }
         return r
 
@@ -110,6 +116,7 @@ class ApplicationCommandRegistry:
         name,
         description,
         callback,
+        cog: Any = None,
         options: Optional[List[Dict]] = None,
         default_permission: bool = True,
     ) -> dict:
@@ -122,5 +129,6 @@ class ApplicationCommandRegistry:
             "d": r,
             "callback": callback,
             "self": self,
+            "cog": cog,
         }
         return r

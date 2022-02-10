@@ -3,10 +3,9 @@ discord.ext.cogs
 ~~~~~~~~~~~~~~~~
 Extension module to ensure the creation of Cogs.
 """
-from typing import Any, Callable, List, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, List, TypeVar
 
-from ...internal import dispatcher
-from ...internal.exceptions import DiscordError
+from ...internal import DiscordError, dispatcher
 
 __all__: List[str] = ["Cog", "ExtensionLoadError"]
 
@@ -19,9 +18,8 @@ class ExtensionLoadError(DiscordError):
 
 class Cog:
     listeners: dict[str, Any] = {}
-
-    def __init__(self, bot):
-        self.bot = bot
+    guild_commands: dict[str, Any] = {}
+    global_commands: dict[str, Any] = {}
 
     @property
     def __cog_name__(self) -> str:
@@ -57,28 +55,27 @@ class Cog:
             name = func.__name__  # if name is None else name # fix this somehow?
             description = func.__doc__
 
+            a = func
+            if isinstance(a, staticmethod):
+                a = a.__func__
+
             if guild_ids is not None:
-                for guild in guild_ids:
-                    cls.bot.state.loop.create_task(
-                        cls.bot.application.register_guild_slash_command(
-                            guild_id=guild,
-                            name=name,
-                            description=description,
-                            callback=func,
-                            options=options,
-                            default_permission=default_permission,
-                        )
-                    )
+                Cog.guild_commands[name] = {
+                    "guild_id": guild_ids,
+                    "name": name,
+                    "description": description,
+                    "callback": a,
+                    "options": options,
+                    "default_permission": default_permission,
+                }
             else:
-                cls.bot.state.loop.create_task(
-                    cls.bot.application.register_global_slash_command(
-                        name=name,
-                        description=description,
-                        callback=func,
-                        options=options,
-                        default_permission=default_permission,
-                    )
-                )
+                Cog.global_commands[name] = {
+                    "name": name,
+                    "description": description,
+                    "callback": a,
+                    "options": options,
+                    "default_permission": default_permission,
+                }
 
             return func
 
@@ -104,6 +101,7 @@ class Cog:
         return decorator
 
     def _inject(self, bot_self):
+        self.bot = bot_self
         return self
 
     def _eject(self, bot_self):

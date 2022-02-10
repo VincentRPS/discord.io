@@ -43,6 +43,7 @@ from .user import *
 from .utils import *
 from .voice import *
 from .webhooks import *
+from .message import *
 
 
 class VersionInfo(typing.NamedTuple):

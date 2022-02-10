@@ -102,10 +102,10 @@ class Shard:
         self.last_recv = perf_counter()
         self.last_send = perf_counter()
         self.last_ack = perf_counter()
-        self.latency = self.last_ack - self.last_send
         self._session_id: int = None
         self._ratelimit_lock: asyncio.Lock = asyncio.Lock()
         self.ws: aiohttp.ClientWebSocketResponse = None
+        self.latency: float = float("nan")
 
     async def connect(self, token: str) -> None:
         """Connects to the url specified, with the token
@@ -207,6 +207,7 @@ class Shard:
     async def recv(self) -> None:
         async for msg in self.ws:
             if msg.type == aiohttp.WSMsgType.BINARY:
+                self.latency = self.last_ack - self.last_send
                 self.buffer.extend(msg.data)
                 try:
                     raw = self.inflator.decompress(self.buffer).decode("utf-8")
@@ -441,3 +442,11 @@ class Gateway:
         }
         shard_id = (int(guild) >> 22) % self._s.shard_count
         await self.shards[shard_id].send(json)
+
+    @property
+    def latency(self) -> float:
+        lat: float = float(0)
+        for shard in self.shards:
+            lat += shard.latency
+        
+        return lat

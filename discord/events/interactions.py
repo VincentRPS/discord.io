@@ -37,10 +37,14 @@ class OnInteraction(Event):
                 )
         try:
             for application_command in self.state.application_commands.values():
+                cog = application_command["cog"]
                 if application_command["d"]["id"] == self.data["data"]["id"]:
                     self.state.loop.create_task(
                         application_command["self"].run(
-                            application_command["callback"], self.data, self.state
+                            application_command["callback"],
+                            self.data,
+                            self.state,
+                            cog=cog,
                         )
                     )
         except KeyError:

@@ -622,7 +622,7 @@ class RESTFactory:
         )
 
     # if your wondering why this is here, it's because it's used in the voice gateway.
-    async def ws_connect(self, url: str, *, compress: int = 0) -> Any:
+    async def ws_connect(self, url: str, *, compress: int = 0):
         kwargs = {
             "proxy_auth": self.proxy_auth,
             "proxy": self.proxy,

@@ -136,7 +136,7 @@ class Client:
             mobile=mobile,
         )
         self._got_gateway_bot: Event = Event()
-        self.cogs = {}
+        self.cogs: dict[str, Cog] = {}
         self._extensions = {}
         self.chunk_guild_members = chunk_guild_members
 
@@ -158,6 +158,10 @@ class Client:
 
     def voice(self, channel: VoiceChannel):
         return VoiceClient(self.state, channel)
+
+    @property
+    def latency(self) -> float:
+        return self.gateway.latency
 
     async def connect(self, token: str):
         """Starts the WebSocket(Gateway) connection with Discord.
@@ -425,7 +429,9 @@ class Client:
         cog = cog._inject(self)
 
         for name, func in cog.listeners.items():
-            self.dispatcher.add_listener(func, name)
+            self.dispatcher.add_listener(func, name, cog=cog)
+
+        self.state.loop.create_task(self._register_cog_commands(real=cog))
         self.cogs[name] = cog
 
     def remove_cog(self, cog: Cog):
@@ -491,3 +497,27 @@ class Client:
         return Modal(self.state).create(
             title=title, callback=callback, components=components, custom_id=custom_id
         )
+
+    async def _register_cog_commands(self, real: Cog):
+        await asyncio.sleep(20)
+
+        for command in real.guild_commands.values():
+            for guild_id in command["guild_id"]:
+                await self.application.register_guild_slash_command(
+                    guild_id=guild_id,
+                    name=command["name"],
+                    description=command["description"],
+                    callback=command["callback"],
+                    options=command["options"],
+                    default_permission=command["default_permission"],
+                    cog=real,
+                )
+        for command in real.global_commands.values():
+            await self.application.register_global_slash_command(
+                name=command["name"],
+                description=command["description"],
+                callback=command["callback"],
+                options=command["options"],
+                default_permission=command["default_permission"],
+                cog=real,
+            )
