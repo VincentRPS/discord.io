@@ -122,23 +122,23 @@ class Cataloger:
             dis.dispatch("RAW_ROLE_DELETE", data["d"])
             OnRoleDelete(data["d"], dis, state)
 
-        elif data["t"] == "SCHEDULED_EVENT_CREATE":
+        elif data["t"] == "GUILD_SCHEDULED_EVENT_CREATE":
             dis.dispatch("RAW_SCHEDULED_EVENT_CREATE", data["d"])
             OnScheduledEventCreate(data["d"], dis, state)
 
-        elif data["t"] == "SCHEDULED_EVENT_UPDATE":
+        elif data["t"] == "GUILD_SCHEDULED_EVENT_UPDATE":
             dis.dispatch("RAW_SCHEDULED_EVENT_UPDATE", data["d"])
             OnScheduledEventUpdate(data["d"], dis, state)
 
-        elif data["t"] == "SCHEDULED_EVENT_DELETE":
+        elif data["t"] == "GUILD_SCHEDULED_EVENT_DELETE":
             dis.dispatch("RAW_SCHEDULED_EVENT_DELETE", data["d"])
             OnScheduledEventDelete(data["d"], dis, state)
 
-        elif data["t"] == "SCHEDULED_EVENT_JOIN":
+        elif data["t"] == "GUILD_SCHEDULED_EVENT_USER_ADD":
             dis.dispatch("RAW_SCHEDULED_EVENT_JOIN", data["d"])
             OnScheduledEventJoin(data["d"], dis, state)
 
-        elif data["t"] == "SCHEDULED_EVENT_LEAVE":
+        elif data["t"] == "GUILD_SCHEDULED_EVENT_USER_REMOVE":
             dis.dispatch("RAW_SCHEDULED_EVENT_LEAVE", data["d"])
             OnScheduledEventLeave(data["d"], dis, state)
 
