@@ -19,7 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Any, List, Optional
 
 from discord.types import allowed_mentions
 
@@ -28,7 +28,6 @@ from ..embed import Embed
 from ..member import Member
 from ..types import Dict, embed_parse
 from ..webhooks import webhook_context
-from ..components import modal
 
 if TYPE_CHECKING:
     from ..state import ConnectionState
@@ -88,12 +87,17 @@ class Interaction:
             self.options = data["data"]["options"]
         except KeyError:
             self.options = None
+        
+        try:
+            self.modals = data["data"]["components"]
+        except KeyError:
+            self.modals = None
 
         try:
             # buttons will give this data
             self.message = data["message"]
         except KeyError:
-            pass
+            self.message = None
 
     def followup(
         self,
@@ -135,7 +139,7 @@ class Interaction:
     def respond(
         self,
         content: Optional[str] = None,
-        modal: Optional[modal.Modal] = None,
+        modal: Optional[dict[str, Any]] = None,
         tts: bool = False,
         embed: Optional[Embed] = None,
         embeds: Optional[List[Embed]] = None,
@@ -188,7 +192,7 @@ class Interaction:
         ret["data"]["embeds"] = emb
 
         if modal:
-            ret["data"]["components"] = modal
+            ret = {"type": 9, "data": modal}
 
         adapter = webhook_context.get()
         return adapter.rest.send(

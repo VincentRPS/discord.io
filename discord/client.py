@@ -29,13 +29,14 @@ import logging
 import sys
 import time
 from threading import Event
-from typing import Callable, List, Literal, Optional, TypeVar, Union
+from typing import Any, Callable, List, Literal, Optional, TypeVar, Union
 
 from discord.channels import VoiceChannel
 
+from . import utils
 from .api.gateway import Gateway
 from .api.rest_factory import RESTFactory
-from .components import Button
+from .components import Button, Modal, ModalComponent
 from .ext.cogs import Cog, ExtensionLoadError
 from .guild import Guild
 from .interactions import ApplicationCommandRegistry
@@ -479,3 +480,14 @@ class Client:
         else:
             self.remove_cog(name)
             self._extensions.pop(lib)
+
+    def create_modal(
+        self,
+        title: str,
+        callback: dispatcher.Coro,
+        components: list[ModalComponent],
+        custom_id: int = utils.create_snowflake(),
+    ):
+        return Modal(self.state).create(
+            title=title, callback=callback, components=components, custom_id=custom_id
+        )

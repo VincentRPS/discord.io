@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-A asynchronous Discord API Wrapper for Python
+Asynchronous Discord API Wrapper for Python
 </p>
 
 ## Features
@@ -55,7 +55,7 @@ This is another example but with a prefixed command
 ```py
 import discord
 
-client = discord.Client(command_prefix=">")
+client = discord.Client()
 
 @client.event
 async def on_ready():

@@ -22,7 +22,6 @@
 from discord.types import Dict
 
 from ..guild import ScheduledEvent
-from ..member import Member
 from ..state import ConnectionState, member_cacher
 from .guilds import (
     OnGuildBan,
@@ -109,7 +108,7 @@ class Cataloger:
 
         elif data["t"] == "GUILD_MEMBERS_CHUNK":
             dis.dispatch("RAW_GUILD_MEMBERS_CHUNK", data["d"])
-            member_cacher(state, data["d"]["members"], data["d"]["guild_id"], Member)
+            member_cacher(state, data["d"]["members"])
 
         elif data["t"] == "ROLE_CREATE":
             dis.dispatch("RAW_ROLE_CREATE", data["d"])

@@ -27,7 +27,7 @@ import string
 import typing
 from typing import Any, Callable, Coroutine
 
-from ..interactions import Interaction
+from ..interactions.interaction import Interaction
 from ..internal.dispatcher import Coro
 from ..state import ConnectionState
 
@@ -63,7 +63,6 @@ class Button:
         style: typing.Literal[1, 2, 3, 4, 5] = 1,
         custom_id: str = None,
         url: str = None,
-        modals: list[dict] = None
     ):
         """Creates a button
 

@@ -35,11 +35,15 @@ class OnInteraction(Event):
                         component["callback"], self.data, self.state
                     )
                 )
-        for application_command in self.state.application_commands.values():
-            if application_command["d"]["id"] == self.data["data"]["id"]:
-                self.state.loop.create_task(
-                    application_command["self"].run(
-                        application_command["callback"], self.data, self.state
+        try:
+            for application_command in self.state.application_commands.values():
+                if application_command["d"]["id"] == self.data["data"]["id"]:
+                    self.state.loop.create_task(
+                        application_command["self"].run(
+                            application_command["callback"], self.data, self.state
+                        )
                     )
-                )
+        except KeyError:
+            # components
+            pass
         self.dispatch("INTERACTION", Interaction(self.data, self.state))

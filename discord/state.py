@@ -200,7 +200,7 @@ class ConnectionState:
         self.shard_count: int = options.get("shard_count", None)
         """The shard count"""
 
-        self.components = {}
+        self.components: dict[str, Any] = {}
 
         self.prefixed_commands: dict[str, List[CoroFunc]] = {}
 
@@ -209,7 +209,6 @@ class ConnectionState:
         self.prefix = options.get("prefix")
 
 
-def member_cacher(state: ConnectionState, data, guild, member_class):
+def member_cacher(state: ConnectionState, data: Any):
     for member in data:
-        mem = member_class(member, guild, state.app.factory)
-        state.members.new(mem.user.id, mem)
+        state.members.new(member["id"], member)

@@ -212,7 +212,7 @@ class VoiceClient:
         backoff = utils.ExponentialBackoff()
         while True:
             try:
-                await self.ws.check_recv()
+                await self.ws.recv()
             except (asyncio.TimeoutError):
                 if not reconnect:
                     await self.disconnect()
