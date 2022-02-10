@@ -23,6 +23,28 @@ from discord.types import Dict
 
 from ..guild import ScheduledEvent
 from ..state import ConnectionState, member_cacher
+from .channels import (
+    OnChannelCreate,
+    OnChannelDelete,
+    OnChannelPinsUpdate,
+    OnChannelUpdate,
+    OnThreadCreate,
+    OnThreadDelete,
+    OnThreadListSync,
+    OnThreadMembersUpdate,
+    OnThreadMemberUpdate,
+    OnThreadUpdate,
+)
+from .etc import (
+    OnInviteCreate,
+    OnInviteDelete,
+    OnStageInstanceCreate,
+    OnStageInstanceDelete,
+    OnStageInstanceEdit,
+    OnTyping,
+    OnUserUpdate,
+    OnWebhooksUpdate,
+)
 from .guilds import (
     OnGuildBan,
     OnGuildBanRemove,
@@ -45,7 +67,16 @@ from .guilds import (
     OnScheduledEventUpdate,
 )
 from .interactions import OnInteraction
-from .messages import OnMessage, OnMessageDelete, OnMessageEdit
+from .messages import (
+    OnMessage,
+    OnMessageDelete,
+    OnMessageDeleteBulk,
+    OnMessageEdit,
+    OnMessageReactionAdd,
+    OnMessageReactionRemove,
+    OnMessageReactionRemoveAll,
+    OnMessageReactionRemoveEmoji,
+)
 
 
 # https://discord.dev/topics/gateway#commands-and-events-gateway-events
@@ -54,7 +85,7 @@ class Cataloger:
 
         # guilds
         if data["t"] == "GUILD_CREATE":
-            state._guilds_cache.new(data["d"]["id"], data["d"])
+            state.guilds.new(data["d"]["id"], data["d"])
             # roles, channels
             for channel in data["d"]["channels"]:
                 state.channels.new(channel["id"], channel)
@@ -142,6 +173,47 @@ class Cataloger:
             dis.dispatch("RAW_SCHEDULED_EVENT_LEAVE", data["d"])
             OnScheduledEventLeave(data["d"], dis, state)
 
+        # channels
+        elif data["t"] == "CHANNEL_CREATE":
+            dis.dispatch("RAW_CHANNEL_CREATE", data["d"])
+            OnChannelCreate(data["d"], dis, state)
+
+        elif data["t"] == "CHANNEL_UPDATE":
+            dis.dispatch("RAW_CHANNEL_UPDATE", data["d"])
+            OnChannelUpdate(data["d"], dis, state)
+
+        elif data["t"] == "CHANNEL_DELETE":
+            dis.dispatch("RAW_CHANNEL_DELETE", data["d"])
+            OnChannelDelete(data["d"], dis, state)
+
+        elif data["t"] == "CHANNEL_PINS_UPDATE":
+            dis.dispatch("RAW_CHANNEL_PINS_UPDATE", data["t"])
+            OnChannelPinsUpdate(data["d"], dis, state)
+
+        elif data["t"] == "THREAD_CREATE":
+            dis.dispatch("RAW_THREAD_CREATE", data["d"])
+            OnThreadCreate(data["d"], dis, state)
+
+        elif data["t"] == "THREAD_UPDATE":
+            dis.dispatch("RAW_THREAD_UPDATE", data["d"])
+            OnThreadUpdate(data["d"], dis, state)
+
+        elif data["t"] == "THREAD_DELETE":
+            dis.dispatch("RAW_THREAD_DELETE", data["d"])
+            OnThreadDelete(data["d"], dis, state)
+
+        elif data["t"] == "THREAD_LIST_SYNC":
+            dis.dispatch("RAW_THREAD_LIST_SYNC", data["d"])
+            OnThreadListSync(data["d"], dis, state)
+
+        elif data["t"] == "THREAD_MEMBER_UPDATE":
+            dis.dispatch("RAW_THREAD_MEMBER_UPDATE", data["d"])
+            OnThreadMemberUpdate(data["d"], dis, state)
+
+        elif data["t"] == "THREAD_MEMBERS_UPDATE":
+            dis.dispatch("RAW_THREAD_MEMBERS_UPDATE", data["d"])
+            OnThreadMembersUpdate(data["d"], dis, state)
+
         # messages
         elif data["t"] == "MESSAGE_CREATE":
             dis.dispatch("RAW_MESSAGE", data["d"])
@@ -155,10 +227,64 @@ class Cataloger:
             dis.dispatch("RAW_MESSAGE_EDIT", data["d"])
             OnMessageEdit(data["d"], dis, state)
 
+        elif data["t"] == "MESSAGE_DELETE_BULK":
+            dis.dispatch("RAW_MESSAGE_DELETE_BULK", data["d"])
+            OnMessageDeleteBulk(data["d"], dis, state)
+
+        elif data["t"] == "MESSAGE_REACTION_ADD":
+            dis.dispatch("RAW_MESSAGE_REACTION_ADD", data["d"])
+            OnMessageReactionAdd(data["d"], dis, state)
+
+        elif data["t"] == "MESSAGE_REACTION_REMOVE":
+            dis.dispatch("RAW_MESSAGE_REACTION_REMOVE", data["d"])
+            OnMessageReactionRemove(data["d"], dis, state)
+
+        elif data["t"] == "MESSAGE_REACTION_REMOVE_ALL":
+            dis.dispatch("RAW_MESSAGE_REACTION_REMOVE_ALL", data["d"])
+            OnMessageReactionRemoveAll(data["d"], dis, state)
+
+        elif data["t"] == "MESSAGE_REACTION_REMOVE_EMOJI":
+            dis.dispatch("RAW_MESSAGE_REACTION_REMOVE_EMOJI", data["d"])
+            OnMessageReactionRemoveEmoji(data["d"], dis, state)
+
         # interactions
         elif data["t"] == "INTERACTION_CREATE":
-            dis.dispatch("RAW_INTERACTION", dis, state)
+            dis.dispatch("RAW_INTERACTION", data["d"])
             OnInteraction(data["d"], dis, state)
 
+        # etc
+        elif data["t"] == "TYPING_START":
+            dis.dispatch("RAW_TYPING_START", data["d"])
+            OnTyping(data["d"], dis, state)
+
+        elif data["t"] == "STAGE_INSTANCE_CREATE":
+            dis.dispatch("RAW_STAGE_INSTANCE_CREATE", data["d"])
+            OnStageInstanceCreate(data["d"], dis, state)
+
+        elif data["t"] == "STAGE_INSTANCE_DELETE":
+            dis.dispatch("RAW_STAGE_INSTANCE_DELETE", data["d"])
+            OnStageInstanceDelete(data["d"], dis, state)
+
+        elif data["t"] == "STAGE_INSTANCE_UPDATE":
+            dis.dispatch("RAW_STAGE_INSTANCE_UPDATE", data["d"])
+            OnStageInstanceEdit(data["d"], dis, state)
+
+        elif data["t"] == "USER_UPDATE":
+            dis.dispatch("RAW_USER_UPDATE", data["d"])
+            OnUserUpdate(data["d"], dis, state)
+
+        elif data["t"] == "WEBHOOKS_UPDATE":
+            dis.dispatch("RAW_WEBHOOKS_UPDATE", data["d"])
+            OnWebhooksUpdate(data["d"], dis, state)
+
+        elif data["t"] == "INVITE_CREATE":
+            dis.dispatch("RAW_INVITE_CREATE", data["d"])
+            OnInviteCreate(data["d"], dis, state)
+
+        elif data["t"] == "INVITE_DELETE":
+            dis.dispatch("RAW_INVITE_DELETE", data["d"])
+            OnInviteDelete(data["d"], dis, state)
+
+        # there are some non-included events.
         else:
             dis.dispatch(f"RAW_{data['t']}", data["d"])

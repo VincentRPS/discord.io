@@ -68,7 +68,6 @@ class Message:  # noqa: ignore
         except KeyError:
             # can error out for embed only/link only messages.
             self.content: str = ""
-    
 
     def __repr__(self):
         return f"<Message id={self.id!r}, Channel id={self.channel.id!r}>"

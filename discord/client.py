@@ -209,11 +209,11 @@ class Client:
         -------
         :class:`Guild`
         """
-        raw = self.state._guilds_cache.get(guild_id)
+        raw = self.state.guilds.get(guild_id)
         return Guild(raw, self.factory)
 
     def fetch_raw_guild(self, guild_id):
-        return self.state._guilds_cache.get(guild_id)
+        return self.state.guilds.get(guild_id)
 
     async def get_guild(self, guild_id):
         """Gets a guild by requesting to the API

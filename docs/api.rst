@@ -148,9 +148,59 @@ Channels
 .. autoclass:: ThreadMetadata
     :members:
 
+.. autoclass:: ThreadMember
+    :members:
+
+.. autoclass:: StageInstance
+    :members:
+
 
 Event Reference
 ---------------
+
+Guilds
+~~~~~~
+
+.. autoclass:: OnGuildJoin
+
+.. autoclass:: OnGuildUpdate
+
+.. autoclass:: OnGuildLeave
+
+.. autoclass:: OnGuildBan
+
+.. autoclass:: OnGuildBanRemove
+
+.. autoclass:: OnGuildEmojisUpdate
+
+.. autoclass:: OnGuildIntegrationsUpdate
+
+.. autoclass:: OnGuildStickersUpdate
+
+.. autoclass:: OnMemberJoin
+
+.. autoclass:: OnMemberLeave
+
+.. autoclass:: OnMemberUpdate
+
+.. autoclass:: OnRoleCreate
+
+.. autoclass:: OnRoleDelete
+
+.. autoclass:: OnRoleUpdate
+
+.. autoclass:: OnScheduledEventCreate
+
+.. autoclass:: OnScheduledEventDelete
+
+.. autoclass:: OnScheduledEventJoin
+
+.. autoclass:: OnScheduledEventLeave
+
+.. autoclass:: OnScheduledEventUpdate
+
+Messages
+~~~~~~~~
 
 .. autoclass:: OnMessage
 
@@ -158,7 +208,64 @@ Event Reference
 
 .. autoclass:: OnMessageDelete
 
+.. autoclass:: OnMessageDeleteBulk
+
+.. autoclass:: OnMessageReactionAdd
+
+.. autoclass:: OnMessageReactionRemove
+
+.. autoclass:: OnMessageReactionRemoveAll
+    
+.. autoclass:: OnMessageReactionRemoveEmoji
+
+
+Channels
+~~~~~~~~
+
+.. autoclass:: OnChannelCreate
+
+.. autoclass:: OnChannelDelete
+
+.. autoclass:: OnChannelPinsUpdate
+
+.. autoclass:: OnChannelUpdate
+
+.. autoclass:: OnThreadCreate
+
+.. autoclass:: OnThreadDelete
+
+.. autoclass:: OnThreadListSync
+
+.. autoclass:: OnThreadMembersUpdate
+
+.. autoclass:: OnThreadMemberUpdate
+
+.. autoclass:: OnThreadUpdate
+
+Interactions
+~~~~~~~~~~~~
+
 .. autoclass:: OnInteraction
+
+Etc
+~~~
+
+.. autoclass:: OnInviteCreate
+
+.. autoclass:: OnInviteDelete
+
+.. autoclass:: OnStageInstanceCreate
+
+.. autoclass:: OnStageInstanceDelete
+
+.. autoclass:: OnStageInstanceEdit
+
+.. autoclass:: OnTyping
+
+.. autoclass:: OnUserUpdate
+    
+.. autoclass:: OnWebhooksUpdate
+
 
 Snowflakes
 ----------

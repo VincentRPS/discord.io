@@ -19,6 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
+
 from typing import Union
 
 from .enums import FormatType
@@ -530,3 +531,122 @@ class ThreadMetadata:
         :class:`bool`
         """
         return self.from_dict["locked"]
+
+
+class ThreadMember:
+    """Represents a Discord Thread Member
+
+    .. versionadded:: 0.8.0
+
+    Parameters
+    ----------
+    data: :class:`dict`
+        The raw Member data
+    """
+
+    def __init__(self, data: dict):
+        self.from_dict = data
+
+    @property
+    def id(self) -> int:
+        """Gives the thread id
+
+        Returns
+        -------
+        :class:`int`
+        """
+        return self.from_dict["id"]
+
+    @property
+    def user_id(self) -> int:
+        """Gives the thread members user id
+
+        Returns
+        -------
+        :class:`int`
+        """
+        return self.from_dict["user_id"]
+
+    @property
+    def join_timestamp(self) -> str:
+        """Gives the thread members join time
+
+        Returns
+        -------
+        :class:`str`
+        """
+        return self.from_dict["join_timestamp"]
+
+    @property
+    def flags(self) -> int:
+        """Gives the thread members flags
+
+        Returns
+        -------
+        :class:`int`
+        """
+        return self.from_dict["flags"]
+
+
+class StageInstance:
+    """Represents a Discord Stage Instance
+
+    .. versionadded:: 0.8.0
+
+    Parameters
+    -----------
+    data: :class:`dict`
+        The raw stage instance data
+    """
+
+    def __init__(self, data: dict):
+        self.from_dict = data
+
+    @property
+    def id(self) -> int:
+        """Gives the stage instance id
+
+        Returns
+        -------
+        :class:`int`
+        """
+        return self.from_dict["id"]
+
+    @property
+    def guild_id(self) -> int:
+        """Gives the guild id of the stage instance
+
+        Returns
+        -------
+        :class:`int`
+        """
+        return self.from_dict["guild_id"]
+
+    @property
+    def channel_id(self) -> int:
+        """Gives the channel id of the stage instance
+
+        Returns
+        -------
+        :class:`int`
+        """
+        return self.from_dict["channel_id"]
+
+    @property
+    def topic(self) -> str:
+        """Gives the stage instance' topic
+
+        Returns
+        -------
+        :class:`str`
+        """
+        return self.from_dict["topic"]
+
+    def privacy_level(self) -> int:
+        """Gives the stage instance' privacy level
+
+        Returns
+        -------
+        :class:`int`
+        """
+        return self.from_dict["privacy_level"]

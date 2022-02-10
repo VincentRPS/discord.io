@@ -422,7 +422,7 @@ class Gateway:
 
     async def _chunk_members(self):
         await asyncio.sleep(20)
-        for guild in self._s._guilds_cache._cache.values():
+        for guild in self._s.guilds._cache.values():
             shard_id = (int(guild["id"]) >> 22) % self._s.shard_count
             await self.shards[shard_id].send(
                 {"op": 8, "d": {"guild_id": guild["id"], "query": "", "limit": 0}}
@@ -448,5 +448,5 @@ class Gateway:
         lat: float = float(0)
         for shard in self.shards:
             lat += shard.latency
-        
+
         return lat

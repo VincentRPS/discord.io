@@ -35,6 +35,7 @@ from .interactions import *
 from .internal.exceptions import *
 from .internal.warnings import *
 from .member import *
+from .message import *
 from .snowflake import *
 from .state import *
 from .types import *
@@ -43,7 +44,6 @@ from .user import *
 from .utils import *
 from .voice import *
 from .webhooks import *
-from .message import *
 
 
 class VersionInfo(typing.NamedTuple):

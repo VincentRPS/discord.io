@@ -65,7 +65,7 @@ class ApplicationCommandRegistry:
 
         await asyncio.sleep(10)
 
-        for guild in self.state._guilds_cache._cache.values():
+        for guild in self.state.guilds._cache.values():
             commands = await self.factory.get_guild_application_commands(
                 self.state._bot_id, guild["id"]
             )

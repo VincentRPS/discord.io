@@ -20,26 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-import abc
-from typing import Any
 
-from ..internal.dispatcher import Dispatcher
-from ..state import ConnectionState
+class AppInfo:
+    """Represents a Discord Application and it's information subsidiaries"""
 
-
-class Event(abc.ABC):
-    """The base event class for all events."""
-
-    def __init__(self, data, dispatcher: Dispatcher, state: ConnectionState):
-        self.data: dict = data
-        self.dispatch = dispatcher.dispatch
-        self.state = state
-        self.process()
-
-    @property
-    def app(self) -> Any:
-        return self.state.app
-
-    # meant to be overridden.
-    def process(self) -> None:
-        ...
+    ...

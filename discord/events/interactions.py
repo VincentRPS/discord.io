@@ -25,7 +25,12 @@ from .core import Event
 
 
 class OnInteraction(Event):
-    """A event which processes interactions, not to be normally used"""
+    """A event which processes interactions, not to be normally used
+
+    Returns
+    -------
+    interaction: :class:`Interaction`
+    """
 
     def process(self):
         for component in self.state.components.values():
