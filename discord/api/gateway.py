@@ -36,7 +36,7 @@ import aiohttp
 
 from discord import utils
 from discord.events import catalog
-from discord.internal.dispatcher import Dispatcher
+from ..internal.dispatcher import Dispatcher
 from discord.snowflake import Snowflakeish
 from discord.types.dict import Dict
 
