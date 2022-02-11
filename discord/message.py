@@ -24,7 +24,6 @@
 ref: https://discord.dev/resources/channel
 """
 
-import asyncio
 from typing import Any, List, Optional, Sequence
 
 from discord.file import File
@@ -34,6 +33,7 @@ from .channels import TextChannel
 from .embed import Embed
 from .guild import Guild
 from .user import User
+from .assets import Attachment
 
 __all__: List[str] = ['Message']
 
@@ -161,7 +161,7 @@ class Message:  # noqa: ignore
             com = [component]
         if components:
             com = components
-        await self.app.factory.create_message(
+        r = await self.app.factory.create_message(
             channel=self.channel.id,
             content=content,
             files=files,
@@ -170,6 +170,8 @@ class Message:  # noqa: ignore
             allowed_mentions=allowed_mentions,
             components=com,
         )
+        
+        return Message(r, self.app)
 
     async def reply(
         self,
@@ -219,7 +221,7 @@ class Message:  # noqa: ignore
             com = [component]
         if components:
             com = components
-        await self.app.factory.create_message(
+        r = await self.app.factory.create_message(
             channel=self.channel.id,
             content=content,
             files=files,
@@ -230,4 +232,29 @@ class Message:  # noqa: ignore
                 'message_id': self.id,
             },
             components=com,
+        )
+        return Message(r, self.app)
+    
+    async def edit(
+        self,
+        content: Optional[str] = None,
+        embeds: Optional[list[Embed]] = None,
+        embed: Optional[Embed] = None,
+        flags: Optional[int] = None,
+        allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
+        components: Optional[list[dict]] = None,
+        files: Optional[Sequence[File]] = None,
+        attachments: Optional[list[Attachment]] = None,
+    ):
+        ...
+    
+    async def delete(
+        self,
+        reason: Optional[str] = None
+    ):
+        self.app.state.messages.pop(self.id)
+        return self.app.factory.delete_message(
+            channel=self.channel.id,
+            message=self.id,
+            reason=reason
         )

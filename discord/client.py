@@ -51,6 +51,12 @@ _log = logging.getLogger(__name__)
 __all__: List[str] = ['Client']
 CFT = TypeVar('CFT', bound='dispatcher.CoroFunc')
 
+def get_event_loop():
+    try:
+        return asyncio.get_running_loop()
+    except RuntimeError:
+        _log.warning('No running event loop detected, creating one')
+        return asyncio.new_event_loop()
 
 class Client:
     """Represents a Discord bot.
@@ -100,7 +106,7 @@ class Client:
         defaults to ''.
     chunk_guild_members
         If to cache guild members,
-        this allowes the before argument on member events,
+        this allows the before argument on member events,
         aswell as faster fetching times.
     """
 
@@ -121,7 +127,7 @@ class Client:
         print_banner(module)
         start_logging(logs, debug)
         self.state = state or ConnectionState(
-            loop=loop,
+            loop=get_event_loop(),
             intents=intents,
             bot=self,
             shard_count=shards,

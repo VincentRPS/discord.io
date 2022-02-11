@@ -23,9 +23,11 @@
 import datetime
 import typing
 from json import dumps
-from typing import Any, Optional
+from typing import Any, Optional, Sequence
 
 import aiohttp
+
+from ..assets import Attachment
 
 from .. import utils
 from ..enums import ScheduledEventType
@@ -151,6 +153,58 @@ class RESTFactory:
             Route('POST', f'/channels/{channel}/messages', channel_id=channel),
             json=json,
         )
+    
+    def delete_message(
+        self,
+        message: int,
+        channel: int,
+        reason: Optional[str]
+    ):
+        return self.rest.send(Route('DELETE', f'/channels/{channel}/messages/{message}'), reason=reason)
+    
+    def edit_message(
+        self,
+        channel: int,
+        message: int,
+        content: Optional[str] = None,
+        embeds: Optional[list[Dict]] = None,
+        flags: Optional[int] = None,
+        allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
+        components: Optional[list[Dict]] = None,
+        files: Optional[Sequence[File]] = None,
+        attachments: Optional[list[Attachment]] = None,
+    ):
+        json = {
+            'content': content,
+            'embeds': embeds,
+            'allowed_mentions': allowed_mentions,
+            'components': components,
+            'flags': flags,
+        }
+        if files:
+            form = []
+            form.append({'name': 'payload_json', 'value': dumps(json)})
+            if len(files) == 1:
+                file = files[0]
+                form.append({
+                    'name': 'file',
+                    'value': file.fp,
+                    'filename': file.filename,
+                    'content_type': 'application-octet-stream',
+                })
+            else:
+                for index, file in enumerate(files):
+                    form.append({
+                        'name': f'file{index}',
+                        'value': file.fp,
+                        'filename': file.filename,
+                        'content_type': 'application-octet-stream',
+                    })
+        if attachments:
+            json['attachements'] = attachments
+        
+        return self.rest.send(Route("PATCH", "/"))
+
 
     def get_channel(self, channel: typing.Optional[Snowflakeish] = None):
         return self.rest.send(Route('GET', f'/channels/{channel}'))
@@ -512,6 +566,34 @@ class RESTFactory:
         afk_timeout: Optional[int] = None,
     ):
         ...
+    
+    def create_guild(
+        self,
+        name: str,
+        region: Optional[str] = None,
+        icon: typing.Optional[bytes] = None,
+        verification_level: typing.Optional[int] = None,
+        default_message_notifications: typing.Optional[int] = None,
+        explicit_content_filter: typing.Optional[int] = None,
+        roles: typing.Optional[typing.List[int]] = None,
+        channels: typing.Optional[typing.List[int]] = None,
+        reason: typing.Optional[str] = None,
+    ):
+        json = {
+            'name': name,
+            'verification_level': verification_level,
+            'default_message_notifications': default_message_notifications,
+            'explicit_content_filter': explicit_content_filter,
+            'roles': roles,
+            'channels': channels,
+        }
+        if icon is not None:
+            json['icon'] = icon
+        
+        if region is not None:
+            json['region'] = region
+        
+        return self.rest.send(Route('POST', '/guilds'), json=json, reason=reason)
 
     # users
     def get_user(self, user: int):
