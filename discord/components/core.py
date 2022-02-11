@@ -31,7 +31,7 @@ from ..interactions.interaction import Interaction
 from ..internal.dispatcher import Coro
 from ..state import ConnectionState
 
-__all__: typing.List[str] = ["Button"]
+__all__: typing.List[str] = ['Button']
 
 
 class Button:
@@ -87,21 +87,21 @@ class Button:
         self.id = (
             custom_id
             if custom_id is not None
-            else "".join(
+            else ''.join(
                 random.choice(string.ascii_letters)
                 for _ in range(random.randint(10, 100))
             )
         )
 
         ret = {
-            "type": 1,
-            "components": [
+            'type': 1,
+            'components': [
                 {
-                    "type": 2,
-                    "label": label,
-                    "style": style,
-                    "url": url,
-                    "custom_id": self.id,
+                    'type': 2,
+                    'label': label,
+                    'style': style,
+                    'url': url,
+                    'custom_id': self.id,
                 }
             ],
         }
@@ -109,10 +109,10 @@ class Button:
         self.callback = callback
 
         self.state.components[self] = {
-            "self": self,
-            "callback": self.callback,
-            "data": ret,
-            "id": self.id,
+            'self': self,
+            'callback': self.callback,
+            'data': ret,
+            'id': self.id,
         }
 
         return ret

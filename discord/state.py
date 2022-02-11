@@ -28,9 +28,9 @@ from typing import Any, Callable, Coroutine, List, Tuple, TypeVar, Union
 
 from discord.types.dict import Dict
 
-__all__: List = ["Hold", "ConnectionState"]
+__all__: List = ['Hold', 'ConnectionState']
 
-T = TypeVar("T")
+T = TypeVar('T')
 Coro = Coroutine[Any, Any, T]
 CoroFunc = Callable[..., Coro[Any]]
 
@@ -141,16 +141,16 @@ class ConnectionState:
     """
 
     def __init__(self, **options):
-        self.guilds = options.get("guild_cache_hold") or Hold()
-        self.members = options.get("members_cache_hold") or Hold()
-        self.roles = options.get("roles_cache_hold") or Hold()
-        self.guild_events = options.get("guild_events_cache_hold") or Hold()
-        self.channels = options.get("channel_cache_hold") or Hold()
-        self.messages = options.get("messages_cache_hold") or Hold()
-        self.stage_instances = options.get("stage_instances_cache_hold") or Hold()
+        self.guilds = options.get('guild_cache_hold') or Hold()
+        self.members = options.get('members_cache_hold') or Hold()
+        self.roles = options.get('roles_cache_hold') or Hold()
+        self.guild_events = options.get('guild_events_cache_hold') or Hold()
+        self.channels = options.get('channel_cache_hold') or Hold()
+        self.messages = options.get('messages_cache_hold') or Hold()
+        self.stage_instances = options.get('stage_instances_cache_hold') or Hold()
         self._ready: asyncio.Event = asyncio.Event()
 
-        self._bot_intents: int = options.get("intents", 0)
+        self._bot_intents: int = options.get('intents', 0)
         """The cached bot intents, used for Gateway"""
 
         self._bot_id: int = None
@@ -162,7 +162,7 @@ class ConnectionState:
         self._seq: int = None
         """The seq number"""
 
-        self.app = options.get("bot", None)
+        self.app = options.get('bot', None)
         """The bot app"""
 
         self._voice_seq: int = None
@@ -177,13 +177,13 @@ class ConnectionState:
         self._said_hello: bool = False
         """If the Gateway got a hello or not."""
 
-        self.loop: asyncio.AbstractEventLoop = options.get("loop", None)
+        self.loop: asyncio.AbstractEventLoop = options.get('loop', None)
         """The current loop"""
 
         self._bot_presences: list[str, Any] = []
         """The precenses"""
 
-        self._bot_status: str = "online"
+        self._bot_status: str = 'online'
         """The status"""
 
         self._bot_presence_type: int = 0
@@ -192,7 +192,7 @@ class ConnectionState:
         self.listeners: dict[str, List[Tuple[asyncio.Future, Callable[..., bool]]]] = {}
         """The listeners"""
 
-        self.shard_count: int = options.get("shard_count", None)
+        self.shard_count: int = options.get('shard_count', None)
         """The shard count"""
 
         self.components: dict[str, Any] = {}
@@ -201,9 +201,9 @@ class ConnectionState:
 
         self.application_commands: dict[str, Any] = {}
 
-        self.prefix = options.get("prefix")
+        self.prefix = options.get('prefix')
 
 
 def member_cacher(state: ConnectionState, data: Any):
     for member in data:
-        state.members.new(member["id"], member)
+        state.members.new(member['id'], member)

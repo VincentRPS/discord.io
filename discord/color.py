@@ -23,7 +23,7 @@
 
 from typing import List
 
-__all__: List[str] = ["Color"]
+__all__: List[str] = ['Color']
 
 
 class Color:
@@ -36,7 +36,7 @@ class Color:
 
     def __init__(self, value: int):
         if not isinstance(value, int):
-            raise TypeError("Expected a integer.")
+            raise TypeError('Expected a integer.')
 
         self.value: int = value
 

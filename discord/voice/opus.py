@@ -33,7 +33,7 @@ from typing import List
 
 from ..internal.exceptions import DiscordError
 
-__all__: List[str] = ["Encoder"]
+__all__: List[str] = ['Encoder']
 
 # structs
 class EncoderStruct(ctypes.Structure):  # noqa: ignore
@@ -61,13 +61,13 @@ opus_loaded: threading.Event = threading.Event()
 # options
 default_options = {
     # generic stuff
-    "opus_get_version_string": (None, ctypes.c_char_p, None),
-    "opus_strerror": ([ctypes.c_int], ctypes.c_char_p, None),
+    'opus_get_version_string': (None, ctypes.c_char_p, None),
+    'opus_strerror': ([ctypes.c_int], ctypes.c_char_p, None),
     # packets
-    "opus_packet_get_bandwidth": ([ctypes.c_char_p], ctypes.c_int),
-    "opus_packet_get_nb_channels": ([ctypes.c_char_p], ctypes.c_int),
-    "opus_packet_get_nb_frames": ([ctypes.c_char_p, ctypes.c_int], ctypes.c_int),
-    "opus_packet_get_samples_per_frame": (
+    'opus_packet_get_bandwidth': ([ctypes.c_char_p], ctypes.c_int),
+    'opus_packet_get_nb_channels': ([ctypes.c_char_p], ctypes.c_int),
+    'opus_packet_get_nb_frames': ([ctypes.c_char_p, ctypes.c_int], ctypes.c_int),
+    'opus_packet_get_samples_per_frame': (
         [ctypes.c_char_p, ctypes.c_int],
         ctypes.c_int,
     ),
@@ -108,15 +108,15 @@ def loader(name: str):
 def load_opus() -> bool:
     global lib
     try:
-        if sys.platform == "win32":
+        if sys.platform == 'win32':
             basedir = os.path.dirname(os.path.abspath(__file__))
-            bitness = struct.calcsize("P") * 8
-            target = "x64" if bitness > 32 else "x86"
-            filename = os.path.join(basedir, "bin", f"opus-{target}.dll")
+            bitness = struct.calcsize('P') * 8
+            target = 'x64' if bitness > 32 else 'x86'
+            filename = os.path.join(basedir, 'bin', f'opus-{target}.dll')
             lib = loader(filename)
             opus_loaded.set()
         else:
-            lib = loader(ctypes.util.find_library("opus"))
+            lib = loader(ctypes.util.find_library('opus'))
             opus_loaded.set()
     except Exception as exc:
         lib = None
@@ -160,12 +160,12 @@ class Encoder(Opus):
     """A class used to encode `.pcm` data into opus data for the discord voice gateway"""
 
     EXP = {
-        "opus_encoder_get_size": ([ctypes.c_int], ctypes.c_int, None),
-        "opus_encoder_create": (
+        'opus_encoder_get_size': ([ctypes.c_int], ctypes.c_int, None),
+        'opus_encoder_create': (
             [ctypes.c_int, ctypes.c_int, ctypes.c_int, c_int_ptr],
             EncoderStructPtr,
         ),
-        "opus_encode": (
+        'opus_encode': (
             [
                 EncoderStructPtr,
                 c_int16_ptr,
@@ -175,7 +175,7 @@ class Encoder(Opus):
             ],
             ctypes.c_int32,
         ),
-        "opus_encode_float": (
+        'opus_encode_float': (
             [
                 EncoderStructPtr,
                 c_float_ptr,
@@ -185,8 +185,8 @@ class Encoder(Opus):
             ],
             ctypes.c_int32,
         ),
-        "opus_encoder_ctl": (None, ctypes.c_int32),
-        "opus_encoder_destroy": ([EncoderStructPtr], None, None),
+        'opus_encoder_ctl': (None, ctypes.c_int32),
+        'opus_encoder_destroy': ([EncoderStructPtr], None, None),
     }
 
     def __init__(self):
@@ -209,13 +209,13 @@ class Encoder(Opus):
         )
 
         if ret < 0:
-            raise RuntimeError("Failed to set bitrate, %s: %s", kbps, ret)
+            raise RuntimeError('Failed to set bitrate, %s: %s', kbps, ret)
 
     def set_fec(self, value):
         ret = self.opus_encoder_ctl(self.inst, int(CntrlEnum.SET_FEC.value), int(value))
 
         if ret < 0:
-            raise RuntimeError("Failed to set bitrate, %s: %s", value, ret)
+            raise RuntimeError('Failed to set bitrate, %s: %s', value, ret)
 
     def set_expected_plp(self, perc):
         ret = self.opus_encoder_ctl(
@@ -223,7 +223,7 @@ class Encoder(Opus):
         )
 
         if ret < 0:
-            raise RuntimeError("Failed to set bitrate, %s: %s", perc, ret)
+            raise RuntimeError('Failed to set bitrate, %s: %s', perc, ret)
 
     def create(self):
         ret = ctypes.c_int()
@@ -237,7 +237,7 @@ class Encoder(Opus):
         return result
 
     def __del__(self):
-        if hasattr(self, "_inst") and self._inst:
+        if hasattr(self, '_inst') and self._inst:
             self.opus_encoder_destroy(self._inst)
             self._inst = None
 
@@ -251,4 +251,4 @@ class Encoder(Opus):
         if ret < 0:
             raise RuntimeError
 
-        return array.array("b", data[:ret].tobytes())
+        return array.array('b', data[:ret].tobytes())

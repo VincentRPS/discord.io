@@ -34,19 +34,19 @@ class OnInteraction(Event):
 
     def process(self):
         for component in self.state.components.values():
-            if component["id"] == self.data["data"]["custom_id"]:
+            if component['id'] == self.data['data']['custom_id']:
                 self.state.loop.create_task(
-                    component["self"]._run_callback(
-                        component["callback"], self.data, self.state
+                    component['self']._run_callback(
+                        component['callback'], self.data, self.state
                     )
                 )
         try:
             for application_command in self.state.application_commands.values():
-                cog = application_command["cog"]
-                if application_command["d"]["id"] == self.data["data"]["id"]:
+                cog = application_command['cog']
+                if application_command['d']['id'] == self.data['data']['id']:
                     self.state.loop.create_task(
-                        application_command["self"].run(
-                            application_command["callback"],
+                        application_command['self'].run(
+                            application_command['callback'],
                             self.data,
                             self.state,
                             cog=cog,
@@ -55,4 +55,4 @@ class OnInteraction(Event):
         except KeyError:
             # components
             pass
-        self.dispatch("INTERACTION", Interaction(self.data, self.state))
+        self.dispatch('INTERACTION', Interaction(self.data, self.state))

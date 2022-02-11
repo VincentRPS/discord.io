@@ -22,7 +22,7 @@
 
 from typing import List
 
-__all__: List[str] = ["MessageFlags"]
+__all__: List[str] = ['MessageFlags']
 
 
 class MessageFlags:

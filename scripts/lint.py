@@ -1,4 +1,4 @@
 import os
 
-os.system("black .")
-os.system("isort . --profile black")
+os.system('black . --skip-string-normalization')
+os.system('isort . --profile black')

@@ -25,7 +25,7 @@ ref: https://discord.dev/resources/users
 """
 from typing import List
 
-__all__: List[str] = ["User"]
+__all__: List[str] = ['User']
 
 
 class User:
@@ -49,7 +49,7 @@ class User:
         -------
         :class:`str`
         """
-        return self.from_dict["username"]
+        return self.from_dict['username']
 
     def discriminator(self) -> int:
         """The users discriminator id
@@ -58,7 +58,7 @@ class User:
         -------
         :class:`int`
         """
-        return self.from_dict["discriminator"]
+        return self.from_dict['discriminator']
 
     @property
     def id(self) -> int:
@@ -68,11 +68,11 @@ class User:
         -------
         :class:`int`
         """
-        return self.from_dict["id"]
+        return self.from_dict['id']
 
     def public_flags(self):
         """The users public flags."""
-        return self.from_dict["public_flags"]
+        return self.from_dict['public_flags']
 
     @property
     def bot(self) -> bool:
@@ -82,4 +82,4 @@ class User:
         -------
         :class:`bool`
         """
-        return self.from_dict["bot"]
+        return self.from_dict['bot']

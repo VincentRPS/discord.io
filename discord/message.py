@@ -35,7 +35,7 @@ from .embed import Embed
 from .guild import Guild
 from .user import User
 
-__all__: List[str] = ["Message"]
+__all__: List[str] = ['Message']
 
 # makes message data readable.
 class Message:  # noqa: ignore
@@ -64,13 +64,13 @@ class Message:  # noqa: ignore
         self.from_dict = msg
         self.app = app
         try:
-            self.content: str = self.from_dict["content"]
+            self.content: str = self.from_dict['content']
         except KeyError:
             # can error out for embed only/link only messages.
-            self.content: str = ""
+            self.content: str = ''
 
     def __repr__(self):
-        return f"<Message id={self.id!r}, Channel id={self.channel.id!r}>"
+        return f'<Message id={self.id!r}, Channel id={self.channel.id!r}>'
 
     @property
     def channel(self):
@@ -80,7 +80,7 @@ class Message:  # noqa: ignore
         -------
         :class:`TextChannel`
         """
-        raw = self.app.state.channels.get(self.from_dict["channel_id"])
+        raw = self.app.state.channels.get(self.from_dict['channel_id'])
         return TextChannel(raw, self.app.state)
 
     @property
@@ -91,7 +91,7 @@ class Message:  # noqa: ignore
         -------
         :class:`int`
         """
-        return self.from_dict["id"]
+        return self.from_dict['id']
 
     @property
     def guild(self):
@@ -101,7 +101,7 @@ class Message:  # noqa: ignore
         -------
         :class:`Guild`
         """
-        return Guild(id=self.from_dict["guild_id"], rest_factory=self.app.factory)
+        return Guild(id=self.from_dict['guild_id'], rest_factory=self.app.factory)
 
     @property
     def author(self) -> User:
@@ -111,7 +111,7 @@ class Message:  # noqa: ignore
         -------
         :class:`User`
         """
-        return User(self.from_dict["author"])
+        return User(self.from_dict['author'])
 
     async def send(
         self,
@@ -151,7 +151,7 @@ class Message:  # noqa: ignore
             else:
                 emb = [embed]
         elif embed and embed:
-            raise TypeError("Used both `embed` and `embed` only 1 is allowed.")
+            raise TypeError('Used both `embed` and `embed` only 1 is allowed.')
         elif embeds and not embed:
             if isinstance(embeds, Embed):
                 emb = [embed.obj for embed in embeds]
@@ -209,7 +209,7 @@ class Message:  # noqa: ignore
             else:
                 emb = [embed]
         elif embed and embed:
-            raise TypeError("Used both `embed` and `embed` only 1 is allowed.")
+            raise TypeError('Used both `embed` and `embed` only 1 is allowed.')
         elif embeds and not embed:
             if isinstance(embeds, Embed):
                 emb = [embed.obj for embed in embeds]
@@ -227,7 +227,7 @@ class Message:  # noqa: ignore
             tts=tts,
             allowed_mentions=allowed_mentions,
             message_reference={
-                "message_id": self.id,
+                'message_id': self.id,
             },
             components=com,
         )

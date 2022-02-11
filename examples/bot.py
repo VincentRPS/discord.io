@@ -8,7 +8,7 @@ client = Client(intents=intents)
 
 @client.event  # type: ignore
 async def on_ready() -> None:
-    print("bot is ready!")
+    print('bot is ready!')
 
 
-client.run("my_bot_token")
+client.run('my_bot_token')

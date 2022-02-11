@@ -31,7 +31,7 @@ from .embed import Embed
 from .file import File
 from .snowflake import Snowflakeish
 
-__all__: typing.List[str] = ["Webhook", "WebhookAdapter"]
+__all__: typing.List[str] = ['Webhook', 'WebhookAdapter']
 
 
 class WebhookAdapter:
@@ -57,7 +57,7 @@ class WebhookAdapter:
 
     def fetch_webhook(self, id, token):
         """Fetch the current Webhook from the API."""
-        return self.request("GET", f"/webhooks/{id}/{token}")
+        return self.request('GET', f'/webhooks/{id}/{token}')
 
     def modify_webhook(
         self,
@@ -77,13 +77,13 @@ class WebhookAdapter:
         """
         json = {}
         if name:
-            json["name"] = name
+            json['name'] = name
         if avatar:
-            json["avatar"] = avatar
+            json['avatar'] = avatar
         return self.rest.send(
             Route(
-                "PATCH",
-                f"/webhooks/{id}/{token}",
+                'PATCH',
+                f'/webhooks/{id}/{token}',
                 webhook_id=id,
                 webhook_token=token,
             ),
@@ -94,8 +94,8 @@ class WebhookAdapter:
         """Deletes the Webhook"""
         return self.rest.send(
             Route(
-                "DELETE",
-                f"/webhooks/{id}/{self.token}",
+                'DELETE',
+                f'/webhooks/{id}/{self.token}',
                 webhook_id=id,
                 webhook_token=token,
             )
@@ -105,8 +105,8 @@ class WebhookAdapter:
         """Fetches a Webhook message."""
         return self.rest.send(
             Route(
-                "GET",
-                f"/webhooks/{id}/{token}/messages/{message}",
+                'GET',
+                f'/webhooks/{id}/{token}/messages/{message}',
                 webhook_id=id,
                 webhook_token=token,
             )
@@ -133,13 +133,13 @@ class WebhookAdapter:
         """
         json = {}
         if content:
-            json["content"] = content
+            json['content'] = content
         elif allowed_mentions:
-            json["allowed_mentions"] = allowed_mentions
+            json['allowed_mentions'] = allowed_mentions
         return self.rest.send(
             Route(
-                "POST",
-                f"/webhooks/{id}/{token}/messages/{message}",
+                'POST',
+                f'/webhooks/{id}/{token}/messages/{message}',
                 webhook_id=id,
                 webhook_token=token,
             ),
@@ -161,8 +161,8 @@ class WebhookAdapter:
         """
         return self.rest.send(
             Route(
-                "DELETE",
-                f"/webhooks/{id}/{token}/messages/{message}",
+                'DELETE',
+                f'/webhooks/{id}/{token}/messages/{message}',
                 webhook_id=id,
                 webhook_token=token,
             )
@@ -199,15 +199,15 @@ class WebhookAdapter:
         """
         json = {}
         if content:
-            json["content"] = content
+            json['content'] = content
         if username:
-            json["username"] = username
+            json['username'] = username
         if avatar_url:
-            json["avatar_url"] = avatar_url
+            json['avatar_url'] = avatar_url
         if tts:
-            json["tts"] = tts
+            json['tts'] = tts
         if allowed_mentions:
-            json["allowed_mentions"] = allowed_mentions
+            json['allowed_mentions'] = allowed_mentions
         if embed:
             if isinstance(embed, Embed):
                 emb = [embed.obj]
@@ -219,15 +219,15 @@ class WebhookAdapter:
             else:
                 emb = embeds
         if embed or embeds:
-            json["embeds"] = emb
+            json['embeds'] = emb
 
         if flags:
-            json["flags"] = flags
+            json['flags'] = flags
 
         return self.rest.send(
             Route(
-                "POST",
-                f"/webhooks/{id}/{token}",
+                'POST',
+                f'/webhooks/{id}/{token}',
                 webhook_id=id,
                 webhook_token=token,
             ),
@@ -237,7 +237,7 @@ class WebhookAdapter:
 
 
 webhook_context: ContextVar[WebhookAdapter] = ContextVar(
-    "webhook_context", default=WebhookAdapter()
+    'webhook_context', default=WebhookAdapter()
 )
 
 

@@ -22,7 +22,7 @@
 
 from typing import List
 
-__all__: List[str] = ["MentionObject"]
+__all__: List[str] = ['MentionObject']
 
 
 def MentionObject(
@@ -31,13 +31,13 @@ def MentionObject(
     roles: bool = False,
     roles_list: list[str] = None,
 ):
-    ret = {"parse": []}
+    ret = {'parse': []}
     if users is not False and usrs is not None:
-        ret.update("parse", "users")
-        ret["users"] = usrs
+        ret.update('parse', 'users')
+        ret['users'] = usrs
     else:
         raise NotImplementedError
 
     if roles is not False and roles_list is not None:
-        ret.update("parse", "roles")
-        ret["roles"] = roles_list
+        ret.update('parse', 'roles')
+        ret['roles'] = roles_list

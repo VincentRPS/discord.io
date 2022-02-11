@@ -51,29 +51,29 @@ class Emoji:
 
     @property
     def id(self) -> int:
-        return self.from_dict["id"]
+        return self.from_dict['id']
 
     @property
     def name(self) -> str:
-        return self.from_dict["name"]
+        return self.from_dict['name']
 
     # def roles(self) -> Role:
 
     @property
     def creator(self) -> User:
-        return User(self.from_dict["user"])
+        return User(self.from_dict['user'])
 
     def require_colons(self) -> bool:
-        return self.from_dict["require_colons"]
+        return self.from_dict['require_colons']
 
     def managed(self) -> bool:
-        return self.from_dict["managed"]
+        return self.from_dict['managed']
 
     def animated(self) -> bool:
-        return self.from_dict["animated"]
+        return self.from_dict['animated']
 
     def available(self) -> bool:
-        return self.from_dict["available"]
+        return self.from_dict['available']
 
 
 class Sticker:
@@ -100,47 +100,47 @@ class Sticker:
 
     @property
     def id(self) -> int:
-        return self.from_dict["id"]
+        return self.from_dict['id']
 
     @property
     def pack(self) -> int:
-        return self.from_dict["pack_id"]
+        return self.from_dict['pack_id']
 
     @property
     def name(self) -> str:
-        return self.from_dict["name"]
+        return self.from_dict['name']
 
     def description(self) -> str:
-        return self.from_dict["description"]
+        return self.from_dict['description']
 
     def tags(self) -> str:
-        return self.from_dict["tags"]
+        return self.from_dict['tags']
 
     def type(self) -> StickerType:
-        if self.from_dict["type"] == 1:
+        if self.from_dict['type'] == 1:
             return StickerType.STANDARD
         else:
             return StickerType.GUILD
 
     def format(self) -> StickerFormatType:
-        if self.from_dict["format_type"] == 1:
+        if self.from_dict['format_type'] == 1:
             return StickerFormatType.PNG
-        elif self.from_dict["format_type"] == 2:
+        elif self.from_dict['format_type'] == 2:
             return StickerFormatType.APNG
         else:
             return StickerFormatType.LOTTIE
 
     def available(self) -> bool:
-        return self.from_dict["available"]
+        return self.from_dict['available']
 
     def guild_id(self) -> int:
-        return int(self.from_dict["guild_id"])
+        return int(self.from_dict['guild_id'])
 
     def creator(self) -> User:
-        return User(self.from_dict["user"])
+        return User(self.from_dict['user'])
 
     def sort_value(self) -> int:
-        return int(self.from_dict["sort_value"])
+        return int(self.from_dict['sort_value'])
 
 
 class Attachment:
@@ -165,7 +165,7 @@ class Attachment:
         -------
         :class:`int`
         """
-        return self.from_dict["id"]
+        return self.from_dict['id']
 
     @property
     def name(self) -> str:
@@ -175,7 +175,7 @@ class Attachment:
         -------
         :class:`str`
         """
-        return self.from_dict["filename"]
+        return self.from_dict['filename']
 
     @property
     def description(self) -> str:
@@ -185,7 +185,7 @@ class Attachment:
         -------
         :class:`str`
         """
-        return self.from_dict["description"]
+        return self.from_dict['description']
 
     def type(self) -> str:
         """Gives the content type, i.e 'image/png' or 'image/jpeg'
@@ -194,7 +194,7 @@ class Attachment:
         -------
         :class:`str`
         """
-        return self.from_dict["content_type"]
+        return self.from_dict['content_type']
 
     def size(self) -> int:
         """Gives the size of the attachment
@@ -203,7 +203,7 @@ class Attachment:
         -------
         :class:`int`
         """
-        return self.from_dict["size"]
+        return self.from_dict['size']
 
     def url(self) -> str:
         """Gives the attachment' url
@@ -212,7 +212,7 @@ class Attachment:
         -------
         :class:`str`
         """
-        return self.from_dict["url"]
+        return self.from_dict['url']
 
     def proxy_url(self) -> str:
         """Gives the proxied url of the attachment
@@ -221,7 +221,7 @@ class Attachment:
         -------
         :class:`str`
         """
-        return self.from_dict["proxy_url"]
+        return self.from_dict['proxy_url']
 
     def height(self) -> int:
         """Gives the height of the attachment
@@ -230,7 +230,7 @@ class Attachment:
         -------
         :class:`int`
         """
-        return self.from_dict["height"]
+        return self.from_dict['height']
 
     def width(self) -> int:
         """Gives the width of the attachment
@@ -239,7 +239,7 @@ class Attachment:
         -------
         :class:`int`
         """
-        return self.from_dict["width"]
+        return self.from_dict['width']
 
     def invisable(self) -> bool:
         """If the attachment is normally seeable or not
@@ -248,4 +248,4 @@ class Attachment:
         -------
         :class:`bool`
         """
-        return self.from_dict["ephemeral"]
+        return self.from_dict['ephemeral']

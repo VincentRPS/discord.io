@@ -9,11 +9,11 @@ class exception_hierarchy(nodes.General, nodes.Element):
 
 
 def visit_exception_hierarchy_node(self, node):
-    self.body.append(self.starttag(node, "div", CLASS="exception-hierarchy-content"))
+    self.body.append(self.starttag(node, 'div', CLASS='exception-hierarchy-content'))
 
 
 def depart_exception_hierarchy_node(self, node):
-    self.body.append("</div>\n")
+    self.body.append('</div>\n')
 
 
 class ExceptionHierarchyDirective(Directive):
@@ -21,7 +21,7 @@ class ExceptionHierarchyDirective(Directive):
 
     def run(self):
         self.assert_has_content()
-        node = exception_hierarchy("\n".join(self.content))
+        node = exception_hierarchy('\n'.join(self.content))
         self.state.nested_parse(self.content, self.content_offset, node)
         return [node]
 
@@ -31,4 +31,4 @@ def setup(app):
         exception_hierarchy,
         html=(visit_exception_hierarchy_node, depart_exception_hierarchy_node),
     )
-    app.add_directive("exception_hierarchy", ExceptionHierarchyDirective)
+    app.add_directive('exception_hierarchy', ExceptionHierarchyDirective)

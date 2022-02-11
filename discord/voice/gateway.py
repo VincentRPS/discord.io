@@ -53,28 +53,28 @@ class VoiceGateway:
         self.session_id = id
 
     async def send_json(self, payload: dict):
-        _log.debug("Sending payload data %s via the voice gateway", payload)
+        _log.debug('Sending payload data %s via the voice gateway', payload)
         await self.ws.send_str(json.dumps(payload))
 
     async def resume(self):
         payload = {
-            "op": 7,
-            "d": {
-                "token": self.state.app.token,
-                "server_id": str(self.server_id),
-                "session_id": self.client.session_id,
+            'op': 7,
+            'd': {
+                'token': self.state.app.token,
+                'server_id': str(self.server_id),
+                'session_id': self.client.session_id,
             },
         }
         await self.send_json(payload)
 
     async def identify(self):
         payload = {
-            "op": 0,
-            "d": {
-                "server_id": str(self.server_id),
-                "user_id": self.state.app.user.id,
-                "session_id": self.client.session_id,
-                "token": self.state.app.token,
+            'op': 0,
+            'd': {
+                'server_id': str(self.server_id),
+                'user_id': self.state.app.user.id,
+                'session_id': self.client.session_id,
+                'token': self.state.app.token,
             },
         }
         await self.send_json(payload)
@@ -96,7 +96,7 @@ class VoiceGateway:
     # it's ok.
     @classmethod
     async def voice_client_entry(cls, client, *, hook=None):
-        gateway = "wss://" + client.endpoint + "/?v=4"
+        gateway = 'wss://' + client.endpoint + '/?v=4'
         self = cls(client._state, client.guild_id, hook=hook)
         self.gateway = gateway
         self.client = client
@@ -105,28 +105,28 @@ class VoiceGateway:
 
     async def select_protocol(self, ip, port, mode):
         payload = {
-            "op": 1,
-            "d": {
-                "protocol": "udp",
-                "data": {
-                    "address": ip,
-                    "port": port,
-                    "mode": mode,
+            'op': 1,
+            'd': {
+                'protocol': 'udp',
+                'data': {
+                    'address': ip,
+                    'port': port,
+                    'mode': mode,
                 },
             },
         }
         await self.send_json(payload)
 
     async def client_connect(self):
-        payload = {"op": 12, "d": {"audio_ssrc": self.client.ssrc}}
+        payload = {'op': 12, 'd': {'audio_ssrc': self.client.ssrc}}
         await self.send_json(payload)
 
     async def speak(self, state=1):
         payload = {
-            "op": 5,
-            "d": {
-                "speaking": int(state),
-                "delay": 0,
+            'op': 5,
+            'd': {
+                'speaking': int(state),
+                'delay': 0,
             },
         }
         await self.send_json(payload)
@@ -135,29 +135,29 @@ class VoiceGateway:
         async for msg in self.ws:
             if msg.type == aiohttp.WSMsgType.TEXT:
                 data = json.loads(msg.data)
-                op: int = data["op"]
-                d: dict = data["d"]
-                _log.debug("> %s", data)
+                op: int = data['op']
+                d: dict = data['d']
+                _log.debug('> %s', data)
 
                 if op == 2:
                     await self.ready(d)
 
                 elif op == 6:
                     self.kept_alive = True
-                    _log.debug("> %s, kept the connection alive", d)
+                    _log.debug('> %s, kept the connection alive', d)
 
                 elif op == 9:
-                    _log.info("Resumed connection successfully")
+                    _log.info('Resumed connection successfully')
 
                 elif op == 4:
-                    _log.info("Received session description")
-                    self.client.mode = d["mode"]
-                    self.secret_key = self.client.secret_key = d.get("secret_key")
+                    _log.info('Received session description')
+                    self.client.mode = d['mode']
+                    self.secret_key = self.client.secret_key = d.get('secret_key')
                     await self.speak()
                     await self.speak(False)
 
                 elif op == 8:
-                    interval: int = d["heartbeat_interval"] / 1000
+                    interval: int = d['heartbeat_interval'] / 1000
                     await self.hello(interval=interval)
 
     async def heartbeat(self, interval: float):
@@ -166,35 +166,35 @@ class VoiceGateway:
                 await self.close(1008)
                 await self.connect(resume=True)
             self.kept_alive = False
-            await self.send_json({"op": 3, "d": create_snowflake()})
+            await self.send_json({'op': 3, 'd': create_snowflake()})
             await asyncio.sleep(interval)
 
     async def ready(self, data: dict):
         client = self.client
-        client.ssrc = data["ssrc"]
-        client.voice_port = data["port"]
-        client.endpoint_ip = data["ip"]
+        client.ssrc = data['ssrc']
+        client.voice_port = data['port']
+        client.endpoint_ip = data['ip']
 
         packet = bytearray(70)
-        struct.pack_into(">H", packet, 0, 1)
-        struct.pack_into(">H", packet, 2, 70)
-        struct.pack_into(">I", packet, 4, client.ssrc)
+        struct.pack_into('>H', packet, 0, 1)
+        struct.pack_into('>H', packet, 2, 70)
+        struct.pack_into('>I', packet, 4, client.ssrc)
         client.socket.sendto(packet, (client.endpoint_ip, client.voice_port))
         recv = self.state.loop.sock_recv(client.socket, 70)
-        _log.debug("Received initial connection: %s", recv)
+        _log.debug('Received initial connection: %s', recv)
 
         ip_end = recv.index(0, 4)
-        client.ip = recv[4:ip_end].decode("ascii")
+        client.ip = recv[4:ip_end].decode('ascii')
 
-        client.port = struct.unpack_from(">H", recv, len(recv) - 2)
-        _log.debug("IP was detected: %s, port: %s", client.ip, client.port)
+        client.port = struct.unpack_from('>H', recv, len(recv) - 2)
+        _log.debug('IP was detected: %s, port: %s', client.ip, client.port)
 
-        modes = [mode for mode in data["modes"] if mode in self.client.supported_modes]
-        _log.debug("Using following encryption mode(s): %s", modes)
+        modes = [mode for mode in data['modes'] if mode in self.client.supported_modes]
+        _log.debug('Using following encryption mode(s): %s', modes)
 
         mode = modes[0]
         await self.select_protocol(client.ip, client.port, mode)
-        _log.info("Using voice protocol: %s", mode)
+        _log.info('Using voice protocol: %s', mode)
 
     async def hello(self, interval: float):
         init = interval * random()

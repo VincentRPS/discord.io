@@ -1,8 +1,8 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/VincentRPS/discord.io/master/docs/assets/discord.io.png" />
+<p align='center'>
+  <img src='https://raw.githubusercontent.com/VincentRPS/discord.io/master/docs/assets/discord.io.png' />
 </p>
 
-<p align="center">
+<p align='center'>
 Asynchronous Discord API Wrapper for Python
 </p>
 

@@ -75,11 +75,11 @@ class StickerFormatType(Enum):
 
 
 class FormatType(Enum):
-    JPEG = ".jpeg"
-    PNG = ".png"
-    WEBP = ".webp"
-    GIF = ".gif"
-    LOTTIE = ".json"
+    JPEG = '.jpeg'
+    PNG = '.png'
+    WEBP = '.webp'
+    GIF = '.gif'
+    LOTTIE = '.json'
 
 
 class ScheduledEventStatusType(Enum):

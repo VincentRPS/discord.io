@@ -26,7 +26,7 @@ import typing as t
 
 from .internal.exceptions import DiscordError, Forbidden
 
-__all__: t.List[str] = ["File"]
+__all__: t.List[str] = ['File']
 
 
 class File:
@@ -55,13 +55,13 @@ class File:
         if isinstance(fp, io.IOBase):
             if not (fp.seekable() and fp.readable()):
                 raise DiscordError(
-                    f"File buffer {fp!r} must be both seekable and readable."
+                    f'File buffer {fp!r} must be both seekable and readable.'
                 )
             self.fp = fp
             self._og_pos = fp.tell()
             self._owner = False
         else:
-            self.fp = open(fp, "rb")
+            self.fp = open(fp, 'rb')
             self._og_pos = 0
             self._owner = True
 
@@ -72,19 +72,19 @@ class File:
             if isinstance(fp, str):
                 _, self.filename = os.path.split(fp)
             else:
-                self.filename = getattr(fp, "name", None)
+                self.filename = getattr(fp, 'name', None)
         else:
             self.filename = filename
 
         if (
             spoiler
             and self.filename is not None  # noqa: ignore
-            and not self.filename.startswith("SPOILER_")  # noqa: ignore
+            and not self.filename.startswith('SPOILER_')  # noqa: ignore
         ):
-            self.filename = "SPOILER_" + self.filename
+            self.filename = 'SPOILER_' + self.filename
 
         self.spoiler = spoiler or (
-            self.filename is not None and self.filename.startswith("SPOILER_")
+            self.filename is not None and self.filename.startswith('SPOILER_')
         )
 
     def reset(self, *, seek: t.Union[int, bool] = True) -> None:
@@ -96,4 +96,4 @@ class File:
         if self._owner:
             self._closer()
         else:
-            raise Forbidden("You arent allowed to close this file")
+            raise Forbidden('You arent allowed to close this file')

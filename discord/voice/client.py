@@ -67,7 +67,7 @@ class VoiceClient:
 
     def __init__(self, state: ConnectionState, channel: VoiceChannel):
         if not has_nacl:
-            raise RuntimeError("PyNaCl is needed in order to use voice")
+            raise RuntimeError('PyNaCl is needed in order to use voice')
 
         self.token: str = None
         self.socket = None
@@ -92,22 +92,22 @@ class VoiceClient:
         self._lite_nonce: int = 0
         self.ws: VoiceGateway = None
         self._state.app.dispatcher.add_listener(
-            self.on_voice_state_update, "on_raw_voice_state_update"
+            self.on_voice_state_update, 'on_raw_voice_state_update'
         )
         self._state.app.dispatcher.add_listener(
-            self.on_voice_server_update, "on_raw_voice_server_update"
+            self.on_voice_server_update, 'on_raw_voice_server_update'
         )
 
     warn_nacl = not has_nacl
     supported_modes: Tuple[str] = (
-        "xsalsa20_poly1305_lite",
-        "xsalsa20_poly1305_suffix",
-        "xsalsa20_poly1305",
+        'xsalsa20_poly1305_lite',
+        'xsalsa20_poly1305_suffix',
+        'xsalsa20_poly1305',
     )
 
     async def on_voice_state_update(self, data):
-        self.session_id = data["session_id"]
-        channel_id = data["channel_id"]
+        self.session_id = data['session_id']
+        channel_id = data['channel_id']
 
         if not self._handshaking or self._potentially_reconnecting:
             if channel_id is None:
@@ -124,15 +124,15 @@ class VoiceClient:
         if self._voice_server_complete.is_set():
             return
 
-        self.token = data.get("token")
-        self.guild_id = int(data["guild_id"])
-        endpoint: str = data.get("endpoint")
+        self.token = data.get('token')
+        self.guild_id = int(data['guild_id'])
+        endpoint: str = data.get('endpoint')
 
         if endpoint is None or self.token is None:
             return
 
-        self.endpoint, _, _ = endpoint.rpartition(":")
-        if self.endpoint.startswith("wss://"):
+        self.endpoint, _, _ = endpoint.rpartition(':')
+        if self.endpoint.startswith('wss://'):
             self.endpoint = self.endpoint[6:]
 
         self.endpoint_ip = None
@@ -159,7 +159,7 @@ class VoiceClient:
         self._connections += 1
 
     def finish_handshake(self):
-        _log.info("Hand shaking done, using endpoint: %s", self.endpoint)
+        _log.info('Hand shaking done, using endpoint: %s', self.endpoint)
         self._handshaking = False
         self._voice_server_complete.clear()
         self._voice_state_complete.clear()
@@ -197,7 +197,7 @@ class VoiceClient:
                 break
             except asyncio.TimeoutError:
                 if reconnect:
-                    _log.error("Failed to connect to the voice gateway, retrying...")
+                    _log.error('Failed to connect to the voice gateway, retrying...')
                     await asyncio.sleep(1 + i * 2)
                     await self.voice_disconnect()
                     continue
@@ -239,15 +239,15 @@ class VoiceClient:
 
         byteheader[0] = 0x80
         byteheader[1] = 0x78
-        struct.pack_into(">H", byteheader, 2, self.sequence)
-        struct.pack_into(">I", byteheader, 4, self.timestamp)
-        struct.pack_into(">I", byteheader, 8, self.ssrc)
+        struct.pack_into('>H', byteheader, 2, self.sequence)
+        struct.pack_into('>I', byteheader, 4, self.timestamp)
+        struct.pack_into('>I', byteheader, 8, self.ssrc)
 
-        encrypt_packet = getattr(self, "__encrypt__" + self.mode)
+        encrypt_packet = getattr(self, '__encrypt__' + self.mode)
         return encrypt_packet(byteheader, data)
 
     def send_audio_packet(self, data: bytes, *, encode: bool = True):
-        self.checked_add("sequence", 1, 65535)
+        self.checked_add('sequence', 1, 65535)
         if encode:
             encoded_data = self.encoder.encode(data, 960)
         else:
@@ -257,6 +257,6 @@ class VoiceClient:
         try:
             self.socket.sendto(packet, (self.endpoint_ip, self.voice_port))
         except BlockingIOError:
-            _log.error("A packet was dropped")
+            _log.error('A packet was dropped')
 
-        self.checked_add("timestamp", 65535, 4294967295)
+        self.checked_add('timestamp', 65535, 4294967295)

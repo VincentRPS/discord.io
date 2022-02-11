@@ -33,7 +33,7 @@ def Choice(
     name: str,
     value: str,
 ):
-    return {"name": name, "value": value}
+    return {'name': name, 'value': value}
 
 
 def Option(
@@ -60,43 +60,43 @@ def Option(
     autocomplete: bool = False,
 ):
     ret = {
-        "name": name,
-        "description": description,
+        'name': name,
+        'description': description,
     }
 
     # probably the most jank thing i wrote but it works, and does it good.
     if type == str:
-        ret["type"] = 3
+        ret['type'] = 3
     elif type == int:
-        ret["type"] = 4
+        ret['type'] = 4
     elif type == bool:
-        ret["type"] = 5
+        ret['type'] = 5
     elif type == User:
-        ret["type"] = 6
+        ret['type'] = 6
     elif type == TextChannel or VoiceChannel or Thread or Category:
-        ret["type"] = 7
+        ret['type'] = 7
     elif type == Role:
-        ret["type"] = 8
+        ret['type'] = 8
     elif type == Member:
-        ret["type"] = 9
+        ret['type'] = 9
     elif type == Attachment:
-        ret["type"] = 11
+        ret['type'] = 11
 
     if required is True:
-        ret["required"] = True
+        ret['required'] = True
 
     if choices is not None:
-        ret["choices"] = choices
+        ret['choices'] = choices
 
     if channel_types:
-        ret["channel_types"] = channel_types
+        ret['channel_types'] = channel_types
 
     if min_value:
-        ret["min_value"] = min_value
+        ret['min_value'] = min_value
     if max_value:
-        ret["max_value"] = max_value
+        ret['max_value'] = max_value
 
     if autocomplete:
-        ret["autocomplete"] = True
+        ret['autocomplete'] = True
 
     return ret

@@ -38,7 +38,7 @@ from ..types.dict import Dict
 from .rest import RESTClient, Route
 
 __all__: typing.List[str] = [
-    "RESTFactory",
+    'RESTFactory',
 ]
 
 
@@ -70,11 +70,11 @@ class RESTFactory:
         self.token = token
 
         if len(self.token) != 59:
-            raise Exception("Invalid Bot Token Was Passed")
+            raise Exception('Invalid Bot Token Was Passed')
         else:
             pass
 
-        r = await self.rest.send(Route("GET", "/users/@me"), token=self.token)
+        r = await self.rest.send(Route('GET', '/users/@me'), token=self.token)
 
         self.state.bot_info[self.state.app] = r
 
@@ -84,13 +84,13 @@ class RESTFactory:
         self,
     ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
         return self.rest.send(
-            Route("POST", "/auth/logout")
+            Route('POST', '/auth/logout')
         )  # Log's you out of the bot.
 
     def get_gateway_bot(
         self,
     ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
-        return self.rest.send(Route("GET", "/gateway/bot"))
+        return self.rest.send(Route('GET', '/gateway/bot'))
 
     def create_message(
         self,
@@ -104,56 +104,56 @@ class RESTFactory:
         components: typing.Optional[list[Dict]] = None,
     ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
         json = {
-            "tts": tts,
-            "allowed_mentions": allowed_mentions,
+            'tts': tts,
+            'allowed_mentions': allowed_mentions,
         }
         if content is not None:
-            json["content"] = content
+            json['content'] = content
         if message_reference is not None:
-            json["message_reference"] = message_reference
+            json['message_reference'] = message_reference
         if components is not None:
-            json["components"] = components
+            json['components'] = components
         if embeds is not None:
-            json["embeds"] = embeds
+            json['embeds'] = embeds
 
         if files:
             form = []
-            form.append({"name": "payload_json", "value": dumps(json)})
+            form.append({'name': 'payload_json', 'value': dumps(json)})
             if len(files) == 1:
                 file = files[0]
                 form.append(
                     {
-                        "name": "file",
-                        "value": file.fp,
-                        "filename": file.filename,
-                        "content_type": "application/octet-stream",
+                        'name': 'file',
+                        'value': file.fp,
+                        'filename': file.filename,
+                        'content_type': 'application/octet-stream',
                     }
                 )
             else:
                 for index, file in enumerate(files):
                     form.append(
                         {
-                            "name": f"file{index}",
-                            "value": file.fp,
-                            "filename": file.filename,
-                            "content_type": "application/octet-stream",
+                            'name': f'file{index}',
+                            'value': file.fp,
+                            'filename': file.filename,
+                            'content_type': 'application/octet-stream',
                         }
                     )
 
             return self.rest.send(
-                Route("POST", f"/channels/{channel}/messages", channel_id=channel),
+                Route('POST', f'/channels/{channel}/messages', channel_id=channel),
                 json=json,
                 form=form,
                 files=files,
             )
 
         return self.rest.send(
-            Route("POST", f"/channels/{channel}/messages", channel_id=channel),
+            Route('POST', f'/channels/{channel}/messages', channel_id=channel),
             json=json,
         )
 
     def get_channel(self, channel: typing.Optional[Snowflakeish] = None):
-        return self.rest.send(Route("GET", f"/channels/{channel}"))
+        return self.rest.send(Route('GET', f'/channels/{channel}'))
 
     def edit_channel(
         self,
@@ -161,11 +161,11 @@ class RESTFactory:
         channel: typing.Optional[Snowflakeish] = None,
         type: typing.Optional[str] = None,
     ):
-        if type == "group_dm":
+        if type == 'group_dm':
             payload = {}
             if name:
-                payload["name"] = name
-        return self.rest.send(Route("PATCH", f"/channels/{channel}"))
+                payload['name'] = name
+        return self.rest.send(Route('PATCH', f'/channels/{channel}'))
 
     def create_invite(
         self,
@@ -178,14 +178,14 @@ class RESTFactory:
         unique: typing.Optional[bool] = True,
     ):
         json = {
-            "max_age": max_age,
-            "max_uses": max_uses,
-            "tempoary": tempoary,
-            "unique": unique,
+            'max_age': max_age,
+            'max_uses': max_uses,
+            'tempoary': tempoary,
+            'unique': unique,
         }
         if channel_id:
-            json["channel_id"] = channel_id
-        return self.rest.send(Route("POST"), reason=reason, json=json)
+            json['channel_id'] = channel_id
+        return self.rest.send(Route('POST'), reason=reason, json=json)
 
     # Application Commands
 
@@ -201,23 +201,23 @@ class RESTFactory:
         type: int = 1,
     ):
         json = {
-            "name": name,
-            "description": description,
-            "type": type,
+            'name': name,
+            'description': description,
+            'type': type,
         }
         if default_permission is False:
-            json["default_permission"] = False
+            json['default_permission'] = False
         if options:
-            json["options"] = options
+            json['options'] = options
         return self.rest.send(
-            Route("POST", f"/applications/{application_id}/commands"), json=json
+            Route('POST', f'/applications/{application_id}/commands'), json=json
         )
 
     def get_global_application_command(
         self, application_id: Snowflakeish, command: Snowflakeish
     ):
         return self.rest.send(
-            Route("GET", f"/applications/{application_id}/commands/{command}")
+            Route('GET', f'/applications/{application_id}/commands/{command}')
         )
 
     def edit_global_application_command(
@@ -230,19 +230,19 @@ class RESTFactory:
         default_permission: typing.Optional[bool] = True,
     ):
         json = {
-            "name": name,
-            "description": description,
-            "default_permission": default_permission,
+            'name': name,
+            'description': description,
+            'default_permission': default_permission,
         }
         if options:
-            json["options"] = options
+            json['options'] = options
         return self.rest.send(
-            Route("PATCH", f"/applications/{application_id}/commands/{command_id}"),
+            Route('PATCH', f'/applications/{application_id}/commands/{command_id}'),
             json=json,
         )
 
     def get_global_application_commands(self, application_id: Snowflakeish):
-        return self.rest.send(Route("GET", f"/applications/{application_id}/commands"))
+        return self.rest.send(Route('GET', f'/applications/{application_id}/commands'))
 
     def delete_global_application_command(
         self,
@@ -251,8 +251,8 @@ class RESTFactory:
     ):
         return self.rest.send(
             Route(
-                "DELETE",
-                f"/applications/{application_id}/commands/{command}",
+                'DELETE',
+                f'/applications/{application_id}/commands/{command}',
             )
         )
 
@@ -269,17 +269,17 @@ class RESTFactory:
         type: int = 1,
     ):
         json = {
-            "name": name,
-            "description": description,
-            "default_permission": default_permission,
-            "type": type,
+            'name': name,
+            'description': description,
+            'default_permission': default_permission,
+            'type': type,
         }
         if default_permission is False:
-            json["default_permission"] = False
+            json['default_permission'] = False
         if options:
-            json["options"] = options
+            json['options'] = options
         return self.rest.send(
-            Route("POST", f"/applications/{application_id}/guilds/{guild_id}/commands"),
+            Route('POST', f'/applications/{application_id}/guilds/{guild_id}/commands'),
             json=json,
         )
 
@@ -291,8 +291,8 @@ class RESTFactory:
     ):
         return self.rest.send(
             Route(
-                "GET",
-                f"/applications/{application_id}/guilds/{guild_id}/commands/{command}",
+                'GET',
+                f'/applications/{application_id}/guilds/{guild_id}/commands/{command}',
             )
         )
 
@@ -303,8 +303,8 @@ class RESTFactory:
     ):
         return self.rest.send(
             Route(
-                "GET",
-                f"/applications/{application_id}/guilds/{guild_id}/commands",
+                'GET',
+                f'/applications/{application_id}/guilds/{guild_id}/commands',
             )
         )
 
@@ -316,8 +316,8 @@ class RESTFactory:
     ):
         return self.rest.send(
             Route(
-                "DELETE",
-                f"/applications/{application_id}/guilds/{guild_id}/commands/{command}",
+                'DELETE',
+                f'/applications/{application_id}/guilds/{guild_id}/commands/{command}',
                 guild_id=guild_id,
             )
         )
@@ -333,16 +333,16 @@ class RESTFactory:
         default_permission: typing.Optional[bool] = True,
     ):
         json = {
-            "name": name,
-            "description": description,
-            "default_permission": default_permission,
+            'name': name,
+            'description': description,
+            'default_permission': default_permission,
         }
         if options:
-            json["options"] = options
+            json['options'] = options
         return self.rest.send(
             Route(
-                "PATCH",
-                f"/applications/{application_id}/guilds/{guild_id}/commands/{command_id}",
+                'PATCH',
+                f'/applications/{application_id}/guilds/{guild_id}/commands/{command_id}',
             ),
             json=json,
         )
@@ -361,29 +361,29 @@ class RESTFactory:
         components: typing.Optional[dict] = None,
     ):
         json = {
-            "content": content,
+            'content': content,
         }
         if embeds is not None:
-            json["embeds"] = embeds
+            json['embeds'] = embeds
         if tts is not False:
-            json["tts"] = tts
+            json['tts'] = tts
         if allowed_mentions is not None:
-            json["allowed_mentions"] = allowed_mentions
+            json['allowed_mentions'] = allowed_mentions
         if flags is not None:
-            json["flags"] = flags
+            json['flags'] = flags
         if components is not None:
-            json["components"] = components
+            json['components'] = components
         return self.rest.send(
             Route(
-                "POST",
-                f"/interactions/{interaction_id}/{interaction_token}/callback",
+                'POST',
+                f'/interactions/{interaction_id}/{interaction_token}/callback',
             ),
             json=json,
         )
 
     def get_initial_response(self, application_id, interaction_token):
         return self.rest.send(
-            Route("GET", f"/webhooks/{application_id}/{interaction_token}/@original")
+            Route('GET', f'/webhooks/{application_id}/{interaction_token}/@original')
         )
 
     # TODO: Edit and Delete initial reponse.
@@ -398,17 +398,17 @@ class RESTFactory:
         components: typing.Optional[typing.List[Dict]] = None,
         flags: typing.Optional[MessageFlags] = None,
     ):
-        json = {"content": content}
+        json = {'content': content}
         if embeds is not None:
-            json["embeds"] = embeds
+            json['embeds'] = embeds
         if allowed_mentions is not None:
-            json["allowed_mentions"] = allowed_mentions
+            json['allowed_mentions'] = allowed_mentions
         if components is not None:
-            json["components"] = components
+            json['components'] = components
         if flags is not None:
-            json["flags"] = flags
+            json['flags'] = flags
         return self.rest.send(
-            Route("POST", f"/webhooks/{application_id}/{interaction_token}"), json=json
+            Route('POST', f'/webhooks/{application_id}/{interaction_token}'), json=json
         )
 
     def get_followup_message(
@@ -419,8 +419,8 @@ class RESTFactory:
     ):
         return self.rest.send(
             Route(
-                "GET",
-                f"/webhooks/{application_id}/{interaction_token}/messages/{message}",
+                'GET',
+                f'/webhooks/{application_id}/{interaction_token}/messages/{message}',
             ),
         )
 
@@ -434,19 +434,19 @@ class RESTFactory:
         before: typing.Optional[Snowflakeish] = None,
         limit: typing.Optional[int] = 50,
     ):
-        ret = {"limit": limit}
+        ret = {'limit': limit}
         if user_id:
-            ret["user_id"] = user_id
+            ret['user_id'] = user_id
         if action_type:
-            ret["action_type"] = action_type
+            ret['action_type'] = action_type
         if before:
-            ret["before"] = before
+            ret['before'] = before
         if limit:
-            ret["limit"] = limit
+            ret['limit'] = limit
         return self.rest.send(
             Route(
-                "GET",
-                f"/guilds/{guild}/audit-logs",
+                'GET',
+                f'/guilds/{guild}/audit-logs',
                 guild_id=guild,
             ),
             json=ret,
@@ -460,15 +460,15 @@ class RESTFactory:
 
     def get_guild_member(self, guild_id, user):
         return self.rest.send(
-            Route("GET", f"/guilds/{guild_id}/members/{user}", guild_id=guild_id)
+            Route('GET', f'/guilds/{guild_id}/members/{user}', guild_id=guild_id)
         )
 
     def get_guild_members(
         self, guild_id, limit: typing.Optional[int] = 1, after: typing.Optional[int] = 0
     ):
-        ret = {"limit": limit, "after": after}
+        ret = {'limit': limit, 'after': after}
         return self.rest.send(
-            Route("GET", f"/guilds/{guild_id}/members", guild_id=guild_id), json=ret
+            Route('GET', f'/guilds/{guild_id}/members', guild_id=guild_id), json=ret
         )
 
     def modify_guild_member(
@@ -484,21 +484,21 @@ class RESTFactory:
         reason: typing.Optional[str] = None,
     ):
         ret = {
-            "nick": nick,
-            "roles": roles,
-            "mute": mute,
-            "deaf": deaf,
-            "channel_id": channel_id,
-            "communication_disabled_until": timeout,
+            'nick': nick,
+            'roles': roles,
+            'mute': mute,
+            'deaf': deaf,
+            'channel_id': channel_id,
+            'communication_disabled_until': timeout,
         }
         return self.rest.send(
-            Route("PATCH", f"/guilds/{guild_id}/members/{member}", guild_id=guild_id),
+            Route('PATCH', f'/guilds/{guild_id}/members/{member}', guild_id=guild_id),
             reason=reason,
             json=ret,
         )
 
     def get_guild(self, guild_id: int):
-        return self.rest.send(Route("GET", f"/guilds/{guild_id}", guild_id=guild_id))
+        return self.rest.send(Route('GET', f'/guilds/{guild_id}', guild_id=guild_id))
 
     def modify_guild(
         self,
@@ -515,12 +515,12 @@ class RESTFactory:
 
     # users
     def get_user(self, user: int):
-        return self.rest.send(Route("GET", f"/users/{user}"))
+        return self.rest.send(Route('GET', f'/users/{user}'))
 
     # scheduled events
     def get_scheduled_events(self, guild_id: int):
         return self.rest.send(
-            Route("GET", f"/guilds/{guild_id}/scheduled-events", guild_id=guild_id)
+            Route('GET', f'/guilds/{guild_id}/scheduled-events', guild_id=guild_id)
         )
 
     def create_scheduled_event(
@@ -538,37 +538,37 @@ class RESTFactory:
     ):
         form = []
         json = {
-            "name": name,
-            "entity_type": type,
-            "scheduled_start_time": start_time,
-            "privacy_level": privacy_level,
+            'name': name,
+            'entity_type': type,
+            'scheduled_start_time': start_time,
+            'privacy_level': privacy_level,
         }
         if end_time:
-            json["scheduled_end_time"] = end_time
+            json['scheduled_end_time'] = end_time
         if description:
-            json["description"]
+            json['description']
         if channel_id:
-            json["channel_id"] = channel_id
+            json['channel_id'] = channel_id
         if metadata:
-            json["entity_metadata"] = metadata
+            json['entity_metadata'] = metadata
 
         raw = image.fp.read(16)
         if image:
             try:
                 mime = utils.img_mime_type(raw)
             except TypeError:
-                mime = "application-octet-stream"
+                mime = 'application-octet-stream'
             form.append(
                 {
-                    "name": "image",
-                    "value": image.fp,
-                    "filename": image.filename,
-                    "content_type": mime,
+                    'name': 'image',
+                    'value': image.fp,
+                    'filename': image.filename,
+                    'content_type': mime,
                 }
             )
 
         return self.rest.send(
-            Route("POST", f"/guilds/{guild_id}/scheduled-events", guild_id=guild_id),
+            Route('POST', f'/guilds/{guild_id}/scheduled-events', guild_id=guild_id),
             json=json,
             form=form,
             files=[image],
@@ -590,32 +590,32 @@ class RESTFactory:
         try:
             mime = utils.img_mime_type(raw)
         except TypeError:
-            if raw.startswith(b"{"):
-                mime = "application/json"
+            if raw.startswith(b'{'):
+                mime = 'application/json'
             else:
-                mime = "application/octet-stream"
+                mime = 'application/octet-stream'
 
         finally:
             file.reset()
 
         form = [
             {
-                "name": "file",
-                "value": file.fp,
-                "filename": file.filename,
-                "content_type": mime,
+                'name': 'file',
+                'value': file.fp,
+                'filename': file.filename,
+                'content_type': mime,
             }
         ]
 
         if name:
-            form.append({"name": "name", "value": name})
+            form.append({'name': 'name', 'value': name})
         if tags:
-            form.append({"name": "tags", "value": tags})
+            form.append({'name': 'tags', 'value': tags})
         if description:
-            form.append({"name": "description", "value": description})
+            form.append({'name': 'description', 'value': description})
 
         return self.rest.send(
-            Route("POST", f"/guilds/{guild_id}/stickers", guild_id=guild_id),
+            Route('POST', f'/guilds/{guild_id}/stickers', guild_id=guild_id),
             form=form,
             files=[file],
             reason=reason,
@@ -624,15 +624,15 @@ class RESTFactory:
     # if your wondering why this is here, it's because it's used in the voice gateway.
     async def ws_connect(self, url: str, *, compress: int = 0):
         kwargs = {
-            "proxy_auth": self.proxy_auth,
-            "proxy": self.proxy,
-            "max_msg_size": 0,
-            "timeout": 30.0,
-            "autoclose": False,
-            "headers": {
-                "User-Agent": self.rest.user_agent,
+            'proxy_auth': self.proxy_auth,
+            'proxy': self.proxy,
+            'max_msg_size': 0,
+            'timeout': 30.0,
+            'autoclose': False,
+            'headers': {
+                'User-Agent': self.rest.user_agent,
             },
-            "compress": compress,
+            'compress': compress,
         }
 
         sesh = aiohttp.ClientSession()

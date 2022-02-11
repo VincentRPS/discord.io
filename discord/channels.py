@@ -54,7 +54,7 @@ def channel_parse(type, data: dict, state: ConnectionState):
         return VoiceChannel(data, state)
 
     else:
-        raise NotImplementedError("Channel is not a currently provided type")
+        raise NotImplementedError('Channel is not a currently provided type')
 
 
 class Category:
@@ -82,7 +82,7 @@ class Category:
         list[:class:`str`]
         list[:class:`int`]
         """
-        return self.from_dict["permission_overwrites"]
+        return self.from_dict['permission_overwrites']
 
     @property
     def position(self) -> int:
@@ -92,7 +92,7 @@ class Category:
         -------
         :class:`int`
         """
-        return self.from_dict["position"]
+        return self.from_dict['position']
 
     @property
     def id(self) -> int:
@@ -102,7 +102,7 @@ class Category:
         -------
         :class:`int`
         """
-        return self.from_dict["id"]
+        return self.from_dict['id']
 
     @property
     def name(self) -> str:
@@ -112,7 +112,7 @@ class Category:
         -------
         :class:`str`
         """
-        return self.from_dict["name"]
+        return self.from_dict['name']
 
     def guild_id(self) -> int:
         """Gives the guild' snowflake id
@@ -121,7 +121,7 @@ class Category:
         -------
         :class:`int`
         """
-        return self.from_dict["guild_id"]
+        return self.from_dict['guild_id']
 
 
 class TextChannel:
@@ -147,7 +147,7 @@ class TextChannel:
         -------
         :class:`int`
         """
-        return self.from_dict["id"]
+        return self.from_dict['id']
 
     @property
     def guild_id(self) -> int:
@@ -157,7 +157,7 @@ class TextChannel:
         -------
         :class:`int`
         """
-        return self.from_dict["guild_id"]
+        return self.from_dict['guild_id']
 
     @property
     def name(self) -> str:
@@ -167,7 +167,7 @@ class TextChannel:
         -------
         :class:`str`
         """
-        return self.from_dict["name"]
+        return self.from_dict['name']
 
     @property
     def position(self) -> int:
@@ -177,11 +177,11 @@ class TextChannel:
         -------
         :class:`int`
         """
-        return self.from_dict["position"]
+        return self.from_dict['position']
 
     def permission_overwrites(self) -> list[str, Union[int, str]]:
         """Gives the permission overwrites of the channel"""
-        return self.from_dict["permission_overwrites"]
+        return self.from_dict['permission_overwrites']
 
     @property
     def nsfw(self) -> bool:
@@ -191,7 +191,7 @@ class TextChannel:
         -------
         :class:`bool`
         """
-        return self.from_dict["nsfw"]
+        return self.from_dict['nsfw']
 
     def topic(self) -> str:
         """Gives the channel' topic
@@ -200,7 +200,7 @@ class TextChannel:
         -------
         :class:`str`
         """
-        return self.from_dict["topic"]
+        return self.from_dict['topic']
 
     def last_message_id(self) -> int:
         """Gives the snowflake id of the last message
@@ -209,7 +209,7 @@ class TextChannel:
         -------
         :class:`int`
         """
-        return self.from_dict["last_message_id"]
+        return self.from_dict['last_message_id']
 
     def category_id(self) -> int:
         """Gives the id of the category this channel is in
@@ -218,7 +218,7 @@ class TextChannel:
         -------
         :class:`int`
         """
-        return self.from_dict["parent_id"]
+        return self.from_dict['parent_id']
 
 
 class VoiceChannel:
@@ -246,7 +246,7 @@ class VoiceChannel:
         -------
         :class:`int`
         """
-        return self.from_dict["id"]
+        return self.from_dict['id']
 
     @property
     def guild(self) -> Guild:
@@ -256,7 +256,7 @@ class VoiceChannel:
         -------
         :class:`Guild`
         """
-        id = self.from_dict["guild_id"]
+        id = self.from_dict['guild_id']
         raw = self.state.app.fetch_raw_guild(guild_id=id)
         return Guild(raw, self.state.app.factory)
 
@@ -268,7 +268,7 @@ class VoiceChannel:
         -------
         :class:`str`
         """
-        return self.from_dict["name"]
+        return self.from_dict['name']
 
     @property
     def position(self) -> int:
@@ -278,10 +278,10 @@ class VoiceChannel:
         -------
         :class:`int`
         """
-        return self.from_dict["position"]
+        return self.from_dict['position']
 
     def permission_overwrites(self) -> list[str, Union[int, str]]:
-        return self.from_dict["permission_overwrites"]
+        return self.from_dict['permission_overwrites']
 
 
 class DMChannel:
@@ -308,7 +308,7 @@ class DMChannel:
         -------
         :class:`int`
         """
-        return self.from_dict["last_message_id"]
+        return self.from_dict['last_message_id']
 
     @property
     def id(self) -> int:
@@ -318,7 +318,7 @@ class DMChannel:
         -------
         :class:`int`
         """
-        return self.from_dict["id"]
+        return self.from_dict['id']
 
     def recipients(self):
         """The list of users in the channel
@@ -327,11 +327,11 @@ class DMChannel:
         -------
         List[:class:`User`]
         """
-        return [User(user_data) for user_data in self.from_dict["recipients"]]
+        return [User(user_data) for user_data in self.from_dict['recipients']]
 
 
 def parse_groupdm_icon(format: FormatType, group_id: int, group_icon_hash: str) -> str:
-    return f"https://cdn.discordapp.com/icons/{group_id}/{group_icon_hash}.{format}"
+    return f'https://cdn.discordapp.com/icons/{group_id}/{group_icon_hash}.{format}'
 
 
 class GroupDMChannel(DMChannel):
@@ -351,7 +351,7 @@ class GroupDMChannel(DMChannel):
         -------
         :class:`str`
         """
-        return self.from_dict["name"]
+        return self.from_dict['name']
 
     def icon(self, format: FormatType = FormatType.PNG) -> str:
         """Gives the link of the channel' icon
@@ -360,7 +360,7 @@ class GroupDMChannel(DMChannel):
         -------
         :class:`str`
         """
-        return parse_groupdm_icon(format, self.id, self.from_dict["icon"])
+        return parse_groupdm_icon(format, self.id, self.from_dict['icon'])
 
     def owner(self) -> User:
         """Returns the User which is the owner of this Group DM
@@ -369,7 +369,7 @@ class GroupDMChannel(DMChannel):
         -------
         :class:`User`
         """
-        user = self.state.app.factory.get_user(self.from_dict["owner"])
+        user = self.state.app.factory.get_user(self.from_dict['owner'])
         return User(user)
 
 
@@ -398,7 +398,7 @@ class Thread:
         -------
         :class:`int`
         """
-        return self.from_dict["id"]
+        return self.from_dict['id']
 
     @property
     def guild_id(self) -> int:
@@ -408,7 +408,7 @@ class Thread:
         -------
         :class:`int`
         """
-        return self.from_dict["guild_id"]
+        return self.from_dict['guild_id']
 
     @property
     def channel_id(self) -> int:
@@ -418,7 +418,7 @@ class Thread:
         -------
         :class:`int`
         """
-        return self.from_dict["parent_id"]
+        return self.from_dict['parent_id']
 
     @property
     def owner_id(self) -> int:
@@ -428,7 +428,7 @@ class Thread:
         -------
         :class:`int`
         """
-        return self.from_dict["owner_id"]
+        return self.from_dict['owner_id']
 
     @property
     def name(self) -> str:
@@ -438,7 +438,7 @@ class Thread:
         -------
         :class:`str`
         """
-        return self.from_dict["name"]
+        return self.from_dict['name']
 
     def last_message_id(self) -> int:
         """Gives the last message id in the thread
@@ -447,7 +447,7 @@ class Thread:
         -------
         :class:`int`
         """
-        return self.from_dict["last_message_id"]
+        return self.from_dict['last_message_id']
 
     def message_count(self) -> int:
         """Gives the amount of messages in the thread
@@ -456,7 +456,7 @@ class Thread:
         -------
         :class:`int`
         """
-        return self.from_dict["message_count"]
+        return self.from_dict['message_count']
 
     def member_count(self) -> int:
         """Gives the thread' member count
@@ -465,17 +465,17 @@ class Thread:
         -------
         :class:`int`
         """
-        return self.from_dict["member_count"]
+        return self.from_dict['member_count']
 
     @property
-    def metadata(self) -> "ThreadMetadata":
+    def metadata(self) -> 'ThreadMetadata':
         """Gives the thread' metadata
 
         Returns
         -------
         :class:`ThreadMetadata`
         """
-        return ThreadMetadata(self.from_dict["thread_metadata"])
+        return ThreadMetadata(self.from_dict['thread_metadata'])
 
 
 class ThreadMetadata:
@@ -500,7 +500,7 @@ class ThreadMetadata:
         -------
         :class:`bool`
         """
-        return self.from_dict["archived"]
+        return self.from_dict['archived']
 
     @property
     def auto_archive_duration(self) -> int:
@@ -510,7 +510,7 @@ class ThreadMetadata:
         -------
         :class:`int`
         """
-        return self.from_dict["auto_archive_duration"]
+        return self.from_dict['auto_archive_duration']
 
     @property
     def archive_timestamp(self) -> str:
@@ -520,7 +520,7 @@ class ThreadMetadata:
         -------
         :class:`str`
         """
-        return self.from_dict["archive_timestamp"]
+        return self.from_dict['archive_timestamp']
 
     @property
     def locked(self) -> bool:
@@ -530,7 +530,7 @@ class ThreadMetadata:
         -------
         :class:`bool`
         """
-        return self.from_dict["locked"]
+        return self.from_dict['locked']
 
 
 class ThreadMember:
@@ -555,7 +555,7 @@ class ThreadMember:
         -------
         :class:`int`
         """
-        return self.from_dict["id"]
+        return self.from_dict['id']
 
     @property
     def user_id(self) -> int:
@@ -565,7 +565,7 @@ class ThreadMember:
         -------
         :class:`int`
         """
-        return self.from_dict["user_id"]
+        return self.from_dict['user_id']
 
     @property
     def join_timestamp(self) -> str:
@@ -575,7 +575,7 @@ class ThreadMember:
         -------
         :class:`str`
         """
-        return self.from_dict["join_timestamp"]
+        return self.from_dict['join_timestamp']
 
     @property
     def flags(self) -> int:
@@ -585,7 +585,7 @@ class ThreadMember:
         -------
         :class:`int`
         """
-        return self.from_dict["flags"]
+        return self.from_dict['flags']
 
 
 class StageInstance:
@@ -610,7 +610,7 @@ class StageInstance:
         -------
         :class:`int`
         """
-        return self.from_dict["id"]
+        return self.from_dict['id']
 
     @property
     def guild_id(self) -> int:
@@ -620,7 +620,7 @@ class StageInstance:
         -------
         :class:`int`
         """
-        return self.from_dict["guild_id"]
+        return self.from_dict['guild_id']
 
     @property
     def channel_id(self) -> int:
@@ -630,7 +630,7 @@ class StageInstance:
         -------
         :class:`int`
         """
-        return self.from_dict["channel_id"]
+        return self.from_dict['channel_id']
 
     @property
     def topic(self) -> str:
@@ -640,7 +640,7 @@ class StageInstance:
         -------
         :class:`str`
         """
-        return self.from_dict["topic"]
+        return self.from_dict['topic']
 
     def privacy_level(self) -> int:
         """Gives the stage instance' privacy level
@@ -649,4 +649,4 @@ class StageInstance:
         -------
         :class:`int`
         """
-        return self.from_dict["privacy_level"]
+        return self.from_dict['privacy_level']

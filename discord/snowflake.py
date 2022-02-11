@@ -23,12 +23,12 @@
 from typing import List, TypeVar, Union
 
 __all__: List[str] = [
-    "Snowflakeish",
-    "SnowflakeishList",
-    "SnowflakeishOr",
+    'Snowflakeish',
+    'SnowflakeishList',
+    'SnowflakeishOr',
 ]
 
-T = TypeVar("T", covariant=True)
+T = TypeVar('T', covariant=True)
 
 Snowflakeish = int
 

@@ -55,7 +55,7 @@ def start_logging(flavor: Union[None, int, str, Dict], debug: bool = False):
     if isinstance(flavor, dict):
         logging.config.dictConfig(flavor)
 
-        if flavor.get("handler"):
+        if flavor.get('handler'):
             return
 
         flavor = None
@@ -66,32 +66,32 @@ def start_logging(flavor: Union[None, int, str, Dict], debug: bool = False):
 
     colorlog.basicConfig(
         level=flavor,
-        format="%(log_color)s%(bold)s%(levelname)-1.1s%(thin)s %(asctime)23.23s %(bold)s%(name)s: "
-        "%(thin)s%(message)s%(reset)s",
+        format='%(log_color)s%(bold)s%(levelname)-1.1s%(thin)s %(asctime)23.23s %(bold)s%(name)s: '
+        '%(thin)s%(message)s%(reset)s',
         stream=sys.stderr,
         log_colors={
-            "DEBUG": "cyan",
-            "INFO": "green",
-            "WARNING": "yellow",
-            "ERROR": "red",
-            "CRITICAL": "red, bg_white",
+            'DEBUG': 'cyan',
+            'INFO': 'green',
+            'WARNING': 'yellow',
+            'ERROR': 'red',
+            'CRITICAL': 'red, bg_white',
         },
     )
-    warnings.simplefilter("always", DeprecationWarning)
+    warnings.simplefilter('always', DeprecationWarning)
     logging.captureWarnings(True)
 
 
-def print_banner(module: Optional[str] = "discord"):
-    banner = importlib.resources.read_text(module, "banner.txt")
+def print_banner(module: Optional[str] = 'discord'):
+    banner = importlib.resources.read_text(module, 'banner.txt')
     today = datetime.date.today()
 
     args = {
-        "copyright": __copyright__,
-        "version": __version__,
-        "license": __license__,
-        "current_time": today.strftime("%B %d, %Y"),
-        "py_version": platform.python_version(),
-        "git_sha": __git_sha1__[:8],
+        'copyright': __copyright__,
+        'version': __version__,
+        'license': __license__,
+        'current_time': today.strftime('%B %d, %Y'),
+        'py_version': platform.python_version(),
+        'git_sha': __git_sha1__[:8],
     }
     args.update(colorlog.escape_codes.escape_codes)
 

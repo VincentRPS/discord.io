@@ -48,8 +48,8 @@ from .user import User
 from .voice import VoiceClient, has_nacl
 
 _log = logging.getLogger(__name__)
-__all__: List[str] = ["Client"]
-CFT = TypeVar("CFT", bound="dispatcher.CoroFunc")
+__all__: List[str] = ['Client']
+CFT = TypeVar('CFT', bound='dispatcher.CoroFunc')
 
 
 class Client:
@@ -97,7 +97,7 @@ class Client:
         and soforth custom db caches.
     command_prefix: :class:`str`
         The prefix for prefixed commands,
-        defaults to "".
+        defaults to ''.
     chunk_guild_members
         If to cache guild members,
         this allowes the before argument on member events,
@@ -108,7 +108,7 @@ class Client:
         self,
         loop: Optional[asyncio.AbstractEventLoop] = asyncio.new_event_loop(),
         intents: Optional[int] = 32509,
-        module: Optional[str] = "discord",
+        module: Optional[str] = 'discord',
         shards: Optional[int] = None,
         mobile: Optional[bool] = False,
         proxy: Optional[str] = None,
@@ -142,7 +142,7 @@ class Client:
 
         if not has_nacl:
             _log.warning(
-                "You don't have PyNaCl, meaning you won't be able to use Voice features."
+                'You dont have PyNaCl, meaning you wont be able to use Voice features.'
             )
 
     async def login(self, token: str):
@@ -153,7 +153,7 @@ class Client:
         """
         self.token = token
         r = await self.factory.login(token)
-        self.state._bot_id = r["id"]
+        self.state._bot_id = r['id']
         return r
 
     def voice(self, channel: VoiceChannel):
@@ -276,7 +276,7 @@ class Client:
         self,
         name: str,
         type: int,
-        status: Literal["online", "dnd", "idle", "invisible", "offline"] = "online",
+        status: Literal['online', 'dnd', 'idle', 'invisible', 'offline'] = 'online',
         stream_url: Optional[str] = None,
         afk: Optional[bool] = False,
     ):
@@ -293,7 +293,7 @@ class Client:
 
             .. note::
 
-                can be "online", "dnd",
+                can be 'online', 'dnd',
                 invisable and offline.
         stream_url
             Used with the streaming presence type
@@ -301,29 +301,29 @@ class Client:
             If to be afk or not
         """
         if type == 1 and stream_url is None:
-            raise NotImplementedError("Streams need to be provided a url!")
+            raise NotImplementedError('Streams need to be provided a url!')
         elif type == 1 and stream_url is not None:
             ret = {
-                "name": name,
-                "type": 1,
-                "url": stream_url,
+                'name': name,
+                'type': 1,
+                'url': stream_url,
             }
         else:
             # another type
             ret = {
-                "name": name,
-                "type": type,
+                'name': name,
+                'type': type,
             }
-        json = {"op": 3, "d": {"activities": [ret]}}
+        json = {'op': 3, 'd': {'activities': [ret]}}
 
         if afk is True:
-            json["d"]["afk"] = True
-            json["d"]["since"] = time()
+            json['d']['afk'] = True
+            json['d']['since'] = time()
         else:
-            json["d"]["afk"] = False
-            json["d"]["since"] = None
+            json['d']['afk'] = False
+            json['d']['since'] = None
 
-        json["d"]["status"] = status
+        json['d']['status'] = status
 
         return self.gateway.send(json)
 
@@ -416,14 +416,14 @@ class Client:
 
     def add_cog(self, cog: Cog, *, override: bool = False):
         if not isinstance(cog, Cog):
-            raise TypeError("ALL cog's must subclass Cog.")
+            raise TypeError('ALL cogs must subclass Cog.')
 
         name = cog.__cog_name__
         current = self.cogs.get(name)
 
         if current is not None:
             if not override:
-                raise TypeError("There is already another Cog with this name!")
+                raise TypeError('There is already another Cog with this name!')
             self.remove_cog(current)
 
         cog = cog._inject(self)
@@ -442,7 +442,7 @@ class Client:
         try:
             return importlib.util.resolve_name(name=name, package=package)
         except ImportError:
-            raise TypeError("Cog is not found!")
+            raise TypeError('Cog is not found!')
 
     def _extension_loader(self, spec: importlib.machinery.ModuleSpec, key: str):
         lib = importlib.util.module_from_spec(spec)
@@ -454,10 +454,10 @@ class Client:
             raise ExtensionLoadError(key, exc) from exc
 
         try:
-            setup = getattr(lib, "setup")
+            setup = getattr(lib, 'setup')
         except Exception as exc:
             del sys.modules[key]
-            raise TypeError("There is no setup function inside your cog file!")
+            raise TypeError('There is no setup function inside your cog file!')
 
         try:
             setup(self)
@@ -470,11 +470,11 @@ class Client:
     def add_extension(self, name: str, *, package: Optional[str] = None):
         name = self._resolver(name=name, package=package)
         if name in self._extensions.items():
-            raise TypeError("Module is already loaded")
+            raise TypeError('Module is already loaded')
 
         spec = importlib.util.find_spec(name)
         if spec is None:
-            raise TypeError(f"Extension {name} is not found!")
+            raise TypeError(f'Extension {name} is not found!')
 
         self._extension_loader(spec, name)
 
@@ -482,7 +482,7 @@ class Client:
         name = self._resolver(name=name, package=package)
         lib = self._extensions.get(name)
         if lib is None:
-            raise TypeError("That Module isn't loaded")
+            raise TypeError('That Module isnt loaded')
         else:
             self.remove_cog(name)
             self._extensions.pop(lib)
@@ -502,22 +502,22 @@ class Client:
         await asyncio.sleep(20)
 
         for command in real.guild_commands.values():
-            for guild_id in command["guild_id"]:
+            for guild_id in command['guild_id']:
                 await self.application.register_guild_slash_command(
                     guild_id=guild_id,
-                    name=command["name"],
-                    description=command["description"],
-                    callback=command["callback"],
-                    options=command["options"],
-                    default_permission=command["default_permission"],
+                    name=command['name'],
+                    description=command['description'],
+                    callback=command['callback'],
+                    options=command['options'],
+                    default_permission=command['default_permission'],
                     cog=real,
                 )
         for command in real.global_commands.values():
             await self.application.register_global_slash_command(
-                name=command["name"],
-                description=command["description"],
-                callback=command["callback"],
-                options=command["options"],
-                default_permission=command["default_permission"],
+                name=command['name'],
+                description=command['description'],
+                callback=command['callback'],
+                options=command['options'],
+                default_permission=command['default_permission'],
                 cog=real,
             )

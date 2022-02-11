@@ -7,9 +7,9 @@ from typing import TYPE_CHECKING, Any, Callable, List, TypeVar
 
 from ...internal import DiscordError, dispatcher
 
-__all__: List[str] = ["Cog", "ExtensionLoadError"]
+__all__: List[str] = ['Cog', 'ExtensionLoadError']
 
-CFT = TypeVar("CFT", bound="dispatcher.CoroFunc")
+CFT = TypeVar('CFT', bound='dispatcher.CoroFunc')
 
 
 class ExtensionLoadError(DiscordError):
@@ -61,20 +61,20 @@ class Cog:
 
             if guild_ids is not None:
                 Cog.guild_commands[name] = {
-                    "guild_id": guild_ids,
-                    "name": name,
-                    "description": description,
-                    "callback": a,
-                    "options": options,
-                    "default_permission": default_permission,
+                    'guild_id': guild_ids,
+                    'name': name,
+                    'description': description,
+                    'callback': a,
+                    'options': options,
+                    'default_permission': default_permission,
                 }
             else:
                 Cog.global_commands[name] = {
-                    "name": name,
-                    "description": description,
-                    "callback": a,
-                    "options": options,
-                    "default_permission": default_permission,
+                    'name': name,
+                    'description': description,
+                    'callback': a,
+                    'options': options,
+                    'default_permission': default_permission,
                 }
 
             return func

@@ -4,13 +4,13 @@ pushd %~dp0
 
 REM Command file for Sphinx documentation
 
-if "%SPHINXBUILD%" == "" (
+if '%SPHINXBUILD%' == '' (
 	set SPHINXBUILD=sphinx-build
 )
 set SOURCEDIR=.
 set BUILDDIR=_build
 
-if "%1" == "" goto help
+if '%1' == '' goto help
 
 %SPHINXBUILD% >NUL 2>NUL
 if errorlevel 9009 (

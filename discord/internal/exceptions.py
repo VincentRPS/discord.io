@@ -23,11 +23,11 @@
 import typing
 
 __all__: typing.List[str] = [
-    "DiscordError",
-    "RESTError",
-    "Forbidden",
-    "NotFound",
-    "ServerError",
+    'DiscordError',
+    'RESTError',
+    'Forbidden',
+    'NotFound',
+    'ServerError',
 ]
 
 

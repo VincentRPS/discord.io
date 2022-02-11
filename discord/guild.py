@@ -30,7 +30,7 @@ from .enums import FormatType, ScheduledEventStatusType, ScheduledEventType
 from .member import Member
 from .user import User
 
-__all__: List[str] = ["Guild"]
+__all__: List[str] = ['Guild']
 
 
 class Guild:
@@ -52,7 +52,7 @@ class Guild:
         self._factory = rest_factory
 
     def joined_at(self) -> str:
-        return self.from_dict["joined_at"]
+        return self.from_dict['joined_at']
 
     def vanity(self) -> str:
         """The vanity url, if None returns None
@@ -61,7 +61,7 @@ class Guild:
         -------
         :class:`str`
         """
-        return self.from_dict["vanity_url_code"]
+        return self.from_dict['vanity_url_code']
 
     def splash(self) -> str:
         """The splash screen, if None returns None
@@ -70,7 +70,7 @@ class Guild:
         -------
         :class:`str`
         """
-        return self.from_dict["splash"]
+        return self.from_dict['splash']
 
     def discovery_splash(self) -> str:
         """The discovery splash, if None returns None
@@ -79,7 +79,7 @@ class Guild:
         -------
         :class:`str`
         """
-        return self.from_dict["discovery_splash"]
+        return self.from_dict['discovery_splash']
 
     def sub_count(self) -> int:
         """The subscription count, returns a int
@@ -88,7 +88,7 @@ class Guild:
         -------
         :class:`int`
         """
-        return self.from_dict["premium_subscription_count"]
+        return self.from_dict['premium_subscription_count']
 
     def emojis(self) -> List[Emoji]:
         """A list of :class:`Emoji`
@@ -97,7 +97,7 @@ class Guild:
         -------
         list[:class:`Emoji`]
         """
-        return [Emoji(emoji) for emoji in self.from_dict["emojis"]]
+        return [Emoji(emoji) for emoji in self.from_dict['emojis']]
 
     @property
     def id(self) -> int:
@@ -107,7 +107,7 @@ class Guild:
         -------
         :class:`int`
         """
-        return self.from_dict["id"]
+        return self.from_dict['id']
 
     async def get_member(self, id: int):
         """Gets a member and returns a :class:`Member` object
@@ -150,11 +150,11 @@ class Guild:
 
 
 def parse_role_icon(format: FormatType, role_id: int, role_icon: str) -> str:
-    return f"https://cdn.discordapp.com/role-icons/{role_id}/{role_icon}.{format}"
+    return f'https://cdn.discordapp.com/role-icons/{role_id}/{role_icon}.{format}'
 
 
 def _parse_tags(data: dict) -> str:
-    return data.get("bot_id") or data.get("integration_id") or ""
+    return data.get('bot_id') or data.get('integration_id') or ''
 
 
 class Role:
@@ -179,7 +179,7 @@ class Role:
         -------
         :class:`int`
         """
-        return self.from_dict["id"]
+        return self.from_dict['id']
 
     @property
     def name(self) -> str:
@@ -189,7 +189,7 @@ class Role:
         -------
         :class:`str`
         """
-        return self.from_dict["name"]
+        return self.from_dict['name']
 
     @property
     def color(self) -> int:
@@ -199,7 +199,7 @@ class Role:
         -------
         :class:`int`
         """
-        return self.from_dict["color"]
+        return self.from_dict['color']
 
     def hoist(self) -> bool:
         """If the role is hoisted or not
@@ -208,7 +208,7 @@ class Role:
         -------
         :class:`bool`
         """
-        return self.from_dict["hoist"]
+        return self.from_dict['hoist']
 
     def icon(self, format: Optional[FormatType] = FormatType.PNG) -> str:
         """Gives the role icon's link, if any.
@@ -218,7 +218,7 @@ class Role:
         :class:`str`
         """
         return parse_role_icon(
-            format=format, role_id=self.id, role_icon=self.from_dict["icon"]
+            format=format, role_id=self.id, role_icon=self.from_dict['icon']
         )
 
     def unicode_emoji(self) -> str:
@@ -228,7 +228,7 @@ class Role:
         -------
         :class:`str`
         """
-        return self.from_dict["unicode_emoji"]
+        return self.from_dict['unicode_emoji']
 
     @property
     def position(self) -> int:
@@ -238,7 +238,7 @@ class Role:
         -------
         :class:`int`
         """
-        return self.from_dict["position"]
+        return self.from_dict['position']
 
     def permissions(self) -> str:
         """Gives the role permissions
@@ -248,7 +248,7 @@ class Role:
         :class:`str`
         """
         # TODO: Replace with a Permission class?
-        return self.from_dict["permissions"]
+        return self.from_dict['permissions']
 
     def managed(self) -> bool:
         """If the role is managed or not
@@ -257,7 +257,7 @@ class Role:
         -------
         :class:`bool`
         """
-        return self.from_dict["managed"]
+        return self.from_dict['managed']
 
     def mentionable(self) -> bool:
         """If the role is publicly mentionable
@@ -266,7 +266,7 @@ class Role:
         -------
         :class:`bool`
         """
-        return self.from_dict["mentionable"]
+        return self.from_dict['mentionable']
 
     def tags(self) -> str:
         """The current role' tags
@@ -279,7 +279,7 @@ class Role:
 
 
 def parse_event_banner(format: FormatType, event_id: int, event_hash: str) -> str:
-    return f"https://cdn.discordapp.com/guild-events/{event_id}/{event_hash}.{format}"
+    return f'https://cdn.discordapp.com/guild-events/{event_id}/{event_hash}.{format}'
 
 
 class ScheduledEvent:
@@ -304,7 +304,7 @@ class ScheduledEvent:
         -------
         :class:`int`
         """
-        return self.from_dict["id"]
+        return self.from_dict['id']
 
     def guild_id(self) -> int:
         """Gives the scheduled event' current guild
@@ -313,7 +313,7 @@ class ScheduledEvent:
         -------
         :class:`int`
         """
-        return self.from_dict["guild_id"]
+        return self.from_dict['guild_id']
 
     def channel_id(self) -> Union[int, None]:
         """Gives the scheduled events current channel, if any
@@ -323,7 +323,7 @@ class ScheduledEvent:
         :class:`int`
         :class:`None`
         """
-        return self.from_dict.get("channel_id")
+        return self.from_dict.get('channel_id')
 
     @property
     def creator(self) -> User:
@@ -333,7 +333,7 @@ class ScheduledEvent:
         -------
         :class:`User`
         """
-        return User(self.from_dict["creator"])
+        return User(self.from_dict['creator'])
 
     @property
     def name(self) -> str:
@@ -343,7 +343,7 @@ class ScheduledEvent:
         -------
         :class:`str`
         """
-        return self.from_dict["name"]
+        return self.from_dict['name']
 
     @property
     def description(self) -> str:
@@ -353,7 +353,7 @@ class ScheduledEvent:
         -------
         :class:`str`
         """
-        return self.from_dict["description"]
+        return self.from_dict['description']
 
     def start_time(self) -> str:
         """Gives the start time of the scheduled event
@@ -362,7 +362,7 @@ class ScheduledEvent:
         -------
         :class:`str`
         """
-        return self.from_dict["scheduled_start_time"]
+        return self.from_dict['scheduled_start_time']
 
     def status(self) -> ScheduledEventStatusType:
         """Gives the current event' status
@@ -371,13 +371,13 @@ class ScheduledEvent:
         -------
         :class:`int`
         """
-        if self.from_dict["status"] == ScheduledEventStatusType.ACTIVE:
+        if self.from_dict['status'] == ScheduledEventStatusType.ACTIVE:
             return ScheduledEventStatusType.ACTIVE
-        elif self.from_dict["status"] == ScheduledEventStatusType.COMPLETED:
+        elif self.from_dict['status'] == ScheduledEventStatusType.COMPLETED:
             return ScheduledEventStatusType.COMPLETED
-        elif self.from_dict["status"] == ScheduledEventStatusType.SCHEDULED:
+        elif self.from_dict['status'] == ScheduledEventStatusType.SCHEDULED:
             return ScheduledEventStatusType.SCHEDULED
-        elif self.from_dict["status"] == ScheduledEventStatusType.CANCELED:
+        elif self.from_dict['status'] == ScheduledEventStatusType.CANCELED:
             return ScheduledEventStatusType.CANCELED
 
     def end_time(self) -> Union[None, str]:
@@ -388,7 +388,7 @@ class ScheduledEvent:
         :class:`str`
         :class:`None`
         """
-        return self.from_dict.get("scheduled_end_time")
+        return self.from_dict.get('scheduled_end_time')
 
     def type(self) -> ScheduledEventType:
         """Gives the type of scheduled event
@@ -397,11 +397,11 @@ class ScheduledEvent:
         -------
         :class:`int`
         """
-        if self.from_dict["entity_type"] == ScheduledEventType.STAGE_INSTANCE:
+        if self.from_dict['entity_type'] == ScheduledEventType.STAGE_INSTANCE:
             return ScheduledEventType.STAGE_INSTANCE
-        elif self.from_dict["entity_type"] == ScheduledEventType.VOICE:
+        elif self.from_dict['entity_type'] == ScheduledEventType.VOICE:
             return ScheduledEventType.VOICE
-        elif self.from_dict["entity_type"] == ScheduledEventType.EXTERNAL:
+        elif self.from_dict['entity_type'] == ScheduledEventType.EXTERNAL:
             return ScheduledEventType.EXTERNAL
 
     def entity_id(self) -> int:
@@ -411,17 +411,17 @@ class ScheduledEvent:
         -------
         :class:`int`
         """
-        return self.from_dict["entity_id"]
+        return self.from_dict['entity_id']
 
     @property
-    def metadata(self) -> "ScheduledEventMetadata":
+    def metadata(self) -> 'ScheduledEventMetadata':
         """Gives the scheduled event metadata
 
         Returns
         -------
         :class:`ScheduledEventMetadata`
         """
-        return ScheduledEventMetadata(self.from_dict["entity_metadata"])
+        return ScheduledEventMetadata(self.from_dict['entity_metadata'])
 
     def joined(self) -> int:
         """Gives the amount of users which joined the event
@@ -430,7 +430,7 @@ class ScheduledEvent:
         -------
         :class:`int`
         """
-        return self.from_dict["user_count"]
+        return self.from_dict['user_count']
 
     def image(self, format: FormatType = FormatType.PNG):
         """Gives the url of the scheduled event' banner
@@ -440,7 +440,7 @@ class ScheduledEvent:
         :class:`str`
         """
         return parse_event_banner(
-            format=format, event_id=self.id, event_hash=self.from_dict["image"]
+            format=format, event_id=self.id, event_hash=self.from_dict['image']
         )
 
 
@@ -467,7 +467,7 @@ class ScheduledEventMetadata:
         :class:`str`
         :class:`None`
         """
-        return self.from_dict["location"]
+        return self.from_dict['location']
 
 
 class WelcomeScreen:
@@ -491,9 +491,9 @@ class WelcomeScreen:
         -------
         :class:`str`
         """
-        return self.from_dict["description"]
+        return self.from_dict['description']
 
-    def channels(self) -> list["WelcomeChannel"]:
+    def channels(self) -> list['WelcomeChannel']:
         """Gives a list of :class:`WelcomeChannel`
 
         Returns
@@ -501,7 +501,7 @@ class WelcomeScreen:
         list[:class:`WelcomeChannel`]
         """
         return [
-            WelcomeChannel(channel) for channel in self.from_dict["welcome_channels"]
+            WelcomeChannel(channel) for channel in self.from_dict['welcome_channels']
         ]
 
 
@@ -528,7 +528,7 @@ class WelcomeChannel:
         -------
         :class:`int`
         """
-        return self.from_dict["channel_id"]
+        return self.from_dict['channel_id']
 
     @property
     def description(self) -> str:
@@ -538,7 +538,7 @@ class WelcomeChannel:
         -------
         :class:`str`
         """
-        return self.from_dict["description"]
+        return self.from_dict['description']
 
     def emoji_id(self) -> Union[int, None]:
         """Gives the Emoji id, if any
@@ -548,7 +548,7 @@ class WelcomeChannel:
         :class:`int`
         :class:`None`
         """
-        return self.from_dict.get("emoji_id")
+        return self.from_dict.get('emoji_id')
 
     def emoji_name(self) -> Union[str, None]:
         """Gives the Emoji name, if any
@@ -558,4 +558,4 @@ class WelcomeChannel:
         :class:`str`
         :class:`None`
         """
-        return self.from_dict.get("emoji_name")
+        return self.from_dict.get('emoji_name')

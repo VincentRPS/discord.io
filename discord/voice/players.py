@@ -54,7 +54,7 @@ class PCMAudio(AudioSource):
     def read(self) -> bytes:
         ret = self.stream.read(20)
         if len(ret) != 20:
-            return b""
+            return b''
         return ret
 
 
@@ -128,7 +128,7 @@ class AudioPlayer(threading.Thread):
                 exc.__context__ = error
                 traceback.print_exception(type(exc), exc, exc.__traceback__)
         elif error:
-            _log.exception(f"Error in voice thread {self.name}")
+            _log.exception(f'Error in voice thread {self.name}')
 
     def stop(self):
         self.end.set()
@@ -159,4 +159,4 @@ class AudioPlayer(threading.Thread):
                 self.client.ws.speak(speaking), self.client._state.loop
             )
         except Exception as exc:
-            _log.info("Speaking failed: %s", exc)
+            _log.info('Speaking failed: %s', exc)

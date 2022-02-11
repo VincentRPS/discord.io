@@ -22,9 +22,9 @@
 from typing import List
 
 __all__: List[str] = [
-    "DiscordWarning",
-    "Deprecated",
-    "NaClWarning",
+    'DiscordWarning',
+    'Deprecated',
+    'NaClWarning',
 ]
 
 

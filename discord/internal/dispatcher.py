@@ -31,10 +31,10 @@ from discord.state import ConnectionState
 
 from ..ext import cogs
 
-__all__: List[str] = ["Dispatcher"]
+__all__: List[str] = ['Dispatcher']
 _log = logging.getLogger(__name__)
-CoroT = TypeVar("CoroT", bound=Callable[..., Coroutine[Any, Any, Any]])
-T = TypeVar("T")
+CoroT = TypeVar('CoroT', bound=Callable[..., Coroutine[Any, Any, Any]])
+T = TypeVar('T')
 Coro = Coroutine[Any, Any, T]
 CoroFunc = Callable[..., Coro[Any]]
 
@@ -78,12 +78,12 @@ class Dispatcher:
         **kwargs: Any,
     ) -> asyncio.Task:
         wrap = self.run(coro, name, cog, *args, **kwargs)
-        return self.state.loop.create_task(wrap, name=f"discord.io: {name}")
+        return self.state.loop.create_task(wrap, name=f'discord.io: {name}')
 
     def dispatch(self, name: str, *args, **kwargs) -> None:
         fake_name = str(name.lower())
-        real_name = "on_" + str(fake_name)
-        _log.debug("Dispatching event: %s", real_name)
+        real_name = 'on_' + str(fake_name)
+        _log.debug('Dispatching event: %s', real_name)
 
         listeners = self.state.listeners.get(real_name)
         if listeners:
@@ -119,27 +119,27 @@ class Dispatcher:
         except AttributeError:
             ...
         else:
-            self.scheduler(coro["main"], real_name, coro["cog"], *args, **kwargs)
+            self.scheduler(coro['main'], real_name, coro['cog'], *args, **kwargs)
 
     def listen(self, coro: Coro) -> Coro:
         if not asyncio.iscoroutinefunction(coro):
-            raise TypeError("Function is not a coroutine.")
+            raise TypeError('Function is not a coroutine.')
 
         setattr(self, coro.__name__, coro)
-        _log.info(f"{coro.__name__} has been registered!")
+        _log.info(f'{coro.__name__} has been registered!')
 
     def add_listener(self, func: CoroFunc, name: Optional[str] = None, cog=None):
         name = func.__name__ if name is None else name
 
         if not asyncio.iscoroutinefunction(func):
-            raise TypeError("Function is not a coroutine.")
+            raise TypeError('Function is not a coroutine.')
 
-        setattr(self, name, {"main": func, "cog": cog})
+        setattr(self, name, {'main': func, 'cog': cog})
 
-        if name.startswith("on_raw"):
-            _log.debug(f"{name} added as a listener!")
+        if name.startswith('on_raw'):
+            _log.debug(f'{name} added as a listener!')
         else:
-            _log.info(f"{name} added as a listener!")
+            _log.info(f'{name} added as a listener!')
 
     def remove_listener(self, func: CoroFunc, name: Optional[str] = None):
         name = func.__name__ if name is None else name

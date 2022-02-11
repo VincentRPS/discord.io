@@ -22,7 +22,7 @@
 
 from typing import List
 
-__all__: List[str] = ["Intents"]
+__all__: List[str] = ['Intents']
 
 
 class Intents:
@@ -73,7 +73,7 @@ class Intents:
 
     def __init__(self, intents: int = 0):
         self.intents = intents
-        if self.intents == "0":
+        if self.intents == '0':
             intents = self.default()
 
     @staticmethod

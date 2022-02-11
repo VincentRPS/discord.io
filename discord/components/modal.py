@@ -39,26 +39,26 @@ def ModalComponent(
     value: Optional[str] = None,
 ):
     ret = {
-        "type": 1,
-        "components": [
+        'type': 1,
+        'components': [
             {
-                "type": 4,
-                "custom_id": utils.create_snowflake(),
-                "label": label,
-                "style": style,
+                'type': 4,
+                'custom_id': utils.create_snowflake(),
+                'label': label,
+                'style': style,
             }
         ],
     }
     if placeholder:
-        ret["components"][0]["placeholder"] = placeholder
+        ret['components'][0]['placeholder'] = placeholder
     if min_length:
-        ret["components"][0]["min_length"] = min_length
+        ret['components'][0]['min_length'] = min_length
     if max_length:
-        ret["components"][0]["max_length"] = max_length
+        ret['components'][0]['max_length'] = max_length
     if required:
-        ret["components"][0]["required"] = True
+        ret['components'][0]['required'] = True
     if value:
-        ret["components"][0]["value"] = value
+        ret['components'][0]['value'] = value
 
     return ret
 
@@ -93,11 +93,11 @@ class Modal:
         custom_id: int = utils.create_snowflake(),
     ):
         self.id = custom_id
-        ret = {"title": title, "custom_id": self.id, "components": components}
+        ret = {'title': title, 'custom_id': self.id, 'components': components}
         self.state.components[self] = {
-            "self": self,
-            "callback": callback,
-            "data": ret,
-            "id": self.id,
+            'self': self,
+            'callback': callback,
+            'data': ret,
+            'id': self.id,
         }
         return ret

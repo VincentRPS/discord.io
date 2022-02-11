@@ -29,7 +29,7 @@ from typing import Any, List, Optional, Union
 from discord.color import Color
 from discord.colour import Colour
 
-__all__: List[str] = ["Embed"]
+__all__: List[str] = ['Embed']
 
 
 class Embed:
@@ -64,23 +64,23 @@ class Embed:
         timestamp: datetime.datetime = None,
     ):
         self.obj: dict[str, Any] = {
-            "type": "rich",
+            'type': 'rich',
         }
 
         if title:
-            self.obj["title"] = title
+            self.obj['title'] = title
         if description:
-            self.obj["description"] = description
+            self.obj['description'] = description
         if url:
-            self.obj["url"] = url
+            self.obj['url'] = url
         if date:
-            self.obj["date"] = date
+            self.obj['date'] = date
         if color:
-            self.obj["color"] = color
+            self.obj['color'] = color
         if colour:
-            self.obj["color"] = colour
+            self.obj['color'] = colour
         if timestamp:
-            self.obj["timestamp"] = timestamp
+            self.obj['timestamp'] = timestamp
 
     def to_dict(self):
         """Gives the dictionary which the embed is within
@@ -103,13 +103,13 @@ class Embed:
             The icon url of the footer
         """
         if text:
-            self.obj["footer"]["text"] = text
+            self.obj['footer']['text'] = text
         if icon_url:
-            self.obj["footer"]["icon_url"] = icon_url
+            self.obj['footer']['icon_url'] = icon_url
 
     def remove_footer(self):
         """Removes the footer"""
-        del self.obj["footer"]
+        del self.obj['footer']
 
     def set_thumbnail(self, url: str = None):
         """Sets a thumbnail on the embed
@@ -120,9 +120,9 @@ class Embed:
             The thumbnail url
         """
         if url is None:
-            del self.obj["thumbnail"]
+            del self.obj['thumbnail']
         else:
-            self.obj["thumbnail"]["url"] = url
+            self.obj['thumbnail']['url'] = url
 
     def set_author(self, name: str, url: str = None, icon_url: str = None):
         """Sets the embed author
@@ -136,16 +136,16 @@ class Embed:
         icon_url
             The author's icon_url
         """
-        self.obj["author"] = name
+        self.obj['author'] = name
 
         if url:
-            self.obj["author"]["url"] = url
+            self.obj['author']['url'] = url
         if icon_url:
-            self.obj["author"]["icon_url"] = icon_url
+            self.obj['author']['icon_url'] = icon_url
 
     def remove_author(self):
         """Removes the author from the embed"""
-        del self.obj["author"]
+        del self.obj['author']
 
     def add_field(self, name: str, value: str, inline: bool = True):
         """Adds a field to the embed
@@ -159,12 +159,12 @@ class Embed:
         inline
             If the field should be inline
         """
-        field = {"name": name, "value": value, "inline": inline}
+        field = {'name': name, 'value': value, 'inline': inline}
 
         try:
-            self.obj["fields"].append(field)
+            self.obj['fields'].append(field)
         except KeyError:
-            self.obj["fields"] = [field]
+            self.obj['fields'] = [field]
 
     def remove_field(self, name: str):
         """Removes the field
@@ -174,4 +174,4 @@ class Embed:
         name
             The field to remove
         """
-        del self.obj["fields"][name]
+        del self.obj['fields'][name]

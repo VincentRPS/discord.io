@@ -32,7 +32,7 @@ from ..webhooks import webhook_context
 if TYPE_CHECKING:
     from ..state import ConnectionState
 
-__all__: List[str] = ["Interaction"]
+__all__: List[str] = ['Interaction']
 
 
 class Interaction:
@@ -76,26 +76,26 @@ class Interaction:
 
     def collect_children(self, data):
         # collects the data
-        self.token: str = data["token"]
-        self.type: int = data["type"]
-        self.guild_id: int = data["guild_id"]
-        self.channel_id: int = data["channel_id"]
-        self.data: Dict = data["data"]
-        self.id: int = data["id"]
+        self.token: str = data['token']
+        self.type: int = data['type']
+        self.guild_id: int = data['guild_id']
+        self.channel_id: int = data['channel_id']
+        self.data: Dict = data['data']
+        self.id: int = data['id']
 
         try:
-            self.options = data["data"]["options"]
+            self.options = data['data']['options']
         except KeyError:
             self.options = None
 
         try:
-            self.modals = data["data"]["components"]
+            self.modals = data['data']['components']
         except KeyError:
             self.modals = None
 
         try:
             # buttons will give this data
-            self.message = data["message"]
+            self.message = data['message']
         except KeyError:
             self.message = None
 
@@ -166,10 +166,10 @@ class Interaction:
         invisable
             If the interaction should only be seeable by the invoker.
         """
-        ret = {"type": type, "data": {}}
+        ret = {'type': type, 'data': {}}
         if content:
-            ret["data"]["content"] = content
-        ret["data"]["tts"] = tts
+            ret['data']['content'] = content
+        ret['data']['tts'] = tts
         if embed:
             emb = embed_parse.parse_embed(embed)
         if embeds:
@@ -179,24 +179,24 @@ class Interaction:
             emb = []
 
         if allowed_mentions:
-            ret["data"]["allowed_mentions"] = allowed_mentions
+            ret['data']['allowed_mentions'] = allowed_mentions
         else:
-            ret["data"]["allowed_mentions"] = {"parse": []}
+            ret['data']['allowed_mentions'] = {'parse': []}
 
         if invisable:
-            ret["data"]["flags"] = 1 << 6
+            ret['data']['flags'] = 1 << 6
             self.invisable = 1 << 6
         else:
             self.invisable = None
 
-        ret["data"]["embeds"] = emb
+        ret['data']['embeds'] = emb
 
         if modal:
-            ret = {"type": 9, "data": modal}
+            ret = {'type': 9, 'data': modal}
 
         adapter = webhook_context.get()
         return adapter.rest.send(
-            Route("POST", f"/interactions/{self.id}/{self.token}/callback"), json=ret
+            Route('POST', f'/interactions/{self.id}/{self.token}/callback'), json=ret
         )
 
     def defer(self, invisable: bool = False):
@@ -217,4 +217,4 @@ class Interaction:
         -------
         :class:`Member`
         """
-        return Member(self.data["member"], self.state.app.factory)
+        return Member(self.data['member'], self.state.app.factory)

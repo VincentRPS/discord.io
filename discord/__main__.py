@@ -29,9 +29,9 @@ import discord
 def main() -> None:
     version = discord.__version__  # type: ignore
     python_version = platform.python_version()
-    sys.stderr.write(f"Running on discord.io Version {version},")
-    sys.stderr.write(f" with Python version {python_version}.")
+    sys.stderr.write(f'Running on discord.io Version {version},')
+    sys.stderr.write(f' with Python version {python_version}.')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

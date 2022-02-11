@@ -27,7 +27,7 @@ import random
 import time
 from typing import Any, Callable, Generic, Optional, TypeVar, overload
 
-T = TypeVar("T")
+T = TypeVar('T')
 
 # probably should be stored in snowflake.py?
 Epoch = 1420070400000
@@ -62,7 +62,7 @@ class _Missing:
         return False
 
     def __repr__(self):
-        return "..."
+        return '...'
 
     def __eq__(self):
         return False
@@ -118,16 +118,16 @@ async def getch(fetch, get):
 
 
 def img_mime_type(data: bytes):
-    if data.startswith(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A"):
-        return "image/png"
-    elif data[0:3] == b"\xff\xd8\xff" or data[6:10] in (b"JFIF", b"Exif"):
-        return "image/jpeg"
-    elif data.startswith((b"\x47\x49\x46\x38\x37\x61", b"\x47\x49\x46\x38\x39\x61")):
-        return "image/gif"
-    elif data.startswith(b"RIFF") and data[8:12] == b"WEBP":
-        return "image/webp"
+    if data.startswith(b'\x89\x50\x4E\x47\x0D\x0A\x1A\x0A'):
+        return 'image/png'
+    elif data[0:3] == b'\xff\xd8\xff' or data[6:10] in (b'JFIF', b'Exif'):
+        return 'image/jpeg'
+    elif data.startswith((b'\x47\x49\x46\x38\x37\x61', b'\x47\x49\x46\x38\x39\x61')):
+        return 'image/gif'
+    elif data.startswith(b'RIFF') and data[8:12] == b'WEBP':
+        return 'image/webp'
     else:
-        raise TypeError("Image given is not supported")
+        raise TypeError('Image given is not supported')
 
 
 async def wait_for(futures, *, timeout):

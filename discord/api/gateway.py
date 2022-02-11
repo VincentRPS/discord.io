@@ -43,9 +43,9 @@ from discord.types.dict import Dict
 from ..state import ConnectionState
 from .rest_factory import RESTFactory
 
-ZLIB_SUFFIX = b"\x00\x00\xff\xff"
+ZLIB_SUFFIX = b'\x00\x00\xff\xff'
 _log = logging.getLogger(__name__)
-url_extension = "?v=9&encoding=json&compress=zlib-stream"
+url_extension = '?v=9&encoding=json&compress=zlib-stream'
 
 
 class Shard:
@@ -105,7 +105,7 @@ class Shard:
         self._session_id: int = None
         self._ratelimit_lock: asyncio.Lock = asyncio.Lock()
         self.ws: aiohttp.ClientWebSocketResponse = None
-        self.latency: float = float("nan")
+        self.latency: float = float('nan')
 
     async def connect(self, token: str) -> None:
         """Connects to the url specified, with the token
@@ -132,7 +132,7 @@ class Shard:
             self.state.loop.create_task(self.check_connection())
         else:
             await self.resume()
-            _log.debug("Reconnected to the Gateway")
+            _log.debug('Reconnected to the Gateway')
 
     @property
     def is_ratelimited(self) -> bool:
@@ -169,7 +169,7 @@ class Shard:
             delay = self.delay()
             if delay:
                 _log.warning(
-                    "Shard %s was ratelimited, waiting %.2f seconds.",
+                    'Shard %s was ratelimited, waiting %.2f seconds.',
                     self.shard_id,
                     delay,
                 )
@@ -179,12 +179,12 @@ class Shard:
         await asyncio.sleep(50)
         if self.last_recv + 60.0 < perf_counter():
             _log.warning(
-                f"Shard {self.shard_id} has stopped receiving from the gateway, reconnecting"
+                f'Shard {self.shard_id} has stopped receiving from the gateway, reconnecting'
             )
             await self.ws.close(code=4000)
             await self.closed(4000)
         elif self.latency > 10:
-            _log.warning(f"Shard {self.shard_id} is behind by {self.latency}")
+            _log.warning(f'Shard {self.shard_id} is behind by {self.latency}')
         self.state.loop.create_task(self.check_connection())
 
     async def send(self, data: Dict) -> None:
@@ -196,11 +196,11 @@ class Shard:
             The data to send
         """
         self.last_send = perf_counter()
-        _log.debug("< %s", data)
+        _log.debug('< %s', data)
         raw_payload = json.dumps(data)
 
         if isinstance(raw_payload, str):
-            payload = raw_payload.encode("utf-8")
+            payload = raw_payload.encode('utf-8')
 
         await self.ws.send_bytes(payload)
 
@@ -210,7 +210,7 @@ class Shard:
                 self.latency = self.last_ack - self.last_send
                 self.buffer.extend(msg.data)
                 try:
-                    raw = self.inflator.decompress(self.buffer).decode("utf-8")
+                    raw = self.inflator.decompress(self.buffer).decode('utf-8')
                 except:
                     # probably corrupted data
                     self.buffer = bytearray()
@@ -219,31 +219,31 @@ class Shard:
                     raise RuntimeError
                 self.buffer = bytearray()  # clean buffer
                 data = json.loads(raw)
-                _log.debug("> %s", data)
+                _log.debug('> %s', data)
 
-                self._seq = data["s"]
-                self.dis.dispatch("RAW_SOCKET_RECEIVE")
+                self._seq = data['s']
+                self.dis.dispatch('RAW_SOCKET_RECEIVE')
 
                 self.last_recv = perf_counter()
 
-                if data["op"] == 0:
+                if data['op'] == 0:
                     if (
-                        data["t"] == "READY"
+                        data['t'] == 'READY'
                     ):  # only fire up getting the session_id on a ready event.
                         await self._ready(data)
-                        self.dis.dispatch("READY")
+                        self.dis.dispatch('READY')
                     else:
                         catalog.Cataloger(data, self.dis, self.state)
-                elif data["op"] == 9:
+                elif data['op'] == 9:
                     await self.ws.close(code=4000)
                     await self.closed(4000)
-                elif data["op"] == 10:
+                elif data['op'] == 10:
                     await self.hello(data)
-                elif data["op"] == 11:
+                elif data['op'] == 11:
                     self.last_ack = perf_counter()
-                    _log.debug("> %s", data)
+                    _log.debug('> %s', data)
                 else:
-                    self.dis.dispatch(data["op"], data)
+                    self.dis.dispatch(data['op'], data)
 
             else:
                 raise RuntimeError
@@ -255,7 +255,7 @@ class Shard:
             await self.closed(code)
 
     async def closed(self, code: int) -> None:
-        _log.error(f"Shard {self.shard_id} closed with code {code}")
+        _log.error(f'Shard {self.shard_id} closed with code {code}')
         if code == 4000:
             pass
 
@@ -313,7 +313,7 @@ class Shard:
         if self.is_ratelimited:
             await self.block()
         if not self.ws.closed:
-            await self.send({"op": 1, "d": self._seq})
+            await self.send({'op': 1, 'd': self._seq})
             await asyncio.sleep(interval)
             self.state.loop.create_task(self.heartbeat(interval))
 
@@ -323,32 +323,32 @@ class Shard:
         self.buffer.clear()
 
     async def hello(self, data: Dict) -> None:
-        interval = data["d"]["heartbeat_interval"] / 1000
+        interval = data['d']['heartbeat_interval'] / 1000
         init = interval * random()
         await asyncio.sleep(init)
         self.state.loop.create_task(self.heartbeat(interval))
 
     async def _ready(self, data: Dict) -> None:
-        self._session_id = data["d"]["session_id"]
+        self._session_id = data['d']['session_id']
         self.state._ready.set()
 
     async def identify(self) -> None:
         await self.send(
             {
-                "op": 2,
-                "d": {
-                    "token": self.token,
-                    "intents": self.state._bot_intents,
-                    "properties": {
-                        "$os": platform.system(),
-                        "$browser": "discord.io"
+                'op': 2,
+                'd': {
+                    'token': self.token,
+                    'intents': self.state._bot_intents,
+                    'properties': {
+                        '$os': platform.system(),
+                        '$browser': 'discord.io'
                         if self.mobile is False
-                        else "Discord iOS",
-                        "$device": "discord.io",
+                        else 'Discord iOS',
+                        '$device': 'discord.io',
                     },
-                    "shard": (self.shard_id, self.state.shard_count),
-                    "v": 9,
-                    "compress": True,
+                    'shard': (self.shard_id, self.state.shard_count),
+                    'v': 9,
+                    'compress': True,
                 },
             }
         )
@@ -356,11 +356,11 @@ class Shard:
     async def resume(self) -> None:
         await self.send(
             {
-                "op": 6,
-                "d": {
-                    "token": self.token,
-                    "session_id": self._session_id,
-                    "seq": self._seq,
+                'op': 6,
+                'd': {
+                    'token': self.token,
+                    'session_id': self._session_id,
+                    'seq': self._seq,
                 },
             }
         )
@@ -399,7 +399,7 @@ class Gateway:
     async def connect(self, token: str) -> None:
         r = await self._f.get_gateway_bot()
         if self.count is None:
-            shds = r["shards"]
+            shds = r['shards']
             self._s.shard_count = shds
         else:
             shds = self.count
@@ -410,11 +410,11 @@ class Gateway:
                 self._d,
                 shard,
                 mobile=self.mobile,
-                url=r["url"] + url_extension,
+                url=r['url'] + url_extension,
             )
             self._s.loop.create_task(self.s.connect(token))
             self.shards.append(self.s)
-            _log.info("Shard %s has connected to Discord", shard)
+            _log.info('Shard %s has connected to Discord', shard)
 
     @utils.copy_doc(Shard.send)
     def send(self, payload: Dict) -> Coroutine[Any, Any, None]:
@@ -423,21 +423,21 @@ class Gateway:
     async def _chunk_members(self):
         await asyncio.sleep(20)
         for guild in self._s.guilds._cache.values():
-            shard_id = (int(guild["id"]) >> 22) % self._s.shard_count
+            shard_id = (int(guild['id']) >> 22) % self._s.shard_count
             await self.shards[shard_id].send(
-                {"op": 8, "d": {"guild_id": guild["id"], "query": "", "limit": 0}}
+                {'op': 8, 'd': {'guild_id': guild['id'], 'query': '', 'limit': 0}}
             )
 
     async def voice_state(
         self, guild: int, channel: Snowflakeish, mute: bool, deaf: bool
     ) -> Coroutine[Any, Any, None]:
         json = {
-            "op": 4,
-            "d": {
-                "guild_id": guild,
-                "channel_id": channel,
-                "self_mute": mute,
-                "self_deaf": deaf,
+            'op': 4,
+            'd': {
+                'guild_id': guild,
+                'channel_id': channel,
+                'self_mute': mute,
+                'self_deaf': deaf,
             },
         }
         shard_id = (int(guild) >> 22) % self._s.shard_count

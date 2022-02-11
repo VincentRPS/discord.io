@@ -38,9 +38,9 @@ class OnStageInstanceCreate(Event):
 
     def process(self):
         ret = StageInstance(self.data)
-        self.state.stage_instances.new(self.data["id"], self.data)
+        self.state.stage_instances.new(self.data['id'], self.data)
 
-        self.dispatch("stage_instance_create", ret)
+        self.dispatch('stage_instance_create', ret)
 
 
 class OnStageInstanceEdit(Event):
@@ -53,11 +53,11 @@ class OnStageInstanceEdit(Event):
     """
 
     def process(self):
-        before = StageInstance(self.state.stage_instances.get(self.data["id"]))
+        before = StageInstance(self.state.stage_instances.get(self.data['id']))
         after = StageInstance(self.data)
         self.state.stage_instances.edit()
 
-        self.dispatch("stage_instance_edit", before, after)
+        self.dispatch('stage_instance_edit', before, after)
 
 
 class OnStageInstanceDelete(Event):
@@ -70,9 +70,9 @@ class OnStageInstanceDelete(Event):
 
     def process(self):
         ret = StageInstance(self.data)
-        self.state.stage_instances.pop(self.data["id"])
+        self.state.stage_instances.pop(self.data['id'])
 
-        self.dispatch("stage_instance_delete", ret)
+        self.dispatch('stage_instance_delete', ret)
 
 
 class OnTyping(Event):
@@ -88,16 +88,16 @@ class OnTyping(Event):
 
     def process(self):
         channel = TextChannel(
-            self.state.channels.get(self.data["channel_id"]), self.state
+            self.state.channels.get(self.data['channel_id']), self.state
         )
         guild = Guild(
-            self.state.guilds.get(self.data["guild_id"]), self.state.app.factory
+            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
         )
-        user = User(self.state.members.get(self.data["user_id"]))
-        timestamp: int = self.data["timestamp"]
-        member = Member(self.data["member"], guild.id, self.state.app.factory)
+        user = User(self.state.members.get(self.data['user_id']))
+        timestamp: int = self.data['timestamp']
+        member = Member(self.data['member'], guild.id, self.state.app.factory)
 
-        self.dispatch("typing", member, user, channel, timestamp)
+        self.dispatch('typing', member, user, channel, timestamp)
 
 
 class OnInviteCreate(Event):
@@ -121,22 +121,22 @@ class OnInviteCreate(Event):
 
     def process(self):
         channel = TextChannel(
-            self.state.channels.get(self.data.get("channel_id")), self.state
+            self.state.channels.get(self.data.get('channel_id')), self.state
         )
-        code: str = self.data.get("code")
-        created_at: str = self.data.get("created_at")
-        guild = Guild(self.state.guilds.get(self.data["guild_id"]))
-        inviter = User(self.data["inviter"])
-        max_age: int = self.data.get("max_age")
-        max_uses: int = self.data.get("max_uses")
-        target_type: int = self.data.get("target_type")
-        target_user = User(self.data.get("target_user"))
-        target_application = self.data.get("target_application")
-        tempoary: bool = self.data.get("tempoary")
-        uses: int = self.data.get("uses")
+        code: str = self.data.get('code')
+        created_at: str = self.data.get('created_at')
+        guild = Guild(self.state.guilds.get(self.data['guild_id']))
+        inviter = User(self.data['inviter'])
+        max_age: int = self.data.get('max_age')
+        max_uses: int = self.data.get('max_uses')
+        target_type: int = self.data.get('target_type')
+        target_user = User(self.data.get('target_user'))
+        target_application = self.data.get('target_application')
+        tempoary: bool = self.data.get('tempoary')
+        uses: int = self.data.get('uses')
 
         self.dispatch(
-            "invite_create",
+            'invite_create',
             channel,
             code,
             created_at,
@@ -164,14 +164,14 @@ class OnInviteDelete(Event):
 
     def process(self):
         channel = TextChannel(
-            self.state.channels.get(self.data.get("channel_id")), self.state
+            self.state.channels.get(self.data.get('channel_id')), self.state
         )
         guild = Guild(
-            self.state.guilds.get(self.data["guild_id"]), self.state.app.factory
+            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
         )
-        code: str = self.data.get("code")
+        code: str = self.data.get('code')
 
-        self.dispatch("invite_delete", channel, guild, code)
+        self.dispatch('invite_delete', channel, guild, code)
 
 
 class OnUserUpdate(Event):
@@ -185,7 +185,7 @@ class OnUserUpdate(Event):
     def process(self):
         user = User(self.data)
 
-        self.dispatch("user_update", user)
+        self.dispatch('user_update', user)
 
 
 class OnWebhooksUpdate(Event):
@@ -199,10 +199,10 @@ class OnWebhooksUpdate(Event):
 
     def process(self):
         guild = Guild(
-            self.state.guilds.get(self.data["guild_id"]), self.state.app.factory
+            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
         )
         channel = TextChannel(
-            self.state.channels.get(self.data["channel_id"]), self.state
+            self.state.channels.get(self.data['channel_id']), self.state
         )
 
-        self.dispatch("webhooks_update", guild, channel)
+        self.dispatch('webhooks_update', guild, channel)

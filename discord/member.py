@@ -28,7 +28,7 @@ from typing import Any, List, Optional, Union
 from .api.rest_factory import RESTFactory
 from .user import User
 
-__all__: List[str] = ["Member"]
+__all__: List[str] = ['Member']
 
 
 class Member:
@@ -62,7 +62,7 @@ class Member:
         -------
         :class:`User`
         """
-        return User(self.from_dict["user"])
+        return User(self.from_dict['user'])
 
     def nick(self) -> str:
         """Returns the members nick name, if any
@@ -72,7 +72,7 @@ class Member:
         :class:`str`
         :class:`None`
         """
-        return self.from_dict["nick"]
+        return self.from_dict['nick']
 
     def avatar(self) -> str:
         raise NotImplementedError
@@ -88,7 +88,7 @@ class Member:
         -------
         :class:`str`
         """
-        return self.from_dict["joined_at"]
+        return self.from_dict['joined_at']
 
     def premium_since(self) -> str:
         """Gives a timestamp of when the member started boosting
@@ -98,7 +98,7 @@ class Member:
         :class:`str`
         :class:`None`
         """
-        return self.from_dict["premium_since"]
+        return self.from_dict['premium_since']
 
     def deaf(self) -> bool:
         """Returns a bool if the member is deaf in a voice channel or not.
@@ -107,7 +107,7 @@ class Member:
         -------
         :class:`bool`
         """
-        return self.from_dict["deaf"]
+        return self.from_dict['deaf']
 
     def mute(self) -> bool:
         """Returns if the member it muted from a channel
@@ -116,7 +116,7 @@ class Member:
         -------
         :class:`bool`
         """
-        return self.from_dict["mute"]
+        return self.from_dict['mute']
 
     def pending(self) -> bool:
         """Returns if the user is pending verification or not
@@ -125,7 +125,7 @@ class Member:
         -------
         :class:`bool`
         """
-        return self.from_dict["pending"]
+        return self.from_dict['pending']
 
     def permissions(self) -> dict[str, Any]:
         """Returns a dict of the users permissions
@@ -134,7 +134,7 @@ class Member:
         -------
         :class:`dict`
         """
-        return self.from_dict["permissions"]
+        return self.from_dict['permissions']
 
     def communication_disabled_until(self) -> str:
         """Gives the time communication is disabled
@@ -143,7 +143,7 @@ class Member:
         -------
         :class:`str`
         """
-        return self.from_dict["communication_disabled_until"]
+        return self.from_dict['communication_disabled_until']
 
     def edit(
         self,
@@ -215,7 +215,7 @@ class Presence:
         -------
         :class:`User`
         """
-        return User(self.from_dict["user"])
+        return User(self.from_dict['user'])
 
     @property
     def guild_id(self) -> int:
@@ -225,7 +225,7 @@ class Presence:
         -------
         :class:`int`
         """
-        return self.from_dict["guild_id"]
+        return self.from_dict['guild_id']
 
     @property
     def status(self) -> str:
@@ -235,17 +235,17 @@ class Presence:
         -------
         :class:`str`
         """
-        return self.from_dict["status"]
+        return self.from_dict['status']
 
     @property
-    def activites(self) -> List["Activity"]:
+    def activites(self) -> List['Activity']:
         """Gives the users activites
 
         Returns
         -------
         List[:class:`Activity`]
         """
-        return [Activity(raw) for raw in self.from_dict["activites"]]
+        return [Activity(raw) for raw in self.from_dict['activites']]
 
     @property
     def client_status(self) -> str:
@@ -255,7 +255,7 @@ class Presence:
         -------
         :class:`str`
         """
-        return self.from_dict["client_status"]
+        return self.from_dict['client_status']
 
 
 # still needs finishing i just don't feel like doing it now.
@@ -275,12 +275,12 @@ class Activity:
 
     @property
     def name(self) -> str:
-        return self.from_dict["name"]
+        return self.from_dict['name']
 
     @property
     def type(self) -> int:
-        return self.from_dict["type"]
+        return self.from_dict['type']
 
     @property
     def url(self) -> Union[str, None]:
-        return self.from_dict["url"]
+        return self.from_dict['url']

@@ -39,20 +39,20 @@ from discord.types.dict import Dict
 _log = logging.getLogger(__name__)
 
 __all__: typing.List[str] = [
-    "RESTClient",
+    'RESTClient',
 ]
 
-PAD = typing.TypeVar("PAD", bound="PadLock")
+PAD = typing.TypeVar('PAD', bound='PadLock')
 
-aiohttp.hdrs.WEBSOCKET = "websocket"
+aiohttp.hdrs.WEBSOCKET = 'websocket'
 
 
 async def parse_tj(
     response: aiohttp.ClientResponse,
 ) -> typing.Union[Dict, str]:
-    text = await response.text(encoding="utf-8")
+    text = await response.text(encoding='utf-8')
     try:
-        if response.headers["content-type"] == "application/json":
+        if response.headers['content-type'] == 'application/json':
             return json.loads(text)  # type: ignore
     except KeyError:
         # could be errored out
@@ -66,18 +66,18 @@ class Route:
     def __init__(self, method: str, endpoint: str, **params: typing.Any):
         self.method = method
         self.endpoint = endpoint
-        self.url = "https://discord.com/api/v9" + endpoint
+        self.url = 'https://discord.com/api/v9' + endpoint
 
-        self.guild_id: typing.Optional[int] = params.get("guild_id")
-        self.channel_id: typing.Optional[int] = params.get("channel_id")
+        self.guild_id: typing.Optional[int] = params.get('guild_id')
+        self.channel_id: typing.Optional[int] = params.get('channel_id')
 
         # Webhooks
-        self.webhook_id: typing.Optional[int] = params.get("webhook_id")
-        self.webhook_token: typing.Optional[str] = params.get("webhook_token")
+        self.webhook_id: typing.Optional[int] = params.get('webhook_id')
+        self.webhook_token: typing.Optional[str] = params.get('webhook_token')
 
     @property
     def bucket(self) -> str:
-        return f"{self.method}:{self.endpoint}:{self.guild_id}:{self.channel_id}:{self.webhook_id}:{self.webhook_token}"  # type: ignore # noqa: ignore
+        return f'{self.method}:{self.endpoint}:{self.guild_id}:{self.channel_id}:{self.webhook_id}:{self.webhook_token}'  # type: ignore # noqa: ignore
 
 
 class PadLock:
@@ -116,8 +116,8 @@ class RESTClient:
     """
 
     def __init__(self, *, state=None, proxy=None, proxy_auth=None):
-        self.user_agent = "DiscordBot https://github.com/VincentRPS/discord.io"
-        self.header: typing.Dict[str, str] = {"User-Agent": self.user_agent}
+        self.user_agent = 'DiscordBot https://github.com/VincentRPS/discord.io'
+        self.header: typing.Dict[str, str] = {'User-Agent': self.user_agent}
         self._locks: weakref.WeakValueDictionary[
             str, asyncio.Lock
         ] = weakref.WeakValueDictionary()
@@ -152,22 +152,22 @@ class RESTClient:
                 self._locks[bucket] = lock
 
         if self.proxy is not None:
-            params["proxy"] = self.proxy
+            params['proxy'] = self.proxy
 
         if self.proxy_auth is not None:
-            params["proxy_auth"] = self.proxy_auth
+            params['proxy_auth'] = self.proxy_auth
 
-        if "json" in params:
-            self.header["Content-Type"] = "application/json"  # Only json.
-            params["data"] = json.dumps(params.pop("json"))
+        if 'json' in params:
+            self.header['Content-Type'] = 'application/json'  # Only json.
+            params['data'] = json.dumps(params.pop('json'))
 
-        if "token" in params:
-            self.header["Authorization"] = "Bot " + params.pop("token")
+        if 'token' in params:
+            self.header['Authorization'] = 'Bot ' + params.pop('token')
 
-        if "reason" in params:
-            self.header["X-Audit-Log-Reason"] = quote(params.pop("reason"), "/ ")
+        if 'reason' in params:
+            self.header['X-Audit-Log-Reason'] = quote(params.pop('reason'), '/ ')
 
-        params["headers"] = self.header
+        params['headers'] = self.header
 
         if not self._has_global.is_set():
             await self._has_global.wait()
@@ -185,63 +185,63 @@ class RESTClient:
                     for kwargs in form:
                         form_data.add_field(**kwargs)
 
-                    params["data"] = form_data
+                    params['data'] = form_data
 
                 try:
                     async with self._session.request(method, url, **params) as r:
 
                         d = await parse_tj(r)
                         _log.debug(
-                            "< %s %s %s %s", method, url, params.get("data"), bucket
+                            '< %s %s %s %s', method, url, params.get('data'), bucket
                         )
 
                         try:
-                            remains = r.headers.get("X-RateLimit-Remaining")
-                            reset_after = r.headers.get("X-RateLimit-Reset-After")
+                            remains = r.headers.get('X-RateLimit-Remaining')
+                            reset_after = r.headers.get('X-RateLimit-Reset-After')
                         except KeyError:
                             # Some endpoints don't give you these ratelimit headers
                             # and so they will error out.
                             pass
 
-                        if remains == "0" and r.status != 429:
+                        if remains == '0' and r.status != 429:
                             # the bucket was depleted
                             padl.defer()
                             _log.debug(
-                                "A ratelimit Bucket was depleted. (bucket: %s, retry: %s)",
+                                'A ratelimit Bucket was depleted. (bucket: %s, retry: %s)',
                                 bucket,
                                 float(reset_after),
                             )
                             self.state.loop.call_later(float(reset_after), lock.release)
 
                         if r.status == 429:
-                            if not r.headers.get("via") or isinstance(d, str):
+                            if not r.headers.get('via') or isinstance(d, str):
                                 # handles couldflare bans
                                 raise RESTError(d)
 
-                            retry_in: float = d["retry_after"]
+                            retry_in: float = d['retry_after']
                             _log.warning(
-                                "The Rest Client seems to be ratelimited,"
-                                " Retrying in: %.2f seconds. Handled with the bucket: %s",
+                                'The Rest Client seems to be ratelimited,'
+                                ' Retrying in: %.2f seconds. Handled with the bucket: %s',
                                 retry_in,
                                 bucket,
                             )
 
-                            is_global = d.get("global", False)
+                            is_global = d.get('global', False)
 
                             if is_global:
                                 _log.debug(
-                                    "Global ratelimit was hit, retrying in %s", retry_in
+                                    'Global ratelimit was hit, retrying in %s', retry_in
                                 )
                                 self._has_global.clear()
 
                             await asyncio.sleep(retry_in)
                             _log.debug(
-                                "Finished waiting for the ratelimit, now retrying..."
+                                'Finished waiting for the ratelimit, now retrying...'
                             )
 
                             if not is_global:
                                 self._has_global.set()
-                                _log.debug("Global ratelimit has been depleted.")
+                                _log.debug('Global ratelimit has been depleted.')
 
                             continue
 
@@ -252,7 +252,7 @@ class RESTClient:
                         elif r.status == 500:
                             raise ServerError(d)
                         elif 300 > r.status >= 200:
-                            _log.debug("> %s", d)
+                            _log.debug('> %s', d)
                             await self.close()
                             return d
                         elif r.status == 204:
@@ -261,18 +261,18 @@ class RESTClient:
                             _log.error(r)
 
                 except Exception as exc:
-                    raise RESTError(f"{exc}")
+                    raise RESTError(f'{exc}')
 
     async def cdn(self, url) -> bytes:
         async with self._session.get(url) as r:
             if r.status == 200:
                 return await r.read()
             elif r.status == 404:
-                raise NotFound(f"{url} is not found!")
+                raise NotFound(f'{url} is not found!')
             elif r.status == 403:
-                raise Forbidden("You are not allowed to see this image!")
+                raise Forbidden('You are not allowed to see this image!')
             else:
-                raise RESTError(r, "asset recovery failed.")
+                raise RESTError(r, 'asset recovery failed.')
 
     async def close(self) -> None:
         if self._session:

@@ -29,7 +29,7 @@ from ..internal.dispatcher import Dispatcher
 from ..state import ConnectionState
 from .interaction import Interaction
 
-__all__: List[str] = ["ApplicationCommandRegistry"]
+__all__: List[str] = ['ApplicationCommandRegistry']
 
 
 class ApplicationCommandRegistry:
@@ -67,19 +67,19 @@ class ApplicationCommandRegistry:
 
         for guild in self.state.guilds._cache.values():
             commands = await self.factory.get_guild_application_commands(
-                self.state._bot_id, guild["id"]
+                self.state._bot_id, guild['id']
             )
             for command in commands:
                 if command not in self.state.application_commands.items():
                     await self.factory.delete_guild_application_command(
-                        self.state._bot_id, guild["id"], command["id"]
+                        self.state._bot_id, guild['id'], command['id']
                     )
         self.unregistered_commands.set()
 
     async def check_application_commands(self, rglobal):
         for command in rglobal:
             await self.factory.delete_global_application_command(
-                self.state._bot_id, command["id"]
+                self.state._bot_id, command['id']
             )
 
     async def register_guild_slash_command(
@@ -104,10 +104,10 @@ class ApplicationCommandRegistry:
             type=1,
         )
         self.state.application_commands[name] = {
-            "d": r,
-            "callback": callback,
-            "self": self,
-            "cog": cog,
+            'd': r,
+            'callback': callback,
+            'self': self,
+            'cog': cog,
         }
         return r
 
@@ -126,9 +126,9 @@ class ApplicationCommandRegistry:
             self.state._bot_id, name, description, options, default_permission, type=1
         )
         self.state.application_commands[name] = {
-            "d": r,
-            "callback": callback,
-            "self": self,
-            "cog": cog,
+            'd': r,
+            'callback': callback,
+            'self': self,
+            'cog': cog,
         }
         return r
