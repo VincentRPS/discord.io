@@ -32,8 +32,7 @@ from .flags import *
 from .guild import *
 from .intents import *
 from .interactions import *
-from .internal.exceptions import *
-from .internal.warnings import *
+from .internal import *
 from .member import *
 from .message import *
 from .snowflake import *

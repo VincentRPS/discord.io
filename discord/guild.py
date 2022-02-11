@@ -30,7 +30,14 @@ from .enums import FormatType, ScheduledEventStatusType, ScheduledEventType
 from .member import Member
 from .user import User
 
-__all__: List[str] = ['Guild']
+__all__: List[str] = [
+    'Guild',
+    'Role',
+    'WelcomeScreen',
+    'WelcomeChannel',
+    'ScheduledEvent',
+    'ScheduledEventMetadata'
+]
 
 
 class Guild:

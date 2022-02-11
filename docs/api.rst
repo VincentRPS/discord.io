@@ -313,12 +313,6 @@ Interaction
 .. autoclass:: Interaction
     :members:
 
-Context
--------
-
-.. autoclass:: Context
-    :members:
-
 
 Exceptions
 ----------
