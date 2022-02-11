@@ -27,7 +27,7 @@ __all__: List[str] = ['MentionObject']
 
 def MentionObject(
     users: bool = False,
-    usrs: list[str] = None,
+    usrs  = None,
     roles: bool = False,
     roles_list: list[str] = None,
 ):
