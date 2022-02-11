@@ -167,12 +167,12 @@ class RESTFactory:
         channel: int,
         message: int,
         content: Optional[str] = None,
-        embeds: Optional[list[Dict]] = None,
+        embeds: Optional[typing.List[Dict]] = None,
         flags: Optional[int] = None,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
-        components: Optional[list[Dict]] = None,
+        components: Optional[typing.List[Dict]] = None,
         files: Optional[Sequence[File]] = None,
-        attachments: Optional[list[Attachment]] = None,
+        attachments: Optional[typing.List[Attachment]] = None,
     ):
         json = {
             'content': content,
@@ -204,7 +204,6 @@ class RESTFactory:
             json['attachements'] = attachments
         
         return self.rest.send(Route("PATCH", "/"))
-
 
     def get_channel(self, channel: typing.Optional[Snowflakeish] = None):
         return self.rest.send(Route('GET', f'/channels/{channel}'))
