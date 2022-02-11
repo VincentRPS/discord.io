@@ -103,7 +103,7 @@ class RESTFactory:
         embeds: typing.List[Dict] = None,
         allowed_mentions: typing.Optional[allowed_mentions.MentionObject] = None,
         message_reference: typing.Optional[dict] = None,
-        components: typing.Optional[list[Dict]] = None,
+        components: typing.Optional[typing.List[Dict]] = None,
     ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
         json = {
             'tts': tts,
