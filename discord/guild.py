@@ -23,7 +23,7 @@
 
 ref: https://discord.dev/resources/guild
 """
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Dict
 
 from .assets import Emoji
 from .enums import FormatType, ScheduledEventStatusType, ScheduledEventType
@@ -54,7 +54,7 @@ class Guild:
     """
 
     # cache helpers for guilds.
-    def __init__(self, guild: dict, rest_factory):
+    def __init__(self, guild: Dict, rest_factory):
         self.from_dict = guild
         self._factory = rest_factory
 
@@ -160,7 +160,7 @@ def parse_role_icon(format: FormatType, role_id: int, role_icon: str) -> str:
     return f'https://cdn.discordapp.com/role-icons/{role_id}/{role_icon}.{format}'
 
 
-def _parse_tags(data: dict) -> str:
+def _parse_tags(data: Dict) -> str:
     return data.get('bot_id') or data.get('integration_id') or ''
 
 
@@ -175,7 +175,7 @@ class Role:
         The raw role data
     """
 
-    def __init__(self, data: dict):
+    def __init__(self, data: Dict):
         self.from_dict = data
 
     @property
@@ -300,7 +300,7 @@ class ScheduledEvent:
         The raw event data
     """
 
-    def __init__(self, data: dict):
+    def __init__(self, data: Dict):
         self.from_dict = data
 
     @property
@@ -462,7 +462,7 @@ class ScheduledEventMetadata:
         The raw metadata' data
     """
 
-    def __init__(self, data: dict):
+    def __init__(self, data: Dict):
         self.from_dict = data
 
     @property
@@ -487,7 +487,7 @@ class WelcomeScreen:
     data: :class:`dict`
     """
 
-    def __init__(self, data: dict):
+    def __init__(self, data: Dict):
         self.from_dict = data
 
     @property
@@ -500,7 +500,7 @@ class WelcomeScreen:
         """
         return self.from_dict['description']
 
-    def channels(self) -> list['WelcomeChannel']:
+    def channels(self) -> List['WelcomeChannel']:
         """Gives a list of :class:`WelcomeChannel`
 
         Returns
@@ -523,7 +523,7 @@ class WelcomeChannel:
         The raw WelcomeChannel data
     """
 
-    def __init__(self, data: dict):
+    def __init__(self, data: Dict):
         self.from_dict = data
 
     @property
