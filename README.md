@@ -45,7 +45,7 @@ async def on_ready():
 
 @client.slash_command()
 async def ping(interaction):
-    await interaction.respond("pong!")
+    await interaction.respond('pong!')
 
 client.run('my_bot_token')
 ```
@@ -66,8 +66,8 @@ async def on_message(msg):
     if msg.author.bot:
         return
     
-    if msg.content.startswith("!ping"):
-        await msg.send("Pong!")
+    if msg.content.startswith('!ping'):
+        await msg.send('Pong!')
 
 client.run('my_bot_token')
 ```
