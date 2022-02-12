@@ -79,7 +79,7 @@ from .messages import (
 )
 
 
-# https://aio.dev/topics/gateway#commands-and-events-gateway-events
+# https://discord.dev/topics/gateway#commands-and-events-gateway-events
 class Cataloger:
     def __init__(self, data: Dict, dis, state: ConnectionState):
 
