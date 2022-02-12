@@ -51,12 +51,14 @@ _log = logging.getLogger(__name__)
 __all__: List[str] = ['Client']
 CFT = TypeVar('CFT', bound='dispatcher.CoroFunc')
 
+
 def get_event_loop():
     try:
         return asyncio.get_running_loop()
     except RuntimeError:
         _log.warning('No running event loop detected, creating one')
         return asyncio.new_event_loop()
+
 
 class Client:
     """Represents a Discord bot.
@@ -201,12 +203,12 @@ class Client:
     def close(self):
         self.state.loop.stop()
         self.state.loop.close()
-    
+
     def shutdown(self):
         for shard in self.gateway.shards:
             self.state.loop.create_task(shard.close())
             self.state.loop.create_task(shard._session.close())
-        
+
         self.state.loop.create_task(self.factory.rest.close())
         self.close()
 

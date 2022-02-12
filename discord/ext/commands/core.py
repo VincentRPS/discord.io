@@ -22,16 +22,20 @@
 import asyncio
 from typing import Callable
 
-from ...state import ConnectionState
 from ...internal import run_storage
+from ...state import ConnectionState
 from ..cogs import Cog
+
 
 class Command:
     """Represents a prefixed Discord command
-    
+
     .. versionadded:: 0.9.0
     """
-    def __init__(self, func: Callable, prefix: str, state: ConnectionState, *, cog: Cog = None):
+
+    def __init__(
+        self, func: Callable, prefix: str, state: ConnectionState, *, cog: Cog = None
+    ):
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Command must be a coroutine")
         self.coro = func
@@ -39,7 +43,7 @@ class Command:
         self.state = state
         self.cog = cog
         self._storage = run_storage.InternalRunner(self.state.loop)
-    
+
     def __call__(self, context, *args, **kwargs):
         if self.cog:
             self._storage._run_process(self.coro, self.cog, context, *args, **kwargs)

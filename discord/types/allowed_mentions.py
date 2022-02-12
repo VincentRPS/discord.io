@@ -27,9 +27,9 @@ __all__: List[str] = ['MentionObject']
 
 def MentionObject(
     users: bool = False,
-    usrs  = None,
+    usrs=None,
     roles: bool = False,
-    roles_list = None,
+    roles_list=None,
 ):
     ret = {'parse': []}
     if users is not False and usrs is not None:

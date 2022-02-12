@@ -36,10 +36,10 @@ import aiohttp
 
 from discord import utils
 from discord.events import catalog
-from ..internal.dispatcher import Dispatcher
 from discord.snowflake import Snowflakeish
 from discord.types.dict import Dict
 
+from ..internal.dispatcher import Dispatcher
 from ..state import ConnectionState
 from .rest_factory import RESTFactory
 

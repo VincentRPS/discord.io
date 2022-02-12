@@ -23,7 +23,7 @@
 
 ref: https://discord.dev/resources/guild
 """
-from typing import List, Optional, Union, Dict
+from typing import Dict, List, Optional, Union
 
 from .assets import Emoji
 from .enums import FormatType, ScheduledEventStatusType, ScheduledEventType
@@ -36,7 +36,7 @@ __all__: List[str] = [
     'WelcomeScreen',
     'WelcomeChannel',
     'ScheduledEvent',
-    'ScheduledEventMetadata'
+    'ScheduledEventMetadata',
 ]
 
 

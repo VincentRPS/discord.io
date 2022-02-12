@@ -27,9 +27,8 @@ from typing import Any, Optional, Sequence
 
 import aiohttp
 
-from ..assets import Attachment
-
 from .. import utils
+from ..assets import Attachment
 from ..enums import ScheduledEventType
 from ..file import File
 from ..flags import MessageFlags
@@ -154,15 +153,12 @@ class RESTFactory:
             Route('POST', f'/channels/{channel}/messages', channel_id=channel),
             json=json,
         )
-    
-    def delete_message(
-        self,
-        message: int,
-        channel: int,
-        reason: Optional[str]
-    ):
-        return self.rest.send(Route('DELETE', f'/channels/{channel}/messages/{message}'), reason=reason)
-    
+
+    def delete_message(self, message: int, channel: int, reason: Optional[str]):
+        return self.rest.send(
+            Route('DELETE', f'/channels/{channel}/messages/{message}'), reason=reason
+        )
+
     def edit_message(
         self,
         channel: int,
@@ -187,24 +183,38 @@ class RESTFactory:
             form.append({'name': 'payload_json', 'value': dumps(json)})
             if len(files) == 1:
                 file = files[0]
-                form.append({
-                    'name': 'file',
-                    'value': file.fp,
-                    'filename': file.filename,
-                    'content_type': 'application-octet-stream',
-                })
-            else:
-                for index, file in enumerate(files):
-                    form.append({
-                        'name': f'file{index}',
+                form.append(
+                    {
+                        'name': 'file',
                         'value': file.fp,
                         'filename': file.filename,
                         'content_type': 'application-octet-stream',
-                    })
+                    }
+                )
+            else:
+                for index, file in enumerate(files):
+                    form.append(
+                        {
+                            'name': f'file{index}',
+                            'value': file.fp,
+                            'filename': file.filename,
+                            'content_type': 'application-octet-stream',
+                        }
+                    )
         if attachments:
             json['attachements'] = attachments
-        
-        return self.rest.send(Route("PATCH", f"/channels/{channel}/messages/{message}", channel_id=channel, message_id=message), json=json, form=form, files=files)
+
+        return self.rest.send(
+            Route(
+                "PATCH",
+                f"/channels/{channel}/messages/{message}",
+                channel_id=channel,
+                message_id=message,
+            ),
+            json=json,
+            form=form,
+            files=files,
+        )
 
     def get_channel(self, channel: typing.Optional[Snowflakeish] = None):
         return self.rest.send(Route('GET', f'/channels/{channel}'))
@@ -566,7 +576,7 @@ class RESTFactory:
         afk_timeout: Optional[int] = None,
     ):
         ...
-    
+
     def create_guild(
         self,
         name: str,
@@ -589,10 +599,10 @@ class RESTFactory:
         }
         if icon is not None:
             json['icon'] = icon
-        
+
         if region is not None:
             json['region'] = region
-        
+
         return self.rest.send(Route('POST', '/guilds'), json=json, reason=reason)
 
     # users

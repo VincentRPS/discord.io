@@ -21,7 +21,9 @@
 # SOFTWARE
 """Black magic and whitchcraft put together to make a running system"""
 import asyncio
+
 from .dispatcher import Coro
+
 
 class InternalRunner:
     def __init__(self, loop):
@@ -40,4 +42,4 @@ class InternalRunner:
         self.loop.call_later(time, self._run_processs(coro, *args, **kwargs))
 
     async def create_process(self, coro: Coro):
-        self.processes[coro.__name__] = coro   
+        self.processes[coro.__name__] = coro

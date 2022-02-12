@@ -29,12 +29,12 @@ from typing import Any, List, Optional, Sequence
 from discord.file import File
 from discord.types import allowed_mentions, embed_parse
 
+from .api.rest_factory import RESTFactory
+from .assets import Attachment
 from .channels import TextChannel
 from .embed import Embed
 from .guild import Guild
 from .user import User
-from .assets import Attachment
-from .api.rest_factory import RESTFactory
 
 __all__: List[str] = ['Message']
 
@@ -171,7 +171,7 @@ class Message:  # noqa: ignore
             allowed_mentions=allowed_mentions,
             components=com,
         )
-        
+
         return Message(r, self.app)
 
     async def reply(
@@ -235,7 +235,7 @@ class Message:  # noqa: ignore
             components=com,
         )
         return Message(r, self.app)
-    
+
     def edit(
         self,
         content: Optional[str] = None,
@@ -254,8 +254,8 @@ class Message:  # noqa: ignore
         elif embed:
             emd = embed_parse.parse_embed(embed)
         return self.app.factory.edit_message(
-            channel=self.channel.id, 
-            message=self.id, 
+            channel=self.channel.id,
+            message=self.id,
             content=content,
             embeds=emd,
             flags=flags,
@@ -264,13 +264,8 @@ class Message:  # noqa: ignore
             files=files,
             attachments=attachments,
         )
-    
-    async def delete(
-        self,
-        reason: Optional[str] = None
-    ):
+
+    async def delete(self, reason: Optional[str] = None):
         return self.app.factory.delete_message(
-            channel=self.channel.id,
-            message=self.id,
-            reason=reason
+            channel=self.channel.id, message=self.id, reason=reason
         )

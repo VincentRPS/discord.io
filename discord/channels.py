@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import Union, Dict, Optional, List
+from typing import Dict, List, Optional, Union
 
 from .enums import FormatType
 from .guild import Guild

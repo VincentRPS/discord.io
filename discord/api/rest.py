@@ -32,9 +32,10 @@ import aiohttp
 
 from discord import utils
 from discord.file import File
-from ..internal.exceptions import Forbidden, NotFound, RESTError, ServerError
 from discord.state import ConnectionState
 from discord.types.dict import Dict
+
+from ..internal.exceptions import Forbidden, NotFound, RESTError, ServerError
 
 _log = logging.getLogger(__name__)
 
@@ -127,7 +128,7 @@ class RESTClient:
         self.proxy = proxy
         self.proxy_auth = proxy_auth
         self._session: aiohttp.ClientSession = utils.MISSING
-    
+
     async def enter(self):
         self._session = aiohttp.ClientSession()
 
