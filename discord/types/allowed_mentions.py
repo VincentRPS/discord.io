@@ -29,7 +29,7 @@ def MentionObject(
     users: bool = False,
     usrs  = None,
     roles: bool = False,
-    roles_list: list[str] = None,
+    roles_list = None,
 ):
     ret = {'parse': []}
     if users is not False and usrs is not None:

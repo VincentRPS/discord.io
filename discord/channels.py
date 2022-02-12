@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import Union
+from typing import Union, Dict, Optional, List
 
 from .enums import FormatType
 from .guild import Guild
@@ -28,7 +28,7 @@ from .state import ConnectionState
 from .user import User
 
 
-def channel_parse(type, data: dict, state: ConnectionState):
+def channel_parse(type, data: Dict, state: ConnectionState):
     if type == 0:
         return TextChannel(data, state)
 
@@ -70,11 +70,11 @@ class Category:
         The connection state
     """
 
-    def __init__(self, data: dict, state: ConnectionState):
+    def __init__(self, data: Dict, state: ConnectionState):
         self.from_dict = data
         self.state = state
 
-    def permission_overwrites(self) -> list[str, Union[int, str]]:
+    def permission_overwrites(self) -> List[str, Union[int, str]]:
         """Gives a list of permission overwrites
 
         Returns
@@ -135,7 +135,7 @@ class TextChannel:
         The connection state
     """
 
-    def __init__(self, data: dict, state: ConnectionState):
+    def __init__(self, data: Dict, state: ConnectionState):
         self.from_dict = data
         self.state = state
 
@@ -179,7 +179,7 @@ class TextChannel:
         """
         return self.from_dict['position']
 
-    def permission_overwrites(self) -> list[str, Union[int, str]]:
+    def permission_overwrites(self) -> List[str, Union[int, str]]:
         """Gives the permission overwrites of the channel"""
         return self.from_dict['permission_overwrites']
 
@@ -234,7 +234,7 @@ class VoiceChannel:
         The connection state
     """
 
-    def __init__(self, data: dict, state: ConnectionState):
+    def __init__(self, data: Dict, state: ConnectionState):
         self.state = state
         self.from_dict = data
 
@@ -280,7 +280,7 @@ class VoiceChannel:
         """
         return self.from_dict['position']
 
-    def permission_overwrites(self) -> list[str, Union[int, str]]:
+    def permission_overwrites(self) -> List[str, Union[int, str]]:
         return self.from_dict['permission_overwrites']
 
 
@@ -297,7 +297,7 @@ class DMChannel:
         The connection state
     """
 
-    def __init__(self, data: dict, state: ConnectionState):
+    def __init__(self, data: Dict, state: ConnectionState):
         self.from_dict = data
         self.state = state
 
@@ -386,7 +386,7 @@ class Thread:
         The connection state
     """
 
-    def __init__(self, data: dict, state: ConnectionState):
+    def __init__(self, data: Dict, state: ConnectionState):
         self.from_dict = data
         self.state = state
 
@@ -489,7 +489,7 @@ class ThreadMetadata:
         The metadata
     """
 
-    def __init__(self, data: dict):
+    def __init__(self, data: Dict):
         self.from_dict = data
 
     @property
@@ -544,7 +544,7 @@ class ThreadMember:
         The raw Member data
     """
 
-    def __init__(self, data: dict):
+    def __init__(self, data: Dict):
         self.from_dict = data
 
     @property
@@ -599,7 +599,7 @@ class StageInstance:
         The raw stage instance data
     """
 
-    def __init__(self, data: dict):
+    def __init__(self, data: Dict):
         self.from_dict = data
 
     @property

@@ -32,6 +32,6 @@ T = TypeVar('T', covariant=True)
 
 Snowflakeish = int
 
-SnowflakeishList = list[Snowflakeish]
+SnowflakeishList = List[Snowflakeish]
 
 SnowflakeishOr = Union[T, Snowflakeish]

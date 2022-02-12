@@ -23,6 +23,7 @@
 
 ref: https://discord.dev/resources/guild#guild-member-object
 """
+import typing
 from typing import Any, List, Optional, Union
 
 from .api.rest_factory import RESTFactory
@@ -49,7 +50,7 @@ class Member:
         The raw :class:`dict` object of the Member.
     """
 
-    def __init__(self, data: dict, guild: Union[int, Any], factory: RESTFactory):
+    def __init__(self, data: typing.Dict, guild: Union[int, Any], factory: RESTFactory):
         self.from_dict = data
         self.guild_id = guild
         self._factory = factory
@@ -127,7 +128,7 @@ class Member:
         """
         return self.from_dict['pending']
 
-    def permissions(self) -> dict[str, Any]:
+    def permissions(self) -> typing.Dict[str, Any]:
         """Returns a dict of the users permissions
 
         Returns
@@ -204,7 +205,7 @@ class Presence:
         The raw presence data
     """
 
-    def __init__(self, data: dict):
+    def __init__(self, data: typing.Dict):
         self.from_dict = data
 
     @property
@@ -270,7 +271,7 @@ class Activity:
         The raw activity data
     """
 
-    def __init__(self, data: dict):
+    def __init__(self, data: typing.Dict):
         self.from_dict = data
 
     @property
