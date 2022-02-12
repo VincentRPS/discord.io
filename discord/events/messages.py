@@ -97,7 +97,7 @@ class OnMessageReactionAdd(Event):
 
     def process(self):
         emoji = Emoji(self.data['emoji'])
-        channel = TextChannel(self.state.channels.get(self.data['channel_id']))
+        channel = TextChannel(self.state.channels.get(self.data['channel_id']), self.state)
         message = Message(self.state.messages.get('message_id'))
         guild = Guild(self.state.guilds.get('guild_id'), self.state.app.factory)
         member = Member(self.state.members.get(self.data['user_id']), guild.id, self.state.app.factory)

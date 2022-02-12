@@ -89,7 +89,7 @@ class VoiceGateway:
             self.client._state.loop.create_task(self.recv())
         else:
             await self.resume()
-            self.client.start.loop.create_task(self.recv())
+            self.client._state.loop.create_task(self.recv())
 
     # i know this is a loss of customization here but doing this makes,
     # the development experience so much easier and since i wouldn't guess people are customizing here
@@ -157,7 +157,8 @@ class VoiceGateway:
                     await self.speak(False)
 
                 elif op == 8:
-                    interval: int = d['heartbeat_interval'] / 1000
+                    raw_interval: int = d['heartbeat_interval'] / 1000.0
+                    interval = min(raw_interval, 5.0)
                     await self.hello(interval=interval)
 
     async def heartbeat(self, interval: float):
@@ -197,8 +198,7 @@ class VoiceGateway:
         _log.info('Using voice protocol: %s', mode)
 
     async def hello(self, interval: float):
-        init = interval * random()
-        await asyncio.sleep(init)
+        await asyncio.sleep(interval)
         self.kept_alive = (
             True  # exception to not kill the connection when saying hello.
         )

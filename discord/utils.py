@@ -141,25 +141,3 @@ async def wait_for(futures, *, timeout):
 
     return done
 
-
-class ExponentialBackoff(Generic[T]):
-    # an exponantial backoff api based off how discord.py implemented theres.
-    def __init__(self, base: int = 1, *, integral: T = False):
-        self.base = base
-        self.exp = 0
-        self.max = 10
-        self.reset_time = base * 2 ** 11
-        self.last_invoke = time.monotonic()
-        rand = random.Random()
-        rand.seed()
-        self.rand = rand.randrange() if integral else rand.uniform
-
-    def delay(self):
-        invoke = time.monotonic
-        interval = invoke - self.last_invoke
-
-        if interval > self.reset_time:
-            self.exp = 0
-
-        self.exp = min(self.exp + 1, self.max)
-        return self.rand(0, self.base * 2 ** self.exp)
