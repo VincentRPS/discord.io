@@ -10,6 +10,7 @@ Asynchronous Discord API Wrapper for Python
 
 - Sane Handling of 429s
 - User friendly interface
+- Most Gateway events
 
 ## Installing
 
