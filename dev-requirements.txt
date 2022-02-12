@@ -23,7 +23,7 @@ types-orjson~=3.6.2
 # tests #
 #########
 coverage~=6.3
-pytest~=7.0.0
+pytest~=7.0.1
 pytest-cov~=3.0.0
 pytest-asyncio~=0.18.1
 pytest-custom_exit_code~=0.3.0
