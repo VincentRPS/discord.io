@@ -27,13 +27,14 @@ ref: https://discord.dev/resources/channel
 from typing import Any, List, Optional, Sequence
 
 from discord.file import File
-from discord.types import allowed_mentions
+from discord.types import allowed_mentions, embed_parse
 
 from .channels import TextChannel
 from .embed import Embed
 from .guild import Guild
 from .user import User
 from .assets import Attachment
+from .api.rest_factory import RESTFactory
 
 __all__: List[str] = ['Message']
 
@@ -235,7 +236,7 @@ class Message:  # noqa: ignore
         )
         return Message(r, self.app)
     
-    async def edit(
+    def edit(
         self,
         content: Optional[str] = None,
         embeds: Optional[list[Embed]] = None,
@@ -246,13 +247,28 @@ class Message:  # noqa: ignore
         files: Optional[Sequence[File]] = None,
         attachments: Optional[list[Attachment]] = None,
     ):
-        ...
+        """Edits the current message"""
+        emd = {}
+        if embeds:
+            emd = embed_parse.parse_embeds(embeds)
+        elif embed:
+            emd = embed_parse.parse_embed(embed)
+        return self.app.factory.edit_message(
+            channel=self.channel.id, 
+            message=self.id, 
+            content=content,
+            embeds=emd,
+            flags=flags,
+            allowed_mentions=allowed_mentions,
+            components=components,
+            files=files,
+            attachments=attachments,
+        )
     
     async def delete(
         self,
         reason: Optional[str] = None
     ):
-        self.app.state.messages.pop(self.id)
         return self.app.factory.delete_message(
             channel=self.channel.id,
             message=self.id,

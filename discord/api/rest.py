@@ -127,6 +127,9 @@ class RESTClient:
         self.proxy = proxy
         self.proxy_auth = proxy_auth
         self._session: aiohttp.ClientSession = utils.MISSING
+    
+    async def enter(self):
+        self._session = aiohttp.ClientSession()
 
     async def send(  # noqa: ignore
         self,
@@ -139,7 +142,6 @@ class RESTClient:
 
         .. versionadded:: 0.3.0
         """
-        self._session = aiohttp.ClientSession()
         method = route.method
         url = route.url
         bucket = route.bucket
@@ -253,7 +255,6 @@ class RESTClient:
                             raise ServerError(d)
                         elif 300 > r.status >= 200:
                             _log.debug('> %s', d)
-                            await self.close()
                             return d
                         elif r.status == 204:
                             pass

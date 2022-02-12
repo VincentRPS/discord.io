@@ -65,6 +65,7 @@ class RESTFactory:
         self.proxy_auth = proxy_auth
         self.state = state or ConnectionState()
         self.rest = RESTClient(state=self.state, proxy=proxy, proxy_auth=proxy_auth)
+        self.state.loop.create_task(self.rest.enter())
 
     async def login(
         self, token: str
@@ -174,6 +175,7 @@ class RESTFactory:
         files: Optional[Sequence[File]] = None,
         attachments: Optional[typing.List[Attachment]] = None,
     ):
+        form = []
         json = {
             'content': content,
             'embeds': embeds,
@@ -182,7 +184,6 @@ class RESTFactory:
             'flags': flags,
         }
         if files:
-            form = []
             form.append({'name': 'payload_json', 'value': dumps(json)})
             if len(files) == 1:
                 file = files[0]
@@ -203,7 +204,7 @@ class RESTFactory:
         if attachments:
             json['attachements'] = attachments
         
-        return self.rest.send(Route("PATCH", "/"))
+        return self.rest.send(Route("PATCH", f"/channels/{channel}/messages/{message}", channel_id=channel, message_id=message), json=json, form=form, files=files)
 
     def get_channel(self, channel: typing.Optional[Snowflakeish] = None):
         return self.rest.send(Route('GET', f'/channels/{channel}'))

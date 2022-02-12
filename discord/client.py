@@ -112,7 +112,6 @@ class Client:
 
     def __init__(
         self,
-        loop: Optional[asyncio.AbstractEventLoop] = asyncio.new_event_loop(),
         intents: Optional[int] = 32509,
         module: Optional[str] = 'discord',
         shards: Optional[int] = None,
