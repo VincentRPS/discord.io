@@ -74,7 +74,7 @@ class Category:
         self.from_dict = data
         self.state = state
 
-    def permission_overwrites(self) -> List[str, Union[int, str]]:
+    def permission_overwrites(self) -> List[Union[int, str]]:
         """Gives a list of permission overwrites
 
         Returns
@@ -179,7 +179,7 @@ class TextChannel:
         """
         return self.from_dict['position']
 
-    def permission_overwrites(self) -> List[str, Union[int, str]]:
+    def permission_overwrites(self) -> List[Union[int, str]]:
         """Gives the permission overwrites of the channel"""
         return self.from_dict['permission_overwrites']
 
@@ -280,7 +280,7 @@ class VoiceChannel:
         """
         return self.from_dict['position']
 
-    def permission_overwrites(self) -> List[str, Union[int, str]]:
+    def permission_overwrites(self) -> List[Union[int, str]]:
         return self.from_dict['permission_overwrites']
 
 
