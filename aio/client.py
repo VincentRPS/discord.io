@@ -115,7 +115,7 @@ class Client:
     def __init__(
         self,
         intents: Optional[int] = 32509,
-        module: Optional[str] = 'discord',
+        module: Optional[str] = 'aio',
         shards: Optional[int] = None,
         mobile: Optional[bool] = False,
         proxy: Optional[str] = None,

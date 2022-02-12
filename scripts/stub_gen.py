@@ -1,16 +1,16 @@
 import os
 # probably missed one here.
 folders = [
-    'discord/__init__.py',
-    'discord/api/__init__.py',
-    'discord/voice/__init__.py',
-    'discord/events/__init__.py',
-    'discord/interactions/__init__.py',
-    'discord/components/__init__.py',
-    'discord/internal/__init__.py',
-    'discord/types/__init__.py',
-    'discord/ext/cogs/__init__.py',
-    'discord/ext/commands/__init__.py',
+    'aio/__init__.py',
+    'aio/api/__init__.py',
+    'aio/voice/__init__.py',
+    'aio/events/__init__.py',
+    'aio/interactions/__init__.py',
+    'aio/components/__init__.py',
+    'aio/internal/__init__.py',
+    'aio/types/__init__.py',
+    'aio/ext/cogs/__init__.py',
+    'aio/ext/commands/__init__.py',
 ]
 
 for dir in folders:

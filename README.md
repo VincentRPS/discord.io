@@ -36,7 +36,7 @@ pip install aio[voice]
 This is a quick usecase example for the library!
 
 ```py
-import discord
+import aio
 
 client = aio.Client()
 
@@ -54,7 +54,7 @@ client.run('my_bot_token')
 This is another example but with a prefixed command
 
 ```py
-import discord
+import aio
 
 client = aio.Client()
 

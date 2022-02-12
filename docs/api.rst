@@ -1,4 +1,4 @@
-.. currentmodule:: discord
+.. currentmodule:: aio
 
 API Reference
 =============

@@ -28,7 +28,7 @@ with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
 packages = [
-    'discord',
+    'aio',
     'aio.events',
     'aio.api',
     'aio.internal',
@@ -55,10 +55,10 @@ setuptools.setup(
     version=__version__,
     packages=packages,
     package_data={
-        'discord': ['banner.txt', 'bin/*.dll'],
+        'aio': ['banner.txt', 'bin/*.dll'],
     },
     project_urls={
-        'Documentation': 'https://discordio.rtfd.io',
+        'Documentation': 'https://aio-py.rtfd.io',
         'Issue Tracker': 'https://github.com/aio-org/aio/issues',
         'Pull Request Tracker': 'https://github.com/aio-org/aio/pulls',
     },
