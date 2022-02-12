@@ -1,6 +1,5 @@
-from typing import Any, Callable, List, TypeVar
-
 from ...internal import DiscordError
+from typing import Any, Callable, List, TypeVar
 
 CFT = TypeVar('CFT', bound='dispatcher.CoroFunc')
 
@@ -13,12 +12,6 @@ class Cog:
     @property
     def __cog_name__(self) -> str: ...
     @classmethod
-    def slash_command(
-        cls,
-        name: str = ...,
-        options: List[dict] = ...,
-        guild_ids: List[int] = ...,
-        default_permission: bool = ...,
-    ): ...
+    def slash_command(cls, name: str = ..., options: List[dict] = ..., guild_ids: List[int] = ..., default_permission: bool = ...): ...
     @classmethod
     def listener(cls, name: str = ...) -> Callable[[CFT], CFT]: ...

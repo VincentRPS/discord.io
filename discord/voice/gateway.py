@@ -26,12 +26,10 @@ import json
 import logging
 import struct
 import time
-from random import random
 
 import aiohttp
 
 from ..state import ConnectionState
-from ..utils import create_snowflake
 
 _log = logging.getLogger(__name__)
 
@@ -72,7 +70,7 @@ class VoiceGateway:
             'op': 0,
             'd': {
                 'server_id': str(self.server_id),
-                'user_id': self.state.app.user.id,
+                'user_id': str(self.state.app.user.id),
                 'session_id': self.client.session_id,
                 'token': self.state.app.token,
             },
@@ -135,8 +133,8 @@ class VoiceGateway:
         async for msg in self.ws:
             if msg.type == aiohttp.WSMsgType.TEXT:
                 data = json.loads(msg.data)
-                op: int = data['op']
-                d: dict = data['d']
+                op = data['op']
+                d = data.get('d')
                 _log.debug('> %s', data)
 
                 if op == 2:
@@ -157,9 +155,58 @@ class VoiceGateway:
                     await self.speak(False)
 
                 elif op == 8:
-                    raw_interval: int = d['heartbeat_interval'] / 1000.0
+                    raw_interval = d['heartbeat_interval'] / 1000.0
                     interval = min(raw_interval, 5.0)
                     await self.hello(interval=interval)
+        
+        close_code = self.ws.close_code
+
+        if close_code is None:
+            return
+        else:
+            await self.closed(close_code)
+    
+    async def closed(self, code):
+        _log.info('Voice websocket closed with code %s', code)
+
+        if code == 4001:
+            raise RuntimeError('Invalid opcode was sent')
+        
+        elif code == 4002:
+            raise RuntimeError("Payload failed to decode (server side)")
+        
+        elif code == 4003:
+            raise RuntimeError('Not authenticated')
+        
+        elif code == 4004:
+            raise RuntimeError("Authentication failed")
+        
+        elif code == 4005:
+            raise RuntimeError('Already authenticated')
+        
+        elif code == 4006:
+            raise RuntimeError('Session no longer valid')
+        
+        elif code == 4009:
+            raise RuntimeError("Session timed out")
+        
+        elif code == 4011:
+            raise RuntimeError("Server not found")
+        
+        elif code == 4012:
+            raise RuntimeError("Unknown protocol")
+        
+        elif code == 4014:
+            raise RuntimeError("Disconnected")
+        
+        elif code == 4015:
+            raise RuntimeError("Voice Server Crashed")
+        
+        elif code == 4016:
+            raise RuntimeError("Unknown encyption code")
+        
+        else:
+            raise NotImplementedError("Unknown error code")
 
     async def heartbeat(self, interval: float):
         while not self.ws.closed:
@@ -167,7 +214,7 @@ class VoiceGateway:
                 await self.close(1008)
                 await self.connect(resume=True)
             self.kept_alive = False
-            await self.send_json({'op': 3, 'd': create_snowflake()})
+            await self.send_json({'op': 3, 'd': int(time.time() * 1000)})
             await asyncio.sleep(interval)
 
     async def ready(self, data: dict):

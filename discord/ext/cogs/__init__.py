@@ -3,7 +3,7 @@ discord.ext.cogs
 ~~~~~~~~~~~~~~~~
 Extension module to ensure the creation of Cogs.
 """
-from typing import TYPE_CHECKING, Any, Callable, List, TypeVar
+from typing import Any, Callable, List, TypeVar
 
 from ...internal import DiscordError, dispatcher
 

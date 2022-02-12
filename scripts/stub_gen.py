@@ -1,5 +1,5 @@
 import os
-
+# probably missed one here.
 folders = [
     'discord/__init__.py',
     'discord/api/__init__.py',
@@ -10,6 +10,7 @@ folders = [
     'discord/internal/__init__.py',
     'discord/types/__init__.py',
     'discord/ext/cogs/__init__.py',
+    'discord/ext/commands/__init__.py',
 ]
 
 for dir in folders:

@@ -1,5 +1,3 @@
-import typing
-
 from .api import *
 from .assets import *
 from .channels import *
@@ -15,8 +13,7 @@ from .flags import *
 from .guild import *
 from .intents import *
 from .interactions import *
-from .internal.exceptions import *
-from .internal.warnings import *
+from .internal import *
 from .member import *
 from .message import *
 from .snowflake import *
@@ -27,6 +24,7 @@ from .user import *
 from .utils import *
 from .voice import *
 from .webhooks import *
+import typing
 
 class VersionInfo(typing.NamedTuple):
     major: str
