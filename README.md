@@ -63,9 +63,6 @@ async def on_ready():
 
 @client.event
 async def on_message(msg):
-    if msg.author.bot:
-        return
-    
     if msg.content.startswith('!ping'):
         await msg.send('Pong!')
 
