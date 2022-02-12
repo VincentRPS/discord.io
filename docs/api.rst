@@ -2,7 +2,7 @@
 
 API Reference
 =============
-The full discord.io API Reference.
+The full aio API Reference.
 
 Version Specific Details
 ------------------------

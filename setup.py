@@ -21,7 +21,7 @@
 # SOFTWARE.
 import setuptools
 
-__version__ = str('0.8.2')
+__version__ = str('0.8.3')
 
 requirements = []
 with open('requirements.txt') as f:
@@ -29,14 +29,14 @@ with open('requirements.txt') as f:
 
 packages = [
     'discord',
-    'discord.events',
-    'discord.api',
-    'discord.internal',
-    'discord.components',
-    'discord.voice',
-    'discord.interactions',
-    'discord.types',
-    'discord.ext.cogs',
+    'aio.events',
+    'aio.api',
+    'aio.internal',
+    'aio.components',
+    'aio.voice',
+    'aio.interactions',
+    'aio.types',
+    'aio.ext.cogs',
 ]
 
 extra_requires = {
@@ -51,7 +51,7 @@ extra_requires = {
 }
 
 setuptools.setup(
-    name='discord.io',
+    name='aio',
     version=__version__,
     packages=packages,
     package_data={
@@ -59,10 +59,10 @@ setuptools.setup(
     },
     project_urls={
         'Documentation': 'https://discordio.rtfd.io',
-        'Issue Tracker': 'https://github.com/VincentRPS/discord.io/issues',
-        'Pull Request Tracker': 'https://github.com/VincentRPS/discord.io/pulls',
+        'Issue Tracker': 'https://github.com/aio-org/aio/issues',
+        'Pull Request Tracker': 'https://github.com/aio-org/aio/pulls',
     },
-    url='https://github.com/VincentRPS/discord.io',
+    url='https://github.com/aio-org/aio',
     license='MIT',
     author='VincentRPS',
     long_description=open('README.md').read(),

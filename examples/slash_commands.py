@@ -1,6 +1,6 @@
-import discord
+import aio
 
-client = discord.Client()  # defining our client
+client = aio.Client()  # defining our client
 
 
 @client.event
@@ -10,15 +10,15 @@ async def on_ready():
 
 # without options
 @client.slash_command()
-async def ping(inter: discord.Interaction):
+async def ping(inter: aio.Interaction):
     await inter.respond('pong!')
 
 
 # with options
 @client.slash_command(
-    options=[discord.Option('anime_good', 'is anime good', type=bool, required=True)]
+    options=[aio.Option('anime_good', 'is anime good', type=bool, required=True)]
 )
-async def anime_good(inter: discord.Interaction):
+async def anime_good(inter: aio.Interaction):
     if inter.options[0]['value'] == True:
         await inter.respond('Nice')
     elif inter.options[0]['value'] == False:

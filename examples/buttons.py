@@ -1,6 +1,6 @@
-import discord
+import aio
 
-client = discord.Client(command_prefix='>')
+client = aio.Client(command_prefix='>')
 
 
 @client.command()
