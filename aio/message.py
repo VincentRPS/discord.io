@@ -29,7 +29,6 @@ from typing import Any, List, Optional, Sequence
 from aio.file import File
 from aio.types import allowed_mentions, embed_parse
 
-from .api.rest_factory import RESTFactory
 from .assets import Attachment
 from .channels import TextChannel
 from .embed import Embed

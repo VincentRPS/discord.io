@@ -29,13 +29,13 @@ import logging
 import sys
 import time
 from threading import Event
-from typing import Any, Callable, List, Literal, Optional, TypeVar, Union
+from typing import Callable, List, Literal, Optional, TypeVar, Union
 
 from aio.channels import VoiceChannel
 
 from . import utils
 from .api.gateway import Gateway
-from .api.rest_factory import RESTFactory
+from .http import RESTFactory
 from .components import Button, Modal, ModalComponent
 from .ext.cogs import Cog, ExtensionLoadError
 from .guild import Guild

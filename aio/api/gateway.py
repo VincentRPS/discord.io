@@ -41,7 +41,7 @@ from aio.types.dict import Dict
 
 from ..internal.dispatcher import Dispatcher
 from ..state import ConnectionState
-from .rest_factory import RESTFactory
+from ..http import RESTFactory
 
 ZLIB_SUFFIX = b'\x00\x00\xff\xff'
 _log = logging.getLogger(__name__)

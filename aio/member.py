@@ -26,7 +26,7 @@ ref: https://discord.dev/resources/guild#guild-member-object
 import typing
 from typing import Any, List, Optional, Union
 
-from .api.rest_factory import RESTFactory
+from .http import RESTFactory
 from .user import User
 
 __all__: List[str] = ['Member']
