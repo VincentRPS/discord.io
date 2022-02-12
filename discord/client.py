@@ -202,6 +202,14 @@ class Client:
     def close(self):
         self.state.loop.stop()
         self.state.loop.close()
+    
+    def shutdown(self):
+        for shard in self.gateway.shards:
+            self.state.loop.create_task(shard.close())
+            self.state.loop.create_task(shard._session.close())
+        
+        self.state.loop.create_task(self.factory.rest.close())
+        self.close()
 
     def fetch_guild(self, guild_id):
         """Fetches the guild from the cache
