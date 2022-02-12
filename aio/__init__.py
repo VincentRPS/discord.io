@@ -30,6 +30,7 @@ from .events import *
 from .file import *
 from .flags import *
 from .guild import *
+from .http import *
 from .intents import *
 from .interactions import *
 from .internal import *
@@ -43,7 +44,6 @@ from .user import *
 from .utils import *
 from .voice import *
 from .webhooks import *
-from .http import *
 
 
 class VersionInfo(typing.NamedTuple):

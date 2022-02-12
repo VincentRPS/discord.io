@@ -35,10 +35,10 @@ from aio.channels import VoiceChannel
 
 from . import utils
 from .api.gateway import Gateway
-from .http import RESTFactory
 from .components import Button, Modal, ModalComponent
 from .ext.cogs import Cog, ExtensionLoadError
 from .guild import Guild
+from .http import RESTFactory
 from .interactions import ApplicationCommandRegistry
 from .internal import dispatcher
 from .state import ConnectionState

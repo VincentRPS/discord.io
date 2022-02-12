@@ -1,14 +1,16 @@
 import typing
 from typing import Dict
-from ..api.rest import Route, RESTClient
-from ..snowflake import Snowflakeish
+
+from ..api.rest import RESTClient, Route
 from ..flags import MessageFlags
+from ..snowflake import Snowflakeish
 from ..types import allowed_mentions
+
 
 class Commands:
     def __init__(self, rest: RESTClient):
         self.rest = rest
-    
+
     def create_global_application_command(
         self,
         application_id: Snowflakeish,

@@ -158,53 +158,53 @@ class VoiceGateway:
                     raw_interval = d['heartbeat_interval'] / 1000.0
                     interval = min(raw_interval, 5.0)
                     await self.hello(interval=interval)
-        
+
         close_code = self.ws.close_code
 
         if close_code is None:
             return
         else:
             await self.closed(close_code)
-    
+
     async def closed(self, code):
         _log.info('Voice websocket closed with code %s', code)
 
         if code == 4001:
             raise RuntimeError('Invalid opcode was sent')
-        
+
         elif code == 4002:
             raise RuntimeError("Payload failed to decode (server side)")
-        
+
         elif code == 4003:
             raise RuntimeError('Not authenticated')
-        
+
         elif code == 4004:
             raise RuntimeError("Authentication failed")
-        
+
         elif code == 4005:
             raise RuntimeError('Already authenticated')
-        
+
         elif code == 4006:
             raise RuntimeError('Session no longer valid')
-        
+
         elif code == 4009:
             raise RuntimeError("Session timed out")
-        
+
         elif code == 4011:
             raise RuntimeError("Server not found")
-        
+
         elif code == 4012:
             raise RuntimeError("Unknown protocol")
-        
+
         elif code == 4014:
             raise RuntimeError("Disconnected")
-        
+
         elif code == 4015:
             raise RuntimeError("Voice Server Crashed")
-        
+
         elif code == 4016:
             raise RuntimeError("Unknown encyption code")
-        
+
         else:
             raise NotImplementedError("Unknown error code")
 

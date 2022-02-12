@@ -20,13 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-import typing
 import datetime
+import typing
+from typing import Any, Optional
+
 from aio import utils
+
 from ..api.rest import RESTClient, Route
-from typing import Optional, Any
-from ..file import File
 from ..enums import ScheduledEventType
+from ..file import File
+
 
 class Guilds:
     def __init__(self, rest: RESTClient):

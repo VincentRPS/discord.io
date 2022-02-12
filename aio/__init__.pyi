@@ -11,6 +11,7 @@ from .events import *
 from .file import *
 from .flags import *
 from .guild import *
+from .http import *
 from .intents import *
 from .interactions import *
 from .internal import *

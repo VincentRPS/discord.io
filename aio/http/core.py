@@ -21,13 +21,15 @@
 # SOFTWARE
 
 import typing
-import aiohttp
-from ..api.rest import Route, RESTClient
 
+import aiohttp
+
+from ..api.rest import RESTClient, Route
 from ..state import ConnectionState
 from .channels import Channels
 from .commands import Commands
 from .guilds import Guilds
+
 
 class RESTFactory(Channels, Commands, Guilds):
     """The RESTFactory for most requests.
@@ -80,7 +82,7 @@ class RESTFactory(Channels, Commands, Guilds):
         self,
     ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
         return self.rest.send(Route('GET', '/gateway/bot'))
-    
+
     async def ws_connect(self, url: str, *, compress: int = 0):
         kwargs = {
             'proxy_auth': self.proxy_auth,

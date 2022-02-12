@@ -22,18 +22,19 @@
 
 import typing
 from json import dumps
-from ..file import File
-from ..api.rest import RESTClient, Route
-from ..types import allowed_mentions
 from typing import Dict, Optional, Sequence
-from ..snowflake import Snowflakeish
+
+from ..api.rest import RESTClient, Route
 from ..assets import Attachment
+from ..file import File
+from ..snowflake import Snowflakeish
+from ..types import allowed_mentions
+
 
 class Channels:
     def __init__(self, rest: RESTClient):
         self.rest = rest
 
-    
     def create_message(
         self,
         channel: Snowflakeish,

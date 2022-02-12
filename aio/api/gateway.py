@@ -39,9 +39,9 @@ from aio.events import catalog
 from aio.snowflake import Snowflakeish
 from aio.types.dict import Dict
 
+from ..http import RESTFactory
 from ..internal.dispatcher import Dispatcher
 from ..state import ConnectionState
-from ..http import RESTFactory
 
 ZLIB_SUFFIX = b'\x00\x00\xff\xff'
 _log = logging.getLogger(__name__)
@@ -341,9 +341,7 @@ class Shard:
                     'intents': self.state._bot_intents,
                     'properties': {
                         '$os': platform.system(),
-                        '$browser': 'aio'
-                        if self.mobile is False
-                        else 'Discord iOS',
+                        '$browser': 'aio' if self.mobile is False else 'Discord iOS',
                         '$device': 'aio',
                     },
                     'shard': (self.shard_id, self.state.shard_count),
