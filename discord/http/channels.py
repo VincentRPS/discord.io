@@ -188,9 +188,7 @@ class Channels:
             'tempoary': tempoary,
             'unique': unique,
         }
-        if channel_id:
-            json['channel_id'] = channel_id
-        return self.rest.send(Route('POST'), reason=reason, json=json)
+        return self.rest.send(Route('POST', f'/channels/{channel_id}/invites', channel_id=channel_id), reason=reason, json=json)
 
     def get_guild_channels(
         self,
