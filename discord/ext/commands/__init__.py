@@ -1,7 +1,7 @@
 """
 discord.ext.commands
 ~~~~~~~~~~~~~~~~~~~~
-Commands extension for aio
+Commands extension for discord.io
 """
 from .bot import *
 from .context import *

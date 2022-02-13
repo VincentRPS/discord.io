@@ -7,7 +7,7 @@ Asynchronous Discord API Wrapper For Python
 :license: MIT
 """
 
-__title__: str = 'aio'
+__title__: str = 'discord.io'
 __author__: str = 'VincentRPS'
 __license__: str = 'MIT'
 __copyright__: str = 'Copyright 2021-present VincentRPS'
