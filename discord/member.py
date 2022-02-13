@@ -192,6 +192,37 @@ class Member:
             timeout=timeout,
             reason=reason,
         )
+    
+    def ban(self, delete_message_days: int = 0, reason: str = None):
+        """Bans the member
+
+        Parameters
+        ----------
+        delete_message_days: Optional[:class:`int`]
+            The amount of days to delete messages for
+        reason: Optional[:class:`str`]
+            A reason why you are banning this member
+        """
+        return self._factory.ban_guild_member(
+            guild_id=self.guild_id,
+            user=self.user.id,
+            delete_message_days=delete_message_days,
+            reason=reason,
+        )
+    
+    def kick(self, reason: str = None):
+        """Kicks the member
+
+        Parameters
+        ----------
+        reason: Optional[:class:`str`]
+            A reason why you are kicking this member
+        """
+        return self._factory.kick_guild_member(
+            guild_id=self.guild_id,
+            user=self.user.id,
+            reason=reason,
+        )
 
 
 class Presence:

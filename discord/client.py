@@ -115,7 +115,7 @@ class Client:
     def __init__(
         self,
         intents: Optional[int] = 32509,
-        module: Optional[str] = 'aio',
+        module: Optional[str] = 'discord',
         shards: Optional[int] = None,
         mobile: Optional[bool] = False,
         proxy: Optional[str] = None,
@@ -400,7 +400,7 @@ class Client:
 
         def decorator(func: CFT) -> CFT:
             name = func.__name__  # if name is None else name # fix this somehow?
-            description = func.__doc__
+            description = "No description provided" if func.__doc__ is None else func.__doc__           
 
             if guild_ids is not None:
                 for guild in guild_ids:

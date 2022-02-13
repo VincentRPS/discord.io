@@ -24,9 +24,12 @@ The ConnectionState Caches most things during connection.
 """
 import asyncio
 from collections import OrderedDict
-from typing import Any, Callable, Coroutine, List, Tuple, TypeVar, Union
+from typing import Any, Callable, Coroutine, List, Tuple, TypeVar, Union, TYPE_CHECKING
 
 from discord.types.dict import Dict
+
+if TYPE_CHECKING:
+    from .client import Client
 
 __all__: List = ['Hold', 'ConnectionState']
 
@@ -162,7 +165,7 @@ class ConnectionState:
         self._seq: int = None
         """The seq number"""
 
-        self.app = options.get('bot', None)
+        self.app: Client = options.get('bot', None)
         """The bot app"""
 
         self._voice_seq: int = None

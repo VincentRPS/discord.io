@@ -81,7 +81,7 @@ def start_logging(flavor: Union[None, int, str, Dict], debug: bool = False):
     logging.captureWarnings(True)
 
 
-def print_banner(module: Optional[str] = 'aio'):
+def print_banner(module: Optional[str] = 'discord'):
     banner = importlib.resources.read_text(module, 'banner.txt')
     today = datetime.date.today()
 

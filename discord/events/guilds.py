@@ -237,7 +237,7 @@ class OnRoleCreate(Event):
     """
 
     def process(self):
-        role = Role(self.data['role'])
+        role = Role(self.data['role'], self.state.app.factory)
         guild = Guild(
             self.state.guilds.get(self.data['guild_id']), self.state.app.factory
         )
@@ -258,8 +258,8 @@ class OnRoleUpdate(Event):
     """
 
     def process(self):
-        before = Role(self.state.roles.get(self.data['role']['id']))
-        after = Role(self.data['role'])
+        before = Role(self.state.roles.get(self.data['role']['id']), self.state.app.factory)
+        after = Role(self.data['role'], self.state.app.factory)
         guild = Guild(
             self.state.guilds.get(self.data['guild_id']), self.state.app.factory
         )
@@ -278,7 +278,7 @@ class OnRoleDelete(Event):
     """
 
     def process(self):
-        role = Role(self.state.roles.pop(self.data['role_id']))
+        role = Role(self.state.roles.pop(self.data['role_id']), self.state.app.factory)
         guild = Guild(
             self.state.guilds.get(self.data['guild_id']), self.state.app.factory
         )
@@ -295,7 +295,7 @@ class OnScheduledEventCreate(Event):
     """
 
     def process(self):
-        ret = ScheduledEvent(self.data)
+        ret = ScheduledEvent(self.data, self.state.app.factory)
         self.state.guild_events.new(ret.id, self.data)
         self.dispatch('scheduled_event', ret)
 
@@ -310,7 +310,7 @@ class OnScheduledEventUpdate(Event):
     """
 
     def process(self):
-        after = ScheduledEvent(self.data)
+        after = ScheduledEvent(self.data, self.state.app.factory)
         raw_before = self.state.guild_events.get(after.id)
         before = raw_before
 
@@ -327,7 +327,7 @@ class OnScheduledEventDelete(Event):
     """
 
     def process(self):
-        event = ScheduledEvent(self.data)
+        event = ScheduledEvent(self.data, self.state.app.factory)
         self.dispatch('scheduled_event_delete', event)
         self.state.guild_events.pop(event)
 
@@ -349,7 +349,7 @@ class OnScheduledEventJoin(Event):
         raw_event = self.state.guild_events.get(raw_event_id)
         raw_user = self.state.members.get(raw_user_id)
         raw_guild = self.state.guilds.get(raw_guild_id)
-        event = ScheduledEvent(raw_event)
+        event = ScheduledEvent(raw_event, self.state.app.factory)
         user = User(raw_user)
         guild = Guild(raw_guild)
 
@@ -373,7 +373,7 @@ class OnScheduledEventLeave(Event):
         raw_event = self.state.guild_events.get(raw_event_id)
         raw_user = self.state.members.get(raw_user_id)
         raw_guild = self.state.guilds.get(raw_guild_id)
-        event = ScheduledEvent(raw_event)
+        event = ScheduledEvent(raw_event, self.state.app.factory)
         user = Member(raw_user)
         guild = Guild(raw_guild)
 

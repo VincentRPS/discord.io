@@ -113,15 +113,16 @@ Guild
 .. autoclass:: ScheduledEvent
     :members:
 
-
 .. autoclass:: ScheduledEventMetadata
     :members:
-
 
 .. autoclass:: WelcomeScreen
     :members:
 
 .. autoclass:: WelcomeChannel
+    :members:
+
+.. autoclass:: Ban
     :members:
 
 Channels

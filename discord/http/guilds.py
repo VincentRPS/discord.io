@@ -73,6 +73,31 @@ class Guilds:
             reason=reason,
             json=ret,
         )
+    
+    def ban_guild_member(
+        self,
+        guild_id: int,
+        user: int,
+        delete_message_days: typing.Optional[int] = 0,
+        reason: typing.Optional[str] = None,
+    ):
+        json = {'delete_message_days': delete_message_days}
+        return self.rest.send(
+            Route('PUT', f'/guilds/{guild_id}/bans/{user}', guild_id=guild_id),
+            reason=reason,
+            json=json,
+        )
+    
+    def kick_guild_member(
+        self,
+        guild_id: int,
+        user: int,
+        reason: typing.Optional[str] = None,
+    ):
+        return self.rest.send(
+            Route('DELETE', f'/guilds/{guild_id}/members/{user}', guild_id=guild_id),
+            reason=reason,
+        )
 
     def get_guild(self, guild_id: int):
         return self.rest.send(Route('GET', f'/guilds/{guild_id}', guild_id=guild_id))
@@ -89,6 +114,12 @@ class Guilds:
         afk_timeout: Optional[int] = None,
     ):
         ...
+    
+    def delete_guild(
+        self,
+        guild_id: int,
+    ):
+        return self.rest.send(Route('DELETE', f'/guilds/{guild_id}', guild_id=guild_id))
 
     def create_guild(
         self,
@@ -224,4 +255,47 @@ class Guilds:
             form=form,
             files=[file],
             reason=reason,
+        )
+
+    def get_guild_bans(
+        self,
+        guild_id: int,
+    ):
+        return self.rest.send(
+            Route('GET', f'/guilds/{guild_id}/bans', guild_id=guild_id)
+        )
+    
+    def get_guild_ban(
+        self,
+        guild_id: int,
+        user: int,
+    ):
+        return self.rest.send(
+            Route('GET', f'/guilds/{guild_id}/bans/{user}', guild_id=guild_id)
+        )
+    
+    def give_user_role(
+        self,
+        guild_id: int,
+        user: int,
+        role: int,
+        *,
+        reason: Optional[str] = None,
+    ):
+        return self.rest.send(
+            Route('PUT', f'/guilds/{guild_id}/members/{user}/roles/{role}', guild_id=guild_id),
+            reason=reason
+        )
+    
+    def remove_user_role(
+        self,
+        guild_id: int,
+        user: int,
+        role: int,
+        *,
+        reason: Optional[str] = None,
+    ):
+        return self.rest.send(
+            Route('DELETE', f'/guilds/{guild_id}/members/{user}/roles/{role}', guild_id=guild_id),
+            reason=reason
         )

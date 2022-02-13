@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 import asyncio
-from typing import Callable
+from typing import Callable, Optional
 
 from ...internal import run_storage
 from ...state import ConnectionState
@@ -34,7 +34,13 @@ class Command:
     """
 
     def __init__(
-        self, func: Callable, prefix: str, state: ConnectionState, *, cog: Cog = None
+        self, 
+        func: Callable, 
+        prefix: str, 
+        state: ConnectionState, 
+        *, 
+        cog: Cog = None,
+        description: Optional[str] = None
     ):
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Command must be a coroutine")
@@ -42,6 +48,7 @@ class Command:
         self.prefix = prefix
         self.state = state
         self.cog = cog
+        self._desc = description or func.__doc__ or "No description provided"
         self._storage = run_storage.InternalRunner(self.state.loop)
 
     def __call__(self, context, *args, **kwargs):

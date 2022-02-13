@@ -191,3 +191,52 @@ class Channels:
         if channel_id:
             json['channel_id'] = channel_id
         return self.rest.send(Route('POST'), reason=reason, json=json)
+
+    def get_guild_channels(
+        self,
+        guild: int,
+    ):
+        return self.rest.send(Route('GET', f'/guilds/{guild}', guild_id=guild))
+
+    def create_guild_channel(
+        self,
+        guild_id: int,
+        name: str,
+        type: typing.Optional[int] = None,
+        *,
+        reason: typing.Optional[str] = None,
+        position: typing.Optional[int] = None,
+        permission_overwrites: typing.Optional[typing.List[Dict]] = None,
+        topic: typing.Optional[str] = None,
+        bitrate: typing.Optional[int] = None,
+        user_limit: typing.Optional[int] = None,
+        rate_limit_per_user: typing.Optional[int] = None,
+        nsfw: typing.Optional[bool] = False,
+        parent_id: typing.Optional[int] = None,
+    ):
+        json = {
+            'name': name
+        }
+        if type:
+            json['type'] = type
+        if position:
+            json['position'] = position
+        if permission_overwrites:
+            json['permission_overwrites'] = permission_overwrites
+        if topic:
+            json['topic'] = topic
+        if bitrate:
+            json['bitrate'] = bitrate
+        if user_limit:
+            json['user_limit'] = user_limit
+        if rate_limit_per_user:
+            json['rate_limit_per_user'] = rate_limit_per_user
+        if nsfw:
+            json['nsfw'] = nsfw
+        if parent_id:
+            json['parent_id'] = parent_id
+        return self.rest.send(
+            Route('POST', f'/guilds/{guild_id}/channels', guild_id=guild_id),
+            reason=reason,
+            json=json,
+        )

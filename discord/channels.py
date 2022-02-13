@@ -20,10 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Union
 
 from .enums import FormatType
-from .guild import Guild
 from .state import ConnectionState
 from .user import User
 
@@ -249,7 +248,7 @@ class VoiceChannel:
         return self.from_dict['id']
 
     @property
-    def guild(self) -> Guild:
+    def guild(self):
         """The guild this channel is in
 
         Returns
@@ -257,8 +256,8 @@ class VoiceChannel:
         :class:`Guild`
         """
         id = self.from_dict['guild_id']
-        raw = self.state.app.fetch_raw_guild(guild_id=id)
-        return Guild(raw, self.state.app.factory)
+        raw = self.state.app.fetch_guild(guild_id=id)
+        return raw
 
     @property
     def name(self) -> str:

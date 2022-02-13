@@ -29,6 +29,8 @@ from .assets import Emoji
 from .enums import FormatType, ScheduledEventStatusType, ScheduledEventType
 from .member import Member
 from .user import User
+from .http import RESTFactory
+from .channels import channel_parse
 
 __all__: List[str] = [
     'Guild',
@@ -39,6 +41,38 @@ __all__: List[str] = [
     'ScheduledEventMetadata',
 ]
 
+class BanObject:
+    """Represents a Discord Ban Object
+    
+    .. versionadded:: 0.9.0
+
+    Parameters
+    ----------
+    data: :class:`dict`
+        The raw data
+    """
+    def __init__(self, data: Dict):
+        self.from_dict = data
+    
+    @property
+    def reason(self) -> str:
+        """The reason of the ban
+        
+        Returns
+        -------
+        :class:`str`
+        """
+        return self.from_dict['reason']
+    
+    @property
+    def user(self) -> User:
+        """The user which invoked the ban
+        
+        Returns
+        -------
+        :class:`User`
+        """
+        return User(self.from_dict['user'])
 
 class Guild:
     """Represents a Discord Guild.
@@ -56,7 +90,7 @@ class Guild:
     # cache helpers for guilds.
     def __init__(self, guild: Dict, rest_factory):
         self.from_dict = guild
-        self._factory = rest_factory
+        self._factory: RESTFactory = rest_factory
 
     def joined_at(self) -> str:
         return self.from_dict['joined_at']
@@ -154,6 +188,45 @@ class Guild:
         await self._factory.state.app.gateway.voice_state(
             guild=self.id, channel=channel, mute=self_mute, deaf=self_deaf
         )
+    
+    def leave(self):
+        """Leaves the guild"""
+        return self._factory.leave_guild(self.id)
+    
+    async def get_channels(self):
+        """Gives a list of Channel objects
+
+        Returns
+        -------
+        List[Union[:class:`TextChannel`, :class:`VoiceChannel`, :class:`Category`, :class:`DMChannel`, :class:`GroupDMChannel`, :class:`Thread`]]
+        """
+        raw = await self._factory.get_guild_channels(self.id)
+        return [channel_parse(channel['type'], channel, self._factory.state) for channel in raw]
+    
+    async def get_bans(self):
+        """Gives a list of :class:`Ban`
+        
+        Returns
+        -------
+        List[:class:`Ban`]
+        """
+        raw = await self._factory.get_guild_bans(self.id)
+        return [BanObject(ban) for ban in raw]
+
+    async def get_ban(self, user_id: int):
+        """Gets a ban for a user
+
+        Parameters
+        ----------
+        user_id: :class:`int`
+            The user id to get the ban for
+        
+        Returns
+        -------
+        :class:`Ban`
+        """
+        raw = await self._factory.get_guild_ban(self.id, user_id)
+        return BanObject(raw)
 
 
 def parse_role_icon(format: FormatType, role_id: int, role_icon: str) -> str:
@@ -175,8 +248,9 @@ class Role:
         The raw role data
     """
 
-    def __init__(self, data: Dict):
+    def __init__(self, data: Dict, factory):
         self.from_dict = data
+        self.factory: RESTFactory = factory
 
     @property
     def id(self) -> int:
@@ -283,6 +357,18 @@ class Role:
         :class:`str`
         """
         return _parse_tags(self.from_dict)
+    
+    def give_to(self, user_id: int, reason: Optional[str] = None):
+        """Gives a user the role"""
+        return self.factory.give_user_role(user_id, self.id, reason=reason)
+    
+    def remove_from(
+        self,
+        user_id: int,
+        reason: Optional[str] = None,
+    ):
+        """Removes a user from the role"""
+        return self.factory.remove_user_role(user_id, self.id, reason=reason)
 
 
 def parse_event_banner(format: FormatType, event_id: int, event_hash: str) -> str:
@@ -300,8 +386,9 @@ class ScheduledEvent:
         The raw event data
     """
 
-    def __init__(self, data: Dict):
+    def __init__(self, data: Dict, factory):
         self.from_dict = data
+        self.factory: RESTFactory = factory
 
     @property
     def id(self) -> int:
@@ -487,8 +574,9 @@ class WelcomeScreen:
     data: :class:`dict`
     """
 
-    def __init__(self, data: Dict):
+    def __init__(self, data: Dict, factory):
         self.from_dict = data
+        self.factory: RESTFactory = factory
 
     @property
     def description(self) -> str:
