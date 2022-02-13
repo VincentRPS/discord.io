@@ -52,7 +52,7 @@ class Cog:
         """
 
         def decorator(func: CFT) -> CFT:
-            name = func.__name__  # if name is None else name # fix this somehow?
+            _name = func.__name__ if name is None else name
             description = func.__doc__
 
             a = func
@@ -62,7 +62,7 @@ class Cog:
             if guild_ids is not None:
                 Cog.guild_commands[name] = {
                     'guild_id': guild_ids,
-                    'name': name,
+                    'name': _name,
                     'description': description,
                     'callback': a,
                     'options': options,
@@ -70,7 +70,7 @@ class Cog:
                 }
             else:
                 Cog.global_commands[name] = {
-                    'name': name,
+                    'name': _name,
                     'description': description,
                     'callback': a,
                     'options': options,

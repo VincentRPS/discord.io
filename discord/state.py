@@ -24,7 +24,7 @@ The ConnectionState Caches most things during connection.
 """
 import asyncio
 from collections import OrderedDict
-from typing import Any, Callable, Coroutine, List, Tuple, TypeVar, Union, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Callable, Coroutine, List, Tuple, TypeVar, Union
 
 from discord.types.dict import Dict
 

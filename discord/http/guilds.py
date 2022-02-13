@@ -73,7 +73,7 @@ class Guilds:
             reason=reason,
             json=ret,
         )
-    
+
     def ban_guild_member(
         self,
         guild_id: int,
@@ -87,7 +87,7 @@ class Guilds:
             reason=reason,
             json=json,
         )
-    
+
     def kick_guild_member(
         self,
         guild_id: int,
@@ -114,7 +114,7 @@ class Guilds:
         afk_timeout: Optional[int] = None,
     ):
         ...
-    
+
     def delete_guild(
         self,
         guild_id: int,
@@ -264,7 +264,7 @@ class Guilds:
         return self.rest.send(
             Route('GET', f'/guilds/{guild_id}/bans', guild_id=guild_id)
         )
-    
+
     def get_guild_ban(
         self,
         guild_id: int,
@@ -273,7 +273,7 @@ class Guilds:
         return self.rest.send(
             Route('GET', f'/guilds/{guild_id}/bans/{user}', guild_id=guild_id)
         )
-    
+
     def give_user_role(
         self,
         guild_id: int,
@@ -283,10 +283,14 @@ class Guilds:
         reason: Optional[str] = None,
     ):
         return self.rest.send(
-            Route('PUT', f'/guilds/{guild_id}/members/{user}/roles/{role}', guild_id=guild_id),
-            reason=reason
+            Route(
+                'PUT',
+                f'/guilds/{guild_id}/members/{user}/roles/{role}',
+                guild_id=guild_id,
+            ),
+            reason=reason,
         )
-    
+
     def remove_user_role(
         self,
         guild_id: int,
@@ -296,6 +300,10 @@ class Guilds:
         reason: Optional[str] = None,
     ):
         return self.rest.send(
-            Route('DELETE', f'/guilds/{guild_id}/members/{user}/roles/{role}', guild_id=guild_id),
-            reason=reason
+            Route(
+                'DELETE',
+                f'/guilds/{guild_id}/members/{user}/roles/{role}',
+                guild_id=guild_id,
+            ),
+            reason=reason,
         )

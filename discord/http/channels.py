@@ -214,9 +214,7 @@ class Channels:
         nsfw: typing.Optional[bool] = False,
         parent_id: typing.Optional[int] = None,
     ):
-        json = {
-            'name': name
-        }
+        json = {'name': name}
         if type:
             json['type'] = type
         if position:

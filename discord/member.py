@@ -192,7 +192,7 @@ class Member:
             timeout=timeout,
             reason=reason,
         )
-    
+
     def ban(self, delete_message_days: int = 0, reason: str = None):
         """Bans the member
 
@@ -209,7 +209,7 @@ class Member:
             delete_message_days=delete_message_days,
             reason=reason,
         )
-    
+
     def kick(self, reason: str = None):
         """Kicks the member
 

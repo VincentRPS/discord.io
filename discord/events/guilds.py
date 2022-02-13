@@ -258,7 +258,9 @@ class OnRoleUpdate(Event):
     """
 
     def process(self):
-        before = Role(self.state.roles.get(self.data['role']['id']), self.state.app.factory)
+        before = Role(
+            self.state.roles.get(self.data['role']['id']), self.state.app.factory
+        )
         after = Role(self.data['role'], self.state.app.factory)
         guild = Guild(
             self.state.guilds.get(self.data['guild_id']), self.state.app.factory

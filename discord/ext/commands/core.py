@@ -34,11 +34,11 @@ class Command:
     """
 
     def __init__(
-        self, 
-        func: Callable, 
-        prefix: str, 
-        state: ConnectionState, 
-        *, 
+        self,
+        func: Callable,
+        prefix: str,
+        state: ConnectionState,
+        *,
         cog: Cog = None,
         description: Optional[str] = None
     ):
@@ -51,7 +51,7 @@ class Command:
         self._desc = description or func.__doc__ or "No description provided"
         self._storage = run_storage.InternalRunner(self.state.loop)
 
-    def __call__(self, context, *args, **kwargs):
+    def _run(self, context, *args, **kwargs):
         if self.cog:
             self._storage._run_process(self.coro, self.cog, context, *args, **kwargs)
         else:

@@ -375,7 +375,7 @@ class Client:
 
     def slash_command(
         self,
-        name: str = None,
+        name: Optional[str] = None,
         options: List[dict] = None,
         guild_ids: List[int] = None,
         default_permission: bool = True,
@@ -399,15 +399,17 @@ class Client:
         """
 
         def decorator(func: CFT) -> CFT:
-            name = func.__name__  # if name is None else name # fix this somehow?
-            description = "No description provided" if func.__doc__ is None else func.__doc__           
+            _name = func.__name__ if name is None else name
+            description = (
+                "No description provided" if func.__doc__ is None else func.__doc__
+            )
 
             if guild_ids is not None:
                 for guild in guild_ids:
                     self.state.loop.create_task(
                         self.application.register_guild_slash_command(
                             guild_id=guild,
-                            name=name,
+                            name=_name,
                             description=description,
                             callback=func,
                             options=options,
@@ -417,7 +419,7 @@ class Client:
             else:
                 self.state.loop.create_task(
                     self.application.register_global_slash_command(
-                        name=name,
+                        name=_name,
                         description=description,
                         callback=func,
                         options=options,
