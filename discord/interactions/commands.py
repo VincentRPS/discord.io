@@ -20,16 +20,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import Callable, Optional, List
-from .option_converter import Option, Choice
+from typing import Callable, List, Optional
+
+from .option_converter import Choice, Option
 from .registry import ApplicationCommandRegistry
+
 
 class ApplicationCommand:
     def __init__(
-        self, 
-        func: Callable, 
-        name: Optional[str] = None, 
-        description: Optional[str] = None, 
+        self,
+        func: Callable,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
         registry: ApplicationCommandRegistry = None,
         group: bool = False,
     ):
@@ -40,7 +42,12 @@ class ApplicationCommand:
         self.desc = description or func.__doc__ or 'No description provided'
         self.options: List[Option] = []
 
-    def sub_command(self, name: Optional[str] = None, description: Optional[str] = None, choices: List[Choice] = None):
+    def sub_command(
+        self,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        choices: List[Choice] = None,
+    ):
         def decorator(func: Callable) -> Option:
             _name = name or func.__name__
             _description = description or func.__doc__ or 'No description provided'
@@ -53,5 +60,5 @@ class ApplicationCommand:
             self.options.append(sub_command)
 
             return sub_command
-        
+
         return decorator

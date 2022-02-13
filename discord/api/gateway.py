@@ -341,7 +341,9 @@ class Shard:
                     'intents': self.state._bot_intents,
                     'properties': {
                         '$os': platform.system(),
-                        '$browser': 'discord.io' if self.mobile is False else 'Discord iOS',
+                        '$browser': 'discord.io'
+                        if self.mobile is False
+                        else 'Discord iOS',
                         '$device': 'discord.io',
                     },
                     'shard': (self.shard_id, self.state.shard_count),

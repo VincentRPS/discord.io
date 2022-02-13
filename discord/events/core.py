@@ -43,5 +43,3 @@ class Event(abc.ABC):
     # meant to be overridden.
     def process(self) -> None:
         ...
-
-
