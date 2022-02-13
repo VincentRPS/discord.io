@@ -539,5 +539,5 @@ class Client:
                 cog=real,
             )
 
-    def wait_for(self):
-        return self.dispatcher.wait_for
+    def wait_for(self, event: str):
+        return self.dispatcher.wait_for(event)

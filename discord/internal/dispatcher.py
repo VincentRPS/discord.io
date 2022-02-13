@@ -57,13 +57,13 @@ class Dispatcher:
         *args: Any,
         **kwargs: Any,
     ) -> None:
+        if one_shot:
+                delattr(self, name)
         try:
             if cog:
                 await coro(cog, *args, **kwargs)
             else:
                 await coro(*args, **kwargs)
-            if one_shot:
-                delattr(self, name)
         except asyncio.CancelledError:
             pass
         except Exception:
@@ -120,7 +120,11 @@ class Dispatcher:
         except AttributeError:
             ...
         else:
-            self.scheduler(coro['main'], real_name, coro['cog'], coro['on_cycle'], *args, **kwargs)
+            try:
+                one_cycle = coro['one_cycle']
+            except KeyError:
+                one_cycle = False
+            self.scheduler(coro['main'], real_name, coro['cog'], one_cycle, *args, **kwargs)
 
     def listen(self, coro: Coro) -> Coro:
         if not asyncio.iscoroutinefunction(coro):

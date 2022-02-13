@@ -26,8 +26,6 @@ from typing import Any
 from ..internal.dispatcher import Dispatcher
 from ..state import ConnectionState
 
-from ..client import Client
-
 
 class Event(abc.ABC):
     """The base event class for all events."""
@@ -52,5 +50,9 @@ class EventNext(abc.ABC):
     __slots__ = ()
 
     @property
-    def app(self) -> Client:
+    def state(self) -> ConnectionState:
         raise NotImplementedError
+
+    @property
+    def app(self):
+        return self.state.app
