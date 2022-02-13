@@ -42,6 +42,13 @@ class OnMessage(Event):
         self.state.channels.edit(ret.channel.id, ret.channel.from_dict)
         self.dispatch('MESSAGE', ret)
 
+        # ext.commands
+        for command in self.state.prefixed_commands:
+            if ret.content.startswith(command.prefix):
+                content = ret.content[len(command.prefix) :]
+                if content.startswith(command.name):
+                    command.invoke(ret)
+
 
 class OnMessageEdit(Event):
     """Returns the new :class:`Message` and if cached the old :class:`Message`"""

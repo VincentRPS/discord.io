@@ -25,6 +25,15 @@ from typing import Callable, Optional
 from ...internal import run_storage
 from ...state import ConnectionState
 from ..cogs import Cog
+from .context import Context
+from ...message import Message
+
+
+# probably doesn't work how i want
+def remove_channel(string: str):
+    fake_ret = string[4:]
+    ret = fake_ret[:4]
+    return ret
 
 
 class Command:
@@ -36,6 +45,7 @@ class Command:
     def __init__(
         self,
         func: Callable,
+        name: str,
         prefix: str,
         state: ConnectionState,
         *,
@@ -44,6 +54,7 @@ class Command:
     ):
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Command must be a coroutine")
+        self.name = name
         self.coro = func
         self.prefix = prefix
         self.state = state
@@ -53,6 +64,10 @@ class Command:
 
     def _run(self, context, *args, **kwargs):
         if self.cog:
-            self._storage._run_process(self.coro, self.cog, context, *args, **kwargs)
+            self.state.loop.create_task(self._storage._run_process(self.coro, self.cog, context, *args, **kwargs))
         else:
-            self._storage._run_process(self.coro, context, *args, **kwargs)
+            self.state.loop.create_task(self._storage._run_process(self.coro, context, *args, **kwargs))
+
+    def invoke(self, msg: Message, *args, **kwargs):
+        context = Context(msg, self)
+        self._run(context, *args, **kwargs)

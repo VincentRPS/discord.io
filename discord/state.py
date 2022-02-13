@@ -30,6 +30,7 @@ from discord.types.dict import Dict
 
 if TYPE_CHECKING:
     from .client import Client
+    from .ext.commands import Command
 
 __all__: List = ['Hold', 'ConnectionState']
 
@@ -200,7 +201,7 @@ class ConnectionState:
 
         self.components: dict[str, Any] = {}
 
-        self.prefixed_commands: dict[str, List[CoroFunc]] = {}
+        self.prefixed_commands: List[Command] = []
 
         self.application_commands: dict[str, Any] = {}
 

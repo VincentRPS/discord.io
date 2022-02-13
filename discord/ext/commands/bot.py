@@ -20,28 +20,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-import abc
-from typing import Any
-
-from ..internal.dispatcher import Dispatcher
-from ..state import ConnectionState
+from ...client import CFT, Client
+from .core import Command
 
 
-class Event(abc.ABC):
-    """The base event class for all events."""
+class Bot(Client):
+    def __init__(self, command_prefix: str, **kwargs):
+        super().__init__(**kwargs)
+        self.command_prefix = command_prefix
 
-    def __init__(self, data, dispatcher: Dispatcher, state: ConnectionState):
-        self.data: dict = data
-        self.dispatch = dispatcher.dispatch
-        self.state = state
-        self.process()
+    def command(self, name):
+        def decorator(func: CFT) -> CFT:
+            _name = name or func.__name__
+            _description = func.__doc__
+            cmd = Command(
+                func=func,
+                prefix=self.command_prefix,
+                state=self.state,
+                description=_description,
+                name=_name,
+            )
+            self.state.prefixed_commands.append(cmd)
+            return func
 
-    @property
-    def app(self) -> Any:
-        return self.state.app
-
-    # meant to be overridden.
-    def process(self) -> None:
-        ...
-
-
+        return decorator

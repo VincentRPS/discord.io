@@ -26,6 +26,7 @@ Dispatches raw Opcode events to Event classes.
 import asyncio
 import logging
 from typing import Any, Callable, Coroutine, List, Optional, TypeVar
+
 from discord.state import ConnectionState
 
 __all__: List[str] = ['Dispatcher']
@@ -58,7 +59,7 @@ class Dispatcher:
         **kwargs: Any,
     ) -> None:
         if one_shot:
-                delattr(self, name)
+            delattr(self, name)
         try:
             if cog:
                 await coro(cog, *args, **kwargs)
@@ -124,7 +125,9 @@ class Dispatcher:
                 one_cycle = coro['one_cycle']
             except KeyError:
                 one_cycle = False
-            self.scheduler(coro['main'], real_name, coro['cog'], one_cycle, *args, **kwargs)
+            self.scheduler(
+                coro['main'], real_name, coro['cog'], one_cycle, *args, **kwargs
+            )
 
     def listen(self, coro: Coro) -> Coro:
         if not asyncio.iscoroutinefunction(coro):
@@ -132,16 +135,17 @@ class Dispatcher:
 
         setattr(self, coro.__name__, coro)
         _log.info(f'{coro.__name__} has been registered!')
-    
-    def wait_for(self, event: str):
 
+    def wait_for(self, event: str):
         def decorator(func: CoroFunc):
             self.add_listener(func, name=event, one_cycle=True)
             return func
-        
+
         return decorator
 
-    def add_listener(self, func: CoroFunc, name: Optional[str] = None, cog=None, one_cycle=False):
+    def add_listener(
+        self, func: CoroFunc, name: Optional[str] = None, cog=None, one_cycle=False
+    ):
         name = func.__name__ if name is None else name
 
         if not asyncio.iscoroutinefunction(func):

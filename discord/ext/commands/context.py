@@ -20,28 +20,32 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-import abc
-from typing import Any
+from typing import Any, List, Optional, Sequence
 
-from ..internal.dispatcher import Dispatcher
-from ..state import ConnectionState
-
-
-class Event(abc.ABC):
-    """The base event class for all events."""
-
-    def __init__(self, data, dispatcher: Dispatcher, state: ConnectionState):
-        self.data: dict = data
-        self.dispatch = dispatcher.dispatch
-        self.state = state
-        self.process()
-
-    @property
-    def app(self) -> Any:
-        return self.state.app
-
-    # meant to be overridden.
-    def process(self) -> None:
-        ...
+from ...embed import Embed
+from ...file import File
+from ...message import Message
+from ...types import allowed_mentions
 
 
+class Context:
+    """Represents a :class:`Command`' context"""
+
+    def __init__(self, msg: Message, command_invoked_under):
+        self.message = msg
+        self.command = command_invoked_under
+
+    def send(
+        self,
+        content: Optional[str] = None,
+        files: Optional[Sequence[File]] = None,
+        embed: Optional[Embed] = None,
+        embeds: Optional[List[Embed]] = None,
+        tts: Optional[bool] = False,
+        allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
+        components: List[dict[str, Any]] = None,
+        component=None,
+    ):
+        return self.message.send(
+            content, files, embed, embeds, tts, allowed_mentions, components, component
+        )
