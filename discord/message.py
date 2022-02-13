@@ -101,7 +101,8 @@ class Message:  # noqa: ignore
         -------
         :class:`Guild`
         """
-        return Guild(id=self.from_dict['guild_id'], rest_factory=self.app.factory)
+        raw = self.app.state.guilds.get(self.from_dict['guild_id'])
+        return Guild(raw, rest_factory=self.app.factory)
 
     @property
     def author(self) -> User:
