@@ -176,7 +176,7 @@ class Shard:
                 await asyncio.sleep(delay)
 
     async def check_connection(self):
-        await asyncio.sleep(50)
+        await asyncio.sleep(20)
         if self.last_recv + 60.0 < perf_counter():
             _log.warning(
                 f'Shard {self.shard_id} has stopped receiving from the gateway, reconnecting'
