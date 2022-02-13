@@ -53,10 +53,11 @@ CFT = TypeVar('CFT', bound='dispatcher.CoroFunc')
 
 
 def get_event_loop():
+    _fake_log = logging.getLogger('asyncio')
     try:
         return asyncio.get_running_loop()
     except RuntimeError:
-        _log.warning('No running event loop detected, creating one')
+        _fake_log.warning('No running event loop detected, creating one')
         return asyncio.new_event_loop()
 
 

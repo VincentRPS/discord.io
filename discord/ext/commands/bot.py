@@ -30,7 +30,7 @@ class Bot(Client):
         self.command_prefix = command_prefix
 
     def command(self, name):
-        def decorator(func: CFT) -> CFT:
+        def decorator(func: CFT) -> Command:
             _name = name or func.__name__
             _description = func.__doc__
             cmd = Command(
@@ -41,6 +41,6 @@ class Bot(Client):
                 name=_name,
             )
             self.state.prefixed_commands.append(cmd)
-            return func
+            return cmd
 
         return decorator

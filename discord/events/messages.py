@@ -47,7 +47,7 @@ class OnMessage(Event):
             if ret.content.startswith(command.prefix):
                 content = ret.content[len(command.prefix) :]
                 if content.startswith(command.name):
-                    command.invoke(ret)
+                    command.invoke(ret, content=content)
 
 
 class OnMessageEdit(Event):

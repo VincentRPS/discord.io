@@ -20,8 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 import asyncio
-from typing import Callable, Optional
-
+import inspect
+from re import L
+from typing import Callable, Optional, Any
+from collections import OrderedDict
 from ...internal import run_storage
 from ...state import ConnectionState
 from ..cogs import Cog
@@ -34,7 +36,6 @@ def remove_channel(string: str):
     fake_ret = string[4:]
     ret = fake_ret[:4]
     return ret
-
 
 class Command:
     """Represents a prefixed Discord command
@@ -61,6 +62,20 @@ class Command:
         self.cog = cog
         self._desc = description or func.__doc__ or "No description provided"
         self._storage = run_storage.InternalRunner(self.state.loop)
+    
+    @property
+    def options(self):
+        dict = OrderedDict(inspect.signature(self._callback).parameters)
+        dict.popitem(last=False)
+        return dict
+    
+    @property
+    def _callback(self):
+        return self.coro
+    
+    @_callback.setter
+    def _callback(self, func: Callable[..., Any]):
+        self.coro = func
 
     def _run(self, context, *args, **kwargs):
         if self.cog:
@@ -68,6 +83,19 @@ class Command:
         else:
             self.state.loop.create_task(self._storage._run_process(self.coro, context, *args, **kwargs))
 
-    def invoke(self, msg: Message, *args, **kwargs):
+    def _run_with_options_detected(self, context: Context):
+        order = 0
+        to_give = OrderedDict()
+        for name, param in self.options.items():
+            order += 1
+            if param.annotation == str:
+                give = self.content_without_command.split(" ")[order]
+                to_give[name] = give
+ 
+        self._run(context, **to_give)
+
+    def invoke(self, msg: Message, **kwargs):
+        if "content" in kwargs:
+            self.content_without_command: str = kwargs.get("content")
         context = Context(msg, self)
-        self._run(context, *args, **kwargs)
+        self._run_with_options_detected(context)
