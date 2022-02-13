@@ -26,7 +26,6 @@ Dispatches raw Opcode events to Event classes.
 import asyncio
 import logging
 from typing import Any, Callable, Coroutine, List, Optional, TypeVar
-
 from discord.state import ConnectionState
 
 __all__: List[str] = ['Dispatcher']
@@ -54,6 +53,7 @@ class Dispatcher:
         coro: Callable[..., Coroutine[Any, Any, Any]],
         name: str,
         cog,
+        one_shot: bool,
         *args: Any,
         **kwargs: Any,
     ) -> None:
@@ -62,6 +62,8 @@ class Dispatcher:
                 await coro(cog, *args, **kwargs)
             else:
                 await coro(*args, **kwargs)
+            if one_shot:
+                delattr(self, name)
         except asyncio.CancelledError:
             pass
         except Exception:
@@ -72,10 +74,11 @@ class Dispatcher:
         coro: Callable[..., Coroutine[Any, Any, Any]],
         name: str,
         cog: Any,
+        one_shot: bool,
         *args: Any,
         **kwargs: Any,
     ) -> asyncio.Task:
-        wrap = self.run(coro, name, cog, *args, **kwargs)
+        wrap = self.run(coro, name, cog, one_shot, *args, **kwargs)
         return self.state.loop.create_task(wrap, name=f'aio: {name}')
 
     def dispatch(self, name: str, *args, **kwargs) -> None:
@@ -117,7 +120,7 @@ class Dispatcher:
         except AttributeError:
             ...
         else:
-            self.scheduler(coro['main'], real_name, coro['cog'], *args, **kwargs)
+            self.scheduler(coro['main'], real_name, coro['cog'], coro['on_cycle'], *args, **kwargs)
 
     def listen(self, coro: Coro) -> Coro:
         if not asyncio.iscoroutinefunction(coro):
@@ -125,14 +128,22 @@ class Dispatcher:
 
         setattr(self, coro.__name__, coro)
         _log.info(f'{coro.__name__} has been registered!')
+    
+    def wait_for(self, event: str):
 
-    def add_listener(self, func: CoroFunc, name: Optional[str] = None, cog=None):
+        def decorator(func: CoroFunc):
+            self.add_listener(func, name=event, one_cycle=True)
+            return func
+        
+        return decorator
+
+    def add_listener(self, func: CoroFunc, name: Optional[str] = None, cog=None, one_cycle=False):
         name = func.__name__ if name is None else name
 
         if not asyncio.iscoroutinefunction(func):
             raise TypeError('Function is not a coroutine.')
 
-        setattr(self, name, {'main': func, 'cog': cog})
+        setattr(self, name, {'main': func, 'cog': cog, 'one_cycle': one_cycle})
 
         if name.startswith('on_raw'):
             _log.debug(f'{name} added as a listener!')

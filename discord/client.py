@@ -538,3 +538,6 @@ class Client:
                 default_permission=command['default_permission'],
                 cog=real,
             )
+
+    def wait_for(self):
+        return self.dispatcher.wait_for

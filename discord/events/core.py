@@ -26,6 +26,8 @@ from typing import Any
 from ..internal.dispatcher import Dispatcher
 from ..state import ConnectionState
 
+from ..client import Client
+
 
 class Event(abc.ABC):
     """The base event class for all events."""
@@ -43,3 +45,12 @@ class Event(abc.ABC):
     # meant to be overridden.
     def process(self) -> None:
         ...
+
+class EventNext(abc.ABC):
+    """The base event class for all events."""
+
+    __slots__ = ()
+
+    @property
+    def app(self) -> Client:
+        raise NotImplementedError
