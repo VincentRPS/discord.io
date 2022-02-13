@@ -81,6 +81,8 @@ def Option(
         ret['type'] = 9
     elif type == Attachment:
         ret['type'] = 11
+    else:
+        ret['type'] = type
 
     if required is True:
         ret['required'] = True
