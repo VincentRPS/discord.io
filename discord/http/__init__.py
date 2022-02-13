@@ -1,6 +1,6 @@
 """
 discord.http
 ~~~~~~~~~
-HTTP related processes for discord.
+HTTP related processes for discord.io
 """
 from .core import *
