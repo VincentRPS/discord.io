@@ -1,8 +1,8 @@
 import asyncio
 
-import aio
+import discord
 
-webhook = aio.Webhook('id', 'token')
+webhook = discord.Webhook('id', 'token')
 
 
 async def send():

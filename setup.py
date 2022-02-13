@@ -28,15 +28,15 @@ with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
 packages = [
-    'aio',
-    'aio.events',
-    'aio.api',
-    'aio.internal',
-    'aio.components',
-    'aio.voice',
-    'aio.interactions',
-    'aio.types',
-    'aio.ext.cogs',
+    'discord',
+    'discord.events',
+    'discord.api',
+    'discord.internal',
+    'discord.components',
+    'discord.voice',
+    'discord.interactions',
+    'discord.types',
+    'discord.ext.cogs',
 ]
 
 extra_requires = {
@@ -59,10 +59,10 @@ setuptools.setup(
     },
     project_urls={
         'Documentation': 'https://aio-py.rtfd.io',
-        'Issue Tracker': 'https://github.com/aio-org/aio/issues',
-        'Pull Request Tracker': 'https://github.com/aio-org/aio/pulls',
+        'Issue Tracker': 'https://github.com/VincentRPS/discord.io/issues',
+        'Pull Request Tracker': 'https://github.com/VincentRPS/discord.io/pulls',
     },
-    url='https://github.com/aio-org/aio',
+    url='https://github.com/VincentRPS/discord.io',
     license='MIT',
     author='VincentRPS',
     long_description=open('README.md').read(),

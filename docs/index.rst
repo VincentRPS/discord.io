@@ -5,7 +5,7 @@
 
 Welcome to aio
 =====================
-Welcome to the documentation of aio.
+Welcome to the documentation of discord.
 aio is a Python based discord library, using aiohttp and asyncio.
 
 Getting Started

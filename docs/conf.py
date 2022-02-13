@@ -19,7 +19,7 @@ sys.path.append(os.path.abspath('extensions'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'aio'
+project = 'discord.io'
 copyright = '2021-present, VincentRPS'
 author = 'VincentRPS'
 
@@ -75,9 +75,9 @@ rst_prolog = """
 
 resource_links = {
     'discord': 'https://discord.gg/cvCAwntVhm',
-    'issues': 'https://github.com/aio-org/aio/issues',
-    'discussions': 'https://github.com/aio-org/aio/discussions',
-    'examples': 'https://github.com/aio-org/aio/tree/master/examples',
+    'issues': 'https://github.com/VincentRPS/discord.io/issues',
+    'discussions': 'https://github.com/VincentRPS/discord.io/discussions',
+    'examples': 'https://github.com/VincentRPS/discord.io/tree/master/examples',
 }
 
 # -- Options for intersphinx extension ---------------------------------------

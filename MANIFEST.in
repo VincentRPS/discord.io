@@ -1,6 +1,7 @@
 include requirements.txt
-include aio/py.typed
-include aio/banner.txt
-include aio/bin/*.dll
+include discord
+include discord/py.typed
+include discord/banner.txt
+include discord/bin/*.dll
 exclude pipelines
 exclude docs

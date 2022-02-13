@@ -1,5 +1,5 @@
 <p align='center'>
-  <img src='https://raw.githubusercontent.com/aio-org/aio/master/docs/assets/aio.png' />
+  <img src='https://raw.githubusercontent.com/VincentRPS/discord.io/master/docs/assets/discord.io.png' />
 </p>
 
 <p align='center'>
@@ -14,31 +14,31 @@ Asynchronous Discord API Wrapper for Python
 
 ## Installing
 
-To Install aio Just run the following command:
+To Install discord.io Just run the following command:
 
 ```py
-pip install aio
+pip install discord.io
 ```
 
 To install our speed requirements just run the following command:
 
 ```py
-pip install aio[speed]
+pip install discord.io[speed]
 ```
 
 For voice support run the following command:
 
 ```py
-pip install aio[voice]
+pip install discord.io[voice]
 ```
 
 ## Examples
 This is a quick usecase example for the library!
 
 ```py
-import aio
+import discord
 
-client = aio.Client()
+client = discord.Client()
 
 @client.event
 async def on_ready():
@@ -54,9 +54,9 @@ client.run('my_bot_token')
 This is another example but with a prefixed command
 
 ```py
-import aio
+import discord
 
-client = aio.Client()
+client = discord.Client()
 
 @client.event
 async def on_ready():
@@ -72,4 +72,4 @@ client.run('my_bot_token')
 
 ## Useful Links
 
-The aio [discord server](https://discord.gg/cvCAwntVhm)
+The d.io [discord server](https://discord.gg/cvCAwntVhm)

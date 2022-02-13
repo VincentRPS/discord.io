@@ -1,4 +1,4 @@
-from aio import Client, Intents
+from discord import Client, Intents
 
 intents = Intents.default()  # type: ignore
 
