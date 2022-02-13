@@ -72,6 +72,7 @@ class Interaction:
     def __init__(self, data: Dict, state):
         self.data = data
         self.state: ConnectionState = state
+        self._responded: bool = False
         self.collect_children(data)
 
     def collect_children(self, data):
@@ -166,6 +167,14 @@ class Interaction:
         invisable
             If the interaction should only be seeable by the invoker.
         """
+        if self._responded:
+            return self.followup(
+                content=content,
+                tts=tts,
+                embed=embed,
+                embeds=embeds,
+            )
+
         ret = {'type': type, 'data': {}}
         if content:
             ret['data']['content'] = content
@@ -195,6 +204,7 @@ class Interaction:
             ret = {'type': 9, 'data': modal}
 
         adapter = webhook_context.get()
+        self._responded = True
         return adapter.rest.send(
             Route('POST', f'/interactions/{self.id}/{self.token}/callback'), json=ret
         )
