@@ -54,20 +54,15 @@ client.run('my_bot_token')
 This is another example but with a prefixed command
 
 ```py
-import discord
+from discord.ext import commands
 
-client = discord.Client()
+bot = commands.Bot(command_prefix="!")
 
-@client.event
-async def on_ready():
-    print('ready!')
+@bot.command()
+async def ping(ctx):
+    await ctx.send("pong!")
 
-@client.event
-async def on_message(msg):
-    if msg.content.startswith('!ping'):
-        await msg.send('Pong!')
-
-client.run('my_bot_token')
+bot.run('my_bot_token')
 ```
 
 ## Useful Links
