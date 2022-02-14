@@ -59,6 +59,6 @@ class ApplicationCommand:
             )
             self.options.append(sub_command)
 
-            return sub_command
+            return sub_command  # type: ignore
 
         return decorator
