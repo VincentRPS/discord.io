@@ -59,26 +59,26 @@ class ApplicationCommandRegistry:
 
     async def on_ready(self):
         await asyncio.sleep(20)
-        glob = await self.factory.get_global_application_commands(self.state._bot_id)
+        glob = await self.factory.commands.get_global_application_commands(self.state._bot_id)
 
         await self.check_application_commands(glob)
 
         await asyncio.sleep(10)
 
         for guild in self.state.guilds._cache.values():
-            commands = await self.factory.get_guild_application_commands(
+            commands = await self.factory.commands.get_guild_application_commands(
                 self.state._bot_id, guild['id']
             )
             for command in commands:
                 if command not in self.state.application_commands.items():
-                    await self.factory.delete_guild_application_command(
+                    await self.factory.commands.delete_guild_application_command(
                         self.state._bot_id, guild['id'], command['id']
                     )
         self.unregistered_commands.set()
 
     async def check_application_commands(self, rglobal):
         for command in rglobal:
-            await self.factory.delete_global_application_command(
+            await self.factory.commands.delete_global_application_command(
                 self.state._bot_id, command['id']
             )
 
@@ -94,7 +94,7 @@ class ApplicationCommandRegistry:
     ) -> dict:
         if not self.unregistered_commands.is_set():
             await self.unregistered_commands.wait()
-        r = await self.factory.create_guild_application_command(
+        r = await self.factory.commands.create_guild_application_command(
             self.state._bot_id,
             guild_id,
             name,
@@ -122,7 +122,7 @@ class ApplicationCommandRegistry:
     ) -> dict:
         if not self.unregistered_commands.is_set():
             await self.unregistered_commands.wait()
-        r = await self.factory.create_global_application_command(
+        r = await self.factory.commands.create_global_application_command(
             self.state._bot_id, name, description, options, default_permission, type=1
         )
         self.state.application_commands[name] = {

@@ -31,7 +31,7 @@ from .commands import Commands
 from .guilds import Guilds
 
 
-class RESTFactory(Channels, Commands, Guilds):
+class RESTFactory:
     """The RESTFactory for most requests.
 
     .. versionadded:: 0.3.0
@@ -54,7 +54,9 @@ class RESTFactory(Channels, Commands, Guilds):
         self.state = state or ConnectionState()
         self.rest = RESTClient(state=self.state, proxy=proxy, proxy_auth=proxy_auth)
         self.state.loop.create_task(self.rest.enter())
-        super().__init__(rest=self.rest)
+        self.channels = Channels(self.rest)
+        self.commands = Commands(self.rest)
+        self.guilds = Guilds(self.rest)
 
     async def login(
         self, token: str

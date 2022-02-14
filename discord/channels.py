@@ -368,7 +368,7 @@ class GroupDMChannel(DMChannel):
         -------
         :class:`User`
         """
-        user = self.state.app.factory.get_user(self.from_dict['owner'])
+        user = self.state.app.factory.guilds.get_user(self.from_dict['owner'])
         return User(user)
 
 

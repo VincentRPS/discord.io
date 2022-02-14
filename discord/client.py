@@ -243,11 +243,11 @@ class Client:
         -------
         :class:`Guild`
         """
-        raw = await self.factory.get_guild(guild_id=guild_id)
+        raw = await self.factory.guilds.get_guild(guild_id=guild_id)
         return Guild(raw, self.factory)
 
     async def get_voice_channel(self, channel_id: int):
-        raw = await self.factory.get_channel(channel=channel_id)
+        raw = await self.factory.channels.get_channel(channel=channel_id)
         return VoiceChannel(raw, self.state)
 
     def create_button(

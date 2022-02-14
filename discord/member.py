@@ -181,7 +181,7 @@ class Member:
         :class:`None`
         :class:`Forbidden`
         """
-        return self._factory.modify_guild_member(
+        return self._factory.guilds.modify_guild_member(
             guild_id=self.guild_id,
             member=self.user.id,
             nick=nick,
@@ -203,7 +203,7 @@ class Member:
         reason: Optional[:class:`str`]
             A reason why you are banning this member
         """
-        return self._factory.ban_guild_member(
+        return self._factory.guilds.ban_guild_member(
             guild_id=self.guild_id,
             user=self.user.id,
             delete_message_days=delete_message_days,
@@ -218,7 +218,7 @@ class Member:
         reason: Optional[:class:`str`]
             A reason why you are kicking this member
         """
-        return self._factory.kick_guild_member(
+        return self._factory.guilds.kick_guild_member(
             guild_id=self.guild_id,
             user=self.user.id,
             reason=reason,

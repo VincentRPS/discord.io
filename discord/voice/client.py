@@ -115,7 +115,7 @@ class VoiceClient:
             else:
                 guild = self.guild_id
                 self.channel = (
-                    channel_id and guild and guild._factory.get_channel(int(channel_id))
+                    channel_id and guild and guild._factory.channels.get_channel(int(channel_id))
                 )
         else:
             self._voice_state_complete.set()

@@ -161,7 +161,7 @@ class Message:  # noqa: ignore
             com = [component]
         if components:
             com = components
-        r = await self.app.factory.create_message(
+        r = await self.app.factory.channels.create_message(
             channel=self.channel.id,
             content=content,
             files=files,
@@ -221,7 +221,7 @@ class Message:  # noqa: ignore
             com = [component]
         if components:
             com = components
-        r = await self.app.factory.create_message(
+        r = await self.app.factory.channels.create_message(
             channel=self.channel.id,
             content=content,
             files=files,
@@ -252,7 +252,7 @@ class Message:  # noqa: ignore
             emd = embed_parse.parse_embeds(embeds)
         elif embed:
             emd = embed_parse.parse_embed(embed)
-        return self.app.factory.edit_message(
+        return self.app.factory.channels.edit_message(
             channel=self.channel.id,
             message=self.id,
             content=content,
@@ -265,6 +265,6 @@ class Message:  # noqa: ignore
         )
 
     async def delete(self, reason: Optional[str] = None):
-        return self.app.factory.delete_message(
+        return self.app.factory.channels.delete_message(
             channel=self.channel.id, message=self.id, reason=reason
         )
