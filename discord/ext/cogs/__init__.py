@@ -20,6 +20,7 @@ class Cog:
     listeners: dict[str, Any] = {}
     guild_commands: dict[str, Any] = {}
     global_commands: dict[str, Any] = {}
+    bot = None
 
     @property
     def __cog_name__(self) -> str:
@@ -99,6 +100,7 @@ class Cog:
             return func
 
         return decorator
+
 
     def _inject(self, bot_self):
         self.bot = bot_self

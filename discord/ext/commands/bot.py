@@ -20,7 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from ...client import CFT, Client
+from typing import Optional
+from ...client import Client, Callable
 from .core import Command
 
 
@@ -29,8 +30,8 @@ class Bot(Client):
         super().__init__(**kwargs)
         self.command_prefix = command_prefix
 
-    def command(self, name):
-        def decorator(func: CFT) -> Command:
+    def command(self, name: Optional[str] = None):
+        def decorator(func: Callable) -> Command:
             _name = name or func.__name__
             _description = func.__doc__
             cmd = Command(

@@ -1,1 +1,1 @@
-from .catalog import Cataloger
+from .catalog import Cataloger as Cataloger

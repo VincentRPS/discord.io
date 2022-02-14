@@ -28,14 +28,12 @@ from typing import Any, Callable, Optional
 from ...internal import run_storage
 from ...message import Message
 from ...state import ConnectionState
-from ..cogs import Cog
 from .context import Context
+from ...channels import TextChannel, VoiceChannel
 
 
-# probably doesn't work how i want
-def remove_channel(string: str):
-    fake_ret = string[4:]
-    ret = fake_ret[:4]
+def resolve_channel(string: str) -> int:
+    ret = string[2:-1]
     return ret
 
 
@@ -52,7 +50,7 @@ class Command:
         prefix: str,
         state: ConnectionState,
         *,
-        cog: Cog = None,
+        cog = None,
         description: Optional[str] = None
     ):
         if not asyncio.iscoroutinefunction(func):
@@ -98,6 +96,18 @@ class Command:
             order += 1
             if param.annotation == str:
                 give = self.content_without_command.split(" ")[order]
+                to_give[name] = give
+            
+            elif param.annotation == TextChannel:
+                id = resolve_channel(self.content_without_command.split(" ")[order])
+                raw = self.state.channels.get(id)
+                give = TextChannel(raw, self.state)
+                to_give[name] = give
+            
+            elif param.annotation == VoiceChannel:
+                id = resolve_channel(self.content_without_command.split(" ")[order])
+                raw = self.state.channels.get(id)
+                give = VoiceChannel(raw, self.state)
                 to_give[name] = give
 
         self._run(context, **to_give)
