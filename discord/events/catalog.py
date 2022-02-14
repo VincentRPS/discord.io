@@ -88,6 +88,7 @@ class Cataloger:
             state.guilds.new(data['d']['id'], data['d'])
             # roles, channels
             for channel in data['d']['channels']:
+                channel['guild_id'] = data['d']['id']
                 state.channels.new(channel['id'], channel)
             for role in data['d']['roles']:
                 state.roles.new(role['id'], role)

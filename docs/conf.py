@@ -39,6 +39,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'exception_hierarchy',
     'resourcelinks',
+    'hoverxref.extension',
     # 'sphinx.ext.githubpages', putting this off until we have a domain.
 ]
 

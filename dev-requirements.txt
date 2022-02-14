@@ -14,6 +14,7 @@ isort[requirements_deprecated_finder]
 #################
 sphinx~=4.4.0
 furo~=2022.1.2
+sphinx-hoverxref~=1.0.0
 #################
 # Static Typing # free PR's
 #################
