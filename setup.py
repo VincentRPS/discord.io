@@ -51,11 +51,11 @@ extra_requires = {
 }
 
 setuptools.setup(
-    name='aio',
+    name='discord.io',
     version=__version__,
     packages=packages,
     package_data={
-        'aio': ['banner.txt', 'bin/*.dll'],
+        'discord': ['banner.txt', 'bin/*.dll'],
     },
     project_urls={
         'Documentation': 'https://aio-py.rtfd.io',
