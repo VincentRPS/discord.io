@@ -37,6 +37,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
+    'sphinx.ext.extlinks',
     'exception_hierarchy',
     'resourcelinks',
     'hoverxref.extension',
@@ -66,6 +67,10 @@ html_static_path = ['_static']
 
 
 # -- Extension configuration -------------------------------------------------
+
+extlinks = {
+    "issue": (f"https://github.com/VincentRPS/discord.io/issues/%s", "#"),
+}
 
 rst_prolog = """
 .. |coro| replace:: This function is a |coroutine_link|_.
