@@ -38,6 +38,7 @@ packages = [
     'discord.types',
     'discord.ext.cogs',
     'discord.ext.commands',
+    'discord.http'
 ]
 
 extra_requires = {
