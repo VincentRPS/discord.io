@@ -54,6 +54,7 @@ class RESTFactory(Channels, Commands, Guilds):
         self.state = state or ConnectionState()
         self.rest = RESTClient(state=self.state, proxy=proxy, proxy_auth=proxy_auth)
         self.state.loop.create_task(self.rest.enter())
+        super().__init__(rest=self.rest)
 
     async def login(
         self, token: str
