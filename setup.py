@@ -37,6 +37,7 @@ packages = [
     'discord.interactions',
     'discord.types',
     'discord.ext.cogs',
+    'discord.ext.commands',
 ]
 
 extra_requires = {
