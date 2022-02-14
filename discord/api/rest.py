@@ -67,7 +67,7 @@ class Route:
     def __init__(self, method: str, endpoint: str, **params: typing.Any):
         self.method = method
         self.endpoint = endpoint
-        self.url = 'https://discord.com/api/v9' + endpoint
+        self.url = 'https://discord.com/api/v10' + endpoint
 
         self.guild_id: typing.Optional[int] = params.get('guild_id')
         self.channel_id: typing.Optional[int] = params.get('channel_id')
