@@ -379,4 +379,4 @@ class OnScheduledEventLeave(Event):
         user = Member(raw_user)
         guild = Guild(raw_guild)
 
-        self.dispatch('scheduled_event_join', event, user, guild)
+        self.dispatch('scheduled_event_leave', event, user, guild)
