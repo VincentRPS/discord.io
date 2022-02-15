@@ -23,10 +23,12 @@
 import io
 import os
 
-from typing import Union, Optional, List
+from typing import Union, Optional
 from .internal.exceptions import DiscordError, Forbidden
 
-__all__ = ['File']
+__all__ = (
+    'File',
+)
 
 
 class File:

@@ -40,7 +40,10 @@ if TYPE_CHECKING:
     from .client import Client
     from .ext.commands import Command
 
-__all__ = ['Hold', 'ConnectionState']
+__all__ = (
+    'Hold',
+    'ConnectionState'
+)
 
 T = TypeVar('T')
 Coro = Coroutine[Any, Any, T]

@@ -20,11 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 """Implementation of Colours."""
-from typing import List
 
 from .color import Color
 
-__all__ = ['Colour']
+__all__ = (
+    'Colour',
+)
 
 
 class Colour(Color):

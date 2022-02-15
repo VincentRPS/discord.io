@@ -15,7 +15,7 @@ __version__: str = '1.0.0'
 __git_sha1__: str = 'HEAD'
 
 import logging
-from typing import List, Literal, NamedTuple
+from typing import Literal, NamedTuple
 
 from .api import *
 from .assets import *
@@ -59,7 +59,7 @@ version_info: VersionInfo = VersionInfo(
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
-__all__ = [
+__all__ = (
     '__title__',
     '__author__',
     '__license__',
@@ -67,4 +67,4 @@ __all__ = [
     '__version__',
     'VersionInfo',
     'version_info',
-]
+)

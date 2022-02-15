@@ -20,9 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import Callable, List, TypeVar
+from typing import Callable, TypeVar
 
-__all__ = ['MessageFlags', 'Intents']
+__all__ = (
+    'MessageFlags',
+    'Intents'
+)
 
 T = TypeVar('T')
 

@@ -29,7 +29,9 @@ from typing import Any, Callable, Coroutine, List, Optional, TypeVar
 
 from discord.state import ConnectionState
 
-__all__ = ['Dispatcher']
+__all__ = (
+    'Dispatcher'
+)
 _log = logging.getLogger(__name__)
 CoroT = TypeVar('CoroT', bound=Callable[..., Coroutine[Any, Any, Any]])
 T = TypeVar('T')

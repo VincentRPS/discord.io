@@ -47,7 +47,9 @@ from .user import User
 from .voice import VoiceClient, has_nacl
 
 _log = logging.getLogger(__name__)
-__all__ = ['Client']
+__all__ = (
+    'Client',
+)
 CFT = TypeVar('CFT', bound='dispatcher.CoroFunc')
 
 

@@ -21,11 +21,11 @@
 # SOFTWARE
 from typing import List
 
-__all__ = [
+__all__ = (
     'DiscordWarning',
     'Deprecated',
     'NaClWarning',
-]
+)
 
 
 class DiscordWarning(Warning):

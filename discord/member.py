@@ -28,7 +28,9 @@ from typing import Any, List, Optional, Union, Dict
 from .http import RESTFactory
 from .user import User
 
-__all__ = ['Member']
+__all__ = (
+    'Member',
+)
 
 
 class Member:

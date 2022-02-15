@@ -31,7 +31,10 @@ from .embed import Embed
 from .file import File
 from .snowflake import Snowflakeish
 
-__all__ = ['Webhook', 'WebhookAdapter']
+__all__ = (
+    'Webhook',
+    'WebhookAdapter'
+)
 
 
 class WebhookAdapter:

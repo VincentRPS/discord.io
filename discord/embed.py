@@ -24,12 +24,14 @@
 ref: https://discord.dev/resources/channel#embed-limits
 """
 import datetime
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 from discord.color import Color
 from discord.colour import Colour
 
-__all__ = ['Embed']
+__all__ = (
+    'Embed',
+)
 
 
 class Embed:
