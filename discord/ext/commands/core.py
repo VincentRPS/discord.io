@@ -30,9 +30,11 @@ from ...message import Message
 from ...state import ConnectionState
 from .context import Context
 from ...channels import TextChannel, VoiceChannel
+from ...member import Member
+from ...user import User
 
 
-def resolve_channel(string: str) -> int:
+def resolve_id(string: str) -> int:
     ret = string[2:-1]
     return ret
 
@@ -99,15 +101,25 @@ class Command:
                 to_give[name] = give
             
             elif param.annotation == TextChannel:
-                id = resolve_channel(self.content_without_command.split(" ")[order])
+                id = resolve_id(self.content_without_command.split(" ")[order])
                 raw = self.state.channels.get(id)
                 give = TextChannel(raw, self.state)
                 to_give[name] = give
             
             elif param.annotation == VoiceChannel:
-                id = resolve_channel(self.content_without_command.split(" ")[order])
+                id = resolve_id(self.content_without_command.split(" ")[order])
                 raw = self.state.channels.get(id)
                 give = VoiceChannel(raw, self.state)
+                to_give[name] = give
+            
+            elif param.annotation == Member or param.annotation == User:
+                id = resolve_id(self.content_without_command.split(" ")[order])
+                raw = self.state.members.get(id)
+                give = Member(raw, context.message.guild.id, context.message.app.factory)
+                to_give[name] = give
+            
+            else:
+                give = self.content_without_command.split(" ")[order]
                 to_give[name] = give
 
         self._run(context, **to_give)
