@@ -80,7 +80,7 @@ class Dispatcher:
         **kwargs: Any,
     ) -> asyncio.Task:
         wrap = self.run(coro, name, cog, one_shot, *args, **kwargs)
-        return self.state.loop.create_task(wrap, name=f'aio: {name}')
+        return self.state.loop.create_task(wrap, name=f'discord.io: {name}')
 
     def dispatch(self, name: str, *args, **kwargs) -> None:
         fake_name = str(name.lower())

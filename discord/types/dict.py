@@ -27,7 +27,7 @@ from typing import Type
 
 
 def Dict() -> Type[BaseDict[str, Any]]:
-    """Represents the widely used Dict format which aio uses.
+    """Represents the widely used Dict format which discord.io uses.
         dict() -> new empty dictionary dict(mapping) -> new dictionary initialized from a mapping object's
         (key, value) pairs
     dict(iterable) -> new dictionary initialized as if via:

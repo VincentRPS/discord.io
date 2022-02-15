@@ -30,7 +30,7 @@ __all__ = [
 
 
 class DiscordError(Exception):
-    """The base exception class for aio"""
+    """The base exception class for discord.io"""
 
 
 class RESTError(DiscordError):

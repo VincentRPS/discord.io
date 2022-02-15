@@ -1,12 +1,12 @@
-.. aio documentation master file, created by
+.. discord.io documentation master file, created by
    sphinx-quickstart on Wed Dec 29 15:23:05 2021.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to aio
+Welcome to discord.io
 =====================
 Welcome to the documentation of discord.
-aio is a Python based discord library, using aiohttp and asyncio.
+discord.io is a Python based discord library, using aiohttp and asyncio.
 
 Getting Started
 ---------------
