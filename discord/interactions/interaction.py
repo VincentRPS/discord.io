@@ -148,7 +148,7 @@ class Interaction:
         type: Optional[int] = 4,
         invisable: Optional[bool] = False,
     ):
-        """Send a initial response to a interaction
+        """Send a response to a interaction
 
         Parameters
         ----------

@@ -46,6 +46,7 @@ from .types.dict import Dict
 from .ui import print_banner, start_logging
 from .user import User
 from .voice import VoiceClient, has_nacl
+from .flags import Intents
 
 _log = logging.getLogger(__name__)
 __all__: List[str] = ['Client']
@@ -115,7 +116,7 @@ class Client:
 
     def __init__(
         self,
-        intents: Optional[int] = 32509,
+        intents: Optional[Intents] = Intents.default(),
         module: Optional[str] = 'discord',
         shards: Optional[int] = None,
         mobile: Optional[bool] = False,
