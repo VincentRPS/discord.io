@@ -133,7 +133,7 @@ class Dispatcher:
         if not asyncio.iscoroutinefunction(coro):
             raise TypeError('Function is not a coroutine.')
 
-        setattr(self, coro.__name__, coro)
+        setattr(self, coro.__name__, {'main': coro, 'cog': None, 'one_cycle': False})
         _log.info(f'{coro.__name__} has been registered!')
 
     def wait_for(self, event: str):
