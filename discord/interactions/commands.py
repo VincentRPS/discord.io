@@ -20,7 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import Callable, List, Optional
+import inspect
+from typing import Callable, Dict, List, Optional, Any
+from collections import OrderedDict
+from uuid import uuid4
 
 from .option_converter import Choice, Option
 from .registry import ApplicationCommandRegistry
@@ -33,32 +36,57 @@ class ApplicationCommand:
         name: Optional[str] = None,
         description: Optional[str] = None,
         registry: ApplicationCommandRegistry = None,
-        group: bool = False,
     ):
-        self.is_group = group
         self.registry = registry
         self.coro = func
         self.name = func.__name__ if name is None else name
         self.desc = description or func.__doc__ or 'No description provided'
-        self.options: List[Option] = []
+        self.obj: Dict[str, Any] = {
+            'self': self,
+            'options': [option for option in self._options]
+        }
+    
+    @property
+    def options(self):
+        dict = OrderedDict(inspect.signature(self._callback).parameters)
+        dict.popitem(last=False)
+        return dict
+    
+    def _parse_options(self):
+        self._options = []
+        for name, param in self.options.items():
+            if param == Option:
+                self._options.append(param)
+            else:
+                raise RuntimeError("%s is not using the Option class!", name)
+
+    @property
+    def _callback(self):
+        return self.coro
+
+    @_callback.setter
+    def _callback(self, func: Callable[..., Any]):
+        self.coro = func
 
     def sub_command(
         self,
         name: Optional[str] = None,
         description: Optional[str] = None,
+        options: List[Option] = None,
         choices: List[Choice] = None,
     ):
-        def decorator(func: Callable) -> Option:
+        def decorator(func: Callable) -> ApplicationCommand:
             _name = name or func.__name__
             _description = description or func.__doc__ or 'No description provided'
-            sub_command = Option(
-                name=_name,
-                description=_description,
-                choices=choices,
-                type=1,
-            )
-            self.options.append(sub_command)
+            sub_command = {
+                "name": _name,
+                "description": _description,
+                "choices": choices,
+                "type": 1,
+                'options': options
+            }
+            self.obj['options'].append(sub_command)
 
-            return sub_command  # type: ignore
+            return self  # type: ignore
 
         return decorator

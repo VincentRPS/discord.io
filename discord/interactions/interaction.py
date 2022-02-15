@@ -140,7 +140,7 @@ class Interaction:
     def respond(
         self,
         content: Optional[str] = None,
-        modal: Optional[dict[str, Any]] = None,
+        modal: Optional[Dict[str, Any]] = None,
         tts: bool = False,
         embed: Optional[Embed] = None,
         embeds: Optional[List[Embed]] = None,

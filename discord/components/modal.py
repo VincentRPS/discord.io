@@ -21,7 +21,7 @@
 # SOFTWARE
 
 import asyncio
-from typing import Any, Callable, Coroutine, Optional
+from typing import Any, Callable, Coroutine, Optional, Dict, List
 
 from .. import utils
 from ..enums import ModalStyle
@@ -89,7 +89,7 @@ class Modal:
         self,
         title: str,
         callback: Any,
-        components: list[ModalComponent],
+        components: List[ModalComponent],
         custom_id: int = utils.create_snowflake(),
     ):
         self.id = custom_id
