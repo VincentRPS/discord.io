@@ -285,7 +285,7 @@ class Client:
         return self.state._ready.is_set()
 
     @property
-    def presence(self) -> list[str]:
+    def presence(self) -> List[str]:
         return self.state._bot_presences
 
     def change_presence(
@@ -509,7 +509,7 @@ class Client:
         self,
         title: str,
         callback: dispatcher.Coro,
-        components: list[ModalComponent],
+        components: List[ModalComponent],
         custom_id: int = utils.create_snowflake(),
     ):
         return Modal(self.state).create(
