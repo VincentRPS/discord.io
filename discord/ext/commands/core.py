@@ -25,17 +25,17 @@ import inspect
 from collections import OrderedDict
 from typing import Any, Callable, Optional
 
+from ...channels import TextChannel, VoiceChannel
 from ...internal import run_storage
+from ...member import Member
 from ...message import Message
 from ...state import ConnectionState
-from ..cogs import Cog
+from ...user import User
 from .context import Context
 
 
-# probably doesn't work how i want
-def remove_channel(string: str):
-    fake_ret = string[4:]
-    ret = fake_ret[:4]
+def resolve_id(string: str) -> int:
+    ret = string[2:-1]
     return ret
 
 
@@ -52,7 +52,7 @@ class Command:
         prefix: str,
         state: ConnectionState,
         *,
-        cog: Cog = None,
+        cog=None,
         description: Optional[str] = None
     ):
         if not asyncio.iscoroutinefunction(func):
@@ -97,6 +97,30 @@ class Command:
         for name, param in self.options.items():
             order += 1
             if param.annotation == str:
+                give = self.content_without_command.split(" ")[order]
+                to_give[name] = give
+
+            elif param.annotation == TextChannel:
+                id = resolve_id(self.content_without_command.split(" ")[order])
+                raw = self.state.channels.get(id)
+                give = TextChannel(raw, self.state)
+                to_give[name] = give
+
+            elif param.annotation == VoiceChannel:
+                id = resolve_id(self.content_without_command.split(" ")[order])
+                raw = self.state.channels.get(id)
+                give = VoiceChannel(raw, self.state)
+                to_give[name] = give
+
+            elif param.annotation == Member or param.annotation == User:
+                id = resolve_id(self.content_without_command.split(" ")[order])
+                raw = self.state.members.get(id)
+                give = Member(
+                    raw, context.message.guild.id, context.message.app.factory
+                )
+                to_give[name] = give
+
+            else:
                 give = self.content_without_command.split(" ")[order]
                 to_give[name] = give
 

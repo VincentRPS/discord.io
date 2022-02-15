@@ -32,7 +32,7 @@ from .http import RESTFactory
 from .member import Member
 from .user import User
 
-__all__: List[str] = [
+__all__ = [
     'Guild',
     'Role',
     'WelcomeScreen',
@@ -168,7 +168,7 @@ class Guild:
         -------
         :class:`Member`
         """
-        unparsed = await self._factory.get_guild_member(self.id(), id)
+        unparsed = await self._factory.guilds.get_guild_member(self.id(), id)
         return Member(unparsed, self.id, self._factory)
 
     async def change_voice_state(
@@ -197,7 +197,7 @@ class Guild:
 
     def leave(self):
         """Leaves the guild"""
-        return self._factory.leave_guild(self.id)
+        return self._factory.guilds.leave_guild(self.id)
 
     async def get_channels(self):
         """Gives a list of Channel objects
@@ -206,7 +206,7 @@ class Guild:
         -------
         List[Union[:class:`TextChannel`, :class:`VoiceChannel`, :class:`Category`, :class:`DMChannel`, :class:`GroupDMChannel`, :class:`Thread`]]
         """
-        raw = await self._factory.get_guild_channels(self.id)
+        raw = await self._factory.channels.get_guild_channels(self.id)
         return [
             channel_parse(channel['type'], channel, self._factory.state)
             for channel in raw
@@ -219,7 +219,7 @@ class Guild:
         -------
         List[:class:`Ban`]
         """
-        raw = await self._factory.get_guild_bans(self.id)
+        raw = await self._factory.guilds.get_guild_bans(self.id)
         return [BanObject(ban) for ban in raw]
 
     async def get_ban(self, user_id: int):
@@ -234,7 +234,7 @@ class Guild:
         -------
         :class:`Ban`
         """
-        raw = await self._factory.get_guild_ban(self.id, user_id)
+        raw = await self._factory.guilds.get_guild_ban(self.id, user_id)
         return BanObject(raw)
 
 
@@ -369,7 +369,7 @@ class Role:
 
     def give_to(self, user_id: int, reason: Optional[str] = None):
         """Gives a user the role"""
-        return self.factory.give_user_role(user_id, self.id, reason=reason)
+        return self.factory.guilds.give_user_role(user_id, self.id, reason=reason)
 
     def remove_from(
         self,
@@ -377,7 +377,7 @@ class Role:
         reason: Optional[str] = None,
     ):
         """Removes a user from the role"""
-        return self.factory.remove_user_role(user_id, self.id, reason=reason)
+        return self.factory.guilds.remove_user_role(user_id, self.id, reason=reason)
 
 
 def parse_event_banner(format: FormatType, event_id: int, event_hash: str) -> str:

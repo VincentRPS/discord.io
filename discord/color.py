@@ -21,9 +21,9 @@
 # SOFTWARE
 """Implementation of Colors."""
 
-from typing import List
-
-__all__: List[str] = ['Color']
+__all__ = (
+    'Color',
+)
 
 
 class Color:

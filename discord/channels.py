@@ -149,6 +149,18 @@ class TextChannel:
         return self.from_dict['id']
 
     @property
+    def guild(self):
+        """The guild this channel is in
+
+        Returns
+        -------
+        :class:`Guild`
+        """
+        id = self.from_dict['guild_id']
+        raw = self.state.app.fetch_guild(guild_id=id)
+        return raw
+
+    @property
     def guild_id(self) -> int:
         """Gives the guild id of the channel
 
@@ -368,7 +380,7 @@ class GroupDMChannel(DMChannel):
         -------
         :class:`User`
         """
-        user = self.state.app.factory.get_user(self.from_dict['owner'])
+        user = self.state.app.factory.guilds.get_user(self.from_dict['owner'])
         return User(user)
 
 

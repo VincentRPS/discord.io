@@ -32,7 +32,9 @@ from ..webhooks import webhook_context
 if TYPE_CHECKING:
     from ..state import ConnectionState
 
-__all__: List[str] = ['Interaction']
+__all__ = (
+    'Interaction'
+)
 
 
 class Interaction:
@@ -140,7 +142,7 @@ class Interaction:
     def respond(
         self,
         content: Optional[str] = None,
-        modal: Optional[dict[str, Any]] = None,
+        modal: Optional[Dict[str, Any]] = None,
         tts: bool = False,
         embed: Optional[Embed] = None,
         embeds: Optional[List[Embed]] = None,
@@ -148,7 +150,7 @@ class Interaction:
         type: Optional[int] = 4,
         invisable: Optional[bool] = False,
     ):
-        """Send a initial response to a interaction
+        """Send a response to a interaction
 
         Parameters
         ----------

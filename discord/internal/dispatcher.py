@@ -29,7 +29,9 @@ from typing import Any, Callable, Coroutine, List, Optional, TypeVar
 
 from discord.state import ConnectionState
 
-__all__: List[str] = ['Dispatcher']
+__all__ = (
+    'Dispatcher'
+)
 _log = logging.getLogger(__name__)
 CoroT = TypeVar('CoroT', bound=Callable[..., Coroutine[Any, Any, Any]])
 T = TypeVar('T')
@@ -80,7 +82,7 @@ class Dispatcher:
         **kwargs: Any,
     ) -> asyncio.Task:
         wrap = self.run(coro, name, cog, one_shot, *args, **kwargs)
-        return self.state.loop.create_task(wrap, name=f'aio: {name}')
+        return self.state.loop.create_task(wrap, name=f'discord.io: {name}')
 
     def dispatch(self, name: str, *args, **kwargs) -> None:
         fake_name = str(name.lower())
@@ -133,7 +135,7 @@ class Dispatcher:
         if not asyncio.iscoroutinefunction(coro):
             raise TypeError('Function is not a coroutine.')
 
-        setattr(self, coro.__name__, coro)
+        setattr(self, coro.__name__, {'main': coro, 'cog': None, 'one_cycle': False})
         _log.info(f'{coro.__name__} has been registered!')
 
     def wait_for(self, event: str):

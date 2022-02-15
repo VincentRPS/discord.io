@@ -1,8 +1,8 @@
-.. currentmodule:: aio
+.. currentmodule:: discord
 
 API Reference
 =============
-The full aio API Reference.
+The full discord.io API Reference.
 
 Version Specific Details
 ------------------------

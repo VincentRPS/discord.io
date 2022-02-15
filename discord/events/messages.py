@@ -21,7 +21,7 @@
 # SOFTWARE
 
 
-from typing import Any, List
+from typing import Any, Dict, List
 
 from ..assets import Emoji
 from ..channels import TextChannel
@@ -30,7 +30,11 @@ from ..member import Member
 from ..message import Message
 from .core import Event
 
-__all__: List[str] = ['OnMessage', 'OnMessageEdit', 'OnMessageDelete']
+__all__ = (
+    'OnMessage',
+    'OnMessageEdit',
+    'OnMessageDelete'
+)
 
 
 class OnMessage(Event):
@@ -83,7 +87,7 @@ class OnMessageDeleteBulk(Event):
     """
 
     def process(self):
-        msgs: list[dict[str, Any]] = [
+        msgs: List[Dict[str, Any]] = [
             msg for msg in self.state.messages.get(self.data['ids'])
         ]
         messages = [Message(msg, self.state.app) for msg in msgs]

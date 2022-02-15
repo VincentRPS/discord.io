@@ -23,13 +23,14 @@
 
 ref: https://discord.dev/resources/guild#guild-member-object
 """
-import typing
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, Dict
 
 from .http import RESTFactory
 from .user import User
 
-__all__: List[str] = ['Member']
+__all__ = (
+    'Member',
+)
 
 
 class Member:
@@ -50,7 +51,7 @@ class Member:
         The raw :class:`dict` object of the Member.
     """
 
-    def __init__(self, data: typing.Dict, guild: Union[int, Any], factory: RESTFactory):
+    def __init__(self, data: Dict, guild: Union[int, Any], factory: RESTFactory):
         self.from_dict = data
         self.guild_id = guild
         self._factory = factory
@@ -128,7 +129,7 @@ class Member:
         """
         return self.from_dict['pending']
 
-    def permissions(self) -> typing.Dict[str, Any]:
+    def permissions(self) -> Dict[str, Any]:
         """Returns a dict of the users permissions
 
         Returns
@@ -181,7 +182,7 @@ class Member:
         :class:`None`
         :class:`Forbidden`
         """
-        return self._factory.modify_guild_member(
+        return self._factory.guilds.modify_guild_member(
             guild_id=self.guild_id,
             member=self.user.id,
             nick=nick,
@@ -203,7 +204,7 @@ class Member:
         reason: Optional[:class:`str`]
             A reason why you are banning this member
         """
-        return self._factory.ban_guild_member(
+        return self._factory.guilds.ban_guild_member(
             guild_id=self.guild_id,
             user=self.user.id,
             delete_message_days=delete_message_days,
@@ -218,7 +219,7 @@ class Member:
         reason: Optional[:class:`str`]
             A reason why you are kicking this member
         """
-        return self._factory.kick_guild_member(
+        return self._factory.guilds.kick_guild_member(
             guild_id=self.guild_id,
             user=self.user.id,
             reason=reason,
@@ -236,7 +237,7 @@ class Presence:
         The raw presence data
     """
 
-    def __init__(self, data: typing.Dict):
+    def __init__(self, data: Dict):
         self.from_dict = data
 
     @property
@@ -302,7 +303,7 @@ class Activity:
         The raw activity data
     """
 
-    def __init__(self, data: typing.Dict):
+    def __init__(self, data: Dict):
         self.from_dict = data
 
     @property

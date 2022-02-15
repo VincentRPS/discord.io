@@ -19,7 +19,6 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-"""The Client powering aio's bots."""
 
 import asyncio
 import importlib
@@ -29,7 +28,7 @@ import logging
 import sys
 import time
 from threading import Event
-from typing import Callable, List, Literal, Optional, TypeVar, Union
+from typing import Callable, Dict, List, Literal, Optional, TypeVar, Union
 
 from discord.channels import VoiceChannel
 
@@ -37,18 +36,20 @@ from . import utils
 from .api.gateway import Gateway
 from .components import Button, Modal, ModalComponent
 from .ext.cogs import Cog, ExtensionLoadError
+from .flags import Intents
 from .guild import Guild
 from .http import RESTFactory
 from .interactions import ApplicationCommandRegistry
 from .internal import dispatcher
 from .state import ConnectionState
-from .types.dict import Dict
 from .ui import print_banner, start_logging
 from .user import User
 from .voice import VoiceClient, has_nacl
 
 _log = logging.getLogger(__name__)
-__all__: List[str] = ['Client']
+__all__ = (
+    'Client',
+)
 CFT = TypeVar('CFT', bound='dispatcher.CoroFunc')
 
 
@@ -115,7 +116,7 @@ class Client:
 
     def __init__(
         self,
-        intents: Optional[int] = 32509,
+        intents: Optional[Intents] = Intents.ALL_UNPRIVLEDGED,
         module: Optional[str] = 'discord',
         shards: Optional[int] = None,
         mobile: Optional[bool] = False,
@@ -144,7 +145,7 @@ class Client:
             mobile=mobile,
         )
         self._got_gateway_bot: Event = Event()
-        self.cogs: dict[str, Cog] = {}
+        self.cogs: Dict[str, Cog] = {}
         self._extensions = {}
         self.chunk_guild_members = chunk_guild_members
 
@@ -243,11 +244,11 @@ class Client:
         -------
         :class:`Guild`
         """
-        raw = await self.factory.get_guild(guild_id=guild_id)
+        raw = await self.factory.guilds.get_guild(guild_id=guild_id)
         return Guild(raw, self.factory)
 
     async def get_voice_channel(self, channel_id: int):
-        raw = await self.factory.get_channel(channel=channel_id)
+        raw = await self.factory.channels.get_channel(channel=channel_id)
         return VoiceChannel(raw, self.state)
 
     def create_button(
@@ -285,7 +286,7 @@ class Client:
         return self.state._ready.is_set()
 
     @property
-    def presence(self) -> list[str]:
+    def presence(self) -> List[str]:
         return self.state._bot_presences
 
     def change_presence(
@@ -509,7 +510,7 @@ class Client:
         self,
         title: str,
         callback: dispatcher.Coro,
-        components: list[ModalComponent],
+        components: List[ModalComponent],
         custom_id: int = utils.create_snowflake(),
     ):
         return Modal(self.state).create(

@@ -3,11 +3,14 @@ discord.ext.cogs
 ~~~~~~~~~~~~~~~~
 Extension module to ensure the creation of Cogs.
 """
-from typing import Any, Callable, List, TypeVar
+from typing import Any, Callable, Dict, List, TypeVar
 
 from ...internal import DiscordError, dispatcher
 
-__all__: List[str] = ['Cog', 'ExtensionLoadError']
+__all__ = (
+    'Cog',
+    'ExtensionLoadError'
+)
 
 CFT = TypeVar('CFT', bound='dispatcher.CoroFunc')
 
@@ -17,9 +20,10 @@ class ExtensionLoadError(DiscordError):
 
 
 class Cog:
-    listeners: dict[str, Any] = {}
-    guild_commands: dict[str, Any] = {}
-    global_commands: dict[str, Any] = {}
+    listeners: Dict[str, Any] = {}
+    guild_commands: Dict[str, Any] = {}
+    global_commands: Dict[str, Any] = {}
+    bot = None
 
     @property
     def __cog_name__(self) -> str:

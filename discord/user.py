@@ -25,7 +25,9 @@ ref: https://discord.dev/resources/users
 """
 from typing import List
 
-__all__: List[str] = ['User']
+__all__ = (
+    'User',
+)
 
 
 class User:

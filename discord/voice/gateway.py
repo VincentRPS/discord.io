@@ -58,8 +58,8 @@ class VoiceGateway:
         payload = {
             'op': 7,
             'd': {
-                'token': self.state.app.token,
-                'server_id': str(self.server_id),
+                'token': self.client.token,
+                'server_id': str(self.client.guild_id),
                 'session_id': self.client.session_id,
             },
         }
@@ -72,7 +72,7 @@ class VoiceGateway:
                 'server_id': str(self.server_id),
                 'user_id': str(self.state.app.user.id),
                 'session_id': self.client.session_id,
-                'token': self.state.app.token,
+                'token': self.client.token,
             },
         }
         await self.send_json(payload)

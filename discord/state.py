@@ -24,15 +24,26 @@ The ConnectionState Caches most things during connection.
 """
 import asyncio
 from collections import OrderedDict
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, List, Tuple, TypeVar, Union
-
-from discord.types.dict import Dict
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Coroutine,
+    Dict,
+    List,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
 if TYPE_CHECKING:
     from .client import Client
     from .ext.commands import Command
 
-__all__: List = ['Hold', 'ConnectionState']
+__all__ = (
+    'Hold',
+    'ConnectionState'
+)
 
 T = TypeVar('T')
 Coro = Coroutine[Any, Any, T]
@@ -184,7 +195,7 @@ class ConnectionState:
         self.loop: asyncio.AbstractEventLoop = options.get('loop', None)
         """The current loop"""
 
-        self._bot_presences: list[str, Any] = []
+        self._bot_presences: List[str, Any] = []
         """The precenses"""
 
         self._bot_status: str = 'online'
@@ -193,17 +204,17 @@ class ConnectionState:
         self._bot_presence_type: int = 0
         """Precense type"""
 
-        self.listeners: dict[str, List[Tuple[asyncio.Future, Callable[..., bool]]]] = {}
+        self.listeners: Dict[str, List[Tuple[asyncio.Future, Callable[..., bool]]]] = {}
         """The listeners"""
 
         self.shard_count: int = options.get('shard_count', None)
         """The shard count"""
 
-        self.components: dict[str, Any] = {}
+        self.components: Dict[str, Any] = {}
 
         self.prefixed_commands: List[Command] = []
 
-        self.application_commands: dict[str, Any] = {}
+        self.application_commands: Dict[str, Any] = {}
 
         self.prefix = options.get('prefix')
 

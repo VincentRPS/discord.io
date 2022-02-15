@@ -24,7 +24,7 @@
 ref: https://discord.dev/resources/channel
 """
 
-from typing import Any, List, Optional, Sequence
+from typing import Any, Dict, List, Optional, Sequence
 
 from discord.file import File
 from discord.types import allowed_mentions, embed_parse
@@ -35,7 +35,9 @@ from .embed import Embed
 from .guild import Guild
 from .user import User
 
-__all__: List[str] = ['Message']
+__all__ = (
+    'Message',
+)
 
 # makes message data readable.
 class Message:  # noqa: ignore
@@ -122,7 +124,7 @@ class Message:  # noqa: ignore
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
-        components: List[dict[str, Any]] = None,
+        components: List[Dict[str, Any]] = None,
         component=None,
     ):
         """Sends a message to the channel currently active in
@@ -162,7 +164,7 @@ class Message:  # noqa: ignore
             com = [component]
         if components:
             com = components
-        r = await self.app.factory.create_message(
+        r = await self.app.factory.channels.create_message(
             channel=self.channel.id,
             content=content,
             files=files,
@@ -182,8 +184,8 @@ class Message:  # noqa: ignore
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
-        components: List[dict[str, Any]] = None,
-        component: dict[str, Any] = None,
+        components: List[Dict[str, Any]] = None,
+        component: Dict[str, Any] = None,
     ):
         """Replys to the current message
 
@@ -222,7 +224,7 @@ class Message:  # noqa: ignore
             com = [component]
         if components:
             com = components
-        r = await self.app.factory.create_message(
+        r = await self.app.factory.channels.create_message(
             channel=self.channel.id,
             content=content,
             files=files,
@@ -239,13 +241,13 @@ class Message:  # noqa: ignore
     def edit(
         self,
         content: Optional[str] = None,
-        embeds: Optional[list[Embed]] = None,
+        embeds: Optional[List[Embed]] = None,
         embed: Optional[Embed] = None,
         flags: Optional[int] = None,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
-        components: Optional[list[dict]] = None,
+        components: Optional[List[dict]] = None,
         files: Optional[Sequence[File]] = None,
-        attachments: Optional[list[Attachment]] = None,
+        attachments: Optional[List[Attachment]] = None,
     ):
         """Edits the current message"""
         emd = {}
@@ -253,7 +255,7 @@ class Message:  # noqa: ignore
             emd = embed_parse.parse_embeds(embeds)
         elif embed:
             emd = embed_parse.parse_embed(embed)
-        return self.app.factory.edit_message(
+        return self.app.factory.channels.edit_message(
             channel=self.channel.id,
             message=self.id,
             content=content,
@@ -266,6 +268,6 @@ class Message:  # noqa: ignore
         )
 
     async def delete(self, reason: Optional[str] = None):
-        return self.app.factory.delete_message(
+        return self.app.factory.channels.delete_message(
             channel=self.channel.id, message=self.id, reason=reason
         )

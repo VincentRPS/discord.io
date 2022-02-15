@@ -21,7 +21,7 @@
 # SOFTWARE.
 import setuptools
 
-__version__ = str('0.8.3')
+__version__ = str('1.0.0')
 
 requirements = []
 with open('requirements.txt') as f:
@@ -37,6 +37,8 @@ packages = [
     'discord.interactions',
     'discord.types',
     'discord.ext.cogs',
+    'discord.ext.commands',
+    'discord.http',
 ]
 
 extra_requires = {
@@ -51,14 +53,14 @@ extra_requires = {
 }
 
 setuptools.setup(
-    name='aio',
+    name='discord.io',
     version=__version__,
     packages=packages,
     package_data={
-        'aio': ['banner.txt', 'bin/*.dll'],
+        'discord': ['banner.txt', 'bin/*.dll'],
     },
     project_urls={
-        'Documentation': 'https://aio-py.rtfd.io',
+        'Documentation': 'https://discordio.rtfd.io',
         'Issue Tracker': 'https://github.com/VincentRPS/discord.io/issues',
         'Pull Request Tracker': 'https://github.com/VincentRPS/discord.io/pulls',
     },

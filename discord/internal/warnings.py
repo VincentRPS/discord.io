@@ -21,15 +21,15 @@
 # SOFTWARE
 from typing import List
 
-__all__: List[str] = [
+__all__ = (
     'DiscordWarning',
     'Deprecated',
     'NaClWarning',
-]
+)
 
 
 class DiscordWarning(Warning):
-    """The base warning class for aio"""
+    """The base warning class for discord.io"""
 
 
 class Deprecated(DiscordWarning):
