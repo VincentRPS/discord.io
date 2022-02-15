@@ -21,7 +21,7 @@
 # SOFTWARE
 
 
-from typing import Any, List
+from typing import Any, List, Dict
 
 from ..assets import Emoji
 from ..channels import TextChannel
@@ -83,7 +83,7 @@ class OnMessageDeleteBulk(Event):
     """
 
     def process(self):
-        msgs: list[dict[str, Any]] = [
+        msgs: List[Dict[str, Any]] = [
             msg for msg in self.state.messages.get(self.data['ids'])
         ]
         messages = [Message(msg, self.state.app) for msg in msgs]

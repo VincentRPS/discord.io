@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import Any, List, Optional, Sequence
+from typing import Any, List, Optional, Sequence, Dict
 
 from ...embed import Embed
 from ...file import File
@@ -43,7 +43,7 @@ class Context:
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
-        components: List[dict[str, Any]] = None,
+        components: List[Dict[str, Any]] = None,
         component=None,
     ):
         return self.message.send(

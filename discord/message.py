@@ -24,7 +24,7 @@
 ref: https://discord.dev/resources/channel
 """
 
-from typing import Any, List, Optional, Sequence
+from typing import Any, List, Optional, Sequence, Dict
 
 from discord.file import File
 from discord.types import allowed_mentions, embed_parse
@@ -121,7 +121,7 @@ class Message:  # noqa: ignore
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
-        components: List[dict[str, Any]] = None,
+        components: List[Dict[str, Any]] = None,
         component=None,
     ):
         """Sends a message to the channel currently active in
@@ -181,8 +181,8 @@ class Message:  # noqa: ignore
         embeds: Optional[List[Embed]] = None,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
-        components: List[dict[str, Any]] = None,
-        component: dict[str, Any] = None,
+        components: List[Dict[str, Any]] = None,
+        component: Dict[str, Any] = None,
     ):
         """Replys to the current message
 

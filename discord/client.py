@@ -29,7 +29,7 @@ import logging
 import sys
 import time
 from threading import Event
-from typing import Callable, List, Literal, Optional, TypeVar, Union
+from typing import Callable, List, Literal, Optional, TypeVar, Union, Dict
 
 from discord.channels import VoiceChannel
 
@@ -42,7 +42,6 @@ from .http import RESTFactory
 from .interactions import ApplicationCommandRegistry
 from .internal import dispatcher
 from .state import ConnectionState
-from .types.dict import Dict
 from .ui import print_banner, start_logging
 from .user import User
 from .voice import VoiceClient, has_nacl
@@ -145,7 +144,7 @@ class Client:
             mobile=mobile,
         )
         self._got_gateway_bot: Event = Event()
-        self.cogs: dict[str, Cog] = {}
+        self.cogs: Dict[str, Cog] = {}
         self._extensions = {}
         self.chunk_guild_members = chunk_guild_members
 

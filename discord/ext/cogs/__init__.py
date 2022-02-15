@@ -3,7 +3,7 @@ discord.ext.cogs
 ~~~~~~~~~~~~~~~~
 Extension module to ensure the creation of Cogs.
 """
-from typing import Any, Callable, List, TypeVar
+from typing import Any, Callable, List, TypeVar, Dict
 
 from ...internal import DiscordError, dispatcher
 
@@ -17,9 +17,9 @@ class ExtensionLoadError(DiscordError):
 
 
 class Cog:
-    listeners: dict[str, Any] = {}
-    guild_commands: dict[str, Any] = {}
-    global_commands: dict[str, Any] = {}
+    listeners: Dict[str, Any] = {}
+    guild_commands: Dict[str, Any] = {}
+    global_commands: Dict[str, Any] = {}
     bot = None
 
     @property
