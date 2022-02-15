@@ -15,7 +15,7 @@ __version__: str = '1.0.0'
 __git_sha1__: str = 'HEAD'
 
 import logging
-import typing
+from typing import Literal, NamedTuple
 
 from .api import *
 from .assets import *
@@ -45,11 +45,11 @@ from .voice import *
 from .webhooks import *
 
 
-class VersionInfo(typing.NamedTuple):
+class VersionInfo(NamedTuple):
     major: str
     minor: str
     micro: str
-    releaselevel: typing.Literal['alpha', 'beta', 'candidate', 'final']
+    releaselevel: Literal['alpha', 'beta', 'candidate', 'final']
     serial: int
 
 
@@ -59,7 +59,7 @@ version_info: VersionInfo = VersionInfo(
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
-__all__: typing.List[str] = [
+__all__ = (
     '__title__',
     '__author__',
     '__license__',
@@ -67,4 +67,4 @@ __all__: typing.List[str] = [
     '__version__',
     'VersionInfo',
     'version_info',
-]
+)
