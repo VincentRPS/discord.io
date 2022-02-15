@@ -238,13 +238,13 @@ class Message:  # noqa: ignore
     def edit(
         self,
         content: Optional[str] = None,
-        embeds: Optional[list[Embed]] = None,
+        embeds: Optional[List[Embed]] = None,
         embed: Optional[Embed] = None,
         flags: Optional[int] = None,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
-        components: Optional[list[dict]] = None,
+        components: Optional[List[dict]] = None,
         files: Optional[Sequence[File]] = None,
-        attachments: Optional[list[Attachment]] = None,
+        attachments: Optional[List[Attachment]] = None,
     ):
         """Edits the current message"""
         emd = {}
