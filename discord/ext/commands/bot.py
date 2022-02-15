@@ -21,7 +21,8 @@
 # SOFTWARE
 
 from typing import Optional
-from ...client import Client, Callable
+
+from ...client import Callable, Client
 from .core import Command
 
 

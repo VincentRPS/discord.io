@@ -21,8 +21,8 @@
 # SOFTWARE
 
 import inspect
-from typing import Callable, Dict, List, Optional, Any
 from collections import OrderedDict
+from typing import Any, Callable, Dict, List, Optional
 from uuid import uuid4
 
 from .option_converter import Choice, Option
@@ -43,15 +43,15 @@ class ApplicationCommand:
         self.desc = description or func.__doc__ or 'No description provided'
         self.obj: Dict[str, Any] = {
             'self': self,
-            'options': [option for option in self._options]
+            'options': [option for option in self._options],
         }
-    
+
     @property
     def options(self):
         dict = OrderedDict(inspect.signature(self._callback).parameters)
         dict.popitem(last=False)
         return dict
-    
+
     def _parse_options(self):
         self._options = []
         for name, param in self.options.items():
@@ -83,7 +83,7 @@ class ApplicationCommand:
                 "description": _description,
                 "choices": choices,
                 "type": 1,
-                'options': options
+                'options': options,
             }
             self.obj['options'].append(sub_command)
 

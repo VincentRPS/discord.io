@@ -21,7 +21,7 @@
 # SOFTWARE
 
 import asyncio
-from typing import Any, Callable, Coroutine, Optional, Dict, List
+from typing import Any, Callable, Coroutine, Dict, List, Optional
 
 from .. import utils
 from ..enums import ModalStyle

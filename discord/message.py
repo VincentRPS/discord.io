@@ -24,7 +24,7 @@
 ref: https://discord.dev/resources/channel
 """
 
-from typing import Any, List, Optional, Sequence, Dict
+from typing import Any, Dict, List, Optional, Sequence
 
 from discord.file import File
 from discord.types import allowed_mentions, embed_parse

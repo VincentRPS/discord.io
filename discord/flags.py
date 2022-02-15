@@ -30,6 +30,7 @@ class flag_value:
         self.flag = func(None)
         self.__doc__ = func.__doc__
 
+
 class MessageFlags:
     """Represents a discord message flag object
 
@@ -68,6 +69,7 @@ class MessageFlags:
     def LOADING(self):
         return 1 << 7
 
+
 class Intents:
     """Helps defining your Intents
     For a full list of intents and there usage please visit
@@ -75,14 +77,17 @@ class Intents:
 
     .. versionadded:: 0.3.0
     """
-    valid_flags = [
-        'default',
-        'all',
-        'GUILDS',
-        'GUILD_MEMBERS',
-        'GUILD_BANS',
-        'GUILD_EMOJIS_AND_STICKERS'
-    ],
+
+    valid_flags = (
+        [
+            'default',
+            'all',
+            'GUILDS',
+            'GUILD_MEMBERS',
+            'GUILD_BANS',
+            'GUILD_EMOJIS_AND_STICKERS',
+        ],
+    )
 
     def __init__(self, **kwargs: bool):
         self.value = self.default
@@ -158,4 +163,3 @@ class Intents:
 
     def GUILD_SCHEDULED_EVENTS(self):
         return 1 << 16
-

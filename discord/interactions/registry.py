@@ -59,7 +59,9 @@ class ApplicationCommandRegistry:
 
     async def on_ready(self):
         await asyncio.sleep(20)
-        glob = await self.factory.commands.get_global_application_commands(self.state._bot_id)
+        glob = await self.factory.commands.get_global_application_commands(
+            self.state._bot_id
+        )
 
         await self.check_application_commands(glob)
 

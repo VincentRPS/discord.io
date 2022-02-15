@@ -29,7 +29,7 @@ import logging
 import sys
 import time
 from threading import Event
-from typing import Callable, List, Literal, Optional, TypeVar, Union, Dict
+from typing import Callable, Dict, List, Literal, Optional, TypeVar, Union
 
 from discord.channels import VoiceChannel
 
@@ -37,6 +37,7 @@ from . import utils
 from .api.gateway import Gateway
 from .components import Button, Modal, ModalComponent
 from .ext.cogs import Cog, ExtensionLoadError
+from .flags import Intents
 from .guild import Guild
 from .http import RESTFactory
 from .interactions import ApplicationCommandRegistry
@@ -45,7 +46,6 @@ from .state import ConnectionState
 from .ui import print_banner, start_logging
 from .user import User
 from .voice import VoiceClient, has_nacl
-from .flags import Intents
 
 _log = logging.getLogger(__name__)
 __all__: List[str] = ['Client']

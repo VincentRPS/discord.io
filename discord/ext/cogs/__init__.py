@@ -3,7 +3,7 @@ discord.ext.cogs
 ~~~~~~~~~~~~~~~~
 Extension module to ensure the creation of Cogs.
 """
-from typing import Any, Callable, List, TypeVar, Dict
+from typing import Any, Callable, Dict, List, TypeVar
 
 from ...internal import DiscordError, dispatcher
 
@@ -100,7 +100,6 @@ class Cog:
             return func
 
         return decorator
-
 
     def _inject(self, bot_self):
         self.bot = bot_self

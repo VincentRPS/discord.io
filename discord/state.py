@@ -24,7 +24,17 @@ The ConnectionState Caches most things during connection.
 """
 import asyncio
 from collections import OrderedDict
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, List, Tuple, TypeVar, Union, Dict
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Coroutine,
+    Dict,
+    List,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
 if TYPE_CHECKING:
     from .client import Client

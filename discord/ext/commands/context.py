@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import Any, List, Optional, Sequence, Dict
+from typing import Any, Dict, List, Optional, Sequence
 
 from ...embed import Embed
 from ...file import File

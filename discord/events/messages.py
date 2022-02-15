@@ -21,7 +21,7 @@
 # SOFTWARE
 
 
-from typing import Any, List, Dict
+from typing import Any, Dict, List
 
 from ..assets import Emoji
 from ..channels import TextChannel
