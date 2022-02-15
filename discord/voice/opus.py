@@ -33,7 +33,7 @@ from typing import List
 
 from ..internal.exceptions import DiscordError
 
-__all__: List[str] = ['Encoder']
+__all__ = ['Encoder']
 
 # structs
 class EncoderStruct(ctypes.Structure):  # noqa: ignore

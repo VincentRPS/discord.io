@@ -29,7 +29,7 @@ from typing import Any, List, Optional, Union
 from discord.color import Color
 from discord.colour import Colour
 
-__all__: List[str] = ['Embed']
+__all__ = ['Embed']
 
 
 class Embed:

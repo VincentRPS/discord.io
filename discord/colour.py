@@ -24,7 +24,7 @@ from typing import List
 
 from .color import Color
 
-__all__: List[str] = ['Colour']
+__all__ = ['Colour']
 
 
 class Colour(Color):

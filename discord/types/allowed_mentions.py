@@ -22,7 +22,7 @@
 
 from typing import List
 
-__all__: List[str] = ['MentionObject']
+__all__ = ['MentionObject']
 
 
 def MentionObject(

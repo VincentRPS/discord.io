@@ -22,7 +22,7 @@
 """Snowflake implementation"""
 from typing import List, TypeVar, Union
 
-__all__: List[str] = [
+__all__ = [
     'Snowflakeish',
     'SnowflakeishList',
     'SnowflakeishOr',

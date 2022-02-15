@@ -22,7 +22,7 @@
 
 from typing import Callable, List
 
-__all__: List[str] = ['MessageFlags', 'Intents']
+__all__ = ['MessageFlags', 'Intents']
 
 
 class flag_value:
