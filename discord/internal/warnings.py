@@ -29,7 +29,7 @@ __all__: List[str] = [
 
 
 class DiscordWarning(Warning):
-    """The base warning class for aio"""
+    """The base warning class for discord.io"""
 
 
 class Deprecated(DiscordWarning):

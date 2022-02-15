@@ -32,7 +32,7 @@ __all__: typing.List[str] = [
 
 
 class DiscordError(Exception):
-    """The base exception class for aio"""
+    """The base exception class for discord.io"""
 
 
 class RESTError(DiscordError):

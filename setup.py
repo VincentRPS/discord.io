@@ -60,7 +60,7 @@ setuptools.setup(
         'discord': ['banner.txt', 'bin/*.dll'],
     },
     project_urls={
-        'Documentation': 'https://aio-py.rtfd.io',
+        'Documentation': 'https://discordio.rtfd.io',
         'Issue Tracker': 'https://github.com/VincentRPS/discord.io/issues',
         'Pull Request Tracker': 'https://github.com/VincentRPS/discord.io/pulls',
     },
