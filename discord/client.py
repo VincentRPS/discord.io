@@ -114,7 +114,7 @@ class Client:
 
     def __init__(
         self,
-        intents: Optional[Intents] = Intents.default(),
+        intents: Optional[Intents] = Intents.ALL_UNPRIVLEDGED,
         module: Optional[str] = 'discord',
         shards: Optional[int] = None,
         mobile: Optional[bool] = False,
