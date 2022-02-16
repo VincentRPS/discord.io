@@ -32,11 +32,7 @@ from ..webhooks import webhook_context
 if TYPE_CHECKING:
     from ..state import ConnectionState
 
-<<<<<<< HEAD
-__all__ = 'Interaction'
-=======
 __all__: List[str] = ['Interaction']
->>>>>>> parent of adc7f3b (refactor: `typing` and `__all__`)
 
 
 class Interaction:

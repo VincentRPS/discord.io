@@ -20,11 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-<<<<<<< HEAD
-from typing import Any, Coroutine, Optional, Union
-=======
+from typing import Any, Coroutine, Union
 import typing
->>>>>>> parent of adc7f3b (refactor: `typing` and `__all__`)
 
 import aiohttp
 
@@ -62,13 +59,9 @@ class RESTFactory:
         self.commands = Commands(self.rest)
         self.guilds = Guilds(self.rest)
 
-<<<<<<< HEAD
-    async def login(self, token: str) -> Coroutine[Any, Any, Union[Any, None]]:
-=======
     async def login(
         self, token: str
     ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
->>>>>>> parent of adc7f3b (refactor: `typing` and `__all__`)
         self.token = token
 
         if len(self.token) != 59:

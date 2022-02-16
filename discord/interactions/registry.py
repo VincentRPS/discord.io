@@ -29,11 +29,7 @@ from ..internal.dispatcher import Dispatcher
 from ..state import ConnectionState
 from .interaction import Interaction
 
-<<<<<<< HEAD
-__all__ = ('ApplicationCommandRegistry',)
-=======
 __all__: List[str] = ['ApplicationCommandRegistry']
->>>>>>> parent of adc7f3b (refactor: `typing` and `__all__`)
 
 
 class ApplicationCommandRegistry:

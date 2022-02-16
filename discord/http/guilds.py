@@ -21,12 +21,8 @@
 # SOFTWARE
 
 import datetime
-<<<<<<< HEAD
-from typing import Any, List, Optional
-=======
 import typing
 from typing import Any, Optional
->>>>>>> parent of adc7f3b (refactor: `typing` and `__all__`)
 
 from discord import utils
 

@@ -22,11 +22,7 @@
 
 import typing
 from json import dumps
-<<<<<<< HEAD
-from typing import Any, Coroutine, Dict, List, Optional, Sequence, Union
-=======
 from typing import Dict, Optional, Sequence
->>>>>>> parent of adc7f3b (refactor: `typing` and `__all__`)
 
 from ..api.rest import RESTClient, Route
 from ..assets import Attachment
