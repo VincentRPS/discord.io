@@ -33,7 +33,7 @@ if TYPE_CHECKING:
     from ..state import ConnectionState
 
 __all__ = (
-    'Interaction'
+    'Interaction',
 )
 
 

@@ -26,6 +26,12 @@ from ...embed import Embed
 from ...file import File
 from ...message import Message
 from ...types import allowed_mentions
+import re
+import shlex
+
+
+arg_splitter = re.compile(r"(\S+)|\"(.+)\"")
+
 
 
 class Context:
@@ -34,6 +40,15 @@ class Context:
     def __init__(self, msg: Message, command_invoked_under):
         self.message = msg
         self.command = command_invoked_under
+
+        if self.command._parser:
+            try:
+                pargs = self.command._parser.parse(shlex.split(msg.content))
+            except Exception as err:
+                print(err)
+            else:
+                for i in self.command._parser._parser._actions:
+                    setattr(self, i.dest, getattr(pargs, i.dest, None))
 
     def send(
         self,

@@ -30,14 +30,13 @@ from typing import Any, Callable, Coroutine, List, Optional, TypeVar
 from discord.state import ConnectionState
 
 __all__ = (
-    'Dispatcher'
+    'Dispatcher',
 )
 _log = logging.getLogger(__name__)
 CoroT = TypeVar('CoroT', bound=Callable[..., Coroutine[Any, Any, Any]])
 T = TypeVar('T')
 Coro = Coroutine[Any, Any, T]
 CoroFunc = Callable[..., Coro[Any]]
-
 
 class Dispatcher:
     """Dispatches raw and non-raw events

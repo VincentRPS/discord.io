@@ -75,7 +75,7 @@ class RESTFactory:
 
     def logout(
         self,
-    ) -> Coroutine[Any, Any, Any, None]:
+    ) -> Coroutine[Any, Any, Union[Any, None]]:
         return self.rest.send(
             Route('POST', '/auth/logout')
         )  # Log's you out of the bot.

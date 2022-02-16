@@ -23,7 +23,8 @@
 import asyncio
 import inspect
 from collections import OrderedDict
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, Union
+import argparse
 
 from ...channels import TextChannel, VoiceChannel
 from ...internal import run_storage
@@ -34,10 +35,53 @@ from ...user import User
 from .context import Context
 
 
+__all__ = (
+    "Flag",
+    "Command",
+    "resolve_id"
+)
+
 def resolve_id(string: str) -> int:
     ret = string[2:-1]
     return ret
 
+
+
+
+
+class Flag:
+    STRING = str
+    BOOLEAN = bool
+    FLOAT = float
+    INT = int
+    def __init__(self, *flags: str, type: Union[str, int, bool, float]=str, default=None, **kwargs):
+        self.flags = flags
+        self.flag_type = type
+        self.default = default
+        self.required = False
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+
+
+
+class CommandParser:
+    def __init__(self, *flags: Flag):
+        self._parser = argparse.ArgumentParser(exit_on_error=False, add_help=False)
+        for flag in flags:
+            if type(flag) == Flag:
+                self._parser.add_argument(*flag.flags, type=flag.flag_type, default=flag.default, required=flag.required)
+
+    def parse(self, args):
+        parsed = None
+        try:
+            parsed, unknown = self._parser.parse_known_args(args)
+        except argparse.ArgumentError as err:
+            pass
+        except Exception as err:
+            print(err)
+        return parsed
 
 class Command:
     """Represents a prefixed Discord command
@@ -53,6 +97,7 @@ class Command:
         state: ConnectionState,
         *,
         cog=None,
+        flags: list[Flag] = [],
         description: Optional[str] = None
     ):
         if not asyncio.iscoroutinefunction(func):
@@ -64,6 +109,7 @@ class Command:
         self.cog = cog
         self._desc = description or func.__doc__ or "No description provided"
         self._storage = run_storage.InternalRunner(self.state.loop)
+        self._parser = CommandParser(*flags)
 
     @property
     def options(self):
@@ -129,5 +175,6 @@ class Command:
     def invoke(self, msg: Message, **kwargs):
         if "content" in kwargs:
             self.content_without_command: str = kwargs.get("content")
+
         context = Context(msg, self)
         self._run_with_options_detected(context)
