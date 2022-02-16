@@ -60,18 +60,23 @@ class Guilds:
         timeout: typing.Optional[str] = None,
         reason: typing.Optional[str] = None,
     ):
-        ret = {
-            'nick': nick,
-            'roles': roles,
-            'mute': mute,
-            'deaf': deaf,
-            'channel_id': channel_id,
-            'communication_disabled_until': timeout,
-        }
+        json = {}
+        if nick:
+            json['nick'] = nick,
+        elif roles:
+            json['roles'] = roles,
+        elif mute:
+            json['mute'] = mute,
+        elif deaf:
+            json['deaf'] = deaf,
+        elif channel_id:
+            json['channel_id'] = channel_id,
+        elif timeout:
+            json['communication_disabled_until'] = timeout,
         return self.rest.send(
             Route('PATCH', f'/guilds/{guild_id}/members/{member}', guild_id=guild_id),
             reason=reason,
-            json=ret,
+            json=json,
         )
 
     def ban_guild_member(

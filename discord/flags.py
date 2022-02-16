@@ -245,5 +245,8 @@ class Intents:
     ALL_UNPRIVLEDGED = ALL_DM | UNPRIVLEDGED_GUILD
     """Adding this will give you every un-priviledged intent"""
 
-    ALL_PRIVLEDGED = ALL_UNPRIVLEDGED | MESSAGE_CONTENT | PRIVLEDGED_GUILD
-    """Adding this will give you every un-priviledged and priviledged intent"""
+    ALL_PRIVLEDGED = MESSAGE_CONTENT | PRIVLEDGED_GUILD
+    """Adding this will give you every priviledged intent"""
+
+    ALL = ALL_PRIVLEDGED | ALL_UNPRIVLEDGED
+    """Adding this will give you every intent"""

@@ -165,7 +165,7 @@ class Guild:
         -------
         :class:`Member`
         """
-        unparsed = await self._factory.guilds.get_guild_member(self.id(), id)
+        unparsed = await self._factory.guilds.get_guild_member(self.id, id)
         return Member(unparsed, self.id, self._factory)
 
     async def change_voice_state(

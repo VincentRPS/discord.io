@@ -118,7 +118,7 @@ class RESTClient:
     """
 
     def __init__(self, *, state=None, proxy=None, proxy_auth=None):
-        self.user_agent = 'DiscordBot https://github.com/VincentRPS/discord.io'
+        self.user_agent = 'DiscordBot (https://github.com/VincentRPS/discord.io)'
         self.header: typing.Dict[str, str] = {'User-Agent': self.user_agent}
         self._locks: weakref.WeakValueDictionary[
             str, asyncio.Lock
@@ -168,8 +168,12 @@ class RESTClient:
         if 'token' in params:
             self.header['Authorization'] = 'Bot ' + params.pop('token')
 
-        if 'reason' in params:
-            self.header['X-Audit-Log-Reason'] = quote(params.pop('reason'), '/ ')
+        try:
+            reason: str = params.pop('reason')
+        except KeyError:
+            pass
+        else:
+            self.header['X-Audit-Log-Reason'] = quote(str(reason), safe='/ ')
 
         params['headers'] = self.header
 

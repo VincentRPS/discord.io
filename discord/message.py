@@ -93,15 +93,15 @@ class Message:  # noqa: ignore
         """
         return self.from_dict['id']
 
-    @property
-    def guild(self):
+    def fetch_guild(self) -> Guild:
         """Returns the :class:`Guild` of the message
 
         Returns
         -------
         :class:`Guild`
         """
-        return Guild(id=self.from_dict['guild_id'], rest_factory=self.app.factory)
+        e = self.app.state.guilds.get(self.from_dict['guild_id'])
+        return Guild(e, rest_factory=self.app.factory)
 
     @property
     def author(self) -> User:
