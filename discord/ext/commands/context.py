@@ -30,10 +30,6 @@ import re
 import shlex
 
 
-arg_splitter = re.compile(r"(\S+)|\"(.+)\"")
-
-
-
 class Context:
     """Represents a :class:`Command`' context"""
 

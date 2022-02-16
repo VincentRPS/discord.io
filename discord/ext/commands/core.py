@@ -35,11 +35,11 @@ from ...user import User
 from .context import Context
 
 
-__all__ = (
+__all__ = [
     "Flag",
     "Command",
     "resolve_id"
-)
+]
 
 def resolve_id(string: str) -> int:
     ret = string[2:-1]
@@ -66,7 +66,7 @@ class Flag:
 
 
 
-class CommandParser:
+class FlagParser:
     def __init__(self, *flags: Flag):
         self._parser = argparse.ArgumentParser(exit_on_error=False, add_help=False)
         for flag in flags:

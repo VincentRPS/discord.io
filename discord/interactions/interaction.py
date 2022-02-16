@@ -32,9 +32,9 @@ from ..webhooks import webhook_context
 if TYPE_CHECKING:
     from ..state import ConnectionState
 
-__all__ = (
+__all__ = [
     'Interaction',
-)
+]
 
 
 class Interaction:

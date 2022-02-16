@@ -38,9 +38,9 @@ from ..internal.exceptions import Forbidden, NotFound, RESTError, ServerError
 
 _log = logging.getLogger(__name__)
 
-__all__ = (
+__all__ = [
     'RESTClient',
-)
+]
 
 PAD = TypeVar('PAD', bound='PadLock')
 

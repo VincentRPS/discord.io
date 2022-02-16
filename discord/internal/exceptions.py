@@ -20,13 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-__all__ = (
+__all__ = [
     'DiscordError',
     'RESTError',
     'Forbidden',
     'NotFound',
     'ServerError',
-)
+]
 
 
 class DiscordError(Exception):

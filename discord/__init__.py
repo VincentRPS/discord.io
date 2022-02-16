@@ -59,7 +59,7 @@ version_info: VersionInfo = VersionInfo(
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
-__all__ = (
+__all__ = [
     '__title__',
     '__author__',
     '__license__',
@@ -67,4 +67,4 @@ __all__ = (
     '__version__',
     'VersionInfo',
     'version_info',
-)
+]
