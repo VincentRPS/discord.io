@@ -109,7 +109,7 @@ class Command:
         self.cog = cog
         self._desc = description or func.__doc__ or "No description provided"
         self._storage = run_storage.InternalRunner(self.state.loop)
-        self._parser = CommandParser(*flags)
+        self._parser = FlagParser(*flags)
 
     @property
     def options(self):
