@@ -19,39 +19,24 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
+from ...user import User
+from ...member import Member
+from ..channels import TextChannel
+from ..core import Event2
 
-import abc
-from typing import Any
-
-from ..internal.dispatcher import Dispatcher
-from ..state import ConnectionState
-
-
-class Event(abc.ABC):
-    """The base event class for all events."""
-
-    def __init__(self, data, dispatcher: Dispatcher, state: ConnectionState):
-        self.data: dict = data
-        self.dispatch = dispatcher.dispatch
-        self.state = state
-        self.process()
+class MessageCreateEvent(Event2):
+    parent = 'message_create'
 
     @property
-    def app(self) -> Any:
-        return self.state.app
-
-    # meant to be overridden.
-    def process(self) -> None:
-        ...
-
-class Event2:
-    # the event v2 system
-
-    def __init__(self, data: dict, state: ConnectionState):
-        self.parent: str = ''
-        self.data: dict = data
-        self.state: ConnectionState = state
-
+    def content(self) -> str:
+        return self.data.get('content')
+    
     @property
-    def app(self):
-        return self.state.app
+    def author(self) -> User:
+        raw = self.state.members.get(self.data['author']['id'])
+        return Member(raw, self.data['guild_id'], self.state.app.factory).user
+    
+    @property
+    def channel(self) -> TextChannel:
+        raw = self.state.channels.get(self.data['channel_id'])
+        return TextChannel(raw, self.state)

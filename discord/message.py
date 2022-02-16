@@ -23,6 +23,7 @@
 
 ref: https://discord.dev/resources/channel
 """
+import logging
 
 from typing import Any, Dict, List, Optional, Sequence
 
@@ -36,6 +37,7 @@ from .guild import Guild
 from .user import User
 
 __all__: List[str] = ['Message']
+_log = logging.getLogger(__name__)
 
 # makes message data readable.
 class Message:  # noqa: ignore
@@ -126,6 +128,8 @@ class Message:  # noqa: ignore
     ):
         """Sends a message to the channel currently active in
 
+        .. deprecated:: 1.0
+
         Parameters
         ----------
         content
@@ -151,7 +155,7 @@ class Message:  # noqa: ignore
             else:
                 emb = [embed]
         elif embed and embed:
-            raise TypeError('Used both `embed` and `embed` only 1 is allowed.')
+            raise TypeError('Used both `embed` and `embeds` only 1 is allowed.')
         elif embeds and not embed:
             if isinstance(embeds, Embed):
                 emb = [embed.obj for embed in embeds]
@@ -161,6 +165,8 @@ class Message:  # noqa: ignore
             com = [component]
         if components:
             com = components
+        
+        _log
         r = await self.app.factory.channels.create_message(
             channel=self.channel.id,
             content=content,

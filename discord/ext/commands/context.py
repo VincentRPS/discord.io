@@ -26,7 +26,6 @@ from ...embed import Embed
 from ...file import File
 from ...message import Message
 from ...types import allowed_mentions
-import re
 import shlex
 
 
