@@ -162,7 +162,7 @@ class ConnectionState:
         self.stage_instances = options.get('stage_instances_cache_hold') or Hold()
         self._ready: asyncio.Event = asyncio.Event()
 
-        self._bot_intents: int = options.get('intents', 0)
+        self._bot_intents: int = options.get('intents')
         """The cached bot intents, used for Gateway"""
 
         self._bot_id: int = None

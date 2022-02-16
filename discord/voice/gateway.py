@@ -139,6 +139,7 @@ class VoiceGateway:
 
                 if op == 2:
                     await self.ready(d)
+                    await self.hello(interval=self.interval)
 
                 elif op == 6:
                     self.kept_alive = True
@@ -156,8 +157,7 @@ class VoiceGateway:
 
                 elif op == 8:
                     raw_interval = d['heartbeat_interval'] / 1000.0
-                    interval = min(raw_interval, 5.0)
-                    await self.hello(interval=interval)
+                    self.interval = min(raw_interval, 5.0)
 
         close_code = self.ws.close_code
 
@@ -213,6 +213,7 @@ class VoiceGateway:
             if not self.kept_alive:
                 await self.close(1008)
                 await self.connect(resume=True)
+                break
             self.kept_alive = False
             await self.send_json({'op': 3, 'd': int(time.time() * 1000)})
             await asyncio.sleep(interval)
@@ -228,7 +229,7 @@ class VoiceGateway:
         struct.pack_into('>H', packet, 2, 70)
         struct.pack_into('>I', packet, 4, client.ssrc)
         client.socket.sendto(packet, (client.endpoint_ip, client.voice_port))
-        recv = self.state.loop.sock_recv(client.socket, 70)
+        recv = await self.state.loop.sock_recv(client.socket, 70)
         _log.debug('Received initial connection: %s', recv)
 
         ip_end = recv.index(0, 4)
