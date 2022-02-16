@@ -21,15 +21,7 @@
 # SOFTWARE
 
 from json import dumps
-from typing import (
-    Dict,
-    Optional,
-    Any,
-    Sequence,
-    List,
-    Coroutine,
-    Union,
-)
+from typing import Any, Coroutine, Dict, List, Optional, Sequence, Union
 
 from ..api.rest import RESTClient, Route
 from ..assets import Attachment

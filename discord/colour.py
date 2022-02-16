@@ -23,9 +23,7 @@
 
 from .color import Color
 
-__all__ = (
-    'Colour',
-)
+__all__ = ('Colour',)
 
 
 class Colour(Color):

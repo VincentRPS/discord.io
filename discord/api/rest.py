@@ -21,13 +21,14 @@
 # SOFTWARE
 from __future__ import annotations
 
-import aiohttp
 import asyncio
 import json
 import logging
 import weakref
+from typing import Any, Iterable, Optional, Sequence, TypeVar, Union
 from urllib.parse import quote
-from typing import TypeVar, Union, Any, Optional, Sequence, Iterable
+
+import aiohttp
 
 from discord import utils
 from discord.file import File
@@ -38,9 +39,7 @@ from ..internal.exceptions import Forbidden, NotFound, RESTError, ServerError
 
 _log = logging.getLogger(__name__)
 
-__all__ = (
-    'RESTClient',
-)
+__all__ = ('RESTClient',)
 
 PAD = TypeVar('PAD', bound='PadLock')
 

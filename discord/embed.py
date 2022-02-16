@@ -29,9 +29,7 @@ from typing import Any, Optional, Union
 from discord.color import Color
 from discord.colour import Colour
 
-__all__ = (
-    'Embed',
-)
+__all__ = ('Embed',)
 
 
 class Embed:

@@ -21,8 +21,8 @@
 # SOFTWARE
 """Implementation of Discord Webhooks."""
 
-from typing import List, Optional, Any, Sequence
 from contextvars import ContextVar
+from typing import Any, List, Optional, Sequence
 
 from discord import utils
 
@@ -31,10 +31,7 @@ from .embed import Embed
 from .file import File
 from .snowflake import Snowflakeish
 
-__all__ = (
-    'Webhook',
-    'WebhookAdapter'
-)
+__all__ = ('Webhook', 'WebhookAdapter')
 
 
 class WebhookAdapter:

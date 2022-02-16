@@ -35,9 +35,7 @@ from .embed import Embed
 from .guild import Guild
 from .user import User
 
-__all__ = (
-    'Message',
-)
+__all__ = ('Message',)
 
 # makes message data readable.
 class Message:  # noqa: ignore

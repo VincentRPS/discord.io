@@ -30,9 +30,7 @@ from ..interactions.interaction import Interaction
 from ..internal.dispatcher import Coro
 from ..state import ConnectionState
 
-__all__ = (
-    'Button',
-)
+__all__ = ('Button',)
 
 
 class Button:

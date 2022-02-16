@@ -22,13 +22,11 @@
 # Implementation of sending Files via rest.
 import io
 import os
+from typing import Optional, Union
 
-from typing import Union, Optional
 from .internal.exceptions import DiscordError, Forbidden
 
-__all__ = (
-    'File',
-)
+__all__ = ('File',)
 
 
 class File:

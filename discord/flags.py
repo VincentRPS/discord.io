@@ -22,12 +22,10 @@
 
 from typing import Callable, TypeVar
 
-__all__ = (
-    'MessageFlags',
-    'Intents'
-)
+__all__ = ('MessageFlags', 'Intents')
 
 T = TypeVar('T')
+
 
 class flag_value:
     def __init__(self, func: Callable):
@@ -249,5 +247,3 @@ class Intents:
 
     ALL_PRIVLEDGED = ALL_UNPRIVLEDGED | MESSAGE_CONTENT | PRIVLEDGED_GUILD
     """Adding this will give you every un-priviledged and priviledged intent"""
-
-

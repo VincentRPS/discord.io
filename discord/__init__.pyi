@@ -1,5 +1,3 @@
-from typing import Literal, NamedTuple
-
 from .api import *
 from .assets import *
 from .channels import *
@@ -26,6 +24,7 @@ from .user import *
 from .utils import *
 from .voice import *
 from .webhooks import *
+from typing import Literal, NamedTuple
 
 class VersionInfo(NamedTuple):
     major: str

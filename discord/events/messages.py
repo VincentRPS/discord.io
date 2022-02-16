@@ -30,11 +30,7 @@ from ..member import Member
 from ..message import Message
 from .core import Event
 
-__all__ = (
-    'OnMessage',
-    'OnMessageEdit',
-    'OnMessageDelete'
-)
+__all__ = ('OnMessage', 'OnMessageEdit', 'OnMessageDelete')
 
 
 class OnMessage(Event):

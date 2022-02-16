@@ -20,9 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
+from typing import Any, Coroutine, Optional, Union
+
 import aiohttp
 
-from typing import Optional, Any, Coroutine, Union
 from ..api.rest import RESTClient, Route
 from ..state import ConnectionState
 from .channels import Channels
@@ -57,9 +58,7 @@ class RESTFactory:
         self.commands = Commands(self.rest)
         self.guilds = Guilds(self.rest)
 
-    async def login(
-        self, token: str
-    ) -> Coroutine[Any, Any, Union[Any, None]]:
+    async def login(self, token: str) -> Coroutine[Any, Any, Union[Any, None]]:
         self.token = token
 
         if len(self.token) != 59:

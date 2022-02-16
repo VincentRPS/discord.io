@@ -22,9 +22,7 @@
 
 from typing import List
 
-__all__ = (
-    'MentionObject',
-)
+__all__ = ('MentionObject',)
 
 
 def MentionObject(

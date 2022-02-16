@@ -21,9 +21,7 @@
 # SOFTWARE
 """Implementation of Colors."""
 
-__all__ = (
-    'Color',
-)
+__all__ = ('Color',)
 
 
 class Color:
