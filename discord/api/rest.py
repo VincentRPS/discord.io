@@ -68,7 +68,6 @@ class Route:
     def __init__(self, method: str, endpoint: str, **params: typing.Any):
         self.method = method
         self.endpoint = endpoint
-        self.url = 'https://discord.com/api/v10' + endpoint
 
         self.guild_id: typing.Optional[int] = params.get('guild_id')
         self.channel_id: typing.Optional[int] = params.get('channel_id')
@@ -117,7 +116,7 @@ class RESTClient:
         The header sent to discord.
     """
 
-    def __init__(self, *, state=None, proxy=None, proxy_auth=None):
+    def __init__(self, *, state=None, proxy=None, proxy_auth=None, version=10):
         self.user_agent = 'DiscordBot (https://github.com/VincentRPS/discord.io)'
         self.header: typing.Dict[str, str] = {'User-Agent': self.user_agent}
         self._locks: weakref.WeakValueDictionary[
@@ -129,6 +128,7 @@ class RESTClient:
         self.proxy = proxy
         self.proxy_auth = proxy_auth
         self._session: aiohttp.ClientSession = utils.MISSING
+        self.url = f'https://discord.com/api/v{version}'
 
     async def enter(self):
         self._session = aiohttp.ClientSession()
@@ -145,7 +145,7 @@ class RESTClient:
         .. versionadded:: 0.3.0
         """
         method = route.method
-        url = route.url
+        url = self.url + route.endpoint
         bucket = route.bucket
 
         lock = self._locks.get(bucket)

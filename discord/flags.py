@@ -237,10 +237,14 @@ class Intents:
     """Adding this will give you every non-privledged guild intent"""
 
     PRIVLEDGED_GUILD = (
-        GUILD_MEMBERS 
+        GUILDS
+        | GUILD_MEMBERS 
         | GUILD_PRESENCES 
         | GUILD_MESSAGES 
         | GUILD_MESSAGE_TYPING 
+        | GUILD_MESSAGE_REACTIONS
+        | GUILD_MESSAGES
+        | GUILD_MESSAGE_TYPING
         | GUILD_MESSAGE_REACTIONS
     )
     """Adding this will give you every priviledged and non-privledged guild intent"""

@@ -49,11 +49,12 @@ class RESTFactory:
         state: typing.Optional[ConnectionState] = None,
         proxy: typing.Optional[str] = None,
         proxy_auth: typing.Optional[str] = None,
+        version=10,
     ):
         self.proxy = proxy
         self.proxy_auth = proxy_auth
         self.state = state or ConnectionState()
-        self.rest = RESTClient(state=self.state, proxy=proxy, proxy_auth=proxy_auth)
+        self.rest = RESTClient(state=self.state, proxy=proxy, proxy_auth=proxy_auth, version=version)
         self.state.loop.create_task(self.rest.enter())
         self.channels = Channels(self.rest)
         self.commands = Commands(self.rest)
