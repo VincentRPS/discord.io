@@ -41,7 +41,6 @@ from discord.types.dict import Dict
 
 from ..http import RESTFactory
 from ..internal.dispatcher import Dispatcher
-from ..internal.event_manager import EventManager
 from ..state import ConnectionState
 
 ZLIB_SUFFIX = b'\x00\x00\xff\xff'
@@ -234,7 +233,6 @@ class Shard:
                         await self._ready(data)
                         self.dis.dispatch('READY')
                     else:
-                        self.state.app.event_manager._dispatch(data['t'].lower(), data['d'])
                         catalog.Cataloger(data, self.dis, self.state)
                 elif data['op'] == 9:
                     await self.ws.close(code=4000)

@@ -43,15 +43,3 @@ class Event(abc.ABC):
     # meant to be overridden.
     def process(self) -> None:
         ...
-
-class Event2:
-    # the event v2 system
-
-    def __init__(self, data: dict, state: ConnectionState):
-        self.parent: str = ''
-        self.data: dict = data
-        self.state: ConnectionState = state
-
-    @property
-    def app(self):
-        return self.state.app
