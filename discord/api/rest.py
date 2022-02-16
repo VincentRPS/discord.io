@@ -21,13 +21,15 @@
 # SOFTWARE
 from __future__ import annotations
 
-import aiohttp
 import asyncio
 import json
 import logging
+import typing
 import weakref
+from typing import Any, Iterable, Optional, Sequence, TypeVar, Union
 from urllib.parse import quote
-from typing import TypeVar, Union, Any, Optional, Sequence, Iterable
+
+import aiohttp
 
 from discord import utils
 from discord.file import File
@@ -38,18 +40,18 @@ from ..internal.exceptions import Forbidden, NotFound, RESTError, ServerError
 
 _log = logging.getLogger(__name__)
 
-__all__ = (
+__all__: typing.List[str] = [
     'RESTClient',
-)
+]
 
-PAD = TypeVar('PAD', bound='PadLock')
+PAD = typing.TypeVar('PAD', bound='PadLock')
 
 aiohttp.hdrs.WEBSOCKET = 'websocket'
 
 
 async def parse_tj(
     response: aiohttp.ClientResponse,
-) -> Union[Dict, str]:
+) -> typing.Union[Dict, str]:
     text = await response.text(encoding='utf-8')
     try:
         if response.headers['content-type'] == 'application/json':
@@ -63,17 +65,17 @@ async def parse_tj(
 
 
 class Route:
-    def __init__(self, method: str, endpoint: str, **params: Any):
+    def __init__(self, method: str, endpoint: str, **params: typing.Any):
         self.method = method
         self.endpoint = endpoint
         self.url = 'https://discord.com/api/v10' + endpoint
 
-        self.guild_id: Optional[int] = params.get('guild_id')
-        self.channel_id: Optional[int] = params.get('channel_id')
+        self.guild_id: typing.Optional[int] = params.get('guild_id')
+        self.channel_id: typing.Optional[int] = params.get('channel_id')
 
         # Webhooks
-        self.webhook_id: Optional[int] = params.get('webhook_id')
-        self.webhook_token: Optional[str] = params.get('webhook_token')
+        self.webhook_id: typing.Optional[int] = params.get('webhook_id')
+        self.webhook_token: typing.Optional[str] = params.get('webhook_token')
 
     @property
     def bucket(self) -> str:
@@ -116,8 +118,8 @@ class RESTClient:
     """
 
     def __init__(self, *, state=None, proxy=None, proxy_auth=None):
-        self.user_agent = 'DiscordBot https://github.com/VincentRPS/discord.io'
-        self.header: Dict[str, str] = {'User-Agent': self.user_agent}
+        self.user_agent = 'DiscordBot (https://github.com/VincentRPS/discord.io)'
+        self.header: typing.Dict[str, str] = {'User-Agent': self.user_agent}
         self._locks: weakref.WeakValueDictionary[
             str, asyncio.Lock
         ] = weakref.WeakValueDictionary()
@@ -134,9 +136,9 @@ class RESTClient:
     async def send(  # noqa: ignore
         self,
         route: Route,
-        files: Optional[Sequence[File]] = None,
-        form: Optional[Iterable[Dict]] = None,
-        **params: Any,
+        files: typing.Optional[typing.Sequence[File]] = None,
+        form: typing.Optional[typing.Iterable[Dict]] = None,
+        **params: typing.Any,
     ):
         """Sends a request to discord
 
@@ -166,8 +168,12 @@ class RESTClient:
         if 'token' in params:
             self.header['Authorization'] = 'Bot ' + params.pop('token')
 
-        if 'reason' in params:
-            self.header['X-Audit-Log-Reason'] = quote(params.pop('reason'), '/ ')
+        try:
+            reason: str = params.pop('reason')
+        except KeyError:
+            pass
+        else:
+            self.header['X-Audit-Log-Reason'] = quote(str(reason), safe='/ ')
 
         params['headers'] = self.header
 

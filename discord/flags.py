@@ -20,14 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import Callable, TypeVar
+from typing import Callable, List, TypeVar
 
-__all__ = (
-    'MessageFlags',
-    'Intents'
-)
+__all__: List[str] = ['MessageFlags', 'Intents']
 
 T = TypeVar('T')
+
 
 class flag_value:
     def __init__(self, func: Callable):
@@ -247,7 +245,8 @@ class Intents:
     ALL_UNPRIVLEDGED = ALL_DM | UNPRIVLEDGED_GUILD
     """Adding this will give you every un-priviledged intent"""
 
-    ALL_PRIVLEDGED = ALL_UNPRIVLEDGED | MESSAGE_CONTENT | PRIVLEDGED_GUILD
-    """Adding this will give you every un-priviledged and priviledged intent"""
+    ALL_PRIVLEDGED = MESSAGE_CONTENT | PRIVLEDGED_GUILD
+    """Adding this will give you every priviledged intent"""
 
-
+    ALL = ALL_PRIVLEDGED | ALL_UNPRIVLEDGED
+    """Adding this will give you every intent"""

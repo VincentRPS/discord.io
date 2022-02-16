@@ -21,7 +21,8 @@
 # SOFTWARE
 
 import datetime
-from typing import Any, Optional, List
+import typing
+from typing import Any, Optional
 
 from discord import utils
 
@@ -40,7 +41,7 @@ class Guilds:
         )
 
     def get_guild_members(
-        self, guild_id, limit: Optional[int] = 1, after: Optional[int] = 0
+        self, guild_id, limit: typing.Optional[int] = 1, after: typing.Optional[int] = 0
     ):
         ret = {'limit': limit, 'after': after}
         return self.rest.send(
@@ -51,34 +52,39 @@ class Guilds:
         self,
         guild_id: int,
         member: int,
-        nick: Optional[str] = None,
-        roles: Optional[List[int]] = None,
-        mute: Optional[bool] = False,
-        deaf: Optional[bool] = False,
-        channel_id: Optional[int] = None,
-        timeout: Optional[str] = None,
-        reason: Optional[str] = None,
+        nick: typing.Optional[str] = None,
+        roles: typing.Optional[typing.List[int]] = None,
+        mute: typing.Optional[bool] = False,
+        deaf: typing.Optional[bool] = False,
+        channel_id: typing.Optional[int] = None,
+        timeout: typing.Optional[str] = None,
+        reason: typing.Optional[str] = None,
     ):
-        ret = {
-            'nick': nick,
-            'roles': roles,
-            'mute': mute,
-            'deaf': deaf,
-            'channel_id': channel_id,
-            'communication_disabled_until': timeout,
-        }
+        json = {}
+        if nick:
+            json['nick'] = nick,
+        elif roles:
+            json['roles'] = roles,
+        elif mute:
+            json['mute'] = mute,
+        elif deaf:
+            json['deaf'] = deaf,
+        elif channel_id:
+            json['channel_id'] = channel_id,
+        elif timeout:
+            json['communication_disabled_until'] = timeout,
         return self.rest.send(
             Route('PATCH', f'/guilds/{guild_id}/members/{member}', guild_id=guild_id),
             reason=reason,
-            json=ret,
+            json=json,
         )
 
     def ban_guild_member(
         self,
         guild_id: int,
         user: int,
-        delete_message_days: Optional[int] = 0,
-        reason: Optional[str] = None,
+        delete_message_days: typing.Optional[int] = 0,
+        reason: typing.Optional[str] = None,
     ):
         json = {'delete_message_days': delete_message_days}
         return self.rest.send(
@@ -91,7 +97,7 @@ class Guilds:
         self,
         guild_id: int,
         user: int,
-        reason: Optional[str] = None,
+        reason: typing.Optional[str] = None,
     ):
         return self.rest.send(
             Route('DELETE', f'/guilds/{guild_id}/members/{user}', guild_id=guild_id),
@@ -124,13 +130,13 @@ class Guilds:
         self,
         name: str,
         region: Optional[str] = None,
-        icon: Optional[bytes] = None,
-        verification_level: Optional[int] = None,
-        default_message_notifications: Optional[int] = None,
-        explicit_content_filter: Optional[int] = None,
-        roles: Optional[List[int]] = None,
-        channels: Optional[List[int]] = None,
-        reason: Optional[str] = None,
+        icon: typing.Optional[bytes] = None,
+        verification_level: typing.Optional[int] = None,
+        default_message_notifications: typing.Optional[int] = None,
+        explicit_content_filter: typing.Optional[int] = None,
+        roles: typing.Optional[typing.List[int]] = None,
+        channels: typing.Optional[typing.List[int]] = None,
+        reason: typing.Optional[str] = None,
     ):
         json = {
             'name': name,

@@ -35,9 +35,7 @@ from .embed import Embed
 from .guild import Guild
 from .user import User
 
-__all__ = (
-    'Message',
-)
+__all__: List[str] = ['Message']
 
 # makes message data readable.
 class Message:  # noqa: ignore
@@ -95,8 +93,7 @@ class Message:  # noqa: ignore
         """
         return self.from_dict['id']
 
-    @property
-    def guild(self):
+    def fetch_guild(self) -> Guild:
         """Returns the :class:`Guild` of the message
 
         Returns

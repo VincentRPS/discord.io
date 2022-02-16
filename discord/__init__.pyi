@@ -1,4 +1,4 @@
-from typing import Literal, NamedTuple
+import typing
 
 from .api import *
 from .assets import *
@@ -27,11 +27,11 @@ from .utils import *
 from .voice import *
 from .webhooks import *
 
-class VersionInfo(NamedTuple):
+class VersionInfo(typing.NamedTuple):
     major: str
     minor: str
     micro: str
-    releaselevel: Literal['alpha', 'beta', 'candidate', 'final']
+    releaselevel: typing.Literal['alpha', 'beta', 'candidate', 'final']
     serial: int
 
 version_info: VersionInfo

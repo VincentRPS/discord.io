@@ -29,9 +29,7 @@ from ..internal.dispatcher import Dispatcher
 from ..state import ConnectionState
 from .interaction import Interaction
 
-__all__ = (
-    'ApplicationCommandRegistry',
-)
+__all__: List[str] = ['ApplicationCommandRegistry']
 
 
 class ApplicationCommandRegistry:

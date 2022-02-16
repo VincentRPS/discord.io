@@ -21,7 +21,7 @@
 # SOFTWARE
 """Implementation of Discord Webhooks."""
 
-from typing import List, Optional, Any, Sequence
+import typing
 from contextvars import ContextVar
 
 from discord import utils
@@ -31,10 +31,7 @@ from .embed import Embed
 from .file import File
 from .snowflake import Snowflakeish
 
-__all__ = (
-    'Webhook',
-    'WebhookAdapter'
-)
+__all__: typing.List[str] = ['Webhook', 'WebhookAdapter']
 
 
 class WebhookAdapter:
@@ -66,8 +63,8 @@ class WebhookAdapter:
         self,
         id,
         token,
-        name: Optional[str] = None,
-        avatar: Optional[str] = None,
+        name: typing.Optional[str] = None,
+        avatar: typing.Optional[str] = None,
     ):
         """Modify the Webhook
 
@@ -120,8 +117,8 @@ class WebhookAdapter:
         id,
         token,
         message: Snowflakeish,
-        content: Optional[str] = None,
-        allowed_mentions: Optional[bool] = None,
+        content: typing.Optional[str] = None,
+        allowed_mentions: typing.Optional[bool] = None,
     ):
         """Edits a Webhook message
 
@@ -175,15 +172,15 @@ class WebhookAdapter:
         self,
         id,
         token,
-        content: Optional[str] = None,
-        username: Optional[str] = None,
-        avatar_url: Optional[str] = None,
-        tts: Optional[bool] = None,
-        allowed_mentions: Optional[bool] = None,
-        embed: Optional[Embed] = None,
-        embeds: Optional[List[Embed]] = None,
-        flags: Optional[Any] = None,
-        files: Optional[Sequence[File]] = None,
+        content: typing.Optional[str] = None,
+        username: typing.Optional[str] = None,
+        avatar_url: typing.Optional[str] = None,
+        tts: typing.Optional[bool] = None,
+        allowed_mentions: typing.Optional[bool] = None,
+        embed: typing.Optional[Embed] = None,
+        embeds: typing.Optional[typing.List[Embed]] = None,
+        flags: typing.Optional[typing.Any] = None,
+        files: typing.Optional[typing.Sequence[File]] = None,
     ):
         """Execute the Webhook
 
@@ -254,15 +251,15 @@ class Webhook:
     @utils.copy_doc(WebhookAdapter.execute)
     def execute(
         self,
-        content: Optional[str] = None,
-        username: Optional[str] = None,
-        avatar_url: Optional[str] = None,
-        tts: Optional[bool] = None,
-        allowed_mentions: Optional[bool] = None,
-        embed: Optional[Embed] = None,
-        embeds: Optional[List[Embed]] = None,
-        flags: Optional[Any] = None,
-        files: Optional[Sequence[File]] = None,
+        content: typing.Optional[str] = None,
+        username: typing.Optional[str] = None,
+        avatar_url: typing.Optional[str] = None,
+        tts: typing.Optional[bool] = None,
+        allowed_mentions: typing.Optional[bool] = None,
+        embed: typing.Optional[Embed] = None,
+        embeds: typing.Optional[typing.List[Embed]] = None,
+        flags: typing.Optional[typing.Any] = None,
+        files: typing.Optional[typing.Sequence[File]] = None,
     ):
         return self.adapter.execute(
             id=self.id,

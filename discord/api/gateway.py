@@ -45,7 +45,7 @@ from ..state import ConnectionState
 
 ZLIB_SUFFIX = b'\x00\x00\xff\xff'
 _log = logging.getLogger(__name__)
-url_extension = '?v=9&encoding=json&compress=zlib-stream'
+url_extension = '?v=10&encoding=json&compress=zlib-stream'
 
 
 class Shard:
