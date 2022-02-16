@@ -20,9 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-import typing
 from json import dumps
-from typing import Dict, Optional, Sequence
+from typing import (
+    Dict,
+    Optional,
+    Any,
+    Sequence,
+    List,
+    Coroutine,
+    Union,
+)
 
 from ..api.rest import RESTClient, Route
 from ..assets import Attachment
@@ -38,14 +45,14 @@ class Channels:
     def create_message(
         self,
         channel: Snowflakeish,
-        content: typing.Optional[str] = None,
-        files: typing.Optional[typing.Sequence[File]] = None,
-        tts: typing.Optional[bool] = False,
-        embeds: typing.List[Dict] = None,
-        allowed_mentions: typing.Optional[allowed_mentions.MentionObject] = None,
-        message_reference: typing.Optional[dict] = None,
-        components: typing.Optional[typing.List[Dict]] = None,
-    ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
+        content: Optional[str] = None,
+        files: Optional[Sequence[File]] = None,
+        tts: Optional[bool] = False,
+        embeds: List[Dict] = None,
+        allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
+        message_reference: Optional[dict] = None,
+        components: Optional[List[Dict]] = None,
+    ) -> Coroutine[Any, Any, Union[Any, None]]:
         json = {
             'tts': tts,
             'allowed_mentions': allowed_mentions,
@@ -105,12 +112,12 @@ class Channels:
         channel: int,
         message: int,
         content: Optional[str] = None,
-        embeds: Optional[typing.List[Dict]] = None,
+        embeds: Optional[List[Dict]] = None,
         flags: Optional[int] = None,
         allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
-        components: Optional[typing.List[Dict]] = None,
+        components: Optional[List[Dict]] = None,
         files: Optional[Sequence[File]] = None,
-        attachments: Optional[typing.List[Attachment]] = None,
+        attachments: Optional[List[Attachment]] = None,
     ):
         form = []
         json = {
@@ -157,14 +164,14 @@ class Channels:
             files=files,
         )
 
-    def get_channel(self, channel: typing.Optional[Snowflakeish] = None):
+    def get_channel(self, channel: Optional[Snowflakeish] = None):
         return self.rest.send(Route('GET', f'/channels/{channel}'))
 
     def edit_channel(
         self,
-        name: typing.Optional[str] = None,
-        channel: typing.Optional[Snowflakeish] = None,
-        type: typing.Optional[str] = None,
+        name: Optional[str] = None,
+        channel: Optional[Snowflakeish] = None,
+        type: Optional[str] = None,
     ):
         if type == 'group_dm':
             payload = {}
@@ -175,12 +182,12 @@ class Channels:
     def create_invite(
         self,
         *,
-        channel_id: typing.Optional[Snowflakeish] = None,
-        reason: typing.Optional[str] = None,
-        max_age: typing.Optional[int] = 0,
-        max_uses: typing.Optional[int] = 0,
-        tempoary: typing.Optional[bool] = False,
-        unique: typing.Optional[bool] = True,
+        channel_id: Optional[Snowflakeish] = None,
+        reason: Optional[str] = None,
+        max_age: Optional[int] = 0,
+        max_uses: Optional[int] = 0,
+        tempoary: Optional[bool] = False,
+        unique: Optional[bool] = True,
     ):
         json = {
             'max_age': max_age,
@@ -204,17 +211,17 @@ class Channels:
         self,
         guild_id: int,
         name: str,
-        type: typing.Optional[int] = None,
+        type: Optional[int] = None,
         *,
-        reason: typing.Optional[str] = None,
-        position: typing.Optional[int] = None,
-        permission_overwrites: typing.Optional[typing.List[Dict]] = None,
-        topic: typing.Optional[str] = None,
-        bitrate: typing.Optional[int] = None,
-        user_limit: typing.Optional[int] = None,
-        rate_limit_per_user: typing.Optional[int] = None,
-        nsfw: typing.Optional[bool] = False,
-        parent_id: typing.Optional[int] = None,
+        reason: Optional[str] = None,
+        position: Optional[int] = None,
+        permission_overwrites: Optional[List[Dict]] = None,
+        topic: Optional[str] = None,
+        bitrate: Optional[int] = None,
+        user_limit: Optional[int] = None,
+        rate_limit_per_user: Optional[int] = None,
+        nsfw: Optional[bool] = False,
+        parent_id: Optional[int] = None,
     ):
         json = {'name': name}
         if type:

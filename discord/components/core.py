@@ -24,14 +24,15 @@
 import asyncio
 import random
 import string
-import typing
-from typing import Any, Callable, Coroutine
+from typing import Any, Callable, Coroutine, List, Literal
 
 from ..interactions.interaction import Interaction
 from ..internal.dispatcher import Coro
 from ..state import ConnectionState
 
-__all__: typing.List[str] = ['Button']
+__all__ = (
+    'Button',
+)
 
 
 class Button:
@@ -60,7 +61,7 @@ class Button:
         self,
         label: str,
         callback: Coro,
-        style: typing.Literal[1, 2, 3, 4, 5] = 1,
+        style: Literal[1, 2, 3, 4, 5] = 1,
         custom_id: str = None,
         url: str = None,
     ):
