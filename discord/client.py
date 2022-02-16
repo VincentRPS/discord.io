@@ -544,5 +544,5 @@ class Client:
     def wait_for(self, event: str):
         return self.dispatcher.wait_for(event)
     
-    def subscribe(self, event: Event2):
-        return self.event_manager.subscribe(event=event)
+    def subscribe(self, event: Optional[Event2] = None):
+        return self.event_manager.subscribe(event)
