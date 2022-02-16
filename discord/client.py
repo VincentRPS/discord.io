@@ -47,9 +47,7 @@ from .user import User
 from .voice import VoiceClient, has_nacl
 
 _log = logging.getLogger(__name__)
-__all__ = (
-    'Client',
-)
+__all__: List[str] = ['Client']
 CFT = TypeVar('CFT', bound='dispatcher.CoroFunc')
 
 
@@ -116,7 +114,7 @@ class Client:
 
     def __init__(
         self,
-        intents: Optional[Intents] = Intents.ALL_UNPRIVLEDGED,
+        intents: Optional[int] = Intents.ALL_UNPRIVLEDGED,
         module: Optional[str] = 'discord',
         shards: Optional[int] = None,
         mobile: Optional[bool] = False,

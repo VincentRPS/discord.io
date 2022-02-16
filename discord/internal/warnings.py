@@ -21,7 +21,7 @@
 # SOFTWARE
 from typing import List
 
-__all__ = [
+__all__: List[str] = [
     'DiscordWarning',
     'Deprecated',
     'NaClWarning',
