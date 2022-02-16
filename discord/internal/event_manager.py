@@ -23,10 +23,8 @@
 Manages events given by discord
 """
 import asyncio
-import inspect
 import logging
-from collections import OrderedDict
-from typing import Any, Dict, Callable, Coroutine, Optional
+from typing import Any, Dict, Callable, Coroutine
 import uuid
 from ..state import ConnectionState
 from ..events import core
@@ -80,21 +78,13 @@ class EventManager:
                 else:
                     self.scheduler(coro['func'], name.lower(), coro['cog'], coro['one_shot'], coro['event_cls'](data=data, state=self.state))
     
-    def subscribe(self, event: Optional[core.Event2] = None, /):
+    def subscribe(self, event: core.Event2):
         def decorator(func: Callable):
-            if event is None:
-                dict = OrderedDict(inspect.signature(func).parameters)
-                name, param = dict.popitem(False)
-                _event = param.annotation
-            else:
-                _event = event
-
-            _log.info(f"Subscribing to {_event.parent}")
+            _log.info(f"Subscribing to {event.parent}")
             if not asyncio.iscoroutinefunction(func):
                 raise TypeError('Function is not a coroutine')
 
-            setattr(self, _event.parent, {'func': func, 'cog': None, 'one_shot': False, 'event_cls': _event})
-            self.events[uuid.uuid4()] = _event
+            setattr(self, event.parent, {'func': func, 'cog': None, 'one_shot': False, 'event_cls': event})
+            self.events[uuid.uuid4()] = event
             return func
-
         return decorator
