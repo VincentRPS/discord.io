@@ -31,6 +31,7 @@ from threading import Event
 from typing import Callable, Dict, List, Literal, Optional, TypeVar, Union
 
 from discord.channels import VoiceChannel
+from discord.events.core import Event2
 
 from . import utils
 from .api.gateway import Gateway
@@ -40,7 +41,7 @@ from .flags import Intents
 from .guild import Guild
 from .http import RESTFactory
 from .interactions import ApplicationCommandRegistry
-from .internal import dispatcher
+from .internal import dispatcher, event_manager
 from .state import ConnectionState
 from .ui import print_banner, start_logging
 from .user import User
@@ -134,6 +135,7 @@ class Client:
             shard_count=shards,
         )
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
+        self.event_manager = event_manager.EventManager(state=self.state)
         self.factory = RESTFactory(state=self.state, proxy=proxy, proxy_auth=proxy_auth)
         self.application = ApplicationCommandRegistry(self.factory, self.state)
         self.gateway = Gateway(
@@ -541,3 +543,6 @@ class Client:
 
     def wait_for(self, event: str):
         return self.dispatcher.wait_for(event)
+    
+    def subscribe(self, event: Event2):
+        return self.event_manager.subscribe(event=event)

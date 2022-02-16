@@ -20,11 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Optional, Sequence, Any
 
+from .file import File
 from .enums import FormatType
 from .state import ConnectionState
 from .user import User
+from .embed import Embed
+from .types import allowed_mentions
 
 
 def channel_parse(type, data: Dict, state: ConnectionState):
@@ -146,7 +149,7 @@ class TextChannel:
         -------
         :class:`int`
         """
-        return self.from_dict['id']
+        return self.from_dict.get('id')
 
     @property
     def guild(self):
@@ -230,6 +233,65 @@ class TextChannel:
         :class:`int`
         """
         return self.from_dict['parent_id']
+    
+    async def send(
+        self,
+        content: Optional[str] = None,
+        files: Optional[Sequence[File]] = None,
+        embed: Optional[Embed] = None,
+        embeds: Optional[List[Embed]] = None,
+        tts: Optional[bool] = False,
+        allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
+        components: List[Dict[str, Any]] = None,
+        component=None,
+    ):
+        """Sends a message in the channel.
+
+        Parameters
+        ----------
+        content
+            The message content
+        files
+            The message files
+        embed
+            A :class:`Embed`
+        embeds
+            A :class:`list` of :class:`Embed`
+        tts
+            A :class:`bool` of if tts should be on in this message
+        allowed_mentions
+            A allowed mentions object
+        components
+            A :class:`list` of components
+        """
+        emb = None
+        com = None
+        if embed and not embeds:
+            if isinstance(embed, Embed):
+                emb = [embed.obj]
+            else:
+                emb = [embed]
+        elif embed and embed:
+            raise TypeError('Used both `embed` and `embeds` only 1 is allowed.')
+        elif embeds and not embed:
+            if isinstance(embeds, Embed):
+                emb = [embed.obj for embed in embeds]
+            else:
+                emb = embeds
+        if component:
+            com = [component]
+        if components:
+            com = components
+        r = await self.state.app.factory.channels.create_message(
+            channel=self.id,
+            content=content,
+            files=files,
+            embeds=emb,
+            tts=tts,
+            allowed_mentions=allowed_mentions,
+            components=com,
+        )
+        return r
 
 
 class VoiceChannel:

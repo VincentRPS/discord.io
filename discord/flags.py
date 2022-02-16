@@ -227,21 +227,22 @@ class Intents:
     """
 
     UNPRIVLEDGED_GUILD = (
-        GUILD_BANS
+        GUILDS
+        | GUILD_BANS
         | GUILD_EMOJIS_AND_STICKERS
         | GUILD_INTEGRATIONS
         | GUILD_WEBHOOKS
         | GUILD_INVITES
         | GUILD_VOICE_STATES
+        | GUILD_MESSAGES
+        | GUILD_MESSAGE_TYPING
+        | GUILD_MESSAGE_REACTIONS
     )
     """Adding this will give you every non-privledged guild intent"""
 
     PRIVLEDGED_GUILD = (
         GUILD_MEMBERS 
-        | GUILD_PRESENCES 
-        | GUILD_MESSAGES 
-        | GUILD_MESSAGE_TYPING 
-        | GUILD_MESSAGE_REACTIONS
+        | GUILD_PRESENCES
     )
     """Adding this will give you every priviledged and non-privledged guild intent"""
 

@@ -39,7 +39,6 @@ class OnMessage(Event):
     def process(self) -> None:
         ret = Message(self.data, self.state.app)
         self.state.messages.new(self.data['id'], self.data)
-        self.state.channels.edit(ret.channel.id, ret.channel.from_dict)
         self.dispatch('MESSAGE', ret)
 
         # ext.commands
