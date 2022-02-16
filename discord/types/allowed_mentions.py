@@ -22,7 +22,11 @@
 
 from typing import List
 
+<<<<<<< HEAD
 __all__ = ('MentionObject',)
+=======
+__all__: List[str] = ['MentionObject']
+>>>>>>> parent of adc7f3b (refactor: `typing` and `__all__`)
 
 
 def MentionObject(

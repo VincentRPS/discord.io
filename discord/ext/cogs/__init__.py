@@ -7,7 +7,11 @@ from typing import Any, Callable, Dict, List, TypeVar
 
 from ...internal import DiscordError, dispatcher
 
+<<<<<<< HEAD
 __all__ = ('Cog', 'ExtensionLoadError')
+=======
+__all__: List[str] = ['Cog', 'ExtensionLoadError']
+>>>>>>> parent of adc7f3b (refactor: `typing` and `__all__`)
 
 CFT = TypeVar('CFT', bound='dispatcher.CoroFunc')
 

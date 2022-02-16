@@ -28,8 +28,7 @@ from typing import Any, Dict, List, Optional, Union
 from .http import RESTFactory
 from .user import User
 
-__all__ = ('Member',)
-
+__all__: List[str] = ['Member']
 
 class Member:
     """Represents a Discord Guild Member

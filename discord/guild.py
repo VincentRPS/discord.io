@@ -32,7 +32,7 @@ from .http import RESTFactory
 from .member import Member
 from .user import User
 
-__all__ = [
+__all__: List[str] = [
     'Guild',
     'Role',
     'WelcomeScreen',

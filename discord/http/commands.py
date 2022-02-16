@@ -1,4 +1,5 @@
-from typing import Dict, List, Optional
+import typing
+from typing import Dict
 
 from ..api.rest import RESTClient, Route
 from ..flags import MessageFlags
@@ -15,8 +16,8 @@ class Commands:
         application_id: Snowflakeish,
         name: str,
         description: str,
-        options: Optional[List[Dict]] = None,
-        default_permission: Optional[bool] = True,
+        options: typing.Optional[typing.List[Dict]] = None,
+        default_permission: typing.Optional[bool] = True,
         type: int = 1,
     ):
         json = {
@@ -45,8 +46,8 @@ class Commands:
         command_id: Snowflakeish,
         name: str,
         description: str,
-        options: Optional[List[Dict]] = None,
-        default_permission: Optional[bool] = True,
+        options: typing.Optional[typing.List[Dict]] = None,
+        default_permission: typing.Optional[bool] = True,
     ):
         json = {
             'name': name,
@@ -83,8 +84,8 @@ class Commands:
         guild_id: Snowflakeish,
         name: str,
         description: str,
-        options: Optional[List[Dict]],
-        default_permission: Optional[bool] = True,
+        options: typing.Optional[typing.List[Dict]],
+        default_permission: typing.Optional[bool] = True,
         type: int = 1,
     ):
         json = {
@@ -148,8 +149,8 @@ class Commands:
         guild_id: Snowflakeish,
         name: str,
         description: str,
-        options: Optional[List[Dict]] = None,
-        default_permission: Optional[bool] = True,
+        options: typing.Optional[typing.List[Dict]] = None,
+        default_permission: typing.Optional[bool] = True,
     ):
         json = {
             'name': name,
@@ -173,11 +174,11 @@ class Commands:
         interaction_id: int,
         interaction_token: str,
         content: str,
-        embeds: Optional[List[Dict]] = None,
-        tts: Optional[bool] = False,
-        allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
-        flags: Optional[MessageFlags] = None,
-        components: Optional[dict] = None,
+        embeds: typing.Optional[typing.List[typing.Dict]] = None,
+        tts: typing.Optional[bool] = False,
+        allowed_mentions: typing.Optional[allowed_mentions.MentionObject] = None,
+        flags: typing.Optional[MessageFlags] = None,
+        components: typing.Optional[dict] = None,
     ):
         json = {
             'content': content,
@@ -212,10 +213,10 @@ class Commands:
         application_id,
         interaction_token,
         content: str,
-        embeds: Optional[List[dict]] = None,
-        allowed_mentions: Optional[allowed_mentions.MentionObject] = None,
-        components: Optional[List[Dict]] = None,
-        flags: Optional[MessageFlags] = None,
+        embeds: typing.Optional[typing.List[dict]] = None,
+        allowed_mentions: typing.Optional[allowed_mentions.MentionObject] = None,
+        components: typing.Optional[typing.List[Dict]] = None,
+        flags: typing.Optional[MessageFlags] = None,
     ):
         json = {'content': content}
         if embeds is not None:

@@ -20,7 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
+<<<<<<< HEAD
 from typing import Any, Coroutine, Optional, Union
+=======
+import typing
+>>>>>>> parent of adc7f3b (refactor: `typing` and `__all__`)
 
 import aiohttp
 
@@ -45,9 +49,9 @@ class RESTFactory:
     def __init__(
         self,
         *,
-        state: Optional[ConnectionState] = None,
-        proxy: Optional[str] = None,
-        proxy_auth: Optional[str] = None,
+        state: typing.Optional[ConnectionState] = None,
+        proxy: typing.Optional[str] = None,
+        proxy_auth: typing.Optional[str] = None,
     ):
         self.proxy = proxy
         self.proxy_auth = proxy_auth
@@ -58,7 +62,13 @@ class RESTFactory:
         self.commands = Commands(self.rest)
         self.guilds = Guilds(self.rest)
 
+<<<<<<< HEAD
     async def login(self, token: str) -> Coroutine[Any, Any, Union[Any, None]]:
+=======
+    async def login(
+        self, token: str
+    ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
+>>>>>>> parent of adc7f3b (refactor: `typing` and `__all__`)
         self.token = token
 
         if len(self.token) != 59:
@@ -74,14 +84,14 @@ class RESTFactory:
 
     def logout(
         self,
-    ) -> Coroutine[Any, Any, Any, None]:
+    ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
         return self.rest.send(
             Route('POST', '/auth/logout')
         )  # Log's you out of the bot.
 
     def get_gateway_bot(
         self,
-    ) -> Coroutine[Any, Any, Union[Any, None]]:
+    ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
         return self.rest.send(Route('GET', '/gateway/bot'))
 
     async def ws_connect(self, url: str, *, compress: int = 0):

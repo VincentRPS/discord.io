@@ -20,13 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-__all__ = (
+import typing
+
+__all__: typing.List[str] = [
     'DiscordError',
     'RESTError',
     'Forbidden',
     'NotFound',
     'ServerError',
-)
+]
 
 
 class DiscordError(Exception):

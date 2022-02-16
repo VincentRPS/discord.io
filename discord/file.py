@@ -22,11 +22,11 @@
 # Implementation of sending Files via rest.
 import io
 import os
-from typing import Optional, Union
+import typing as t
 
 from .internal.exceptions import DiscordError, Forbidden
 
-__all__ = ('File',)
+__all__: t.List[str] = ['File']
 
 
 class File:
@@ -47,9 +47,9 @@ class File:
 
     def __init__(
         self,
-        fp: Union[str, bytes, os.PathLike, io.BufferedIOBase],
+        fp: t.Union[str, bytes, os.PathLike, io.BufferedIOBase],
         *,
-        filename: Optional[str] = None,
+        filename: t.Optional[str] = None,
         spoiler: bool = False,
     ):
         if isinstance(fp, io.IOBase):
@@ -87,7 +87,7 @@ class File:
             self.filename is not None and self.filename.startswith('SPOILER_')
         )
 
-    def reset(self, *, seek: Union[int, bool] = True) -> None:
+    def reset(self, *, seek: t.Union[int, bool] = True) -> None:
         if seek:
             self.fp.seek(self._og_pos)
 
