@@ -23,7 +23,7 @@
 from typing import Optional
 
 from ...client import Callable, Client
-from .core import Command
+from .core import Command, Flag
 
 
 class Bot(Client):
@@ -31,7 +31,7 @@ class Bot(Client):
         super().__init__(**kwargs)
         self.command_prefix = command_prefix
 
-    def command(self, name: Optional[str] = None):
+    def command(self, name: Optional[str] = None, flags: list[Flag] = []):
         def decorator(func: Callable) -> Command:
             _name = name or func.__name__
             _description = func.__doc__
@@ -41,6 +41,7 @@ class Bot(Client):
                 state=self.state,
                 description=_description,
                 name=_name,
+                flags=flags
             )
             self.state.prefixed_commands.append(cmd)
             return cmd

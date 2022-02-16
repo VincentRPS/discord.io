@@ -95,6 +95,9 @@ class Guild:
         self.from_dict = guild
         self._factory: RESTFactory = rest_factory
 
+    def __repr__(self):
+        return f"<Guild guild_id={self.id!r}>"
+
     def joined_at(self) -> str:
         return self.from_dict['joined_at']
 

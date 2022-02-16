@@ -42,6 +42,9 @@ class User:
     def __init__(self, usr: dict):
         self.from_dict = usr
 
+    def __repr__(self):
+        return f"<User id={self.id!r}>"
+
     def username(self) -> str:
         """The users username
 
