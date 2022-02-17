@@ -24,6 +24,7 @@
 import asyncio
 import json
 import logging
+from random import random
 import struct
 import time
 
@@ -78,7 +79,7 @@ class VoiceGateway:
         await self.send_json(payload)
 
     async def connect(self, resume: bool = False):
-        self.ws = await self.client._state.app.factory.ws_connect(
+        self.ws = await aiohttp.ClientSession().ws_connect(
             self.gateway, compress=15
         )
 
@@ -139,7 +140,6 @@ class VoiceGateway:
 
                 if op == 2:
                     await self.ready(d)
-                    await self.hello(interval=self.interval)
 
                 elif op == 6:
                     self.kept_alive = True
@@ -151,13 +151,12 @@ class VoiceGateway:
                 elif op == 4:
                     _log.info('Received session description')
                     self.client.mode = d['mode']
-                    self.secret_key = self.client.secret_key = d.get('secret_key')
-                    await self.speak()
-                    await self.speak(False)
+                    await self.load_secret_key(d)
 
                 elif op == 8:
                     raw_interval = d['heartbeat_interval'] / 1000.0
                     self.interval = min(raw_interval, 5.0)
+                    await self.hello(interval=self.interval)
 
         close_code = self.ws.close_code
 
@@ -186,7 +185,8 @@ class VoiceGateway:
 
         elif code == 4006:
             await self.connect(False)
-            raise RuntimeError('Session no longer valid')
+            _log.error("Session is no longer valid")
+            return
 
         elif code == 4009:
             raise RuntimeError("Session timed out")
@@ -208,7 +208,7 @@ class VoiceGateway:
 
         await self.connect(True)
 
-    async def heartbeat(self, interval: float):
+    async def heartbeat(self, interval: float, /):
         if not self.ws.closed:
             if not self.kept_alive:
                 await self.close(1008)
@@ -216,7 +216,7 @@ class VoiceGateway:
             self.kept_alive = False
             await self.send_json({'op': 3, 'd': int(time.time() * 1000)})
             await asyncio.sleep(interval)
-            self.state.loop.create_task(self.heartbeat(interval=interval))
+            self.state.loop.create_task(self.heartbeat(interval))
 
     async def ready(self, data: dict):
         client = self.client
@@ -246,10 +246,16 @@ class VoiceGateway:
         _log.info('Using voice protocol: %s', mode)
 
     async def hello(self, interval: float):
+        await asyncio.sleep(interval)
         self.kept_alive = (
             True  # exception to not kill the connection when saying hello.
         )
         await self.heartbeat(interval)
+    
+    async def load_secret_key(self, data: dict):
+        self.secret_key = self.client.secret_key = data.get('secret_key')
+        await self.speak()
+        await self.speak(False)
 
     async def close(self, code: int):
         await self.ws.close(code=code)
