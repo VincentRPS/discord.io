@@ -20,14 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
+import re
+import shlex
 from typing import Any, Dict, List, Optional, Sequence
 
 from ...embed import Embed
 from ...file import File
 from ...message import Message
 from ...types import allowed_mentions
-import re
-import shlex
 
 
 class Context:

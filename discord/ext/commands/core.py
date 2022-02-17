@@ -20,11 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
+import argparse
 import asyncio
 import inspect
 from collections import OrderedDict
 from typing import Any, Callable, Optional, Union
-import argparse
 
 from ...channels import TextChannel, VoiceChannel
 from ...internal import run_storage
@@ -34,19 +34,12 @@ from ...state import ConnectionState
 from ...user import User
 from .context import Context
 
+__all__ = ["Flag", "Command", "resolve_id"]
 
-__all__ = [
-    "Flag",
-    "Command",
-    "resolve_id"
-]
 
 def resolve_id(string: str) -> int:
     ret = string[2:-1]
     return ret
-
-
-
 
 
 class Flag:
@@ -54,7 +47,14 @@ class Flag:
     BOOLEAN = bool
     FLOAT = float
     INT = int
-    def __init__(self, *flags: str, type: Union[str, int, bool, float]=str, default=None, **kwargs):
+
+    def __init__(
+        self,
+        *flags: str,
+        type: Union[str, int, bool, float] = str,
+        default=None,
+        **kwargs
+    ):
         self.flags = flags
         self.flag_type = type
         self.default = default
@@ -64,14 +64,17 @@ class Flag:
             setattr(self, key, value)
 
 
-
-
 class FlagParser:
     def __init__(self, *flags: Flag):
         self._parser = argparse.ArgumentParser(exit_on_error=False, add_help=False)
         for flag in flags:
             if type(flag) == Flag:
-                self._parser.add_argument(*flag.flags, type=flag.flag_type, default=flag.default, required=flag.required)
+                self._parser.add_argument(
+                    *flag.flags,
+                    type=flag.flag_type,
+                    default=flag.default,
+                    required=flag.required
+                )
 
     def parse(self, args):
         parsed = None
@@ -82,6 +85,7 @@ class FlagParser:
         except Exception as err:
             print(err)
         return parsed
+
 
 class Command:
     """Represents a prefixed Discord command

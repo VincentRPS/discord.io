@@ -41,7 +41,7 @@ class Bot(Client):
                 state=self.state,
                 description=_description,
                 name=_name,
-                flags=flags
+                flags=flags,
             )
             self.state.prefixed_commands.append(cmd)
             return cmd

@@ -1,9 +1,10 @@
-from discord.ext.commands import Flag, Bot, Context
+from discord.ext.commands import Bot, Context, Flag
 from discord.flags import Intents
 
 intents = Intents.GUILD_MESSAGES | Intents.GUILDS
 
 bot = Bot(command_prefix='!', intents=intents)
+
 
 @bot.listen("on_ready")
 async def on_ready():
@@ -20,11 +21,13 @@ async def ping(ctx):
         Flag("--test", "-t", type=Flag.STRING, default=""),
         Flag('--bool', '-b', type=Flag.BOOLEAN, default=False),
         Flag("--int", '-i', type=Flag.INT),
-        Flag("--float", "-f", type=Flag.FLOAT)
+        Flag("--float", "-f", type=Flag.FLOAT),
     ]
 )
 async def flags(ctx: Context, word: str):
-    await ctx.send(f"word: {word}\ntest: {ctx.test!s}\nbool: {ctx.bool}\nint: {ctx.int}\nfloat {ctx.float}")
+    await ctx.send(
+        f"word: {word}\ntest: {ctx.test!s}\nbool: {ctx.bool}\nint: {ctx.int}\nfloat {ctx.float}"
+    )
 
 
 bot.run('my_token')

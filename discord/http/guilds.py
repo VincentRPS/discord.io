@@ -62,17 +62,17 @@ class Guilds:
     ):
         json = {}
         if nick:
-            json['nick'] = nick,
+            json['nick'] = (nick,)
         elif roles:
-            json['roles'] = roles,
+            json['roles'] = (roles,)
         elif mute:
-            json['mute'] = mute,
+            json['mute'] = (mute,)
         elif deaf:
-            json['deaf'] = deaf,
+            json['deaf'] = (deaf,)
         elif channel_id:
-            json['channel_id'] = channel_id,
+            json['channel_id'] = (channel_id,)
         elif timeout:
-            json['communication_disabled_until'] = timeout,
+            json['communication_disabled_until'] = (timeout,)
         return self.rest.send(
             Route('PATCH', f'/guilds/{guild_id}/members/{member}', guild_id=guild_id),
             reason=reason,

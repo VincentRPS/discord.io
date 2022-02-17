@@ -238,10 +238,10 @@ class Intents:
 
     PRIVLEDGED_GUILD = (
         GUILDS
-        | GUILD_MEMBERS 
-        | GUILD_PRESENCES 
-        | GUILD_MESSAGES 
-        | GUILD_MESSAGE_TYPING 
+        | GUILD_MEMBERS
+        | GUILD_PRESENCES
+        | GUILD_MESSAGES
+        | GUILD_MESSAGE_TYPING
         | GUILD_MESSAGE_REACTIONS
         | GUILD_MESSAGES
         | GUILD_MESSAGE_TYPING

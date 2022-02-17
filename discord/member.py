@@ -30,6 +30,7 @@ from .user import User
 
 __all__: List[str] = ['Member']
 
+
 class Member:
     """Represents a Discord Guild Member
 

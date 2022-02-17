@@ -20,8 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import Any, Coroutine, Union
 import typing
+from typing import Any, Coroutine, Union
 
 import aiohttp
 
@@ -54,7 +54,9 @@ class RESTFactory:
         self.proxy = proxy
         self.proxy_auth = proxy_auth
         self.state = state or ConnectionState()
-        self.rest = RESTClient(state=self.state, proxy=proxy, proxy_auth=proxy_auth, version=version)
+        self.rest = RESTClient(
+            state=self.state, proxy=proxy, proxy_auth=proxy_auth, version=version
+        )
         self.state.loop.create_task(self.rest.enter())
         self.channels = Channels(self.rest)
         self.commands = Commands(self.rest)

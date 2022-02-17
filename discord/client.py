@@ -135,7 +135,9 @@ class Client:
             shard_count=shards,
         )
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
-        self.factory = RESTFactory(state=self.state, proxy=proxy, proxy_auth=proxy_auth, version=api_version)
+        self.factory = RESTFactory(
+            state=self.state, proxy=proxy, proxy_auth=proxy_auth, version=api_version
+        )
         self.application = ApplicationCommandRegistry(self.factory, self.state)
         self.gateway = Gateway(
             state=self.state,

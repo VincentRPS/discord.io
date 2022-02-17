@@ -24,9 +24,9 @@
 import asyncio
 import json
 import logging
-from random import random
 import struct
 import time
+from random import random
 
 import aiohttp
 
@@ -79,9 +79,7 @@ class VoiceGateway:
         await self.send_json(payload)
 
     async def connect(self, resume: bool = False):
-        self.ws = await aiohttp.ClientSession().ws_connect(
-            self.gateway, compress=15
-        )
+        self.ws = await aiohttp.ClientSession().ws_connect(self.gateway, compress=15)
 
         if not resume:
             await self.identify()
@@ -251,7 +249,7 @@ class VoiceGateway:
             True  # exception to not kill the connection when saying hello.
         )
         await self.heartbeat(interval)
-    
+
     async def load_secret_key(self, data: dict):
         self.secret_key = self.client.secret_key = data.get('secret_key')
         await self.speak()
