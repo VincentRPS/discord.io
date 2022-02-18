@@ -45,7 +45,7 @@ __all__: List[str] = [
 class BanObject:
     """Represents a Discord Ban Object
 
-    .. versionadded:: 0.9.0
+    .. versionadded:: 1.0
 
     Parameters
     ----------

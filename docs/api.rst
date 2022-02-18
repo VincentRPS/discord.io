@@ -89,8 +89,8 @@ Dispatcher
 .. autoclass:: Dispatcher
     :members:
 
-Data Objects
--------------
+Types
+-----
 
 .. autoclass:: Message
     :members:
@@ -123,6 +123,21 @@ Guild
     :members:
 
 .. autoclass:: Ban
+    :members:
+
+Assets
+------
+
+.. autoclass:: Emoji
+    :members:
+
+.. autoclass:: PartialEmoji
+    :members:
+
+.. autoclass:: Sticker
+    :members:
+
+.. autoclass:: Attachment
     :members:
 
 Channels

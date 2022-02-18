@@ -90,7 +90,7 @@ class FlagParser:
 class Command:
     """Represents a prefixed Discord command
 
-    .. versionadded:: 0.9.0
+    .. versionadded:: 1.0
     """
 
     def __init__(
