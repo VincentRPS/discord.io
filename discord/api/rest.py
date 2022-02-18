@@ -130,6 +130,9 @@ class RESTClient:
         self._session: aiohttp.ClientSession = utils.MISSING
         self.url = f'https://discord.com/api/v{version}'
 
+        if version not in (8, 9, 10):
+            raise DeprecationWarning('The API Version you are running has been decommissioned, please bump the version.')
+
     async def enter(self):
         self._session = aiohttp.ClientSession()
 
