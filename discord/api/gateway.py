@@ -106,6 +106,10 @@ class Shard:
         self._ratelimit_lock: asyncio.Lock = asyncio.Lock()
         self.ws: aiohttp.ClientWebSocketResponse = None
         self.latency: float = float('nan')
+        self.state.loop.create_task(self.enter())
+    
+    async def enter(self):
+        self._session = aiohttp.ClientSession()
 
     async def connect(self, token: str) -> None:
         """Connects to the url specified, with the token
@@ -122,7 +126,6 @@ class Shard:
         ws
             The WebSocket connection.
         """
-        self._session = aiohttp.ClientSession()
         self.ws = await self._session.ws_connect(self.url)
 
         self.token = token

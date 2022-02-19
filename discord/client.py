@@ -186,19 +186,23 @@ class Client:
             await asyncio.sleep(30)
             await self.gateway._chunk_members()
 
-    def run(self, token: str):
+    def run(self, token: str, **kwargs):
         """A blocking function to start your bot
 
         Parameters
         ----------
         token: :class:`str`
             Your bot token
+        asyncio_debug: :class:`bool`
         """
 
         async def runner():
             await self.login(token=token)
             await asyncio.sleep(0.111)  # sleep for a bit
             await self.connect(token=token)
+
+        if kwargs.get('asyncio_debug', False) == True:
+            self.state.loop.set_debug(True)
 
         self.state.loop.create_task(runner())
         self.state.loop.run_forever()
