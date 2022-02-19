@@ -19,9 +19,9 @@ async def ping(inter: discord.Interaction):
     options=[discord.Option('anime_good', 'is anime good', type=bool, required=True)]
 )
 async def anime_good(inter: discord.Interaction):
-    if inter.options[0]['value'] == True:
+    if inter.options[0]['value'] is True:
         await inter.respond('Nice')
-    elif inter.options[0]['value'] == False:
+    elif inter.options[0]['value'] is False:
         await inter.defer(invisable=True)
         await inter.followup('i cant believe he no like the animes oh my god...')
 
