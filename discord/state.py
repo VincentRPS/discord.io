@@ -88,12 +88,6 @@ class ConnectionState:
         The connection state is responsible for caching
         everything, meaning most classes will depend on it.
 
-    .. note::
-
-        .. data:: ConnectionState._speaking
-
-        is planned to be deprecated soon.
-
     Attributes
     ----------
     _bot_intents: :class:`int`
@@ -110,21 +104,6 @@ class ConnectionState:
 
     app: :class:`Client`
         The bot app
-
-        .. versionadded:: 0.5.0
-
-    _voice_seq: :class:`int`
-        The Voice Gateway seq
-
-        .. versionadded:: 0.5.0
-
-    _voice_user_data: :class:`dict`
-        The Voice User Data given by the Voice Gateway.
-
-        .. versionadded:: 0.5.0
-
-    _speaking: :class:`bool`
-        If the bot is currently speaking, defaults False
 
         .. versionadded:: 0.5.0
 
@@ -153,6 +132,8 @@ class ConnectionState:
     """
 
     def __init__(self, **options):
+
+        # core cache holds
         self.guilds = options.get('guild_cache_hold') or Hold()
         self.members = options.get('members_cache_hold') or Hold()
         self.roles = options.get('roles_cache_hold') or Hold()
@@ -160,6 +141,7 @@ class ConnectionState:
         self.channels = options.get('channel_cache_hold') or Hold()
         self.messages = options.get('messages_cache_hold') or Hold()
         self.stage_instances = options.get('stage_instances_cache_hold') or Hold()
+
         self._ready: asyncio.Event = asyncio.Event()
 
         self._bot_intents: int = options.get('intents')
@@ -176,15 +158,6 @@ class ConnectionState:
 
         self.app: Client = options.get('bot', None)
         """The bot app"""
-
-        self._voice_seq: int = None
-        """The Voice Gateway seq"""
-
-        self._voice_user_data: Dict = {}
-        """The Voice User Data given by the Voice Gateway."""
-
-        self._speaking: bool = False
-        """If the bot is currently speaking"""
 
         self._said_hello: bool = False
         """If the Gateway got a hello or not."""
