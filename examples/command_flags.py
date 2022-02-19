@@ -1,7 +1,7 @@
 from discord.ext.commands import Bot, Context, Flag
 from discord.flags import Intents
 
-intents = Intents.GUILD_MESSAGES | Intents.GUILDS
+intents = Intents.GUILD_MESSAGES | Intents.GUILDS | Intents.MESSAGE_CONTENT
 
 bot = Bot(command_prefix='!', intents=intents)
 
