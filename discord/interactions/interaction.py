@@ -228,3 +228,10 @@ class Interaction:
         :class:`Member`
         """
         return Member(self.data['member'], self.state.app.factory)
+    
+    def send(self, content: Optional[str] = None, **kwargs):
+        """Shorthand for :meth:`Interaction.respond`
+        
+        .. versionadded:: 1.0
+        """
+        return self.respond(content, **kwargs)
