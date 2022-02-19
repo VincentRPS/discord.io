@@ -23,6 +23,7 @@
 
 ref: https://discord.dev/resources/emoji
 """
+from typing import Optional
 from .enums import StickerFormatType, StickerType
 from .state import ConnectionState
 from .types import Dict
@@ -133,6 +134,7 @@ class Sticker:
     def available(self) -> bool:
         return self.from_dict['available']
 
+    @property
     def guild_id(self) -> int:
         return int(self.from_dict['guild_id'])
 
@@ -141,6 +143,21 @@ class Sticker:
 
     def sort_value(self) -> int:
         return int(self.from_dict['sort_value'])
+    
+    async def delete(self) -> None:
+        await self.state.app.factory.guilds.delete_guild_sticker(
+            self.guild_id,
+            self.id,
+        )
+    
+    async def edit(
+        self, 
+        name: Optional[str] = None, 
+        description: Optional[str] = None, 
+        tags: Optional[str] = None,
+        reason: Optional[str] = None
+    ):
+        await self.state.app.factory.guilds.modify_guild_sticker(self.guild_id, self.id, name, description, tags, reason)
 
 
 class Attachment:

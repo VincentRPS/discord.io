@@ -119,6 +119,9 @@ class Guilds:
         afk_timeout: Optional[int] = None,
     ):
         ...
+    
+    def get_guild_preview(self, guild_id: int):
+        return self.rest.send(Route('GET', f'/guilds/{guild_id}/preview', guild_id=guild_id))
 
     def delete_guild(
         self,
@@ -261,6 +264,36 @@ class Guilds:
             files=[file],
             reason=reason,
         )
+    
+    def modify_guild_sticker(
+        self,
+        guild_id: int,
+        sticker_id: int,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        tags: Optional[str] = None,
+        reason: Optional[str] = None
+    ):
+        json = {}
+
+        if name:
+            json['name'] = name
+        if description:
+            json['description'] = description
+        if tags:
+            json['tags'] = tags
+        return self.rest.send(
+            Route('PATCH', f'/guilds/{guild_id}/stickers/{sticker_id}', guild_id=guild_id),
+            json=json,
+            reason=reason,
+        )
+    
+    def delete_guild_sticker(
+        self,
+        guild_id: int,
+        sticker_id: int
+    ):
+        return self.rest.send(Route('DELETE', f'/guilds/{guild_id}/stickers/{sticker_id}', guild_id=guild_id))
 
     def get_guild_bans(
         self,

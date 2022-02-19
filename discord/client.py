@@ -110,6 +110,9 @@ class Client:
         If to cache guild members,
         this allows the before argument on member events,
         aswell as faster fetching times.
+    api_version: :class:`int`
+        The Discord API Version to use,
+        normally defaults to the newest version.
     """
 
     def __init__(
