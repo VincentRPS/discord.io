@@ -490,7 +490,10 @@ class Client:
             raise TypeError('There is no setup function inside your cog file!')
 
         try:
-            setup(self)
+            if asyncio.iscoroutinefunction(setup):
+                self.state.loop.create_task(setup(self))
+            else:
+                setup(self)
         except Exception as exc:
             del sys.modules[key]
             raise ExtensionLoadError(key, exc) from exc
