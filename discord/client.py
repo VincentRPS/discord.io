@@ -79,6 +79,8 @@ class Client:
         The presence
     cogs
         A :class:`dict` of all Cogs.
+    intents: :class:`int`
+        Your current Gateway intents.
 
     Parameters
     ----------
@@ -152,6 +154,7 @@ class Client:
         self.cogs: Dict[str, Cog] = {}
         self._extensions = {}
         self.chunk_guild_members = chunk_guild_members
+        self.intents = intents
 
         if not has_nacl:
             _log.warning(
