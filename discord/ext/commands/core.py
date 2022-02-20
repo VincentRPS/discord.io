@@ -38,12 +38,6 @@ from .context import Context
 __all__ = ["Flag", "Command", "resolve_id"]
 
 
-__all__ = [
-    "Flag",
-    "Command",
-    "resolve_id"
-]
-
 def resolve_id(string: str) -> int:
     ret = string[2:-1]
     return ret
@@ -59,7 +53,7 @@ class Flag:
     INT = int
     def __init__(self,
         *flags: str,
-        type: Union[str, int, bool, float]=str,
+        type: Union[str, int, bool, float] = str,
         default=None,
         **kwargs
     ):
