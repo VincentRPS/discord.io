@@ -36,7 +36,6 @@ T = TypeVar('T')
 Coro = Coroutine[Any, Any, T]
 CoroFunc = Callable[..., Coro[Any]]
 
-
 class Dispatcher:
     """Dispatches raw and non-raw events
 
