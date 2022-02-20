@@ -138,3 +138,15 @@ async def wait_for(futures, *, timeout):
         raise asyncio.TimeoutError()
 
     return done
+
+def created_at(snowflake: int):
+    """Gives the ensured creation date of the Snowflake
+    
+    .. versionadded:: 1.0
+
+    Returns
+    -------
+    :class:`datetime.datetime`
+    """
+    timestamp = ((snowflake >> 22) + 1420070400000) / 1000
+    return datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc)
