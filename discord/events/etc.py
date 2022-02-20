@@ -93,8 +93,8 @@ class OnTyping(Event):
 
         try:
             guild = Guild(
-            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
-        )
+                self.state.guilds.get(self.data['guild_id']), self.state.app.factory
+            )
         except KeyError:
             guild = None
         user = User(self.state.members.get(self.data['user_id']))

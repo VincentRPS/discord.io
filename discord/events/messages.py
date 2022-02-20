@@ -139,7 +139,11 @@ class OnMessageReactionRemove(Event):
         channel = TextChannel(self.state.channels.get(self.data['channel_id']))
         message = Message(self.state.messages.get('message_id'), self.state.app)
         guild = Guild(self.state.guilds.get('guild_id'), self.state.app.factory)
-        member = Member(self.state.members.get(self.data['user_id']), guild.id, self.state.app.factory)
+        member = Member(
+            self.state.members.get(self.data['user_id']),
+            guild.id,
+            self.state.app.factory,
+        )
 
         self.dispatch('MESSAGE_REACTION_REMOVE', emoji, message, channel, guild, member)
 

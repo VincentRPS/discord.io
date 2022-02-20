@@ -42,15 +42,14 @@ def resolve_id(string: str) -> int:
     return ret
 
 
-
-
-
 class Flag:
     STRING = str
     BOOLEAN = bool
     FLOAT = float
     INT = int
-    def __init__(self,
+
+    def __init__(
+        self,
         *flags: str,
         type: Union[str, int, bool, float] = str,
         default=None,
@@ -65,19 +64,17 @@ class Flag:
             setattr(self, key, value)
 
 
-
-
 class FlagParser:
     def __init__(self, *flags: Flag):
         self._parser = argparse.ArgumentParser(exit_on_error=False, add_help=False)
         for flag in flags:
             if type(flag) == Flag:
                 self._parser.add_argument(
-                *flag.flags,
-                type=flag.flag_type,
-                default=flag.default,
-                required=flag.required
-            )
+                    *flag.flags,
+                    type=flag.flag_type,
+                    default=flag.default,
+                    required=flag.required
+                )
 
     def parse(self, args):
         parsed = None
@@ -88,6 +85,7 @@ class FlagParser:
         except Exception as err:
             raise
         return parsed
+
 
 class Command:
     """Represents a prefixed Discord command

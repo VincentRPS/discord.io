@@ -175,11 +175,9 @@ class Embed:
             The field to remove
         """
         del self.obj['fields'][name]
-    
+
     def set_image(self, url: str):
         if url is None:
             del self.obj['image']
         else:
-            self.obj['image'] = {
-                'url': str(url)
-            }
+            self.obj['image'] = {'url': str(url)}

@@ -236,7 +236,6 @@ class WebhookAdapter:
         )
 
 
-
 @utils.copy_doc(WebhookAdapter)
 class Webhook:
     def __init__(self, id, token, state):

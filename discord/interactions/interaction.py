@@ -27,9 +27,9 @@ from discord.user import User
 from ..api.rest import Route
 from ..embed import Embed
 from ..member import Member
+from ..message import Message
 from ..types import Dict, embed_parse
 from ..webhooks import WebhookAdapter
-from ..message import Message
 
 if TYPE_CHECKING:
     from ..state import ConnectionState
@@ -237,7 +237,7 @@ class Interaction:
         .. versionadded:: 1.0
         """
         return self.respond(content, **kwargs)
-    
+
     @property
     def author(self) -> User:
         return User(self.data.get('message')['author'])

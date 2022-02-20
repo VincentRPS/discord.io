@@ -54,7 +54,7 @@ extra_requires = {
         'sphinx~=4.4.0',
         'furo~=2022.2.14',
         'sphinx-hoverxref~=1.0.1',
-    ]
+    ],
 }
 
 setuptools.setup(
