@@ -28,6 +28,7 @@ from ..embed import Embed
 from ..member import Member
 from ..types import Dict, embed_parse
 from ..webhooks import webhook_context
+from ..message import Message
 
 if TYPE_CHECKING:
     from ..state import ConnectionState
@@ -96,7 +97,7 @@ class Interaction:
 
         try:
             # buttons will give this data
-            self.message = data['message']
+            self.message = Message(data['message'], self.state.app)
         except KeyError:
             self.message = None
 
