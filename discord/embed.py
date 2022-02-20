@@ -122,7 +122,7 @@ class Embed:
         if url is None:
             del self.obj['thumbnail']
         else:
-            self.obj['thumbnail']['url'] = url
+            self.obj['thumbnail'] = {'url': url}
 
     def set_author(self, name: str, url: str = None, icon_url: str = None):
         """Sets the embed author
@@ -175,3 +175,11 @@ class Embed:
             The field to remove
         """
         del self.obj['fields'][name]
+    
+    def set_image(self, url: str):
+        if url is None:
+            del self.obj['image']
+        else:
+            self.obj['image'] = {
+                'url': str(url)
+            }

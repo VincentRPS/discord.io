@@ -108,7 +108,7 @@ class OnMessageReactionAdd(Event):
         channel = TextChannel(
             self.state.channels.get(self.data['channel_id']), self.state
         )
-        message = Message(self.state.messages.get('message_id'))
+        message = Message(self.state.messages.get('message_id'), self.state.app)
         guild = Guild(self.state.guilds.get('guild_id'), self.state.app.factory)
         member = Member(
             self.state.members.get(self.data['user_id']),
@@ -126,7 +126,7 @@ class OnMessageReactionRemove(Event):
         emoji = Emoji(self.data['emoji'])
         member = Member(self.state.members.get(self.data['user_id']))
         channel = TextChannel(self.state.channels.get(self.data['channel_id']))
-        message = Message(self.state.messages.get('message_id'))
+        message = Message(self.state.messages.get('message_id'), self.state.app)
         guild = Guild(self.state.guilds.get('guild_id'), self.state.app.factory)
 
         self.dispatch('MESSAGE_REACTION_REMOVE', emoji, message, channel, guild, member)
@@ -144,7 +144,7 @@ class OnMessageReactionRemoveAll(Event):
 
     def process(self):
         channel = TextChannel(self.state.channels.get(self.data['channel_id']))
-        message = Message(self.state.messages.get('message_id'))
+        message = Message(self.state.messages.get('message_id'), self.state.app)
         guild = Guild(self.state.guilds.get('guild_id'), self.state.app.factory)
 
         self.dispatch('MESSAGE_REACTION_REMOVE_ALL', message, channel, guild)
@@ -164,7 +164,7 @@ class OnMessageReactionRemoveEmoji(Event):
     def process(self):
         emoji = Emoji(self.data['emoji'])
         channel = TextChannel(self.state.channels.get(self.data['channel_id']))
-        message = Message(self.state.messages.get('message_id'))
+        message = Message(self.state.messages.get('message_id'), self.state.app)
         guild = Guild(self.state.guilds.get('guild_id'), self.state.app.factory)
 
         self.dispatch('MESSAGE_REACTION_REMOVE_EMOJI', emoji, message, channel, guild)
