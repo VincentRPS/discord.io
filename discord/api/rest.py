@@ -264,7 +264,7 @@ class RESTClient:
                         elif r.status == 500:
                             raise ServerError(d)
                         elif 300 > r.status >= 200:
-                            _log.debug('> %s', d)
+                            _log.debug('> %s (bucket: %s)', d, r.headers.get('X-RateLimit-Bucket', None))
                             await self._session.close()
                             return d
                         elif r.status == 204:
