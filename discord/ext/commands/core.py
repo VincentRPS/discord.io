@@ -57,7 +57,12 @@ class Flag:
     BOOLEAN = bool
     FLOAT = float
     INT = int
-    def __init__(self, *flags: str, type: Union[str, int, bool, float]=str, default=None, **kwargs):
+    def __init__(self,
+        *flags: str,
+        type: Union[str, int, bool, float]=str,
+        default=None,
+        **kwargs
+    ):
         self.flags = flags
         self.flag_type = type
         self.default = default
@@ -74,7 +79,12 @@ class FlagParser:
         self._parser = argparse.ArgumentParser(exit_on_error=False, add_help=False)
         for flag in flags:
             if type(flag) == Flag:
-                self._parser.add_argument(*flag.flags, type=flag.flag_type, default=flag.default, required=flag.required)
+                self._parser.add_argument(
+                *flag.flags,
+                type=flag.flag_type,
+                default=flag.default,
+                required=flag.required
+            )
 
     def parse(self, args):
         parsed = None
@@ -112,7 +122,7 @@ class Command:
         self.cog = cog
         self._desc = description or func.__doc__ or "No description provided"
         self._storage = run_storage.InternalRunner(self.state.loop)
-        self._parser = CommandParser(*flags)
+        self._parser = FlagParser(*flags)
 
     @property
     def options(self):
