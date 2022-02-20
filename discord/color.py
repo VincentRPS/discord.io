@@ -164,3 +164,16 @@ class Color:
     def yellow(self) -> int:
         """A factory color method which returns `0xFEE75C`"""
         return int(0xFEE75C)
+
+    @classmethod
+    def from_rgb(self, red: int, green: int, blue: int) -> int:
+        """A factory color method which gets its color from rgb values"""
+        return (red << 16) + (green << 8) + blue
+
+    @classmethod
+    def from_hex(self, hex_code: str):
+        """A factory color method which gets its color from a hex code string"""
+        if '#' in hex_code:
+            hex_code = hex_code.lstrip('#')
+        x = len(hex_code)
+        return self.from_rgb(*tuple(int(hex_code[i:i+x//3], 16) for i in range(0, x, x//3)))
