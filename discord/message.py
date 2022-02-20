@@ -63,11 +63,7 @@ class Message:  # noqa: ignore
     def __init__(self, msg: dict, app):
         self.from_dict = msg
         self.app = app
-        try:
-            self.content: str = self.from_dict['content']
-        except KeyError:
-            # can error out for embed only/link only messages.
-            self.content: str = ''
+        self.content: str = self.from_dict.get('content', '')
 
     def __repr__(self):
         return f'<Message id={self.id!r}, Channel id={self.channel.id!r}>'
@@ -153,10 +149,7 @@ class Message:  # noqa: ignore
         elif embed and embed:
             raise TypeError('Used both `embed` and `embed` only 1 is allowed.')
         elif embeds and not embed:
-            if isinstance(embeds, Embed):
-                emb = [embed.obj for embed in embeds]
-            else:
-                emb = embeds
+            emb = [embed.obj for embed in embeds]
         if component:
             com = [component]
         if components:
@@ -213,10 +206,7 @@ class Message:  # noqa: ignore
         elif embed and embed:
             raise TypeError('Used both `embed` and `embed` only 1 is allowed.')
         elif embeds and not embed:
-            if isinstance(embeds, Embed):
-                emb = [embed.obj for embed in embeds]
-            else:
-                emb = embeds
+            emb = [embed.obj for embed in embeds]
         if component:
             com = [component]
         if components:

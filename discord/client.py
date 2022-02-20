@@ -211,18 +211,24 @@ class Client:
             self.state.loop.set_debug(True)
 
         self.state.loop.create_task(runner())
-        self.state.loop.run_forever()
+
+        try:
+            self.state.loop.run_forever()
+        except KeyboardInterrupt:
+            self.state.loop.create_task(self.shutdown())
 
     def close(self):
         self.state.loop.stop()
         self.state.loop.close()
 
-    def shutdown(self):
+    async def shutdown(self):
         for shard in self.gateway.shards:
             self.state.loop.create_task(shard.close())
             self.state.loop.create_task(shard._session.close())
 
         self.state.loop.create_task(self.factory.rest.close())
+
+        await asyncio.sleep(2)
         self.close()
 
     def fetch_guild(self, guild_id):
