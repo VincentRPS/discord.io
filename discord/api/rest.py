@@ -127,16 +127,13 @@ class RESTClient:
         self.state = state or ConnectionState()
         self.proxy = proxy
         self.proxy_auth = proxy_auth
-        self._session: aiohttp.ClientSession = utils.MISSING
+        self._session: aiohttp.ClientSession = None
         self.url = f'https://discord.com/api/v{version}'
 
         if version not in (8, 9, 10):
             raise DeprecationWarning(
                 'The API Version you are running has been decommissioned, please bump the version.'
             )
-
-    async def enter(self):
-        self._session = aiohttp.ClientSession()
 
     async def send(  # noqa: ignore
         self,
@@ -152,6 +149,8 @@ class RESTClient:
         method = route.method
         url = self.url + route.endpoint
         bucket = route.bucket
+
+        self._session = aiohttp.ClientSession()
 
         lock = self._locks.get(bucket)
 
@@ -266,6 +265,7 @@ class RESTClient:
                             raise ServerError(d)
                         elif 300 > r.status >= 200:
                             _log.debug('> %s', d)
+                            await self._session.close()
                             return d
                         elif r.status == 204:
                             pass

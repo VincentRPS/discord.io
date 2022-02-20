@@ -22,12 +22,13 @@
 from typing import TYPE_CHECKING, Any, List, Optional
 
 from discord.types import allowed_mentions
+from discord.user import User
 
 from ..api.rest import Route
 from ..embed import Embed
 from ..member import Member
 from ..types import Dict, embed_parse
-from ..webhooks import webhook_context
+from ..webhooks import WebhookAdapter
 from ..message import Message
 
 if TYPE_CHECKING:
@@ -127,7 +128,7 @@ class Interaction:
         -------
         :meth:`Webhook.execute`
         """
-        adapter = webhook_context.get()
+        adapter = WebhookAdapter(self.state)
         return adapter.execute(
             id=self.state._bot_id,
             token=self.token,
@@ -204,7 +205,7 @@ class Interaction:
         if modal:
             ret = {'type': 9, 'data': modal}
 
-        adapter = webhook_context.get()
+        adapter = WebhookAdapter(self.state)
         self._responded = True
         return adapter.rest.send(
             Route('POST', f'/interactions/{self.id}/{self.token}/callback'), json=ret
@@ -236,3 +237,7 @@ class Interaction:
         .. versionadded:: 1.0
         """
         return self.respond(content, **kwargs)
+    
+    @property
+    def author(self) -> User:
+        return User(self.data.get('message')['author'])

@@ -57,7 +57,6 @@ class RESTFactory:
         self.rest = RESTClient(
             state=self.state, proxy=proxy, proxy_auth=proxy_auth, version=version
         )
-        self.state.loop.create_task(self.rest.enter())
         self.channels = Channels(self.rest)
         self.commands = Commands(self.rest)
         self.guilds = Guilds(self.rest)

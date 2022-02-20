@@ -52,12 +52,12 @@ class WebhookAdapter:
         An instance of RESTClient.
     """
 
-    def __init__(self):
-        self.rest = RESTClient()
+    def __init__(self, state):
+        self.rest = RESTClient(state=state)
 
     def fetch_webhook(self, id, token):
         """Fetch the current Webhook from the API."""
-        return self.request('GET', f'/webhooks/{id}/{token}')
+        return self.rest.send('GET', f'/webhooks/{id}/{token}')
 
     def modify_webhook(
         self,
@@ -236,17 +236,13 @@ class WebhookAdapter:
         )
 
 
-webhook_context: ContextVar[WebhookAdapter] = ContextVar(
-    'webhook_context', default=WebhookAdapter()
-)
-
 
 @utils.copy_doc(WebhookAdapter)
 class Webhook:
-    def __init__(self, id, token):
+    def __init__(self, id, token, state):
         self.id = id
         self.token = token
-        self.adapter = webhook_context.get()
+        self.adapter = WebhookAdapter(state)
 
     @utils.copy_doc(WebhookAdapter.execute)
     def execute(
