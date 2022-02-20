@@ -316,6 +316,7 @@ Intents
 -------
 
 .. autoclass:: Intents
+    :members:
 
 Embed
 -----

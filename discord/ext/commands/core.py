@@ -147,23 +147,35 @@ class Command:
         for name, param in self.options.items():
             order += 1
             if param.annotation == str:
-                give = self.content_without_command.split(" ")[order]
+                try:
+                    give = self.content_without_command.split(" ")[order]
+                except IndexError:
+                    break
                 to_give[name] = give
 
             elif param.annotation == TextChannel:
-                id = resolve_id(self.content_without_command.split(" ")[order])
+                try:
+                    id = resolve_id(self.content_without_command.split(" ")[order])
+                except IndexError:
+                    break
                 raw = self.state.channels.get(id)
                 give = TextChannel(raw, self.state)
                 to_give[name] = give
 
             elif param.annotation == VoiceChannel:
-                id = resolve_id(self.content_without_command.split(" ")[order])
+                try:
+                    id = resolve_id(self.content_without_command.split(" ")[order])
+                except IndexError:
+                    break
                 raw = self.state.channels.get(id)
                 give = VoiceChannel(raw, self.state)
                 to_give[name] = give
 
             elif param.annotation == Member or param.annotation == User:
-                id = resolve_id(self.content_without_command.split(" ")[order])
+                try:
+                    id = resolve_id(self.content_without_command.split(" ")[order])
+                except IndexError:
+                    break
                 raw = self.state.members.get(id)
                 give = Member(
                     raw, context.message.guild.id, context.message.app.factory
@@ -171,7 +183,10 @@ class Command:
                 to_give[name] = give
 
             else:
-                give = self.content_without_command.split(" ")[order]
+                try:
+                    give = self.content_without_command.split(" ")[order]
+                except IndexError:
+                    break
                 to_give[name] = give
 
         self._run(context, **to_give)
