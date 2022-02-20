@@ -139,9 +139,10 @@ async def wait_for(futures, *, timeout):
 
     return done
 
+
 def created_at(snowflake: int):
     """Gives the ensured creation date of the Snowflake
-    
+
     .. versionadded:: 1.0
 
     Returns

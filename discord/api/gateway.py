@@ -107,7 +107,7 @@ class Shard:
         self.ws: aiohttp.ClientWebSocketResponse = None
         self.latency: float = float('nan')
         self.state.loop.create_task(self.enter())
-    
+
     async def enter(self):
         self._session = aiohttp.ClientSession()
 

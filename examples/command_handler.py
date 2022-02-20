@@ -1,7 +1,11 @@
 import discord
 from discord.ext import commands
 
-intents = discord.Intents.MESSAGE_CONTENT | discord.Intents.GUILD_MESSAGES | discord.Intents.GUILDS
+intents = (
+    discord.Intents.MESSAGE_CONTENT
+    | discord.Intents.GUILD_MESSAGES
+    | discord.Intents.GUILDS
+)
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 

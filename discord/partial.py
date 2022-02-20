@@ -28,7 +28,7 @@ from typing import Optional
 
 class PartialEmoji:
     """Represents a Partial Discord Emoji
-    
+
     .. versionadded:: 1.0
 
     Parameters
@@ -42,7 +42,14 @@ class PartialEmoji:
     animated: :class:`bool`
         If the emoji is animated
     """
-    def __init__(self, data: Optional[dict] = None, id: Optional[int] = None, name: Optional[str] = None, animated: Optional[bool] = False):
+
+    def __init__(
+        self,
+        data: Optional[dict] = None,
+        id: Optional[int] = None,
+        name: Optional[str] = None,
+        animated: Optional[bool] = False,
+    ):
         self.from_dict = data
         self.id = id
         self.name = name

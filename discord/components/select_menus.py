@@ -21,10 +21,12 @@
 # SOFTWARE
 
 from typing import Callable, Optional
-from ..state import ConnectionState
-from ..internal import run_storage
+
 from ..interactions import Interaction
+from ..internal import run_storage
 from ..partial import PartialEmoji
+from ..state import ConnectionState
+
 
 def SelectOption(
     label: str,
@@ -35,23 +37,25 @@ def SelectOption(
 ):
     ...
 
+
 class Select:
     """Represents a Discord Select Menu
-    
+
     .. versionadded:: 1.0
 
     Parameters
     ----------
     state: :class:`ConnectionState`
     """
+
     def __init__(self, state: ConnectionState):
         self.state = state
         self.storage = run_storage.InternalRunner(self.state.loop)
         self.func: Callable = None
-    
+
     def _run(self, interaction: Interaction):
         self.state.loop.create_task(self.storage._run_process(self.func(interaction)))
-    
+
     def create(self, callback: Callable):
         self.func = callback
         data = {}

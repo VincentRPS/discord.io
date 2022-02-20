@@ -55,5 +55,5 @@ class OnInteraction(Event):
         except KeyError:
             # components
             pass
-        
+
         self.dispatch('INTERACTION', Interaction(self.data, self.state))

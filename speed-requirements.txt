@@ -1,3 +1,0 @@
-aiodns~=3.0 # included in aiohttp speed.
-Brotli~=1.0.9 # included in aiohttp speed.
-cchardet~=2.1.7 # included in aiohttp speed.

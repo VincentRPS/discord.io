@@ -75,21 +75,23 @@ class BanObject:
         :class:`User`
         """
         return User(self.from_dict['user'])
-    
+
+
 def parse_guild_hash(type: int, id, hash: str):
 
     if type == 1:
         return f"https://cdn.discordapp.com/icons/{id}/{hash}"
-    
+
     elif type == 2:
         return f"https://cdn.discordapp.com/splashes/{id}/{hash}"
-    
+
     elif type == 3:
         return f'https://cdn.discordapp.com/discovery-splashes/{id}/{hash}'
 
+
 class GuildPreview:
     """Represents a Discord Guild Preview.
-    
+
     .. versionadded:: 1.0
 
     Parameters
@@ -97,49 +99,51 @@ class GuildPreview:
     data: :class:`dict`
         The raw preview data
     """
+
     def __init__(self, data: dict):
         self.from_dict = data
-    
+
     @property
     def id(self) -> int:
         return self.from_dict['id']
-    
+
     @property
     def name(self) -> str:
         return self.from_dict['name']
-    
+
     @property
     def icon_url(self) -> str:
         return parse_guild_hash(1, self.id, self.from_dict['icon'])
-    
+
     @property
     def splash_url(self) -> str:
         return parse_guild_hash(2, self.id, self.from_dict['splash'])
-    
+
     @property
     def discovery_splash_url(self) -> str:
         return parse_guild_hash(3, self.id, self.from_dict['discovery_splash'])
-    
+
     @property
     def emojis(self) -> List[Emoji]:
         return [Emoji(emoji) for emoji in self.from_dict['emojis']]
-    
+
     def features(self) -> str:
         return self.from_dict['features']
-    
+
     def approximate_member_count(self) -> int:
         return self.from_dict['approximate_member_count']
-    
+
     def approximate_presence_count(self) -> int:
         return self.from_dict['approximate_presence_count']
-    
+
     @property
     def description(self) -> str:
         return self.from_dict.get('description')
-    
+
     @property
     def stickers(self) -> List[Sticker]:
         return [Sticker(sticker) for sticker in self.from_dict['stickers']]
+
 
 class Guild:
     """Represents a Discord Guild.
@@ -300,11 +304,10 @@ class Guild:
         """
         raw = await self._factory.guilds.get_guild_ban(self.id, user_id)
         return BanObject(raw)
-    
+
     async def get_preview(self):
         raw = await self._factory.guilds.get_guild_preview(self.id)
         return GuildPreview(raw)
-
 
 
 def parse_role_icon(format: FormatType, role_id: int, role_icon: str) -> str:
