@@ -50,6 +50,11 @@ extra_requires = {
         'ciso8601~=2.2.0',  # Faster datetime parsing.
     ],
     'voice': ['PyNaCl~=1.5.0'],
+    'docs': [
+        'sphinx~=4.4.0',
+        'furo~=2022.2.14',
+        'sphinx-hoverxref~=1.0.1',
+    ]
 }
 
 setuptools.setup(
