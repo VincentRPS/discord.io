@@ -86,7 +86,7 @@ class FlagParser:
         except argparse.ArgumentError as err:
             pass
         except Exception as err:
-            print(err)
+            raise
         return parsed
 
 class Command:
