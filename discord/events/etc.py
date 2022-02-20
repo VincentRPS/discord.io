@@ -90,12 +90,20 @@ class OnTyping(Event):
         channel = TextChannel(
             self.state.channels.get(self.data['channel_id']), self.state
         )
-        guild = Guild(
+
+        try:
+            guild = Guild(
             self.state.guilds.get(self.data['guild_id']), self.state.app.factory
         )
+        except KeyError:
+            guild = None
         user = User(self.state.members.get(self.data['user_id']))
         timestamp: int = self.data['timestamp']
-        member = Member(self.data['member'], guild.id, self.state.app.factory)
+
+        try:
+            member = Member(self.data['member'], guild.id, self.state.app.factory)
+        except KeyError:
+            member = None
 
         self.dispatch('typing', member, user, channel, timestamp)
 

@@ -39,7 +39,12 @@ class OnMessage(Event):
     def process(self) -> None:
         ret = Message(self.data, self.state.app)
         self.state.messages.new(self.data['id'], self.data)
-        self.state.channels.edit(ret.channel.id, ret.channel.from_dict)
+
+        try:
+            self.state.channels.edit(ret.channel.id, ret.channel.from_dict)
+        except TypeError:
+            # DM Channels
+            pass
         self.dispatch('MESSAGE', ret)
 
         # ext.commands
@@ -61,6 +66,7 @@ class OnMessageEdit(Event):
             before = None
         after = Message(self.data, self.state.app)
         self.dispatch('MESSAGE_EDIT', before, after)
+
         self.state.messages.edit(self.data['id'], self.data)
 
 
@@ -68,7 +74,10 @@ class OnMessageDelete(Event):
     """Gives the deleted :class:`Message`"""
 
     def process(self):
-        message = Message(self.state.messages.pop(self.data['id']), self.state.app)
+        try:
+            message = Message(self.state.messages.pop(self.data['id']), self.state.app)
+        except KeyError:
+            message = None
         self.dispatch('MESSAGE_DELETE', message)
 
 
@@ -108,7 +117,10 @@ class OnMessageReactionAdd(Event):
         channel = TextChannel(
             self.state.channels.get(self.data['channel_id']), self.state
         )
-        message = Message(self.state.messages.get('message_id'), self.state.app)
+        try:
+            message = Message(self.state.messages.get('message_id'), self.state.app)
+        except AttributeError:
+            message = None
         guild = Guild(self.state.guilds.get('guild_id'), self.state.app.factory)
         member = Member(
             self.state.members.get(self.data['user_id']),
@@ -124,10 +136,10 @@ class OnMessageReactionRemove(Event):
 
     def process(self):
         emoji = Emoji(self.data['emoji'])
-        member = Member(self.state.members.get(self.data['user_id']))
         channel = TextChannel(self.state.channels.get(self.data['channel_id']))
         message = Message(self.state.messages.get('message_id'), self.state.app)
         guild = Guild(self.state.guilds.get('guild_id'), self.state.app.factory)
+        member = Member(self.state.members.get(self.data['user_id']), guild.id, self.state.app.factory)
 
         self.dispatch('MESSAGE_REACTION_REMOVE', emoji, message, channel, guild, member)
 
