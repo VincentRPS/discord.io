@@ -53,4 +53,4 @@ class PartialEmoji:
         self.from_dict = data
         self.id = id
         self.name = name
-        self.animated = self.animated
+        self.animated = animated
