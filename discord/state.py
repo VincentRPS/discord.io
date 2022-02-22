@@ -76,6 +76,14 @@ class Hold:
 
     def reset(self) -> None:
         del self._cache
+    
+    def cache_for(self, name: str, data: Any, time: float):
+        self._cache[name] = data
+        asyncio.create_task(self.delete_after(name=name, time=time))
+
+    async def delete_after(self, *, name: str, time: float):
+        await asyncio.sleep(time)
+        del self._cache[name]
 
 
 class ConnectionState:

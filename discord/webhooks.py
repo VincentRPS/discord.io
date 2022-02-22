@@ -22,7 +22,6 @@
 """Implementation of Discord Webhooks."""
 
 import typing
-from contextvars import ContextVar
 
 from discord import utils
 
