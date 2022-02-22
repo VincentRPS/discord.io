@@ -106,6 +106,7 @@ class Shard:
         self._ratelimit_lock: asyncio.Lock = asyncio.Lock()
         self.ws: aiohttp.ClientWebSocketResponse = None
         self.latency: float = float('nan')
+        self.ready: asyncio.Event =  asyncio.Event()
         self.state.loop.create_task(self.enter())
 
     async def enter(self):
@@ -334,6 +335,7 @@ class Shard:
     async def _ready(self, data: Dict) -> None:
         self._session_id = data['d']['session_id']
         self.state._ready.set()
+        self.ready.set()
 
     async def identify(self) -> None:
         await self.send(
@@ -408,20 +410,26 @@ class Gateway:
             shds = self.count
 
         for shard in range(shds):
-            self.s = Shard(
+            s = Shard(
                 self._s,
                 self._d,
                 shard,
                 mobile=self.mobile,
                 url=r['url'] + url_extension,
             )
-            self._s.loop.create_task(self.s.connect(token))
-            self.shards.append(self.s)
+            self._s.loop.create_task(s.connect(token))
+            while not s.ready.is_set():
+                await s.ready.wait()
+            self.shards.append(s)
             _log.info('Shard %s has connected to Discord', shard)
 
     @utils.copy_doc(Shard.send)
-    def send(self, payload: Dict) -> Coroutine[Any, Any, None]:
-        return self.s.send(payload)
+    async def send(self, payload: Dict, shard=None) -> Coroutine[Any, Any, None]:
+        if shard == None:
+            for s in self.shards:
+                await s.send(payload)
+        else:
+            await self.shards[shard].send(payload)
 
     async def _chunk_members(self):
         await asyncio.sleep(20)

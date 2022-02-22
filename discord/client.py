@@ -313,6 +313,7 @@ class Client:
         status: Literal['online', 'dnd', 'idle', 'invisible', 'offline'] = 'online',
         stream_url: Optional[str] = None,
         afk: Optional[bool] = False,
+        shard: Optional[int] = None,
     ):
         """Changes the bot's presence
 
@@ -359,7 +360,7 @@ class Client:
 
         json['d']['status'] = status
 
-        return self.gateway.send(json)
+        return self.gateway.send(json, shard)
 
     def event(self, coro: dispatcher.Coro) -> dispatcher.Coro:
         """Register an event"""
