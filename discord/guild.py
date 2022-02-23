@@ -166,6 +166,7 @@ class Guild:
     def __repr__(self):
         return f"<Guild guild_id={self.id!r}>"
 
+    @property
     def joined_at(self) -> str:
         return self.from_dict['joined_at']
 
