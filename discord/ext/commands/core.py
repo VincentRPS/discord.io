@@ -66,7 +66,7 @@ class Flag:
 
 class FlagParser:
     def __init__(self, *flags: Flag):
-        self._parser = argparse.ArgumentParser(exit_on_error=False, add_help=False)
+        self._parser = argparse.ArgumentParser(add_help=False)
         for flag in flags:
             if type(flag) == Flag:
                 self._parser.add_argument(
