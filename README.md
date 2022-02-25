@@ -56,11 +56,11 @@ This is another example but with a prefixed command
 ```py
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix="!")
+bot = commands.Bot(command_prefix='!')
 
 @bot.command()
 async def ping(ctx):
-    await ctx.send("pong!")
+    await ctx.send('pong!')
 
 bot.run('my_bot_token')
 ```
