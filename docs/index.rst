@@ -5,7 +5,7 @@
 
 Welcome to discord.io
 =====================
-Welcome to the documentation of discord.
+Welcome to the documentation of discord.io
 discord.io is a Python based discord library, using aiohttp and asyncio.
 
 Getting Started
