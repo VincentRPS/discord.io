@@ -261,7 +261,7 @@ class Attachment:
         """
         return self.from_dict['width']
 
-    def invisable(self) -> bool:
+    def invisible(self) -> bool:
         """If the attachment is normally seeable or not
 
         Returns
