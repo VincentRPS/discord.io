@@ -22,7 +22,7 @@ async def anime_good(inter: discord.Interaction):
     if inter.options[0]['value'] is True:
         await inter.respond('Nice')
     elif inter.options[0]['value'] is False:
-        await inter.defer(invisable=True)
+        await inter.defer(invisible=True)
         await inter.followup('i cant believe he no like the animes oh my god...')
 
 

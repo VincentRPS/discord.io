@@ -329,7 +329,7 @@ class Client:
             .. note::
 
                 can be 'online', 'dnd',
-                invisable and offline.
+                invisible and offline.
         stream_url
             Used with the streaming presence type
         afk
