@@ -77,7 +77,7 @@ setuptools.setup(
     install_requires=requirements,
     extras_require=extra_requires,
     description='Asynchronous Discord API Wrapper For Python',
-    python_requires='>=3.8',
+    python_requires='>=3.9',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: MIT License',
