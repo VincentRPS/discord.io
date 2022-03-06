@@ -68,6 +68,7 @@ class Route:
     def __init__(self, method: str, endpoint: str, **params: typing.Any):
         self.method = method
         self.endpoint = endpoint
+        self.params = params
 
         self.guild_id: typing.Optional[int] = params.get('guild_id')
         self.channel_id: typing.Optional[int] = params.get('channel_id')
@@ -147,7 +148,9 @@ class RESTClient:
         .. versionadded:: 0.3.0
         """
         method = route.method
-        url = self.url + route.endpoint
+        url = self.url + route.endpoint.format_map(
+            {k: quote(v) if isinstance(v, str) else v for k, v in route.params.items()}
+        )
         bucket = route.bucket
 
         self._session = aiohttp.ClientSession()
