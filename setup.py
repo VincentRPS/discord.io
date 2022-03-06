@@ -33,7 +33,6 @@ packages = [
     'discord.api',
     'discord.internal',
     'discord.components',
-    'discord.voice',
     'discord.interactions',
     'discord.types',
     'discord.ext.cogs',

@@ -41,7 +41,6 @@ from .types import *
 from .ui import *
 from .user import *
 from .utils import *
-from .voice import *
 from .webhooks import *
 
 

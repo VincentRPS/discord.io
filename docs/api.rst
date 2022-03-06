@@ -44,20 +44,12 @@ Gateway's
 .. autoclass:: Gateway
     :members:
 
-.. autoclass:: VoiceGateway
-    :members:
-
 Opus
 ----
 
 .. autoclass:: Encoder
     :members:
 
-Voice
------
-
-.. autoclass:: VoiceClient
-    :members:
 
 Client
 ------

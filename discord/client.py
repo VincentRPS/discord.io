@@ -44,7 +44,6 @@ from .internal import dispatcher
 from .state import ConnectionState
 from .ui import print_banner, start_logging
 from .user import User
-from .voice import VoiceClient, has_nacl
 
 _log = logging.getLogger(__name__)
 __all__: List[str] = ['Client']
@@ -156,11 +155,6 @@ class Client:
         self.chunk_guild_members = chunk_guild_members
         self.intents = intents
 
-        if not has_nacl:
-            _log.warning(
-                'You dont have PyNaCl, meaning you wont be able to use Voice features.'
-            )
-
     async def login(self, token: str):
         """Starts the bot connection
 
@@ -173,7 +167,7 @@ class Client:
         return r
 
     def voice(self, channel: VoiceChannel):
-        return VoiceClient(self.state, channel)
+        return DeprecationWarning('This has been deprecated.')
 
     @property
     def latency(self) -> float:
