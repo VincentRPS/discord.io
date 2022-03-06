@@ -129,6 +129,7 @@ class Client:
         state: Optional[ConnectionState] = None,
         chunk_guild_members: Optional[bool] = False,
         api_version: Optional[int] = 10,
+        cache_timeout: Optional[int] = 1000,
     ):
         print_banner(module)
         start_logging(logs, debug)
@@ -137,6 +138,7 @@ class Client:
             intents=intents,
             bot=self,
             shard_count=shards,
+            timeout=cache_timeout
         )
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
         self.factory = RESTFactory(

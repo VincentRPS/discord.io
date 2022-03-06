@@ -26,14 +26,13 @@ import json
 import logging
 import typing
 import weakref
-from typing import Any, Iterable, Optional, Sequence, TypeVar, Union
 from urllib.parse import quote
 
 import aiohttp
 
 from discord import utils
 from discord.file import File
-from discord.state import ConnectionState
+from discord.state import ConnectionState, HTTPStream
 from discord.types.dict import Dict
 
 from ..internal.exceptions import Forbidden, NotFound, RESTError, ServerError
@@ -217,6 +216,21 @@ class RESTClient:
                             # Some endpoints don't give you these ratelimit headers
                             # and so they will error out.
                             pass
+    
+                        self.state.http_streams.append(HTTPStream(
+                            {
+                                'route': url,
+                                'bucket': route.bucket,
+                                'ratelimit_bucket': r.headers.get(
+                                    'X-RateLimit-Bucket', 
+                                    None
+                                ),
+                                'data': d,
+                                'global': d.get('global', False),
+                                'limit': r.headers.get('X-RateLimit-Limit', None)
+                            }
+                        )
+                    )
 
                         if remains == '0' and r.status != 429:
                             # the bucket was depleted

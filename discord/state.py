@@ -34,6 +34,7 @@ from typing import (
     Tuple,
     TypeVar,
     Union,
+    overload
 )
 
 if TYPE_CHECKING:
@@ -68,14 +69,24 @@ class Hold:
     def edit(self, name: str, data: Union[str, int, Dict, Any]):
         self._cache.update({name: data})
 
+    @overload
     def get(self, name: str):
         return self._cache.get(name)
 
+    @overload
+    def get(self, name: str, __default: Any):
+        return self._cache.get(name, __default)
+
+    @overload
     def pop(self, name: str):
         return self._cache.pop(name)
 
+    @overload
+    def pop(self, name: str, __default: Any):
+        return self._cache.pop(name, __default)
+
     def reset(self) -> None:
-        del self._cache
+        self._cache.clear()
     
     def cache_for(self, name: str, data: Any, time: float):
         self._cache[name] = data
@@ -85,6 +96,69 @@ class Hold:
         await asyncio.sleep(time)
         del self._cache[name]
 
+class Stream:
+    def __init__(self, __name: str, __data: dict):
+        self.__name__ = __name
+        self._formulate_data(__data)
+    
+    def _formulate_data(self, _d: dict):
+        self.data = {
+            'stream': self.__name__,
+            'data': _d
+        }
+    
+    def __repr__(self) -> Dict:
+        return self.data
+
+class HTTPStream(Stream):
+    def __init__(self, __data: dict):
+        self.__name__ = 'http'
+        self._formulate_data(__data)
+
+    def _formulate_data(self, _d: dict):
+        self.data = {
+            'stream': 'http',
+            'data': {
+                'Route': _d.get('route'),
+                'X-RateLimit': {
+                    'Limit': _d.get('limit'),
+                    'Global': _d.get('global', False),
+                    'Bucket': _d.get('ratelimit_bucket'),
+                },
+                'Max-Retries': 5,
+                'Data': _d.get('data'),
+                'Bucket': _d.get('bucket')
+            }
+        }
+
+class ShardStream(Stream):
+    def __init__(self, __data: dict):
+        self.__name__ = 'shard'
+        self._formulate_data(__data)
+    
+    def _formulate_data(self, _d: dict):
+        self.data = {
+            'stream': self.__name__,
+            'data': {
+                'intents': _d.get('intents', 0),
+                'active': _d.get('active', []),
+                'pending': _d.get('pending', 0),
+                'session_ids': _d.get('session_ids', []),
+                'ready': _d.get('ready', [])
+            }
+        }
+    
+    def edit(self, _d: dict):
+        self.data = {
+            'stream': self.__name__,
+            'data': {
+                'intents': _d.get('intents', 0),
+                'active': _d.get('active', []),
+                'pending': _d.get('pending', []),
+                'session_ids': _d.get('session_ids', []),
+                'ready': _d.get('ready', [])
+            }
+        }
 
 class ConnectionState:
     """The Connection State
@@ -139,7 +213,7 @@ class ConnectionState:
         .. versionadded:: 0.6.0
     """
 
-    def __init__(self, **options):
+    def __init__(self, *, timeout: int = 1000, **options):
 
         # core cache holds
         self.guilds = options.get('guild_cache_hold') or Hold()
@@ -151,6 +225,10 @@ class ConnectionState:
         self.stage_instances = options.get('stage_instances_cache_hold') or Hold()
 
         self._ready: asyncio.Event = asyncio.Event()
+
+        self.streams: List[Stream] = []
+        self.http_streams: List[HTTPStream] = []
+        self.shard_streams: List[ShardStream] = []
 
         self._bot_intents: int = options.get('intents')
         """The cached bot intents, used for Gateway"""
@@ -195,6 +273,18 @@ class ConnectionState:
         self.application_commands: Dict[str, Any] = {}
 
         self.prefix = options.get('prefix')
+
+        self.timeout = timeout
+
+        self.loop.create_task(self.clear_cache())
+
+    async def clear_cache(self):
+        await asyncio.sleep(self.timeout)
+        self.messages.reset()
+        self.http_streams.clear()
+        self.streams.clear()
+        self.stage_instances.reset()
+        self.loop.create_task(self.clear_cache())
 
 
 def member_cacher(state: ConnectionState, data: Any):

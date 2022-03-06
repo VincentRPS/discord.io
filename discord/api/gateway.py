@@ -41,7 +41,7 @@ from discord.types.dict import Dict
 
 from ..http import RESTFactory
 from ..internal.dispatcher import Dispatcher
-from ..state import ConnectionState
+from ..state import ConnectionState, ShardStream
 
 ZLIB_SUFFIX = b'\x00\x00\xff\xff'
 _log = logging.getLogger(__name__)
@@ -88,6 +88,7 @@ class Shard:
         url: str,
         mobile: bool = False,
     ):
+        self.id = shard_id
         self.remaining = 110
         self.per = 60.0
         self.window = 0.0
@@ -410,6 +411,17 @@ class Gateway:
             shds = self.count
 
         for shard in range(shds):
+            stream = ShardStream(
+                {
+                    'intents': self._s._bot_intents,
+                    'active': [shard.id for shard in self.shards if shard.ready.is_set()],
+                    'pending': shard - 1,
+                    'session_ids': [shard._session_id for shard in self.shards],
+                    'ready': [shard.id for shard in self.shards if shard.ready.is_set()]
+                }
+            )
+            _log.debug(f'Created Stream for Shard {shard}, {stream}')
+            self._s.shard_streams.append(stream)
             s = Shard(
                 self._s,
                 self._d,

@@ -21,7 +21,6 @@
 # SOFTWARE
 
 import typing
-from typing import Any, Coroutine, Union
 
 import aiohttp
 
