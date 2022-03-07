@@ -107,8 +107,8 @@ class Stream:
             'data': _d
         }
     
-    def __repr__(self) -> Dict:
-        return self.data
+    def __repr__(self):
+        return self.data.__repr__()
 
 class HTTPStream(Stream):
     def __init__(self, __data: dict):
