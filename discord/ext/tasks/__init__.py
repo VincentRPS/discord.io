@@ -48,6 +48,7 @@ class Sleeper:
     async def _looper(self, **_) -> None:
         if self.done():
             await self._callback(**_)
+            return
         self.loop.create_task(self._looper(**_))
 
     def cancel(self):
