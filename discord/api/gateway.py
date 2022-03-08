@@ -420,7 +420,7 @@ class Gateway:
                     'ready': [shard.id for shard in self.shards if shard.ready.is_set()]
                 }
             )
-            _log.debug(f'Created Stream for Shard {shard}, {stream}')
+            _log.debug(f'Created Stream for Shard {shard!s}, {stream!s}')
             self._s.shard_streams.append(stream)
             s = Shard(
                 self._s,

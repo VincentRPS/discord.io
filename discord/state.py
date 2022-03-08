@@ -135,6 +135,12 @@ class ShardStream(Stream):
     def __init__(self, __data: dict):
         self.__name__ = 'shard'
         self._formulate_data(__data)
+
+    def __repr__(self):
+        return self.data.__repr__()
+    
+    def __str__(self):
+        return self.data.__str__()
     
     def _formulate_data(self, _d: dict):
         self.data = {

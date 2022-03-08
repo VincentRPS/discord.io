@@ -1,5 +1,7 @@
 from typing import Any, Callable, Dict, List, TypeVar
 
+from ...bases import CommandBase, SlashCommandBase, ListenerBase
+
 from ...internal import DiscordError
 
 CFT = TypeVar('CFT', bound='dispatcher.CoroFunc')
@@ -23,3 +25,5 @@ class Cog:
     ): ...
     @classmethod
     def listener(cls, name: str = ...) -> Callable[[CFT], CFT]: ...
+    @classmethod
+    def command(cls, name: str = ...): ...

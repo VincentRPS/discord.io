@@ -3,9 +3,10 @@ discord.ext.cogs
 ~~~~~~~~~~~~~~~~
 Extension module to ensure the creation of Cogs.
 """
-from typing import Any, Callable, Dict, List, TypeVar
+from typing import Any, Callable, Dict, List, TypeVar, Optional
 
 from ...internal import DiscordError, dispatcher
+from ...bases import CommandBase, SlashCommandBase, ListenerBase
 
 __all__: List[str] = ['Cog', 'ExtensionLoadError']
 
@@ -16,15 +17,77 @@ class ExtensionLoadError(DiscordError):
     ...
 
 
+
 class Cog:
-    listeners: Dict[str, Any] = {}
-    guild_commands: Dict[str, Any] = {}
-    global_commands: Dict[str, Any] = {}
+    guild_commands = {}
+    global_commands = {}
+    prefixed_commands = {}
+    listeners = {}
     bot = None
+
+    def __new__(cls, *args, **kwargs):
+
+        listeners: Dict[str, Any] = {}
+        guild_commands: Dict[str, Any] = {}
+        global_commands: Dict[str, Any] = {}
+        prefixed_commands: Dict[str, Any] = {}
+
+        for name, value in cls.__dict__.items():
+            if isinstance(value, CommandBase):
+                prefixed_commands[name] = value
+            elif isinstance(value, ListenerBase):
+                listeners[name] = value
+            elif isinstance(value, SlashCommandBase):
+                if value.guild_ids is None:
+                    global_commands[name] = value
+                else:
+                    guild_commands[name] = value
+            
+
+        cls.prefixed_commands = prefixed_commands
+        cls.listeners = listeners
+        cls.global_commands = global_commands
+        cls.guild_commands = guild_commands
+
+        return super(Cog, cls).__new__(cls)
 
     @property
     def __cog_name__(self) -> str:
         return type(self).__name__
+
+    @classmethod
+    def command(cls, name: Optional[str] = None, flags: Optional[list] = []):
+        def wrap(func: Callable):
+            _name = name or func.__name__
+            _description = func.__doc__
+            cmd = CommandBase(
+                name=_name,
+                description=_description,
+                func=func
+            )
+
+            return cmd
+
+        return wrap
+
+    @classmethod
+    def listener(cls, name: str = None):
+        """Listen to a event
+
+        Parameters
+        ----------
+        name
+            The event to listen to
+        """
+
+        def decorator(func: Callable):
+            a = func
+            if isinstance(a, staticmethod):
+                a = a.__func__
+            _name = name or a.__name__
+            return ListenerBase(_name, a)
+
+        return decorator
 
     @classmethod
     def slash_command(
@@ -32,7 +95,7 @@ class Cog:
         name: str = None,
         options: List[dict] = None,
         guild_ids: List[int] = None,
-        default_permission: bool = True,
+        default_permission: bool = True
     ):
         """Creates a slash command
 
@@ -51,55 +114,23 @@ class Cog:
         default_permission: :class:`bool`
             If this slash command should have default permissions
         """
+        def wrap(func):
+            a = func
+            if isinstance(a, staticmethod):
+                a = a.__func__
 
-        def decorator(func: CFT) -> CFT:
             _name = func.__name__ if name is None else name
             description = func.__doc__
 
-            a = func
-            if isinstance(a, staticmethod):
-                a = a.__func__
-
-            if guild_ids is not None:
-                Cog.guild_commands[name] = {
-                    'guild_id': guild_ids,
-                    'name': _name,
-                    'description': description,
-                    'callback': a,
-                    'options': options,
-                    'default_permission': default_permission,
-                }
-            else:
-                Cog.global_commands[name] = {
-                    'name': _name,
-                    'description': description,
-                    'callback': a,
-                    'options': options,
-                    'default_permission': default_permission,
-                }
-
-            return func
-
-        return decorator
-
-    @classmethod
-    def listener(cls, name: str = None) -> Callable[[CFT], CFT]:
-        """Listen to a event
-
-        Parameters
-        ----------
-        name
-            The event to listen to
-        """
-
-        def decorator(func: CFT) -> CFT:
-            a = func
-            if isinstance(a, staticmethod):
-                a = a.__func__
-            Cog.listeners[name] = a
-            return func
-
-        return decorator
+            return SlashCommandBase(
+                name=_name,
+                options=options,
+                guild_ids=guild_ids,
+                default_permission=default_permission,
+                description=description,
+                func=func
+            )   
+        return wrap
 
     def _inject(self, bot_self):
         self.bot = bot_self

@@ -20,16 +20,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import Optional
+from typing import Optional, Any
 
 from ...client import Callable, Client
 from .core import Command, Flag
+from ..cogs import Cog
 
 
 class Bot(Client):
     def __init__(self, command_prefix: str, **kwargs):
         super().__init__(**kwargs)
         self.command_prefix = command_prefix
+
+    def __add_cog_commands__(self, cog: Cog):
+        for command in cog.prefixed_commands.values():
+            self.state.prefixed_commands.append(
+                Command(
+                    func=command.func,
+                    name=command.name,
+                    prefix=self.command_prefix,
+                    state=self.state,
+                    description=command.description,
+                    cog=cog
+                )
+            )
 
     def command(self, name: Optional[str] = None, flags: list[Flag] = []):
         def decorator(func: Callable) -> Command:
@@ -47,3 +61,20 @@ class Bot(Client):
             return cmd
 
         return decorator
+
+
+    def add_cog(self, cog: Cog, *, override: bool = False):
+        if not isinstance(cog, Cog):
+            raise TypeError('ALL cogs must subclass Cog.')
+
+        name = cog.__cog_name__
+        current = self.cogs.get(name)
+
+        if current is not None:
+            if not override:
+                raise TypeError('There is already another Cog with this name!')
+            self.remove_cog(current)
+
+        cog = cog._inject(self)
+        self.__add_cog_commands__(cog)
+
