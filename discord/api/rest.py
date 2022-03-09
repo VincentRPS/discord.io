@@ -26,6 +26,7 @@ import json
 import logging
 import typing
 import weakref
+import time
 from urllib.parse import quote
 
 import aiohttp
@@ -42,8 +43,6 @@ _log = logging.getLogger(__name__)
 __all__: typing.List[str] = [
     'RESTClient',
 ]
-
-PAD = typing.TypeVar('PAD', bound='PadLock')
 
 aiohttp.hdrs.WEBSOCKET = 'websocket'
 
@@ -80,24 +79,56 @@ class Route:
     def bucket(self) -> str:
         return f'{self.method}:{self.endpoint}:{self.guild_id}:{self.channel_id}:{self.webhook_id}:{self.webhook_token}'  # type: ignore # noqa: ignore
 
+class Lock:
+    def __init__(self, bucket: str):
+        self.bucket = bucket
+        self.pending_release: typing.List[asyncio.Future[None]] = []
+        self.reserved = 0
+        self.left = None
+        self.left_after = None
+        self.left_pending = None
+        self.limit = 0
+        self.reset_at: float = None
+        self.loop = asyncio.get_event_loop()
 
-class PadLock:
-    # based off the PadLock of interactions.py & MaybeUnlock of discord.py.
-    def __init__(self, lock: asyncio.Lock):
-        self.lock: asyncio.Lock = lock
-        self.MaybeUnlock: bool = True
+    def request(self, left: int):
+        self.left = left
+        self._left = left
+        self.left_after = self.left - 1
+        self.left_pending = self.left - self.reserved
 
-    def __enter__(self: PAD) -> PAD:
+    @property
+    def _left(self):
+        return self.left
+    
+    @_left.setter
+    def _left(self, i: int):
+        self.limit = i
+        if i == 0:
+            sleep = self.reset_at - time.time()
+            self.loop.call_later(sleep, self.release)
+
+    def release(self):
+        self.left = self.limit
+        for _ in range(self.left_pending):
+            try:
+                future = self.pending_release.pop(0)
+            except IndexError:
+                break
+            future.set_result(None)
+
+    async def __aenter__(self) -> Lock:
+        if self.left == None:
+            return self
+        if self.left == 0 or self.left_pending <= 0:
+            fut = asyncio.Future()
+            self.pending_release.append(fut)
+            await fut
+        self.reserved += 1
         return self
 
-    # defers the UnLock.
-    def defer(self) -> None:
-        self.MaybeUnlock = False
-
-    def __exit__(self, exc_type, exc, traceback) -> None:
-        if self.MaybeUnlock:
-            self.lock.release()
-
+    async def __aexit__(self, *_):
+        pass
 
 class RESTClient:
     """Represents a Rest connection with Discord.
@@ -129,8 +160,9 @@ class RESTClient:
         self.proxy_auth = proxy_auth
         self._session: aiohttp.ClientSession = None
         self.url = f'https://discord.com/api/v{version}'
+        self.locks = {}
 
-        if version not in (8, 9, 10):
+        if version < 8:
             raise DeprecationWarning(
                 'The API Version you are running has been decommissioned, please bump the version.'
             )
@@ -154,12 +186,11 @@ class RESTClient:
 
         self._session = aiohttp.ClientSession()
 
-        lock = self._locks.get(bucket)
+        _bucket: Lock = self.locks.get(route.endpoint)
 
-        if lock is None:
-            lock = asyncio.Lock()
-            if bucket is not None:
-                self._locks[bucket] = lock
+        if _bucket == None:
+            _bucket = Lock(route.endpoint)
+            self.locks[route.endpoint] = _bucket
 
         if self.proxy is not None:
             params['proxy'] = self.proxy
@@ -183,13 +214,8 @@ class RESTClient:
 
         params['headers'] = self.header
 
-        if not self._has_global.is_set():
-            await self._has_global.wait()
-
-        await lock.acquire()
-        with PadLock(lock) as padl:
-            for tries in range(5):
-
+        for tries in range(5):
+            async with _bucket as buck:
                 if files:
                     for f in files:
                         f.reset(seek=tries)
@@ -216,6 +242,23 @@ class RESTClient:
                             # Some endpoints don't give you these ratelimit headers
                             # and so they will error out.
                             pass
+
+                        limit = r.headers.get('X-RateLimit-Limit')
+                        
+                        if limit == None:
+                            buck.limit = None
+                        else:
+                            buck.limit = int(limit)
+
+                        if remains:
+                            buck.request(int(remains))
+
+                        reset = r.headers.get('X-RateLimit-Reset')
+
+                        if reset:
+                            buck.reset_at = float(reset)
+                        else:
+                            buck.reset_at = None
     
                         self.state.http_streams.append(HTTPStream(
                             {
@@ -234,13 +277,11 @@ class RESTClient:
 
                         if remains == '0' and r.status != 429:
                             # the bucket was depleted
-                            padl.defer()
                             _log.debug(
                                 'A ratelimit Bucket was depleted. (bucket: %s, retry: %s)',
                                 bucket,
                                 float(reset_after),
                             )
-                            self.state.loop.call_later(float(reset_after), lock.release)
 
                         if r.status == 429:
                             if not r.headers.get('via') or isinstance(d, str):

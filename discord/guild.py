@@ -105,7 +105,7 @@ class GuildPreview:
 
     @property
     def id(self) -> int:
-        return self.from_dict['id']
+        return int(self.from_dict['id'])
 
     @property
     def name(self) -> str:
@@ -223,7 +223,7 @@ class Guild:
         -------
         :class:`int`
         """
-        return self.from_dict['id']
+        return int(self.from_dict['id'])
 
     async def get_member(self, id: int):
         """Gets a member and returns a :class:`Member` object
@@ -342,7 +342,7 @@ class Role:
         -------
         :class:`int`
         """
-        return self.from_dict['id']
+        return int(int(self.from_dict['id']))
 
     @property
     def name(self) -> str:
@@ -480,7 +480,7 @@ class ScheduledEvent:
         -------
         :class:`int`
         """
-        return self.from_dict['id']
+        return int(self.from_dict['id'])
 
     def guild_id(self) -> int:
         """Gives the scheduled event' current guild
