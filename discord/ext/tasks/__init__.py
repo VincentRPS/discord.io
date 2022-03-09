@@ -94,6 +94,9 @@ def loop(
     if weeks:
         kwds['weeks'] = weeks
 
+    if kwds == {}:
+        raise TypeError('Time to loop for was not provided.')
+
     interval: float = datetime.timedelta(**kwds).total_seconds()
 
     def decorator(func: Callable) -> Task:
