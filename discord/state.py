@@ -73,15 +73,13 @@ class Hold:
     def get(self, name: str):
         return self._cache.get(name)
 
-    @overload
-    def get(self, name: str, __default: Any):
+    def get(self, name: str, __default: Any = None):
         return self._cache.get(name, __default)
 
     @overload
     def pop(self, name: str):
         return self._cache.pop(name)
 
-    @overload
     def pop(self, name: str, __default: Any):
         return self._cache.pop(name, __default)
 

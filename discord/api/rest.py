@@ -226,7 +226,7 @@ class RESTClient:
                                     None
                                 ),
                                 'data': d,
-                                'global': d.get('global', False),
+                                'global': d.get('global', False) if isinstance(d, dict) else False,
                                 'limit': r.headers.get('X-RateLimit-Limit', None)
                             }
                         )

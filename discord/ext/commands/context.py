@@ -20,14 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-import re
 import shlex
-from typing import Any, Dict, List, Optional, Sequence
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence
 
 from ...embed import Embed
 from ...file import File
 from ...message import Message
 from ...types import allowed_mentions
+
+if TYPE_CHECKING:
+    from .core import Command
 
 
 class Context:
@@ -35,7 +37,7 @@ class Context:
 
     def __init__(self, msg: Message, command_invoked_under):
         self.message = msg
-        self.command = command_invoked_under
+        self.command: Command = command_invoked_under
 
         if self.command._parser:
             try:
