@@ -24,7 +24,7 @@ import argparse
 import asyncio
 import inspect
 from collections import OrderedDict
-from typing import Any, Callable, Optional, Union
+from typing import TYPE_CHECKING, Any, Callable, Optional, Union
 
 from ...channels import TextChannel, VoiceChannel
 from ...internal import run_storage
@@ -32,7 +32,9 @@ from ...member import Member
 from ...message import Message
 from ...state import ConnectionState
 from ...user import User
+from ...api import Gateway
 from .context import Context
+from .inject import Injector
 
 __all__ = ["Flag", "Command", "resolve_id"]
 
@@ -114,6 +116,7 @@ class Command:
         self._desc = description or func.__doc__ or "No description provided"
         self._storage = run_storage.InternalRunner(self.state.loop)
         self._parser = FlagParser(*flags)
+        self._injector = Injector()
 
     @property
     def options(self):
@@ -129,7 +132,10 @@ class Command:
     def _callback(self, func: Callable[..., Any]):
         self.coro = func
 
-    def _run(self, context, *args, **kwargs):
+    def _run(self, context, injections, *args, **kwargs):
+        if injections:
+            self.state.loop.create_task(self._injector.inject_callback(self.coro, context, *args, **injections, **kwargs))
+            return
         if self.cog:
             self.state.loop.create_task(
                 self._storage._run_process(
@@ -144,6 +150,7 @@ class Command:
     def _run_with_options_detected(self, context: Context):
         order = 0
         to_give = OrderedDict()
+        injections = {}
         for name, param in self.options.items():
             order += 1
             if param.annotation == str:
@@ -182,6 +189,11 @@ class Command:
                 )
                 to_give[name] = give
 
+            elif param.annotation in (type(self.state.app), Gateway, ConnectionState):
+                if param.annotation == Gateway:
+                    injections['gateway'] = (self.state.app.gateway)
+                elif param.annotation == ConnectionState:
+                    injections['cache'] = (self.state)
             else:
                 try:
                     give = self.content_without_command.split(" ")[order]
@@ -189,11 +201,14 @@ class Command:
                     break
                 to_give[name] = give
 
-        self._run(context, **to_give)
+        if injections != {}:
+            self._injector.add_injections(**injections)
 
-    def invoke(self, msg: Message, **kwargs):
-        if "content" in kwargs:
-            self.content_without_command: str = kwargs.get("content")
+        self._run(context, injections, **to_give)
+
+    def invoke(self, msg: Message, content=None):
+        if content:
+            self.content_without_command: str = content
 
         context = Context(msg, self)
         self._run_with_options_detected(context)

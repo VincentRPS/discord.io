@@ -71,7 +71,7 @@ class User:
         -------
         :class:`int`
         """
-        return self.from_dict['id']
+        return int(self.from_dict['id'])
 
     def public_flags(self):
         """The users public flags."""

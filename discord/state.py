@@ -73,15 +73,13 @@ class Hold:
     def get(self, name: str):
         return self._cache.get(name)
 
-    @overload
-    def get(self, name: str, __default: Any):
+    def get(self, name: str, __default: Any = None):
         return self._cache.get(name, __default)
 
     @overload
     def pop(self, name: str):
         return self._cache.pop(name)
 
-    @overload
     def pop(self, name: str, __default: Any):
         return self._cache.pop(name, __default)
 
@@ -107,8 +105,8 @@ class Stream:
             'data': _d
         }
     
-    def __repr__(self) -> Dict:
-        return self.data
+    def __repr__(self):
+        return self.data.__repr__()
 
 class HTTPStream(Stream):
     def __init__(self, __data: dict):

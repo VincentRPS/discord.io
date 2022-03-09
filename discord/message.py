@@ -87,7 +87,7 @@ class Message:  # noqa: ignore
         -------
         :class:`int`
         """
-        return self.from_dict['id']
+        return int(self.from_dict['id'])
 
     def fetch_guild(self) -> Guild:
         """Returns the :class:`Guild` of the message

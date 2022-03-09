@@ -53,7 +53,7 @@ class Emoji:
 
     @property
     def id(self) -> int:
-        return self.from_dict['id']
+        return int(self.from_dict['id'])
 
     @property
     def name(self) -> str:
@@ -102,7 +102,7 @@ class Sticker:
 
     @property
     def id(self) -> int:
-        return self.from_dict['id']
+        return int(self.from_dict['id'])
 
     @property
     def pack(self) -> int:
@@ -185,7 +185,7 @@ class Attachment:
         -------
         :class:`int`
         """
-        return self.from_dict['id']
+        return int(self.from_dict['id'])
 
     @property
     def name(self) -> str:

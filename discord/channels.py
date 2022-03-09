@@ -101,7 +101,7 @@ class Category:
         -------
         :class:`int`
         """
-        return self.from_dict['id']
+        return int(self.from_dict['id'])
 
     @property
     def name(self) -> str:
@@ -146,7 +146,7 @@ class TextChannel:
         -------
         :class:`int`
         """
-        return self.from_dict['id']
+        return int(self.from_dict['id'])
 
     @property
     def guild(self):
@@ -257,7 +257,7 @@ class VoiceChannel:
         -------
         :class:`int`
         """
-        return self.from_dict['id']
+        return int(self.from_dict['id'])
 
     @property
     def guild(self):
@@ -329,7 +329,7 @@ class DMChannel:
         -------
         :class:`int`
         """
-        return self.from_dict['id']
+        return int(self.from_dict['id'])
 
     def recipients(self):
         """The list of users in the channel
@@ -409,7 +409,7 @@ class Thread:
         -------
         :class:`int`
         """
-        return self.from_dict['id']
+        return int(self.from_dict['id'])
 
     @property
     def guild_id(self) -> int:
@@ -566,7 +566,7 @@ class ThreadMember:
         -------
         :class:`int`
         """
-        return self.from_dict['id']
+        return int(self.from_dict['id'])
 
     @property
     def user_id(self) -> int:
@@ -621,7 +621,7 @@ class StageInstance:
         -------
         :class:`int`
         """
-        return self.from_dict['id']
+        return int(self.from_dict['id'])
 
     @property
     def guild_id(self) -> int:

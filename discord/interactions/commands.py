@@ -23,16 +23,17 @@
 import inspect
 from collections import OrderedDict
 from typing import Any, Callable, Dict, List, Optional
-from uuid import uuid4
 
 from .option_converter import Choice, Option
 from .registry import ApplicationCommandRegistry
+from ..state import ConnectionState
 
 
 class ApplicationCommand:
     def __init__(
         self,
         func: Callable,
+        state: ConnectionState,
         name: Optional[str] = None,
         description: Optional[str] = None,
         registry: ApplicationCommandRegistry = None,
@@ -41,10 +42,13 @@ class ApplicationCommand:
         self.coro = func
         self.name = func.__name__ if name is None else name
         self.desc = description or func.__doc__ or 'No description provided'
+        self._options = []
         self.obj: Dict[str, Any] = {
             'self': self,
             'options': [option for option in self._options],
         }
+        state.application_commands[name] = self.obj
+        self.state = state
 
     @property
     def options(self):
@@ -53,9 +57,8 @@ class ApplicationCommand:
         return dict
 
     def _parse_options(self):
-        self._options = []
         for name, param in self.options.items():
-            if param == Option:
+            if param.annotation == Option:
                 self._options.append(param)
             else:
                 raise RuntimeError("%s is not using the Option class!", name)
@@ -75,7 +78,7 @@ class ApplicationCommand:
         options: List[Option] = None,
         choices: List[Choice] = None,
     ):
-        def decorator(func: Callable) -> ApplicationCommand:
+        def decorator(func: Callable) -> ApplicationSubcommand:
             _name = name or func.__name__
             _description = description or func.__doc__ or 'No description provided'
             sub_command = {
@@ -85,8 +88,50 @@ class ApplicationCommand:
                 "type": 1,
                 'options': options,
             }
-            self.obj['options'].append(sub_command)
+            self.state.application_commands[self.name]['options'].append(sub_command)
+            appended_as = len(self.state.application_commands[self.name]['options'])
 
-            return self  # type: ignore
+            cmd = ApplicationSubcommand(self.name, appended_as, sub_command, self.state)
+            return cmd
 
         return decorator
+
+class ApplicationSubcommand:
+    def __init__(self, parent_name: str, append: int, data: dict, state: ConnectionState):
+        self.obj = {
+            'options': []
+        }
+        self.state = state
+        self.data = data
+        self._name = parent_name
+        self._append = append
+
+    def sub_command(
+        self,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        options: Optional[List[Option]] = None,
+        choices: Optional[List[Choice]] = None,
+    ):
+        def inner(func: Callable) -> ApplicationFinalSubcommand:
+            _name = name or func.__name__
+            _description = description or func.__doc__ or 'No description provided'
+            sub_command = {
+                'name': _name,
+                'description': _description,
+                'choices': choices,
+                'type': 1,
+                'options': options,
+            }
+            self.state.application_commands[self._name]['options'][self._append].append(sub_command)
+            final = ApplicationFinalSubcommand(sub_command, self.state)
+            return final
+        return inner
+
+class ApplicationFinalSubcommand:
+    def __init__(self, data: dict, state: ConnectionState):
+        self.obj = {
+            'options': []
+        }
+        self.data = data
+        self.state = state
