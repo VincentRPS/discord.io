@@ -1,7 +1,11 @@
 from discord.ext.commands import Bot, Context
 from discord.flags import Intents
 from discord.ext.cogs import Cog
-
+import sys
+from argparse import ArgumentParser
+parser = ArgumentParser()
+parser.add_argument("--token", "-t", type=str, required=True)
+args = parser.parse_args()
 
 intents = Intents.GUILD_MESSAGES | Intents.GUILDS | Intents.MESSAGE_CONTENT
 
@@ -25,4 +29,4 @@ class Default(Cog):
         await ctx.send(f'pong! {round(self.bot.latency * 1000, 2)}ms')
 
 bot.add_cog(Default(bot))
-bot.run('bot token')
+bot.run(args.token)
