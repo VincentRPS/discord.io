@@ -25,4 +25,4 @@ class Default(Cog):
         await ctx.send(f'pong! {round(self.bot.latency * 1000, 2)}ms')
 
 bot.add_cog(Default(bot))
-bot.run('OTMxMzQ0NTYzNjY1MjU2NDQ4.YeDENw.d8ZN8jzxf8voc5Het8tfs2lf08A')
+bot.run('bot token')
