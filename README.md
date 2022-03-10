@@ -1,6 +1,15 @@
-<p align='center'>
-  <img src='https://raw.githubusercontent.com/VincentRPS/discord.io/master/docs/assets/discord.io.png' />
-</p>
+<div align='center'>
+    <br />
+    <p>
+        <a href="https://github.com/VincentRPS/discord.io"><img src="https://raw.githubusercontent.com/VincentRPS/discord.io/master/docs/assets/discord.io.png" width="546" alt="discord.io" /></a>
+    </p>
+    <br />
+    <p>
+        <a href="https://discord.gg/cvCAwntVhm"><img src="https://img.shields.io/discord/935701676948590642?color=5865F2&logo=discord&logoColor=white" alt="discord"> </a>
+        <a href="https://pypi.org/project/discord.io"><img src="https://img.shields.io/pypi/v/discord.io?label=pip" alt="pip version"> </a>
+        <a href="https://pypi.org/project/discord.io"><img src="https://img.shields.io/pypi/dm/discord.io" alt="pip downloads"> </a>
+    </p>
+</div>
 
 <p align='center'>
 Asynchronous Discord API Wrapper for Python
