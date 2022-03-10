@@ -31,6 +31,7 @@ class Bot(Client):
     def __init__(self, command_prefix: str, **kwargs):
         super().__init__(**kwargs)
         self.command_prefix = command_prefix
+        self._cmd_cls = Command
 
     def __add_cog_commands__(self, cog: Cog):
         for command in cog.prefixed_commands.values():
@@ -49,7 +50,7 @@ class Bot(Client):
         def decorator(func: Callable) -> Command:
             _name = name or func.__name__
             _description = func.__doc__
-            cmd = Command(
+            cmd = self._cmd_cls(
                 func=func,
                 prefix=self.command_prefix,
                 state=self.state,

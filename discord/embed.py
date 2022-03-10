@@ -176,7 +176,7 @@ class Embed:
         """
         del self.obj['fields'][name]
 
-    def set_image(self, url: str):
+    def set_image(self, url: str = None):
         if url is None:
             del self.obj['image']
         else:
