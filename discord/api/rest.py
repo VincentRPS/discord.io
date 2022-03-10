@@ -128,7 +128,8 @@ class Lock:
         return self
 
     async def __aexit__(self, *_):
-        pass
+        if self.left_after - len(self.pending_release) != 0:
+            self.release()
 
 class RESTClient:
     """Represents a Rest connection with Discord.
