@@ -128,8 +128,11 @@ class Lock:
         return self
 
     async def __aexit__(self, *_):
-        if self.left_after - len(self.pending_release) != 0:
-            self.release()
+        try:
+            if self.left_after - len(self.pending_release) != 0:
+                self.release()
+        except TypeError:
+            pass
 
 class RESTClient:
     """Represents a Rest connection with Discord.
@@ -162,6 +165,7 @@ class RESTClient:
         self._session: aiohttp.ClientSession = None
         self.url = f'https://discord.com/api/v{version}'
         self.locks = {}
+        self.specific_limits: typing.Dict[str, int] = {'/channels': 500}
 
         if version < 8:
             raise DeprecationWarning(
@@ -192,6 +196,10 @@ class RESTClient:
         if _bucket == None:
             _bucket = Lock(route.endpoint)
             self.locks[route.endpoint] = _bucket
+
+        for key, limit in self.specific_limits.items():
+            if route.endpoint.endswith(key):
+                _bucket.limit = limit
 
         if self.proxy is not None:
             params['proxy'] = self.proxy
@@ -279,43 +287,10 @@ class RESTClient:
 
                         _log.debug(f'Created stream for {route.endpoint}: {stream}')
 
-                        if remains == '0' and r.status != 429:
-                            # the bucket was depleted
-                            _log.debug(
-                                'A ratelimit Bucket was depleted. (bucket: %s, retry: %s)',
-                                bucket,
-                                float(reset_after),
-                            )
-
                         if r.status == 429:
                             if not r.headers.get('via') or isinstance(d, str):
                                 # handles couldflare bans
                                 raise RESTError(d)
-
-                            retry_in: float = d['retry_after']
-                            _log.warning(
-                                'The Rest Client seems to be ratelimited,'
-                                ' Retrying in: %.2f seconds. Handled with the bucket: %s',
-                                retry_in,
-                                bucket,
-                            )
-
-                            is_global = d.get('global', False)
-
-                            if is_global:
-                                _log.debug(
-                                    'Global ratelimit was hit, retrying in %s', retry_in
-                                )
-                                self._has_global.clear()
-
-                            await asyncio.sleep(retry_in)
-                            _log.debug(
-                                'Finished waiting for the ratelimit, now retrying...'
-                            )
-
-                            if not is_global:
-                                self._has_global.set()
-                                _log.debug('Global ratelimit has been depleted.')
 
                             continue
 
