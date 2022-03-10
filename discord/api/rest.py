@@ -259,8 +259,8 @@ class RESTClient:
                             buck.reset_at = float(reset)
                         else:
                             buck.reset_at = None
-    
-                        self.state.http_streams.append(HTTPStream(
+
+                        stream = HTTPStream(
                             {
                                 'route': url,
                                 'bucket': route.bucket,
@@ -273,7 +273,10 @@ class RESTClient:
                                 'limit': r.headers.get('X-RateLimit-Limit', None)
                             }
                         )
-                    )
+    
+                        self.state.http_streams.append(stream)
+
+                        _log.debug(f'Created stream for {route.endpoint}: {stream}')
 
                         if remains == '0' and r.status != 429:
                             # the bucket was depleted

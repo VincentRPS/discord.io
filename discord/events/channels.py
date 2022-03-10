@@ -66,7 +66,10 @@ class OnChannelDelete(Event):
 
     def process(self):
         raw = self.state.channels.get(self.data['id'])
-        channel = channel_parse(raw['type'], self.data, self.state)
+        if raw:
+            channel = channel_parse(raw['type'], self.data, self.state)
+        else:
+            channel = None
         self.dispatch('channel_delete', channel)
         self.state.channels.pop(self.data['id'])
 
