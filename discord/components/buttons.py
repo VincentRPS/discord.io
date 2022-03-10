@@ -46,9 +46,7 @@ class Button:
     def __init__(self, state: ConnectionState):
         self.state = state
 
-    async def _run_callback(
-        self, coro: Callable[..., Coroutine[Any, Any, Any]], data, state
-    ) -> None:
+    async def _run_callback(self, coro: Callable[..., Coroutine[Any, Any, Any]], data, state) -> None:
         try:
             await coro(Interaction(data, state))
         except asyncio.CancelledError:
@@ -87,10 +85,7 @@ class Button:
         self.id = (
             custom_id
             if custom_id is not None
-            else ''.join(
-                random.choice(string.ascii_letters)
-                for _ in range(random.randint(10, 100))
-            )
+            else ''.join(random.choice(string.ascii_letters) for _ in range(random.randint(10, 100)))
         )
 
         ret = {

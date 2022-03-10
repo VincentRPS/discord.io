@@ -53,16 +53,12 @@ class RESTFactory:
         self.proxy = proxy
         self.proxy_auth = proxy_auth
         self.state = state or ConnectionState()
-        self.rest = RESTClient(
-            state=self.state, proxy=proxy, proxy_auth=proxy_auth, version=version
-        )
+        self.rest = RESTClient(state=self.state, proxy=proxy, proxy_auth=proxy_auth, version=version)
         self.channels = Channels(self.rest)
         self.commands = Commands(self.rest)
         self.guilds = Guilds(self.rest)
 
-    async def login(
-        self, token: str
-    ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
+    async def login(self, token: str) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
         self.token = token
 
         if len(self.token) != 59:
@@ -79,9 +75,7 @@ class RESTFactory:
     def logout(
         self,
     ) -> typing.Coroutine[typing.Any, typing.Any, typing.Union[typing.Any, None]]:
-        return self.rest.send(
-            Route('POST', '/auth/logout')
-        )  # Log's you out of the bot.
+        return self.rest.send(Route('POST', '/auth/logout'))  # Log's you out of the bot.
 
     def get_gateway_bot(
         self,

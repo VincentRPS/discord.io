@@ -87,14 +87,10 @@ class OnTyping(Event):
     """
 
     def process(self):
-        channel = TextChannel(
-            self.state.channels.get(self.data['channel_id']), self.state
-        )
+        channel = TextChannel(self.state.channels.get(self.data['channel_id']), self.state)
 
         try:
-            guild = Guild(
-                self.state.guilds.get(self.data['guild_id']), self.state.app.factory
-            )
+            guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
         except KeyError:
             guild = None
         user = User(self.state.members.get(self.data['user_id']))
@@ -128,9 +124,7 @@ class OnInviteCreate(Event):
     """
 
     def process(self):
-        channel = TextChannel(
-            self.state.channels.get(self.data.get('channel_id')), self.state
-        )
+        channel = TextChannel(self.state.channels.get(self.data.get('channel_id')), self.state)
         code: str = self.data.get('code')
         created_at: str = self.data.get('created_at')
         guild = Guild(self.state.guilds.get(self.data['guild_id']))
@@ -171,12 +165,8 @@ class OnInviteDelete(Event):
     """
 
     def process(self):
-        channel = TextChannel(
-            self.state.channels.get(self.data.get('channel_id')), self.state
-        )
-        guild = Guild(
-            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
-        )
+        channel = TextChannel(self.state.channels.get(self.data.get('channel_id')), self.state)
+        guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
         code: str = self.data.get('code')
 
         self.dispatch('invite_delete', channel, guild, code)
@@ -206,11 +196,7 @@ class OnWebhooksUpdate(Event):
     """
 
     def process(self):
-        guild = Guild(
-            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
-        )
-        channel = TextChannel(
-            self.state.channels.get(self.data['channel_id']), self.state
-        )
+        guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
+        channel = TextChannel(self.state.channels.get(self.data['channel_id']), self.state)
 
         self.dispatch('webhooks_update', guild, channel)

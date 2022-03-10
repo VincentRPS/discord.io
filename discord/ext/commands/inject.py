@@ -48,11 +48,11 @@ class Injector:
         if 'bot' in kwargs:
             injections.append(self.bot)
             kwargs.pop('bot')
-        
+
         if 'gateway' in kwargs:
             injections.append(self.gateway)
             kwargs.pop('gateway')
-        
+
         if 'cache' in kwargs:
             injections.append(self.cache)
             kwargs.pop('cache')
@@ -85,13 +85,14 @@ class Injector:
     def __getitem__(self, i: str):
         return getattr(self, i, None)
 
-class inject:
 
+class inject:
     def __class_getitem__(cls, obj):
         if isinstance(obj, tuple):
             raise TypeError('object must not be a tuple')
 
         return _Inject(obj)
+
 
 class _Inject:
     def __init__(self, injection: Any):

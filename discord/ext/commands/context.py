@@ -59,6 +59,4 @@ class Context:
         components: List[Dict[str, Any]] = None,
         component=None,
     ):
-        return self.message.send(
-            content, files, embed, embeds, tts, allowed_mentions, components, component
-        )
+        return self.message.send(content, files, embed, embeds, tts, allowed_mentions, components, component)

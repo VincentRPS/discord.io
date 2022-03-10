@@ -55,6 +55,7 @@ class Sleeper:
         self.handler.cancel()
         self.fut.cancel()
 
+
 class Task:
     def __init__(self, interval: float, callback: Callable, loop=None):
         self.interval = interval
@@ -70,11 +71,12 @@ class Task:
         await self.sleeper.wait()
         if self.canceled:
             return
-        
+
         self.loop.create_task(self.start())
 
     async def stop(self):
         self.canceled = True
+
 
 def loop(
     seconds: int = None,

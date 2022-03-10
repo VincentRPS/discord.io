@@ -96,9 +96,7 @@ class Channels:
         )
 
     def delete_message(self, message: int, channel: int, reason: Optional[str]):
-        return self.rest.send(
-            Route('DELETE', f'/channels/{channel}/messages/{message}'), reason=reason
-        )
+        return self.rest.send(Route('DELETE', f'/channels/{channel}/messages/{message}'), reason=reason)
 
     def edit_message(
         self,

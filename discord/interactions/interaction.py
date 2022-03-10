@@ -207,9 +207,7 @@ class Interaction:
 
         adapter = WebhookAdapter(self.state)
         self._responded = True
-        return adapter.rest.send(
-            Route('POST', f'/interactions/{self.id}/{self.token}/callback'), json=ret
-        )
+        return adapter.rest.send(Route('POST', f'/interactions/{self.id}/{self.token}/callback'), json=ret)
 
     def defer(self, invisible: bool = False):
         """defers an interaction response

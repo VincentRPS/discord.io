@@ -42,9 +42,7 @@ class ApplicationCommandRegistry:
         self.state.loop.create_task(self.on_ready())
         self.unregistered_commands: asyncio.Event = asyncio.Event()
 
-    async def run(
-        self, coro: Callable[..., Coroutine[Any, Any, Any]], data, state, cog=None
-    ) -> None:
+    async def run(self, coro: Callable[..., Coroutine[Any, Any, Any]], data, state, cog=None) -> None:
         try:
             if cog:
                 i = Interaction(data, state)
@@ -59,18 +57,14 @@ class ApplicationCommandRegistry:
 
     async def on_ready(self):
         await asyncio.sleep(20)
-        glob = await self.factory.commands.get_global_application_commands(
-            self.state._bot_id
-        )
+        glob = await self.factory.commands.get_global_application_commands(self.state._bot_id)
 
         await self.check_application_commands(glob)
 
         await asyncio.sleep(10)
 
         for guild in self.state.guilds._cache.values():
-            commands = await self.factory.commands.get_guild_application_commands(
-                self.state._bot_id, guild['id']
-            )
+            commands = await self.factory.commands.get_guild_application_commands(self.state._bot_id, guild['id'])
             for command in commands:
                 if command not in self.state.application_commands.items():
                     await self.factory.commands.delete_guild_application_command(
@@ -80,9 +74,7 @@ class ApplicationCommandRegistry:
 
     async def check_application_commands(self, rglobal):
         for command in rglobal:
-            await self.factory.commands.delete_global_application_command(
-                self.state._bot_id, command['id']
-            )
+            await self.factory.commands.delete_global_application_command(self.state._bot_id, command['id'])
 
     async def register_guild_slash_command(
         self,

@@ -96,11 +96,10 @@ class ApplicationCommand:
 
         return decorator
 
+
 class ApplicationSubcommand:
     def __init__(self, parent_name: str, append: int, data: dict, state: ConnectionState):
-        self.obj = {
-            'options': []
-        }
+        self.obj = {'options': []}
         self.state = state
         self.data = data
         self._name = parent_name
@@ -126,12 +125,12 @@ class ApplicationSubcommand:
             self.state.application_commands[self._name]['options'][self._append].append(sub_command)
             final = ApplicationFinalSubcommand(sub_command, self.state)
             return final
+
         return inner
+
 
 class ApplicationFinalSubcommand:
     def __init__(self, data: dict, state: ConnectionState):
-        self.obj = {
-            'options': []
-        }
+        self.obj = {'options': []}
         self.data = data
         self.state = state

@@ -24,18 +24,7 @@ The ConnectionState Caches most things during connection.
 """
 import asyncio
 from collections import OrderedDict
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Coroutine,
-    Dict,
-    List,
-    Tuple,
-    TypeVar,
-    Union,
-    overload
-)
+from typing import TYPE_CHECKING, Any, Callable, Coroutine, Dict, List, Tuple, TypeVar, Union, overload
 
 if TYPE_CHECKING:
     from .client import Client
@@ -85,7 +74,7 @@ class Hold:
 
     def reset(self) -> None:
         self._cache.clear()
-    
+
     def cache_for(self, name: str, data: Any, time: float):
         self._cache[name] = data
         asyncio.create_task(self.delete_after(name=name, time=time))
@@ -94,19 +83,18 @@ class Hold:
         await asyncio.sleep(time)
         del self._cache[name]
 
+
 class Stream:
     def __init__(self, __name: str, __data: dict):
         self.__name__ = __name
         self._formulate_data(__data)
-    
+
     def _formulate_data(self, _d: dict):
-        self.data = {
-            'stream': self.__name__,
-            'data': _d
-        }
-    
+        self.data = {'stream': self.__name__, 'data': _d}
+
     def __repr__(self):
         return self.data.__repr__()
+
 
 class HTTPStream(Stream):
     def __init__(self, __data: dict):
@@ -125,15 +113,16 @@ class HTTPStream(Stream):
                 },
                 'Max-Retries': 5,
                 'Data': _d.get('data'),
-                'Bucket': _d.get('bucket')
-            }
+                'Bucket': _d.get('bucket'),
+            },
         }
+
 
 class ShardStream(Stream):
     def __init__(self, __data: dict):
         self.__name__ = 'shard'
         self._formulate_data(__data)
-    
+
     def _formulate_data(self, _d: dict):
         self.data = {
             'stream': self.__name__,
@@ -142,10 +131,10 @@ class ShardStream(Stream):
                 'active': _d.get('active', []),
                 'pending': _d.get('pending', 0),
                 'session_ids': _d.get('session_ids', []),
-                'ready': _d.get('ready', [])
-            }
+                'ready': _d.get('ready', []),
+            },
         }
-    
+
     def edit(self, _d: dict):
         self.data = {
             'stream': self.__name__,
@@ -154,9 +143,10 @@ class ShardStream(Stream):
                 'active': _d.get('active', []),
                 'pending': _d.get('pending', []),
                 'session_ids': _d.get('session_ids', []),
-                'ready': _d.get('ready', [])
-            }
+                'ready': _d.get('ready', []),
+            },
         }
+
 
 class ConnectionState:
     """The Connection State

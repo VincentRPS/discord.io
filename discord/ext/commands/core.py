@@ -50,13 +50,7 @@ class Flag:
     FLOAT = float
     INT = int
 
-    def __init__(
-        self,
-        *flags: str,
-        type: Union[str, int, bool, float] = str,
-        default=None,
-        **kwargs
-    ):
+    def __init__(self, *flags: str, type: Union[str, int, bool, float] = str, default=None, **kwargs):
         self.flags = flags
         self.flag_type = type
         self.default = default
@@ -72,10 +66,7 @@ class FlagParser:
         for flag in flags:
             if type(flag) == Flag:
                 self._parser.add_argument(
-                    *flag.flags,
-                    type=flag.flag_type,
-                    default=flag.default,
-                    required=flag.required
+                    *flag.flags, type=flag.flag_type, default=flag.default, required=flag.required
                 )
 
     def parse(self, args):
@@ -134,18 +125,14 @@ class Command:
 
     def _run(self, context, injections, *args, **kwargs):
         if injections:
-            self.state.loop.create_task(self._injector.inject_callback(self.coro, context, *args, **injections, **kwargs))
+            self.state.loop.create_task(
+                self._injector.inject_callback(self.coro, context, *args, **injections, **kwargs)
+            )
             return
         if self.cog:
-            self.state.loop.create_task(
-                self._storage._run_process(
-                    self.coro, self.cog, context, *args, **kwargs
-                )
-            )
+            self.state.loop.create_task(self._storage._run_process(self.coro, self.cog, context, *args, **kwargs))
         else:
-            self.state.loop.create_task(
-                self._storage._run_process(self.coro, context, *args, **kwargs)
-            )
+            self.state.loop.create_task(self._storage._run_process(self.coro, context, *args, **kwargs))
 
     def _run_with_options_detected(self, context: Context):
         order = 0
@@ -184,16 +171,14 @@ class Command:
                 except IndexError:
                     break
                 raw = self.state.members.get(id)
-                give = Member(
-                    raw, context.message.guild.id, context.message.app.factory
-                )
+                give = Member(raw, context.message.guild.id, context.message.app.factory)
                 to_give[name] = give
 
             elif param.annotation in (type(self.state.app), Gateway, ConnectionState):
                 if param.annotation == Gateway:
-                    injections['gateway'] = (self.state.app.gateway)
+                    injections['gateway'] = self.state.app.gateway
                 elif param.annotation == ConnectionState:
-                    injections['cache'] = (self.state)
+                    injections['cache'] = self.state
             else:
                 try:
                     give = self.content_without_command.split(" ")[order]

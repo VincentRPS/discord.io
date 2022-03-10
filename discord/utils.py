@@ -130,9 +130,7 @@ def img_mime_type(data: bytes):
 
 async def wait_for(futures, *, timeout):
     ensured = [asyncio.ensure_future(fut) for fut in futures]
-    done, pending = await asyncio.wait(
-        ensured, timeout=timeout, return_when=asyncio.ALL_COMPLETED
-    )
+    done, pending = await asyncio.wait(ensured, timeout=timeout, return_when=asyncio.ALL_COMPLETED)
 
     if len(pending) != 0:
         raise asyncio.TimeoutError()

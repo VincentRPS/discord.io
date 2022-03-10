@@ -79,6 +79,7 @@ class Route:
     def bucket(self) -> str:
         return f'{self.method}:{self.endpoint}:{self.guild_id}:{self.channel_id}:{self.webhook_id}:{self.webhook_token}'  # type: ignore # noqa: ignore
 
+
 class Lock:
     def __init__(self, bucket: str):
         self.bucket = bucket
@@ -100,7 +101,7 @@ class Lock:
     @property
     def _left(self):
         return self.left
-    
+
     @_left.setter
     def _left(self, i: int):
         self.limit = i
@@ -134,6 +135,7 @@ class Lock:
         except TypeError:
             pass
 
+
 class RESTClient:
     """Represents a Rest connection with Discord.
 
@@ -154,9 +156,7 @@ class RESTClient:
     def __init__(self, *, state=None, proxy=None, proxy_auth=None, version=10):
         self.user_agent = 'DiscordBot (https://github.com/VincentRPS/discord.io)'
         self.header: typing.Dict[str, str] = {'User-Agent': self.user_agent}
-        self._locks: weakref.WeakValueDictionary[
-            str, asyncio.Lock
-        ] = weakref.WeakValueDictionary()
+        self._locks: weakref.WeakValueDictionary[str, asyncio.Lock] = weakref.WeakValueDictionary()
         self._has_global: asyncio.Event = asyncio.Event()
         self._has_global.set()
         self.state = state or ConnectionState()
@@ -242,9 +242,7 @@ class RESTClient:
                     async with self._session.request(method, url, **params) as r:
 
                         d = await parse_tj(r)
-                        _log.debug(
-                            '< %s %s %s %s', method, url, params.get('data'), bucket
-                        )
+                        _log.debug('< %s %s %s %s', method, url, params.get('data'), bucket)
 
                         try:
                             remains = r.headers.get('X-RateLimit-Remaining')
@@ -254,7 +252,7 @@ class RESTClient:
                             pass
 
                         limit = r.headers.get('X-RateLimit-Limit')
-                        
+
                         if limit == None:
                             buck.limit = None
                         else:

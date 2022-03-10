@@ -36,9 +36,7 @@ class OnInteraction(Event):
         for component in self.state.components.values():
             if component['id'] == self.data['data']['custom_id']:
                 self.state.loop.create_task(
-                    component['self']._run_callback(
-                        component['callback'], self.data, self.state
-                    )
+                    component['self']._run_callback(component['callback'], self.data, self.state)
                 )
         try:
             for application_command in self.state.application_commands.values():

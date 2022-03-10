@@ -134,16 +134,10 @@ class Client:
         print_banner(module)
         start_logging(logs, debug)
         self.state = state or ConnectionState(
-            loop=get_event_loop(),
-            intents=intents,
-            bot=self,
-            shard_count=shards,
-            timeout=cache_timeout
+            loop=get_event_loop(), intents=intents, bot=self, shard_count=shards, timeout=cache_timeout
         )
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
-        self.factory = RESTFactory(
-            state=self.state, proxy=proxy, proxy_auth=proxy_auth, version=api_version
-        )
+        self.factory = RESTFactory(state=self.state, proxy=proxy, proxy_auth=proxy_auth, version=api_version)
         self.application = ApplicationCommandRegistry(self.factory, self.state)
         self.gateway = Gateway(
             state=self.state,
@@ -416,9 +410,7 @@ class Client:
 
         def decorator(func: CFT) -> CFT:
             _name = func.__name__ if name is None else name
-            description = (
-                "No description provided" if func.__doc__ is None else func.__doc__
-            )
+            description = "No description provided" if func.__doc__ is None else func.__doc__
 
             if guild_ids is not None:
                 for guild in guild_ids:
@@ -530,9 +522,7 @@ class Client:
         components: List[ModalComponent],
         custom_id: int = utils.create_snowflake(),
     ):
-        return Modal(self.state).create(
-            title=title, callback=callback, components=components, custom_id=custom_id
-        )
+        return Modal(self.state).create(title=title, callback=callback, components=components, custom_id=custom_id)
 
     async def _register_cog_commands(self, real: Cog):
         await asyncio.sleep(20)

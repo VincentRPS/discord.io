@@ -276,10 +276,7 @@ class Guild:
         List[Union[:class:`TextChannel`, :class:`VoiceChannel`, :class:`Category`, :class:`DMChannel`, :class:`GroupDMChannel`, :class:`Thread`]]
         """
         raw = await self._factory.channels.get_guild_channels(self.id)
-        return [
-            channel_parse(channel['type'], channel, self._factory.state)
-            for channel in raw
-        ]
+        return [channel_parse(channel['type'], channel, self._factory.state) for channel in raw]
 
     async def get_bans(self):
         """Gives a list of :class:`Ban`
@@ -380,9 +377,7 @@ class Role:
         -------
         :class:`str`
         """
-        return parse_role_icon(
-            format=format, role_id=self.id, role_icon=self.from_dict['icon']
-        )
+        return parse_role_icon(format=format, role_id=self.id, role_icon=self.from_dict['icon'])
 
     def unicode_emoji(self) -> str:
         """Gives the roles unicode emoji
@@ -615,9 +610,7 @@ class ScheduledEvent:
         -------
         :class:`str`
         """
-        return parse_event_banner(
-            format=format, event_id=self.id, event_hash=self.from_dict['image']
-        )
+        return parse_event_banner(format=format, event_id=self.id, event_hash=self.from_dict['image'])
 
 
 class ScheduledEventMetadata:
@@ -677,9 +670,7 @@ class WelcomeScreen:
         -------
         list[:class:`WelcomeChannel`]
         """
-        return [
-            WelcomeChannel(channel) for channel in self.from_dict['welcome_channels']
-        ]
+        return [WelcomeChannel(channel) for channel in self.from_dict['welcome_channels']]
 
 
 class WelcomeChannel:
