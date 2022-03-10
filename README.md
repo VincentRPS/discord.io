@@ -7,7 +7,7 @@
     <p>
         <a href="https://discord.gg/cvCAwntVhm"><img src="https://img.shields.io/discord/935701676948590642?color=5865F2&logo=discord&logoColor=white" alt="discord"> </a>
         <a href="https://pypi.org/project/discord.io"><img src="https://img.shields.io/pypi/v/discord.io?label=pip" alt="pip version"> </a>
-        <a href="https://pypi.org/project/discord.io"><img src="https://img.shields.io/pypi/dm/discord.io" alt="pip downloads"> </a>
+        <a href="https://pypi.org/project/discord.io"><img src="https://static.pepy.tech/personalized-badge/discord-io?period=total&units=abbreviation&left_color=grey&right_color=green&left_text=downloads" alt="pip downloads"> </a>
     </p>
 </div>
 
