@@ -171,6 +171,10 @@ class RESTClient:
             raise DeprecationWarning(
                 'The API Version you are running has been decommissioned, please bump the version.'
             )
+        self.state.loop.create_task(self.enter())
+
+    async def enter(self):
+        self._session = aiohttp.ClientSession()
 
     async def send(  # noqa: ignore
         self,
@@ -188,8 +192,6 @@ class RESTClient:
             {k: quote(v) if isinstance(v, str) else v for k, v in route.params.items()}
         )
         bucket = route.bucket
-
-        self._session = aiohttp.ClientSession()
 
         _bucket: Lock = self.locks.get(route.endpoint)
 
@@ -246,7 +248,6 @@ class RESTClient:
 
                         try:
                             remains = r.headers.get('X-RateLimit-Remaining')
-                            reset_after = r.headers.get('X-RateLimit-Reset-After')
                         except KeyError:
                             # Some endpoints don't give you these ratelimit headers
                             # and so they will error out.
@@ -269,29 +270,10 @@ class RESTClient:
                         else:
                             buck.reset_at = None
 
-                        stream = HTTPStream(
-                            {
-                                'route': url,
-                                'bucket': route.bucket,
-                                'ratelimit_bucket': r.headers.get(
-                                    'X-RateLimit-Bucket', 
-                                    None
-                                ),
-                                'data': d,
-                                'global': d.get('global', False) if isinstance(d, dict) else False,
-                                'limit': r.headers.get('X-RateLimit-Limit', None)
-                            }
-                        )
-    
-                        self.state.http_streams.append(stream)
-
-                        _log.debug(f'Created stream for {route.endpoint}: {stream}')
-
                         if r.status == 429:
                             if not r.headers.get('via') or isinstance(d, str):
                                 # handles couldflare bans
                                 raise RESTError(d)
-
                             continue
 
                         elif r.status == 403:
@@ -302,7 +284,6 @@ class RESTClient:
                             raise ServerError(d)
                         elif 300 > r.status >= 200:
                             _log.debug('> %s (bucket: %s)', d, r.headers.get('X-RateLimit-Bucket', None))
-                            await self._session.close()
                             return d
                         elif r.status == 204:
                             pass
