@@ -69,7 +69,7 @@ class Hold:
     def pop(self, name: str):
         return self._cache.pop(name)
 
-    def pop(self, name: str, __default: Any):
+    def pop(self, name: str, __default: Any = None):
         return self._cache.pop(name, __default)
 
     def reset(self) -> None:
