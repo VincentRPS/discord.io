@@ -154,17 +154,10 @@ class OnThreadListSync(Event):
     """
 
     def process(self):
-        guild = Guild(
-            self.state.guilds.get(self.data.get('guild_id')), self.state.app.factory
-        )
-        channels = [
-            TextChannel(channel, self.state) for channel in self.data.get('channel_ids')
-        ]
+        guild = Guild(self.state.guilds.get(self.data.get('guild_id')), self.state.app.factory)
+        channels = [TextChannel(channel, self.state) for channel in self.data.get('channel_ids')]
         threads = [Thread(thread, self.state) for thread in self.data.get('threads')]
-        members = [
-            Member(member, guild.id, self.state.app.factory)
-            for member in self.data.get('members')
-        ]
+        members = [Member(member, guild.id, self.state.app.factory) for member in self.data.get('members')]
         self.dispatch('thread_list_sync', channels, threads, members)
 
 

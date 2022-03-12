@@ -75,9 +75,7 @@ class Modal:
     def __init__(self, state: ConnectionState):
         self.state = state
 
-    async def _run_callback(
-        self, coro: Callable[..., Coroutine[Any, Any, Any]], data, state
-    ) -> None:
+    async def _run_callback(self, coro: Callable[..., Coroutine[Any, Any, Any]], data, state) -> None:
         try:
             await coro(Interaction(data, state))
         except asyncio.CancelledError:

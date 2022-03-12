@@ -36,17 +36,11 @@ class Guilds:
         self.rest = rest
 
     def get_guild_member(self, guild_id, user):
-        return self.rest.send(
-            Route('GET', f'/guilds/{guild_id}/members/{user}', guild_id=guild_id)
-        )
+        return self.rest.send(Route('GET', f'/guilds/{guild_id}/members/{user}', guild_id=guild_id))
 
-    def get_guild_members(
-        self, guild_id, limit: typing.Optional[int] = 1, after: typing.Optional[int] = 0
-    ):
+    def get_guild_members(self, guild_id, limit: typing.Optional[int] = 1, after: typing.Optional[int] = 0):
         ret = {'limit': limit, 'after': after}
-        return self.rest.send(
-            Route('GET', f'/guilds/{guild_id}/members', guild_id=guild_id), json=ret
-        )
+        return self.rest.send(Route('GET', f'/guilds/{guild_id}/members', guild_id=guild_id), json=ret)
 
     def modify_guild_member(
         self,
@@ -121,9 +115,7 @@ class Guilds:
         ...
 
     def get_guild_preview(self, guild_id: int):
-        return self.rest.send(
-            Route('GET', f'/guilds/{guild_id}/preview', guild_id=guild_id)
-        )
+        return self.rest.send(Route('GET', f'/guilds/{guild_id}/preview', guild_id=guild_id))
 
     def delete_guild(
         self,
@@ -165,9 +157,7 @@ class Guilds:
 
     # scheduled events
     def get_scheduled_events(self, guild_id: int):
-        return self.rest.send(
-            Route('GET', f'/guilds/{guild_id}/scheduled-events', guild_id=guild_id)
-        )
+        return self.rest.send(Route('GET', f'/guilds/{guild_id}/scheduled-events', guild_id=guild_id))
 
     def create_scheduled_event(
         self,
@@ -285,36 +275,26 @@ class Guilds:
         if tags:
             json['tags'] = tags
         return self.rest.send(
-            Route(
-                'PATCH', f'/guilds/{guild_id}/stickers/{sticker_id}', guild_id=guild_id
-            ),
+            Route('PATCH', f'/guilds/{guild_id}/stickers/{sticker_id}', guild_id=guild_id),
             json=json,
             reason=reason,
         )
 
     def delete_guild_sticker(self, guild_id: int, sticker_id: int):
-        return self.rest.send(
-            Route(
-                'DELETE', f'/guilds/{guild_id}/stickers/{sticker_id}', guild_id=guild_id
-            )
-        )
+        return self.rest.send(Route('DELETE', f'/guilds/{guild_id}/stickers/{sticker_id}', guild_id=guild_id))
 
     def get_guild_bans(
         self,
         guild_id: int,
     ):
-        return self.rest.send(
-            Route('GET', f'/guilds/{guild_id}/bans', guild_id=guild_id)
-        )
+        return self.rest.send(Route('GET', f'/guilds/{guild_id}/bans', guild_id=guild_id))
 
     def get_guild_ban(
         self,
         guild_id: int,
         user: int,
     ):
-        return self.rest.send(
-            Route('GET', f'/guilds/{guild_id}/bans/{user}', guild_id=guild_id)
-        )
+        return self.rest.send(Route('GET', f'/guilds/{guild_id}/bans/{user}', guild_id=guild_id))
 
     def give_user_role(
         self,

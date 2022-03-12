@@ -92,16 +92,10 @@ class OnMessageDeleteBulk(Event):
     """
 
     def process(self):
-        msgs: List[Dict[str, Any]] = [
-            msg for msg in self.state.messages.get(self.data['ids'])
-        ]
+        msgs: List[Dict[str, Any]] = [msg for msg in self.state.messages.get(self.data['ids'])]
         messages = [Message(msg, self.state.app) for msg in msgs]
-        channel = TextChannel(
-            self.state.channels.get(self.data['channel_id']), self.state
-        )
-        guild = Guild(
-            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
-        )
+        channel = TextChannel(self.state.channels.get(self.data['channel_id']), self.state)
+        guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
         self.dispatch('MESSAGE_BULK_DELETE', messages, channel, guild)
 
@@ -114,9 +108,7 @@ class OnMessageReactionAdd(Event):
 
     def process(self):
         emoji = Emoji(self.data['emoji'])
-        channel = TextChannel(
-            self.state.channels.get(self.data['channel_id']), self.state
-        )
+        channel = TextChannel(self.state.channels.get(self.data['channel_id']), self.state)
         try:
             message = Message(self.state.messages.get('message_id'), self.state.app)
         except AttributeError:

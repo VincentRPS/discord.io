@@ -54,9 +54,7 @@ class File:
     ):
         if isinstance(fp, io.IOBase):
             if not (fp.seekable() and fp.readable()):
-                raise DiscordError(
-                    f'File buffer {fp!r} must be both seekable and readable.'
-                )
+                raise DiscordError(f'File buffer {fp!r} must be both seekable and readable.')
             self.fp = fp
             self._og_pos = fp.tell()
             self._owner = False
@@ -83,9 +81,7 @@ class File:
         ):
             self.filename = 'SPOILER_' + self.filename
 
-        self.spoiler = spoiler or (
-            self.filename is not None and self.filename.startswith('SPOILER_')
-        )
+        self.spoiler = spoiler or (self.filename is not None and self.filename.startswith('SPOILER_'))
 
     def reset(self, *, seek: t.Union[int, bool] = True) -> None:
         if seek:

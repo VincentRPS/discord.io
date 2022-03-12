@@ -84,9 +84,7 @@ class OnGuildBan(Event):
 
     def process(self):
         user = User(self.data['user'])
-        guild = Guild(
-            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
-        )
+        guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
         self.dispatch('GUILD_BAN', user, guild)
 
@@ -102,9 +100,7 @@ class OnGuildBanRemove(Event):
 
     def process(self):
         user = User(self.data['user'])
-        guild = Guild(
-            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
-        )
+        guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
         self.dispatch('GUILD_BAN_REMOVE', user, guild)
 
@@ -118,9 +114,7 @@ class OnGuildIntegrationsUpdate(Event):
     """
 
     def process(self):
-        guild = Guild(
-            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
-        )
+        guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
         self.dispatch('GUILD_INTEGRATIONS_UPDATE', guild)
 
@@ -139,9 +133,7 @@ class OnGuildEmojisUpdate(Event):
 
     def process(self):
         emojis = [Emoji(emoji) for emoji in self.data['emojis']]
-        guild = Guild(
-            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
-        )
+        guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
         self.dispatch('GUILD_EMOJIS_UPDATE', emojis, guild)
 
 
@@ -156,9 +148,7 @@ class OnGuildStickersUpdate(Event):
 
     def process(self):
         stickers = [Sticker(sticker, self.state) for sticker in self.data['stickers']]
-        guild = Guild(
-            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
-        )
+        guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
         self.dispatch('GUILD_STICKERS_UPDATE', stickers, guild)
 
@@ -176,9 +166,7 @@ class OnMemberJoin(Event):
     def process(self):
         # it says inner payload so i would guess it's a member keyword?
         member = Member(self.data, self.data['guild_id'], self.state.app.factory)
-        guild = Guild(
-            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
-        )
+        guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
         self.dispatch('MEMBER_JOIN', member, guild)
 
@@ -194,9 +182,7 @@ class OnMemberLeave(Event):
 
     def process(self):
         user = User(self.data['user'])
-        guild = Guild(
-            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
-        )
+        guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
         for member in self.state.members._cache.values():
             if member.user.id == user.id:
@@ -238,9 +224,7 @@ class OnRoleCreate(Event):
 
     def process(self):
         role = Role(self.data['role'], self.state.app.factory)
-        guild = Guild(
-            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
-        )
+        guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
         self.state.roles.new(role.id, role)
 
@@ -258,13 +242,9 @@ class OnRoleUpdate(Event):
     """
 
     def process(self):
-        before = Role(
-            self.state.roles.get(self.data['role']['id']), self.state.app.factory
-        )
+        before = Role(self.state.roles.get(self.data['role']['id']), self.state.app.factory)
         after = Role(self.data['role'], self.state.app.factory)
-        guild = Guild(
-            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
-        )
+        guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
         self.state.roles.edit(after.id, after)
 
         self.dispatch('ROLE_UPDATE', before, after, guild)
@@ -281,9 +261,7 @@ class OnRoleDelete(Event):
 
     def process(self):
         role = Role(self.state.roles.pop(self.data['role_id']), self.state.app.factory)
-        guild = Guild(
-            self.state.guilds.get(self.data['guild_id']), self.state.app.factory
-        )
+        guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
         self.dispatch('ROLE_DELETE', role, guild)
 

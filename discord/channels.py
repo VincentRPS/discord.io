@@ -222,14 +222,18 @@ class TextChannel:
         """
         return self.from_dict['last_message_id']
 
-    def category_id(self) -> int:
+    def category_id(self) -> Union[int, None]:
         """Gives the id of the category this channel is in
 
         Returns
         -------
         :class:`int`
         """
-        return self.from_dict['parent_id']
+        _raw_id = self.from_dict.get('parent_id', None)
+        if _raw_id is None:
+            return None
+        else:
+            return int(_raw_id)
 
 
 class VoiceChannel:

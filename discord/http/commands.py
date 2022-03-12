@@ -29,16 +29,10 @@ class Commands:
             json['default_permission'] = False
         if options:
             json['options'] = options
-        return self.rest.send(
-            Route('POST', f'/applications/{application_id}/commands'), json=json
-        )
+        return self.rest.send(Route('POST', f'/applications/{application_id}/commands'), json=json)
 
-    def get_global_application_command(
-        self, application_id: Snowflakeish, command: Snowflakeish
-    ):
-        return self.rest.send(
-            Route('GET', f'/applications/{application_id}/commands/{command}')
-        )
+    def get_global_application_command(self, application_id: Snowflakeish, command: Snowflakeish):
+        return self.rest.send(Route('GET', f'/applications/{application_id}/commands/{command}'))
 
     def edit_global_application_command(
         self,
@@ -202,9 +196,7 @@ class Commands:
         )
 
     def get_initial_response(self, application_id, interaction_token):
-        return self.rest.send(
-            Route('GET', f'/webhooks/{application_id}/{interaction_token}/@original')
-        )
+        return self.rest.send(Route('GET', f'/webhooks/{application_id}/{interaction_token}/@original'))
 
     # TODO: Edit and Delete initial reponse.
 
@@ -227,9 +219,7 @@ class Commands:
             json['components'] = components
         if flags is not None:
             json['flags'] = flags
-        return self.rest.send(
-            Route('POST', f'/webhooks/{application_id}/{interaction_token}'), json=json
-        )
+        return self.rest.send(Route('POST', f'/webhooks/{application_id}/{interaction_token}'), json=json)
 
     def get_followup_message(
         self,

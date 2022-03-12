@@ -15,9 +15,7 @@ async def ping(inter: discord.Interaction):
 
 
 # with options
-@client.slash_command(
-    options=[discord.Option('anime_good', 'is anime good', type=bool, required=True)]
-)
+@client.slash_command(options=[discord.Option('anime_good', 'is anime good', type=bool, required=True)])
 async def anime_good(inter: discord.Interaction):
     if inter.options[0]['value'] is True:
         await inter.respond('Nice')

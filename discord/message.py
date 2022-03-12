@@ -255,6 +255,4 @@ class Message:  # noqa: ignore
         )
 
     async def delete(self, reason: Optional[str] = None):
-        return self.app.factory.channels.delete_message(
-            channel=self.channel.id, message=self.id, reason=reason
-        )
+        return self.app.factory.channels.delete_message(channel=self.channel.id, message=self.id, reason=reason)

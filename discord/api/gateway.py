@@ -28,6 +28,7 @@ import json
 import logging
 import platform
 import zlib
+import traceback
 from random import random
 from time import perf_counter, time
 from typing import Any, Coroutine, List
@@ -107,7 +108,7 @@ class Shard:
         self._ratelimit_lock: asyncio.Lock = asyncio.Lock()
         self.ws: aiohttp.ClientWebSocketResponse = None
         self.latency: float = float('nan')
-        self.ready: asyncio.Event =  asyncio.Event()
+        self.ready: asyncio.Event = asyncio.Event()
         self.state.loop.create_task(self.enter())
 
     async def enter(self):
@@ -134,7 +135,7 @@ class Shard:
         if self._session_id is None:
             await self.identify()
             self.state.loop.create_task(self.recv())
-            self.state.loop.create_task(self.check_connection())
+            await self.check_connection()
         else:
             await self.resume()
             _log.debug('Reconnected to the Gateway')
@@ -183,14 +184,12 @@ class Shard:
     async def check_connection(self):
         await asyncio.sleep(20)
         if self.last_recv + 60.0 < perf_counter():
-            _log.warning(
-                f'Shard {self.shard_id} has stopped receiving from the gateway, reconnecting'
-            )
+            _log.warning(f'Shard {self.shard_id} has stopped receiving from the gateway, reconnecting')
             await self.ws.close(code=4000)
             await self.closed(4000)
         elif self.latency > 10:
             _log.warning(f'Shard {self.shard_id} is behind by {self.latency}')
-        self.state.loop.create_task(self.check_connection())
+        await self.check_connection()
 
     async def send(self, data: Dict) -> None:
         """Send a request to the Gateway via the shard
@@ -227,18 +226,27 @@ class Shard:
                 _log.debug('> %s', data)
 
                 self._seq = data['s']
-                self.dis.dispatch('RAW_SOCKET_RECEIVE')
+
+                try:
+                    self.dis.dispatch('RAW_SOCKET_RECEIVE')
+                except Exception as exc:
+                    traceback.print_exc()
 
                 self.last_recv = perf_counter()
 
                 if data['op'] == 0:
-                    if (
-                        data['t'] == 'READY'
-                    ):  # only fire up getting the session_id on a ready event.
+                    if data['t'] == 'READY':  # only fire up getting the session_id on a ready event.
                         await self._ready(data)
-                        self.dis.dispatch('READY')
+
+                        try:
+                            self.dis.dispatch('READY')
+                        except Exception as exc:
+                            traceback.print_exc()
                     else:
-                        catalog.Cataloger(data, self.dis, self.state)
+                        try:
+                            catalog.Cataloger(data, self.dis, self.state)
+                        except Exception as exc:
+                            traceback.print_exc()
                 elif data['op'] == 9:
                     await self.ws.close(code=4000)
                     await self.closed(4000)
@@ -347,9 +355,7 @@ class Shard:
                     'intents': self.state._bot_intents,
                     'properties': {
                         '$os': platform.system(),
-                        '$browser': 'discord.io'
-                        if self.mobile is False
-                        else 'Discord iOS',
+                        '$browser': 'discord.io' if self.mobile is False else 'Discord iOS',
                         '$device': 'discord.io',
                     },
                     'shard': (self.shard_id, self.state.shard_count),
@@ -417,7 +423,7 @@ class Gateway:
                     'active': [shard.id for shard in self.shards if shard.ready.is_set()],
                     'pending': shard - 1,
                     'session_ids': [shard._session_id for shard in self.shards],
-                    'ready': [shard.id for shard in self.shards if shard.ready.is_set()]
+                    'ready': [shard.id for shard in self.shards if shard.ready.is_set()],
                 }
             )
             _log.debug(f'Created Stream for Shard {shard!s}, {stream!s}')
@@ -447,13 +453,9 @@ class Gateway:
         await asyncio.sleep(20)
         for guild in self._s.guilds._cache.values():
             shard_id = (int(guild['id']) >> 22) % self._s.shard_count
-            await self.shards[shard_id].send(
-                {'op': 8, 'd': {'guild_id': guild['id'], 'query': '', 'limit': 0}}
-            )
+            await self.shards[shard_id].send({'op': 8, 'd': {'guild_id': guild['id'], 'query': '', 'limit': 0}})
 
-    async def voice_state(
-        self, guild: int, channel: Snowflakeish, mute: bool, deaf: bool
-    ) -> Coroutine[Any, Any, None]:
+    async def voice_state(self, guild: int, channel: Snowflakeish, mute: bool, deaf: bool) -> Coroutine[Any, Any, None]:
         json = {
             'op': 4,
             'd': {

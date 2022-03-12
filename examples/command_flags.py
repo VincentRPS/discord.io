@@ -25,9 +25,7 @@ async def ping(ctx):
     ]
 )
 async def flags(ctx: Context, word: str):
-    await ctx.send(
-        f'word: {word}\ntest: {ctx.test!s}\nbool: {ctx.bool}\nint: {ctx.int}\nfloat {ctx.float}'
-    )
+    await ctx.send(f'word: {word}\ntest: {ctx.test!s}\nbool: {ctx.bool}\nint: {ctx.int}\nfloat {ctx.float}')
 
 
 bot.run('my_token')

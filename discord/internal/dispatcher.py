@@ -125,9 +125,7 @@ class Dispatcher:
                 one_cycle = coro['one_cycle']
             except KeyError:
                 one_cycle = False
-            self.scheduler(
-                coro['main'], real_name, coro['cog'], one_cycle, *args, **kwargs
-            )
+            self.scheduler(coro['main'], real_name, coro['cog'], one_cycle, *args, **kwargs)
 
     def listen(self, coro: Coro) -> Coro:
         if not asyncio.iscoroutinefunction(coro):
@@ -143,9 +141,7 @@ class Dispatcher:
 
         return decorator
 
-    def add_listener(
-        self, func: CoroFunc, name: Optional[str] = None, cog=None, one_cycle=False
-    ):
+    def add_listener(self, func: CoroFunc, name: Optional[str] = None, cog=None, one_cycle=False):
         name = func.__name__ if name is None else name
 
         if not asyncio.iscoroutinefunction(func):

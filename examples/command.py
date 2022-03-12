@@ -1,10 +1,6 @@
 import discord
 
-intents = (
-    discord.Intents.MESSAGE_CONTENT
-    | discord.Intents.GUILD_MESSAGES
-    | discord.Intents.GUILDS
-)
+intents = discord.Intents.MESSAGE_CONTENT | discord.Intents.GUILD_MESSAGES | discord.Intents.GUILDS
 
 client = discord.Client()
 

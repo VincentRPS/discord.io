@@ -176,6 +176,4 @@ class Color:
         if '#' in hex_code:
             hex_code = hex_code.lstrip('#')
         x = len(hex_code)
-        return self.from_rgb(
-            *tuple(int(hex_code[i : i + x // 3], 16) for i in range(0, x, x // 3))
-        )
+        return self.from_rgb(*tuple(int(hex_code[i : i + x // 3], 16) for i in range(0, x, x // 3)))
