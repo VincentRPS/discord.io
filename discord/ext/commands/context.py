@@ -68,12 +68,6 @@ class Context:
     def author(self) -> "User":
         return self.message.author
 
-    def __getattribute__(self, __name: str) -> Any:
-        if __name not in self.__dict__.keys():
-            return None
-        else:
-            super.__getattribute__(self, __name)
-
     def send(
         self,
         content: Optional[str] = None,
