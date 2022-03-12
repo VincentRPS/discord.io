@@ -77,3 +77,4 @@ bot.run('my_bot_token')
 ## Useful Links
 
 The d.io [discord server](https://discord.gg/cvCAwntVhm)
+The d.io [docs](https://discordio.readthedocs.io/)
