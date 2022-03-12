@@ -24,6 +24,7 @@
 ref: https://discord.dev/resources/guild
 """
 from typing import Dict, List, Optional, Union
+import typing
 
 from .assets import Emoji, Sticker
 from .channels import channel_parse
@@ -306,6 +307,36 @@ class Guild:
     async def get_preview(self):
         raw = await self._factory.guilds.get_guild_preview(self.id)
         return GuildPreview(raw)
+
+    async def create_channel(
+        self,
+        name: str,
+        type: typing.Optional[int] = None,
+        *,
+        reason: typing.Optional[str] = None,
+        position: typing.Optional[int] = None,
+        permission_overwrites: typing.Optional[typing.List[Dict]] = None,
+        topic: typing.Optional[str] = None,
+        bitrate: typing.Optional[int] = None,
+        user_limit: typing.Optional[int] = None,
+        rate_limit_per_user: typing.Optional[int] = None,
+        nsfw: typing.Optional[bool] = False,
+        parent_id: typing.Optional[int] = None,
+    ):
+        self._factory.channels.create_guild_channel(
+            guild_id=self.id,
+            name=name,
+            type=type,
+            reason=reason,
+            position=position,
+            permission_overwrites=permission_overwrites,
+            topic=topic,
+            bitrate=bitrate,
+            user_limit=user_limit,
+            rate_limit_per_user=rate_limit_per_user,
+            nsfw=nsfw,
+            parent_id=parent_id
+        )
 
 
 def parse_role_icon(format: FormatType, role_id: int, role_icon: str) -> str:

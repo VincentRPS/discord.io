@@ -25,7 +25,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence
 
 from ...embed import Embed
 from ...file import File
-from ...message import Message
+from ...message import Message, Guild, TextChannel, User
 from ...types import allowed_mentions
 
 if TYPE_CHECKING:
@@ -38,6 +38,7 @@ class Context:
     def __init__(self, msg: Message, command_invoked_under):
         self.message = msg
         self.command: Command = command_invoked_under
+        self.pargs = []
 
         if self.command._parser:
             try:
@@ -47,6 +48,31 @@ class Context:
             else:
                 for i in self.command._parser._parser._actions:
                     setattr(self, i.dest, getattr(pargs, i.dest, None))
+                    self.pargs.append(i.dest)
+
+    @property
+    def guild_id(self) -> int:
+        return int(self.from_dict['guild_id'])
+
+    @property
+    def guild(self) -> "Guild":
+        if not self._guild:
+            self._guild = self.message.fetch_guild()
+        return self._guild
+
+    @property
+    def channel(self) -> "TextChannel":
+        return self.message.channel
+
+    @property
+    def author(self) -> "User":
+        return self.message.author
+
+    def __getattribute__(self, __name: str) -> Any:
+        if __name not in self.__dict__.keys():
+            return None
+        else:
+            super.__getattribute__(self, __name)
 
     def send(
         self,
