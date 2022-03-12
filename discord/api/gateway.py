@@ -135,7 +135,7 @@ class Shard:
         if self._session_id is None:
             await self.identify()
             self.state.loop.create_task(self.recv())
-            self.state.loop.create_task(self.check_connection())
+            await self.check_connection()
         else:
             await self.resume()
             _log.debug('Reconnected to the Gateway')
@@ -189,7 +189,7 @@ class Shard:
             await self.closed(4000)
         elif self.latency > 10:
             _log.warning(f'Shard {self.shard_id} is behind by {self.latency}')
-        self.state.loop.create_task(self.check_connection())
+        await self.check_connection()
 
     async def send(self, data: Dict) -> None:
         """Send a request to the Gateway via the shard
