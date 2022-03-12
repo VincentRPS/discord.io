@@ -28,6 +28,7 @@ import json
 import logging
 import platform
 import zlib
+import traceback
 from random import random
 from time import perf_counter, time
 from typing import Any, Coroutine, List
@@ -225,16 +226,27 @@ class Shard:
                 _log.debug('> %s', data)
 
                 self._seq = data['s']
-                self.dis.dispatch('RAW_SOCKET_RECEIVE')
+
+                try:
+                    self.dis.dispatch('RAW_SOCKET_RECEIVE')
+                except Exception as exc:
+                    traceback.print_exc()
 
                 self.last_recv = perf_counter()
 
                 if data['op'] == 0:
                     if data['t'] == 'READY':  # only fire up getting the session_id on a ready event.
                         await self._ready(data)
-                        self.dis.dispatch('READY')
+
+                        try:
+                            self.dis.dispatch('READY')
+                        except Exception as exc:
+                            traceback.print_exc()
                     else:
-                        catalog.Cataloger(data, self.dis, self.state)
+                        try:
+                            catalog.Cataloger(data, self.dis, self.state)
+                        except Exception as exc:
+                            traceback.print_exc()
                 elif data['op'] == 9:
                     await self.ws.close(code=4000)
                     await self.closed(4000)

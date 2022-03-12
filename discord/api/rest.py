@@ -118,8 +118,15 @@ class Lock:
                 break
             future.set_result(None)
 
+    async def check_loop(self):
+        if self.left:
+            if self.reserved - self.left != 0:
+                self.release()
+        self.loop.create_task(self.check_loop())
+
     async def __aenter__(self) -> Lock:
         if self.left == None:
+            await self.check_loop()
             return self
         if self.left == 0 or self.left_pending <= 0:
             fut = asyncio.Future()
