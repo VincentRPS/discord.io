@@ -51,7 +51,7 @@ class OnMessage(Event):
         for command in self.state.prefixed_commands:
             if ret.content.startswith(command.prefix):
                 content = ret.content[len(command.prefix) :]
-                if content.startswith(command.name):
+                if content.startswith(tuple([command.name, *command.aliases])):
                     command.invoke(ret, content=content)
 
 

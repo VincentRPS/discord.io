@@ -11,11 +11,13 @@ class ListenerBase:
 class CommandBase:
     def __init__(self,
         name: str = None,
+        aliases: list[str] = None,
         description: str = None,
         func: Callable = None,
-        flags: list =None
+        flags: list = None
     ) -> None:
         self.name = name or func.name
+        self.aliases = aliases or []
         self.description = description or func.__doc__
         self.func = func
         self.flags = flags

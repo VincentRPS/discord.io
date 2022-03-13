@@ -42,11 +42,12 @@ class Bot(Client):
                     prefix=self.command_prefix,
                     state=self.state,
                     description=command.description,
-                    cog=cog
+                    cog=cog,
+                    aliases=command.aliases
                 )
             )
 
-    def command(self, name: Optional[str] = None, flags: list[Flag] = []):
+    def command(self, name: Optional[str] = None, flags: list[Flag] = [], aliases: list[str] = []):
         def decorator(func: Callable) -> Command:
             _name = name or func.__name__
             _description = func.__doc__
@@ -56,6 +57,7 @@ class Bot(Client):
                 state=self.state,
                 description=_description,
                 name=_name,
+                aliases=aliases,
                 flags=flags,
             )
             self.state.prefixed_commands.append(cmd)

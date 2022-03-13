@@ -76,7 +76,7 @@ class FlagParser:
         except argparse.ArgumentError as err:
             pass
         except Exception as err:
-            raise
+            raise err
         return parsed
 
 
@@ -93,6 +93,7 @@ class Command:
         prefix: str,
         state: ConnectionState,
         *,
+        aliases: list[str] = [],
         cog=None,
         flags: list[Flag] = [],
         description: Optional[str] = None
@@ -100,6 +101,7 @@ class Command:
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Command must be a coroutine")
         self.name = name
+        self.aliases = [*aliases]
         self.coro = func
         self.prefix = prefix
         self.state = state
