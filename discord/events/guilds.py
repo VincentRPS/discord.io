@@ -21,9 +21,11 @@
 # SOFTWARE
 
 from ..assets import Emoji, Sticker
-from ..guild import Guild, Role, ScheduledEvent
+from ..guild import Guild
 from ..member import Member
 from ..user import User
+from ..scheduled_events import ScheduledEvent
+from ..roles import Role
 from .core import Event
 
 

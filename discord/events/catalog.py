@@ -21,7 +21,7 @@
 # SOFTWARE
 from discord.types import Dict
 
-from ..guild import ScheduledEvent
+from ..scheduled_events import ScheduledEvent
 from ..state import ConnectionState, member_cacher
 from .channels import (
     OnChannelCreate,

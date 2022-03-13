@@ -24,21 +24,24 @@
 ref: https://discord.dev/resources/channel
 """
 
-from typing import Any, Dict, List, Optional, Sequence
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence
 
-from discord.file import File
-from discord.types import allowed_mentions, embed_parse
-
+from .file import File
+from .types import allowed_mentions, embed_parse
+from .abc import Messageable
 from .assets import Attachment
 from .channels import TextChannel
 from .embed import Embed
 from .guild import Guild
 from .user import User
 
+if TYPE_CHECKING:
+    from .client import Client
+
 __all__: List[str] = ['Message']
 
 # makes message data readable.
-class Message:  # noqa: ignore
+class Message(Messageable):  # noqa: ignore
     """Represents a Discord Message
 
     .. versionadded:: 0.6.0
@@ -62,7 +65,7 @@ class Message:  # noqa: ignore
 
     def __init__(self, msg: dict, app):
         self.from_dict = msg
-        self.app = app
+        self.app: Client = app
         self.content: str = self.from_dict.get('content', '')
 
     def __repr__(self):
@@ -112,6 +115,7 @@ class Message:  # noqa: ignore
     async def send(
         self,
         content: Optional[str] = None,
+        *,
         files: Optional[Sequence[File]] = None,
         embed: Optional[Embed] = None,
         embeds: Optional[List[Embed]] = None,

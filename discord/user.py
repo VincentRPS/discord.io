@@ -24,11 +24,12 @@
 ref: https://discord.dev/resources/users
 """
 from typing import List
+from .mixins import Hashable
 
 __all__: List[str] = ['User']
 
 
-class User:
+class User(Hashable):
     """Represents a Discord User
 
     .. versionadded:: 0.6.0

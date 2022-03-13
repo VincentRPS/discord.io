@@ -24,7 +24,7 @@ import argparse
 import asyncio
 import inspect
 from collections import OrderedDict
-from typing import TYPE_CHECKING, Any, Callable, Optional, Union
+from typing import Any, Callable, Optional, Union
 
 from ...channels import TextChannel, VoiceChannel
 from ...internal import run_storage
@@ -90,7 +90,6 @@ class Command:
         self,
         func: Callable,
         name: str,
-        prefix: str,
         state: ConnectionState,
         *,
         cog=None,
@@ -99,13 +98,13 @@ class Command:
     ):
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Command must be a coroutine")
+        self.state = state
         self.name = name
         self.coro = func
-        self.prefix = prefix
-        self.state = state
         self.cog = cog
         self._desc = description or func.__doc__ or "No description provided"
-        self._storage = run_storage.InternalRunner(self.state.loop)
+        self.loop = self.state.loop
+        self._storage = run_storage.InternalRunner(loop=self.loop)
         self._parser = FlagParser(*flags)
         self._injector = Injector()
 
@@ -125,14 +124,14 @@ class Command:
 
     def _run(self, context, injections, *args, **kwargs):
         if injections:
-            self.state.loop.create_task(
+            self.loop.create_task(
                 self._injector.inject_callback(self.coro, context, *args, **injections, **kwargs)
             )
             return
         if self.cog:
-            self.state.loop.create_task(self._storage._run_process(self.coro, self.cog, context, *args, **kwargs))
+            self.loop.create_task(self._storage._run_process(self.coro, self.cog, context, *args, **kwargs))
         else:
-            self.state.loop.create_task(self._storage._run_process(self.coro, context, *args, **kwargs))
+            self.loop.create_task(self._storage._run_process(self.coro, context, *args, **kwargs))
 
     def _run_with_options_detected(self, context: Context):
         order = 0

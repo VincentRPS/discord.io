@@ -27,11 +27,12 @@ from typing import Any, Dict, List, Optional, Union
 
 from .http import RESTFactory
 from .user import User
+from .mixins import Hashable
 
 __all__: List[str] = ['Member']
 
 
-class Member:
+class Member(Hashable):
     """Represents a Discord Guild Member
 
     .. versionadded:: 0.7.0
@@ -222,96 +223,3 @@ class Member:
             user=self.user.id,
             reason=reason,
         )
-
-
-class Presence:
-    """Represents a Discord Presence
-
-    .. versionadded:: 0.8.0
-
-    Parameters
-    ----------
-    data: :class:`dict`
-        The raw presence data
-    """
-
-    def __init__(self, data: Dict):
-        self.from_dict = data
-
-    @property
-    def user(self) -> User:
-        """Gives the :class:`User` which has this presence
-
-        Returns
-        -------
-        :class:`User`
-        """
-        return User(self.from_dict['user'])
-
-    @property
-    def guild_id(self) -> int:
-        """Gives the id of the guild
-
-        Returns
-        -------
-        :class:`int`
-        """
-        return self.from_dict['guild_id']
-
-    @property
-    def status(self) -> str:
-        """The users current status, i.e 'online', 'offline', etc
-
-        Returns
-        -------
-        :class:`str`
-        """
-        return self.from_dict['status']
-
-    @property
-    def activites(self) -> List['Activity']:
-        """Gives the users activites
-
-        Returns
-        -------
-        List[:class:`Activity`]
-        """
-        return [Activity(raw) for raw in self.from_dict['activites']]
-
-    @property
-    def client_status(self) -> str:
-        """The users current client status, i.e desktop, mobile, etc
-
-        Returns
-        -------
-        :class:`str`
-        """
-        return self.from_dict['client_status']
-
-
-# still needs finishing i just don't feel like doing it now.
-class Activity:
-    """Represents a Discord Activity
-
-    .. versionadded:: 0.8.0
-
-    Parameters
-    ----------
-    data: :class:`dict`
-        The raw activity data
-    """
-
-    def __init__(self, data: Dict):
-        self.from_dict = data
-
-    @property
-    def name(self) -> str:
-        return self.from_dict['name']
-
-    @property
-    def type(self) -> int:
-        return self.from_dict['type']
-
-    @property
-    def url(self) -> Union[str, None]:
-        return self.from_dict['url']

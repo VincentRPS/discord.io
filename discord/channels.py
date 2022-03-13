@@ -25,6 +25,7 @@ from typing import Dict, List, Union
 from .enums import FormatType
 from .state import ConnectionState
 from .user import User
+from .abc import Messageable
 
 
 def channel_parse(type, data: Dict, state: ConnectionState):
@@ -123,7 +124,7 @@ class Category:
         return self.from_dict['guild_id']
 
 
-class TextChannel:
+class TextChannel(Messageable):
     """Represents a Discord Text Channel
 
     Parameters
@@ -133,10 +134,6 @@ class TextChannel:
     state: :class:`ConnectionState`
         The connection state
     """
-
-    def __init__(self, data: Dict, state: ConnectionState):
-        self.from_dict = data
-        self.state = state
 
     @property
     def id(self) -> int:
@@ -299,7 +296,7 @@ class VoiceChannel:
         return self.from_dict['permission_overwrites']
 
 
-class DMChannel:
+class DMChannel(Messageable):
     """Represents a Discord DM Channel
 
     .. versionadded:: 0.8.0
@@ -311,10 +308,6 @@ class DMChannel:
     state: :class:`ConnectionState`
         The connection state
     """
-
-    def __init__(self, data: Dict, state: ConnectionState):
-        self.from_dict = data
-        self.state = state
 
     def last_message_id(self) -> int:
         """The snowflake id of the last message
@@ -388,7 +381,7 @@ class GroupDMChannel(DMChannel):
         return User(user)
 
 
-class Thread:
+class Thread(Messageable):
     """Represents a Discord Thread
 
     .. versionadded:: 0.8.0

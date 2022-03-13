@@ -24,7 +24,7 @@ from typing import List, Optional, Union
 
 from ..assets import Attachment
 from ..channels import Category, TextChannel, Thread, VoiceChannel
-from ..guild import Role
+from ..roles import Role
 from ..member import Member
 from ..user import User
 
