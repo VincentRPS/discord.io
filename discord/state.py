@@ -201,7 +201,7 @@ class ConnectionState:
         .. versionadded:: 0.6.0
     """
 
-    def __init__(self, *, timeout: int = 1000, **options):
+    def __init__(self, *, timeout: int = 10000, **options):
 
         # core cache holds
         self.guilds = options.get('guild_cache_hold') or Hold()
@@ -236,9 +236,6 @@ class ConnectionState:
         self._said_hello: bool = False
         """If the Gateway got a hello or not."""
 
-        self.loop: asyncio.AbstractEventLoop = options.get('loop', None)
-        """The current loop"""
-
         self._bot_presences: List[str, Any] = []
         """The precenses"""
 
@@ -264,15 +261,13 @@ class ConnectionState:
 
         self.timeout = timeout
 
-        self.loop.create_task(self.clear_cache())
-
     async def clear_cache(self):
         await asyncio.sleep(self.timeout)
         self.messages.reset()
         self.http_streams.clear()
         self.streams.clear()
         self.stage_instances.reset()
-        self.loop.create_task(self.clear_cache())
+        await self.clear_cache()
 
 
 def member_cacher(state: ConnectionState, data: Any):

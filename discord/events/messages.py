@@ -36,7 +36,7 @@ __all__: List[str] = ['OnMessage', 'OnMessageEdit', 'OnMessageDelete']
 class OnMessage(Event):
     """Returns a :class:`Message`"""
 
-    def process(self) -> None:
+    async def process(self) -> None:
         ret = Message(self.data, self.state.app)
         self.state.messages.new(self.data['id'], self.data)
 
@@ -45,7 +45,7 @@ class OnMessage(Event):
         except TypeError:
             # DM Channels
             pass
-        self.dispatch('MESSAGE', ret)
+        await self.dispatch('MESSAGE', ret)
 
         # ext.commands
         for command in self.state.prefixed_commands:
@@ -58,14 +58,14 @@ class OnMessage(Event):
 class OnMessageEdit(Event):
     """Returns the new :class:`Message` and if cached the old :class:`Message`"""
 
-    def process(self):
+    async def process(self):
         try:
             before = Message(self.state.messages.get(self.data['id']), self.state.app)
         except KeyError:
             # if the message is not in the cache we cant really save it.
             before = None
         after = Message(self.data, self.state.app)
-        self.dispatch('MESSAGE_EDIT', before, after)
+        await self.dispatch('MESSAGE_EDIT', before, after)
 
         self.state.messages.edit(self.data['id'], self.data)
 
@@ -73,12 +73,12 @@ class OnMessageEdit(Event):
 class OnMessageDelete(Event):
     """Gives the deleted :class:`Message`"""
 
-    def process(self):
+    async def process(self):
         try:
             message = Message(self.state.messages.pop(self.data['id']), self.state.app)
         except KeyError:
             message = None
-        self.dispatch('MESSAGE_DELETE', message)
+        await self.dispatch('MESSAGE_DELETE', message)
 
 
 class OnMessageDeleteBulk(Event):
@@ -91,13 +91,13 @@ class OnMessageDeleteBulk(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         msgs: List[Dict[str, Any]] = [msg for msg in self.state.messages.get(self.data['ids'])]
         messages = [Message(msg, self.state.app) for msg in msgs]
         channel = TextChannel(self.state.channels.get(self.data['channel_id']), self.state)
         guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
-        self.dispatch('MESSAGE_BULK_DELETE', messages, channel, guild)
+        await self.dispatch('MESSAGE_BULK_DELETE', messages, channel, guild)
 
         for msg in self.data['ids']:
             self.state.messages.pop(msg)
@@ -106,7 +106,7 @@ class OnMessageDeleteBulk(Event):
 class OnMessageReactionAdd(Event):
     """Gives a :class:`Message` and a :class:`Emoji` that was added."""
 
-    def process(self):
+    async def process(self):
         emoji = Emoji(self.data['emoji'])
         channel = TextChannel(self.state.channels.get(self.data['channel_id']), self.state)
         try:
@@ -120,13 +120,13 @@ class OnMessageReactionAdd(Event):
             self.state.app.factory,
         )
 
-        self.dispatch('MESSAGE_REACTION_ADD', emoji, message, channel, guild, member)
+        await self.dispatch('MESSAGE_REACTION_ADD', emoji, message, channel, guild, member)
 
 
 class OnMessageReactionRemove(Event):
     """Gives a :class:`Message` and a :class:`Emoji` that was removed."""
 
-    def process(self):
+    async def process(self):
         emoji = Emoji(self.data['emoji'])
         channel = TextChannel(self.state.channels.get(self.data['channel_id']))
         message = Message(self.state.messages.get('message_id'), self.state.app)
@@ -137,7 +137,7 @@ class OnMessageReactionRemove(Event):
             self.state.app.factory,
         )
 
-        self.dispatch('MESSAGE_REACTION_REMOVE', emoji, message, channel, guild, member)
+        await self.dispatch('MESSAGE_REACTION_REMOVE', emoji, message, channel, guild, member)
 
 
 class OnMessageReactionRemoveAll(Event):
@@ -150,12 +150,12 @@ class OnMessageReactionRemoveAll(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         channel = TextChannel(self.state.channels.get(self.data['channel_id']))
         message = Message(self.state.messages.get('message_id'), self.state.app)
         guild = Guild(self.state.guilds.get('guild_id'), self.state.app.factory)
 
-        self.dispatch('MESSAGE_REACTION_REMOVE_ALL', message, channel, guild)
+        await self.dispatch('MESSAGE_REACTION_REMOVE_ALL', message, channel, guild)
 
 
 class OnMessageReactionRemoveEmoji(Event):
@@ -169,10 +169,10 @@ class OnMessageReactionRemoveEmoji(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         emoji = Emoji(self.data['emoji'])
         channel = TextChannel(self.state.channels.get(self.data['channel_id']))
         message = Message(self.state.messages.get('message_id'), self.state.app)
         guild = Guild(self.state.guilds.get('guild_id'), self.state.app.factory)
 
-        self.dispatch('MESSAGE_REACTION_REMOVE_EMOJI', emoji, message, channel, guild)
+        await self.dispatch('MESSAGE_REACTION_REMOVE_EMOJI', emoji, message, channel, guild)

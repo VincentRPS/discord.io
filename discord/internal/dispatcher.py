@@ -70,19 +70,7 @@ class Dispatcher:
         except Exception:
             raise
 
-    def scheduler(
-        self,
-        coro: Callable[..., Coroutine[Any, Any, Any]],
-        name: str,
-        cog: Any,
-        one_shot: bool,
-        *args: Any,
-        **kwargs: Any,
-    ) -> asyncio.Task:
-        wrap = self.run(coro, name, cog, one_shot, *args, **kwargs)
-        return self.state.loop.create_task(wrap, name=f'discord.io: {name}')
-
-    def dispatch(self, name: str, *args, **kwargs) -> None:
+    async def dispatch(self, name: str, *args, **kwargs) -> None:
         fake_name = str(name.lower())
         real_name = 'on_' + str(fake_name)
         _log.debug('Dispatching event: %s', real_name)
@@ -125,7 +113,8 @@ class Dispatcher:
                 one_cycle = coro['one_cycle']
             except KeyError:
                 one_cycle = False
-            self.scheduler(coro['main'], real_name, coro['cog'], one_cycle, *args, **kwargs)
+            
+            await self.run(coro['main'], real_name, coro['cog'], one_cycle, *args, **kwargs)
 
     def listen(self, coro: Coro) -> Coro:
         if not asyncio.iscoroutinefunction(coro):

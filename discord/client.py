@@ -28,13 +28,11 @@ import logging
 import sys
 import time
 from threading import Event
-from typing import Callable, Dict, List, Literal, Optional, TypeVar, Union
+from typing import Callable, Dict, List, Literal, Optional, TypeVar
 
 from discord.channels import VoiceChannel
 
-from . import utils
 from .api.gateway import Gateway
-from .components import Button, Modal, ModalComponent
 from .ext.cogs import Cog, ExtensionLoadError
 from .flags import Intents
 from .guild import Guild
@@ -42,21 +40,11 @@ from .http import RESTFactory
 from .interactions import ApplicationCommandRegistry
 from .internal import dispatcher
 from .state import ConnectionState
-from .ui import print_banner, start_logging
 from .user import User
 
 _log = logging.getLogger(__name__)
 __all__: List[str] = ['Client']
 CFT = TypeVar('CFT', bound='dispatcher.CoroFunc')
-
-
-def get_event_loop():
-    _fake_log = logging.getLogger('asyncio')
-    try:
-        return asyncio.get_running_loop()
-    except RuntimeError:
-        _fake_log.warning('No running event loop detected, creating one')
-        return asyncio.new_event_loop()
 
 
 class Client:
@@ -119,22 +107,17 @@ class Client:
     def __init__(
         self,
         intents: Optional[int] = Intents.ALL_UNPRIVLEDGED,
-        module: Optional[str] = 'discord',
         shards: Optional[int] = None,
         mobile: Optional[bool] = False,
         proxy: Optional[str] = None,
         proxy_auth: Optional[str] = None,
-        logs: Optional[Union[None, int, str, Dict]] = None,
-        debug: Optional[bool] = False,
         state: Optional[ConnectionState] = None,
         chunk_guild_members: Optional[bool] = False,
         api_version: Optional[int] = 10,
-        cache_timeout: Optional[int] = 1000,
+        cache_timeout: Optional[int] = 10000,
     ):
-        print_banner(module)
-        start_logging(logs, debug)
         self.state = state or ConnectionState(
-            loop=get_event_loop(), intents=intents, bot=self, shard_count=shards, timeout=cache_timeout
+            intents=intents, bot=self, shard_count=shards, timeout=cache_timeout
         )
         self.dispatcher = dispatcher.Dispatcher(state=self.state)
         self.factory = RESTFactory(state=self.state, proxy=proxy, proxy_auth=proxy_auth, version=api_version)
@@ -194,32 +177,15 @@ class Client:
 
         async def runner():
             await self.login(token=token)
-            await asyncio.sleep(0.111)  # sleep for a bit
+            await self.dispatcher.dispatch('login')
             await self.connect(token=token)
 
-        if kwargs.get('asyncio_debug', False) == True:
-            self.state.loop.set_debug(True)
+        debug = kwargs.get('asyncio_debug', False)
 
-        self.state.loop.create_task(runner())
-
-        try:
-            self.state.loop.run_forever()
-        except KeyboardInterrupt:
-            self.state.loop.create_task(self.shutdown())
-
-    def close(self):
-        self.state.loop.stop()
-        self.state.loop.close()
-
-    async def shutdown(self):
-        for shard in self.gateway.shards:
-            self.state.loop.create_task(shard.close())
-            self.state.loop.create_task(shard._session.close())
-
-        self.state.loop.create_task(self.factory.rest.close())
-
-        await asyncio.sleep(2)
-        self.close()
+        if not debug:
+            asyncio.run(runner())
+        else:
+            asyncio.run(runner(), debug=True)
 
     def fetch_guild(self, guild_id):
         """Fetches the guild from the cache
@@ -257,35 +223,6 @@ class Client:
     async def get_voice_channel(self, channel_id: int):
         raw = await self.factory.channels.get_channel(channel=channel_id)
         return VoiceChannel(raw, self.state)
-
-    def create_button(
-        self,
-        label: str,
-        callback: dispatcher.Coro,
-        style: Literal[1, 2, 3, 4, 5] = 1,
-        custom_id: str = None,
-        url: str = None,
-    ):
-        """Creates a button
-
-        Parameters
-        ----------
-        label
-            The button label
-        callback
-            The button callback
-        style
-            The button style to use
-        custom_id
-            A custom_id
-        url
-            A url
-
-            .. note::
-
-                can only be used in buttons
-        """
-        return Button(self.state).create(label, callback, style, custom_id, url)
 
     @property
     def is_ready(self):
@@ -407,14 +344,14 @@ class Client:
         default_permission: :class:`bool`
             If this slash command should have default permissions
         """
-
         def decorator(func: CFT) -> CFT:
+            loop = asyncio.get_running_loop()
             _name = func.__name__ if name is None else name
             description = "No description provided" if func.__doc__ is None else func.__doc__
 
             if guild_ids is not None:
                 for guild in guild_ids:
-                    self.state.loop.create_task(
+                    loop.create_task(
                         self.application.register_guild_slash_command(
                             guild_id=guild,
                             name=_name,
@@ -425,7 +362,7 @@ class Client:
                         )
                     )
             else:
-                self.state.loop.create_task(
+                loop.create_task(
                     self.application.register_global_slash_command(
                         name=_name,
                         description=description,
@@ -439,7 +376,7 @@ class Client:
 
         return decorator
 
-    def add_cog(self, cog: Cog, *, override: bool = False):
+    async def add_cog(self, cog: Cog, *, override: bool = False):
         if not isinstance(cog, Cog):
             raise TypeError('ALL cogs must subclass Cog.')
 
@@ -456,10 +393,10 @@ class Client:
         for name, func in cog.listeners.items():
             self.dispatcher.add_listener(func, name, cog=cog)
 
-        self.state.loop.create_task(self._register_cog_commands(real=cog))
+        await self._register_cog_commands(real=cog)
         self.cogs[name] = cog
 
-    def remove_cog(self, cog: Cog):
+    async def remove_cog(self, cog: Cog):
         self.cogs.pop(cog.__cog_name__)
         cog._eject(self)
 
@@ -469,7 +406,7 @@ class Client:
         except ImportError:
             raise TypeError('Cog is not found!')
 
-    def _extension_loader(self, spec: importlib.machinery.ModuleSpec, key: str):
+    async def _extension_loader(self, spec: importlib.machinery.ModuleSpec, key: str):
         lib = importlib.util.module_from_spec(spec)
         sys.modules[key] = lib
         try:
@@ -485,17 +422,14 @@ class Client:
             raise TypeError('There is no setup function inside your cog file!')
 
         try:
-            if asyncio.iscoroutinefunction(setup):
-                self.state.loop.create_task(setup(self))
-            else:
-                setup(self)
+            await setup(self)
         except Exception as exc:
             del sys.modules[key]
             raise ExtensionLoadError(key, exc) from exc
         else:
             self._extensions[key] = lib
 
-    def add_extension(self, name: str, *, package: Optional[str] = None):
+    async def add_extension(self, name: str, *, package: Optional[str] = None):
         name = self._resolver(name=name, package=package)
         if name in self._extensions.items():
             raise TypeError('Module is already loaded')
@@ -504,25 +438,16 @@ class Client:
         if spec is None:
             raise TypeError(f'Extension {name} is not found!')
 
-        self._extension_loader(spec, name)
+        await self._extension_loader(spec, name)
 
-    def remove_extension(self, name: str, *, package: Optional[str] = None):
+    async def remove_extension(self, name: str, *, package: Optional[str] = None):
         name = self._resolver(name=name, package=package)
         lib = self._extensions.get(name)
         if lib is None:
             raise TypeError('That Module isnt loaded')
         else:
-            self.remove_cog(name)
+            await self.remove_cog(name)
             self._extensions.pop(lib)
-
-    def create_modal(
-        self,
-        title: str,
-        callback: dispatcher.Coro,
-        components: List[ModalComponent],
-        custom_id: int = utils.create_snowflake(),
-    ):
-        return Modal(self.state).create(title=title, callback=callback, components=components, custom_id=custom_id)
 
     async def _register_cog_commands(self, real: Cog):
         await asyncio.sleep(20)
@@ -550,3 +475,7 @@ class Client:
 
     def wait_for(self, event: str):
         return self.dispatcher.wait_for(event)
+
+    @property
+    def guilds(self) -> List[Guild]:
+        return [Guild(guild, self.factory) for guild in self.state.guilds.view()]

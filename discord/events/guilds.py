@@ -38,10 +38,10 @@ class OnGuildJoin(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         ret = Guild(self.data, self.state.app.factory)
 
-        self.dispatch('GUILD_JOIN', ret)
+        await self.dispatch('GUILD_JOIN', ret)
 
 
 class OnGuildUpdate(Event):
@@ -53,12 +53,12 @@ class OnGuildUpdate(Event):
     after: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         before = Guild(self.state.guilds.get(self.data['id']), self.state.app.factory)
         after = Guild(self.data, self.state.app.factory)
         self.state.guilds.edit(self.data['id'], self.data)
 
-        self.dispatch('GUILD_UPDATE', before, after)
+        await self.dispatch('GUILD_UPDATE', before, after)
 
 
 class OnGuildLeave(Event):
@@ -69,9 +69,9 @@ class OnGuildLeave(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         guild = Guild(self.state.guilds.pop(self.data['id']), self.state.app.factory)
-        self.dispatch('GUILD_LEAVE', guild)
+        await self.dispatch('GUILD_LEAVE', guild)
 
 
 # bans
@@ -84,11 +84,11 @@ class OnGuildBan(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         user = User(self.data['user'])
         guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
-        self.dispatch('GUILD_BAN', user, guild)
+        await self.dispatch('GUILD_BAN', user, guild)
 
 
 class OnGuildBanRemove(Event):
@@ -100,11 +100,11 @@ class OnGuildBanRemove(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         user = User(self.data['user'])
         guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
-        self.dispatch('GUILD_BAN_REMOVE', user, guild)
+        await self.dispatch('GUILD_BAN_REMOVE', user, guild)
 
 
 class OnGuildIntegrationsUpdate(Event):
@@ -115,10 +115,10 @@ class OnGuildIntegrationsUpdate(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
-        self.dispatch('GUILD_INTEGRATIONS_UPDATE', guild)
+        await self.dispatch('GUILD_INTEGRATIONS_UPDATE', guild)
 
 
 # assets
@@ -133,10 +133,10 @@ class OnGuildEmojisUpdate(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         emojis = [Emoji(emoji) for emoji in self.data['emojis']]
         guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
-        self.dispatch('GUILD_EMOJIS_UPDATE', emojis, guild)
+        await self.dispatch('GUILD_EMOJIS_UPDATE', emojis, guild)
 
 
 class OnGuildStickersUpdate(Event):
@@ -148,11 +148,11 @@ class OnGuildStickersUpdate(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         stickers = [Sticker(sticker, self.state) for sticker in self.data['stickers']]
         guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
-        self.dispatch('GUILD_STICKERS_UPDATE', stickers, guild)
+        await self.dispatch('GUILD_STICKERS_UPDATE', stickers, guild)
 
 
 # members
@@ -165,12 +165,12 @@ class OnMemberJoin(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         # it says inner payload so i would guess it's a member keyword?
         member = Member(self.data, self.data['guild_id'], self.state.app.factory)
         guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
-        self.dispatch('MEMBER_JOIN', member, guild)
+        await self.dispatch('MEMBER_JOIN', member, guild)
 
 
 class OnMemberLeave(Event):
@@ -182,7 +182,7 @@ class OnMemberLeave(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         user = User(self.data['user'])
         guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
@@ -190,7 +190,7 @@ class OnMemberLeave(Event):
             if member.user.id == user.id:
                 self.state.members.pop(member)
 
-        self.dispatch('MEMBER_LEAVE', user, guild)
+        await self.dispatch('MEMBER_LEAVE', user, guild)
 
 
 class OnMemberUpdate(Event):
@@ -202,7 +202,7 @@ class OnMemberUpdate(Event):
     after: :class:`Member`
     """
 
-    def process(self):
+    async def process(self):
         before = None
         for member in self.state.members._cache.values():
             if member.user.id == self.data['user']['id']:
@@ -211,7 +211,7 @@ class OnMemberUpdate(Event):
 
         after = Member(self.data, self.data['guild_id'], self.state.app.factory)
 
-        self.dispatch('MEMBER_UPDATE', before, after)
+        await self.dispatch('MEMBER_UPDATE', before, after)
 
 
 # roles
@@ -224,13 +224,13 @@ class OnRoleCreate(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         role = Role(self.data['role'], self.state.app.factory)
         guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
         self.state.roles.new(role.id, role)
 
-        self.dispatch('ROLE_CREATE', role, guild)
+        await self.dispatch('ROLE_CREATE', role, guild)
 
 
 class OnRoleUpdate(Event):
@@ -243,13 +243,13 @@ class OnRoleUpdate(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         before = Role(self.state.roles.get(self.data['role']['id']), self.state.app.factory)
         after = Role(self.data['role'], self.state.app.factory)
         guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
         self.state.roles.edit(after.id, after)
 
-        self.dispatch('ROLE_UPDATE', before, after, guild)
+        await self.dispatch('ROLE_UPDATE', before, after, guild)
 
 
 class OnRoleDelete(Event):
@@ -261,11 +261,11 @@ class OnRoleDelete(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         role = Role(self.state.roles.pop(self.data['role_id']), self.state.app.factory)
         guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
 
-        self.dispatch('ROLE_DELETE', role, guild)
+        await self.dispatch('ROLE_DELETE', role, guild)
 
 
 class OnScheduledEventCreate(Event):
@@ -276,10 +276,10 @@ class OnScheduledEventCreate(Event):
     Event: :class:`ScheduledEvent`
     """
 
-    def process(self):
+    async def process(self):
         ret = ScheduledEvent(self.data, self.state.app.factory)
         self.state.guild_events.new(ret.id, self.data)
-        self.dispatch('scheduled_event', ret)
+        await self.dispatch('scheduled_event', ret)
 
 
 class OnScheduledEventUpdate(Event):
@@ -291,12 +291,12 @@ class OnScheduledEventUpdate(Event):
     after: :class:`SchduledEvent`
     """
 
-    def process(self):
+    async def process(self):
         after = ScheduledEvent(self.data, self.state.app.factory)
         raw_before = self.state.guild_events.get(after.id)
         before = raw_before
 
-        self.dispatch('scheduled_event_edit', before, after)
+        await self.dispatch('scheduled_event_edit', before, after)
         self.state.guild_events.edit(after.id, self.data)
 
 
@@ -308,9 +308,9 @@ class OnScheduledEventDelete(Event):
     Event: :class:`ScheduledEvent`
     """
 
-    def process(self):
+    async def process(self):
         event = ScheduledEvent(self.data, self.state.app.factory)
-        self.dispatch('scheduled_event_delete', event)
+        await self.dispatch('scheduled_event_delete', event)
         self.state.guild_events.pop(event)
 
 
@@ -324,7 +324,7 @@ class OnScheduledEventJoin(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         raw_event_id = self.data['guild_scheduled_event_id']
         raw_user_id = self.data['user_id']
         raw_guild_id = self.data['guild_id']
@@ -335,7 +335,7 @@ class OnScheduledEventJoin(Event):
         user = User(raw_user)
         guild = Guild(raw_guild)
 
-        self.dispatch('scheduled_event_join', event, user, guild)
+        await self.dispatch('scheduled_event_join', event, user, guild)
 
 
 class OnScheduledEventLeave(Event):
@@ -348,7 +348,7 @@ class OnScheduledEventLeave(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         raw_event_id = self.data['guild_scheduled_event_id']
         raw_user_id = self.data['user_id']
         raw_guild_id = self.data['guild_id']
@@ -359,4 +359,4 @@ class OnScheduledEventLeave(Event):
         user = Member(raw_user)
         guild = Guild(raw_guild)
 
-        self.dispatch('scheduled_event_leave', event, user, guild)
+        await self.dispatch('scheduled_event_leave', event, user, guild)

@@ -20,43 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import Callable, Optional
 
-from ..interactions import Interaction
-from ..internal import run_storage
-from ..partial import PartialEmoji
-from ..state import ConnectionState
-
-
-def SelectOption(
-    label: str,
-    value: str,
-    description: Optional[str] = None,
-    emoji: Optional[PartialEmoji] = None,
-    default: Optional[bool] = False,
-):
-    ...
-
-
-class Select:
-    """Represents a Discord Select Menu
-
-    .. versionadded:: 1.0
-
-    Parameters
-    ----------
-    state: :class:`ConnectionState`
-    """
-
-    def __init__(self, state: ConnectionState):
-        self.state = state
-        self.storage = run_storage.InternalRunner(self.state.loop)
-        self.func: Callable = None
-
-    def _run(self, interaction: Interaction):
-        self.state.loop.create_task(self.storage._run_process(self.func(interaction)))
-
-    def create(self, callback: Callable):
-        self.func = callback
-        data = {}
-        self.state.components[self] = {}
+class ViewStore:
+    def __init__(self):
+        pass

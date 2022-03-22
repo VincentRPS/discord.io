@@ -24,10 +24,8 @@ import asyncio
 
 from .dispatcher import Coro
 
-
 class InternalRunner:
-    def __init__(self, loop):
-        self.loop: asyncio.AbstractEventLoop = loop
+    def __init__(self):
         self.processes = {}
 
     async def _run_process(self, coro, *args, **kwargs):
@@ -35,11 +33,6 @@ class InternalRunner:
             await coro(*args, **kwargs)
         except asyncio.CancelledError:
             pass
-        except Exception:
-            raise
-
-    async def _time_process(self, time: float, coro, *args, **kwargs):
-        self.loop.call_later(time, self._run_processs(coro, *args, **kwargs))
 
     async def create_process(self, coro: Coro):
         self.processes[coro.__name__] = coro

@@ -32,17 +32,17 @@ class OnInteraction(Event):
     interaction: :class:`Interaction`
     """
 
-    def process(self):
+    async def process(self):
         for component in self.state.components.values():
             if component['id'] == self.data['data']['custom_id']:
-                self.state.loop.create_task(
+                self.loop.create_task(
                     component['self']._run_callback(component['callback'], self.data, self.state)
                 )
         try:
             for application_command in self.state.application_commands.values():
                 cog = application_command['cog']
                 if application_command['d']['id'] == self.data['data']['id']:
-                    self.state.loop.create_task(
+                    self.loop.create_task(
                         application_command['self'].run(
                             application_command['callback'],
                             self.data,
@@ -54,4 +54,4 @@ class OnInteraction(Event):
             # components
             pass
 
-        self.dispatch('INTERACTION', Interaction(self.data, self.state))
+        await self.dispatch('INTERACTION', Interaction(self.data, self.state))

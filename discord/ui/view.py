@@ -20,29 +20,5 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-import abc
-import asyncio
-from typing import Any
-
-from ..internal.dispatcher import Dispatcher
-from ..state import ConnectionState
-
-
-class Event(abc.ABC):
-    """The base event class for all events."""
-
-    def __init__(self, data, dispatcher: Dispatcher, state: ConnectionState):
-        self.data: dict = data
-        self.dispatch = dispatcher.dispatch
-        self.state = state
-        loop = asyncio.get_event_loop()
-        loop.create_task(self.process())
-        self.loop = loop
-
-    @property
-    def app(self) -> Any:
-        return self.state.app
-
-    # meant to be overridden.
-    async def process(self) -> None:
-        ...
+class View:
+    ...

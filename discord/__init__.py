@@ -23,7 +23,7 @@ from .channels import *
 from .client import *
 from .color import *
 from .colour import *
-from .components import *
+from .ui import *
 from .embed import *
 from .enums import *
 from .events import *
@@ -38,7 +38,6 @@ from .message import *
 from .snowflake import *
 from .state import *
 from .types import *
-from .ui import *
 from .user import *
 from .utils import *
 from .webhooks import *

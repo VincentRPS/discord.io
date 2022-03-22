@@ -1,2 +1,1 @@
-aiohttp~=3.8 # http module for asyncio.
-colorlog~=6.6 # colored terminal logging.
+aiohttp~=3.8

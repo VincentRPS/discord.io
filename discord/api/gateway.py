@@ -109,7 +109,7 @@ class Shard:
         self.ws: aiohttp.ClientWebSocketResponse = None
         self.latency: float = float('nan')
         self.ready: asyncio.Event = asyncio.Event()
-        self.state.loop.create_task(self.enter())
+        self.loop = asyncio.get_running_loop()
 
     async def enter(self):
         self._session = aiohttp.ClientSession()
@@ -129,12 +129,13 @@ class Shard:
         ws
             The WebSocket connection.
         """
+
         self.ws = await self._session.ws_connect(self.url)
 
         self.token = token
         if self._session_id is None:
             await self.identify()
-            self.state.loop.create_task(self.recv())
+            self.loop.create_task(self.recv())
             await self.check_connection()
         else:
             await self.resume()
@@ -164,8 +165,6 @@ class Shard:
             return self.per - (now - self.window)
 
         self.remaining -= 1
-        if self.remaining == 0:
-            self.window = now
 
         return 0.0
 
@@ -228,7 +227,7 @@ class Shard:
                 self._seq = data['s']
 
                 try:
-                    self.dis.dispatch('RAW_SOCKET_RECEIVE')
+                    await self.dis.dispatch('RAW_SOCKET_RECEIVE')
                 except Exception as exc:
                     traceback.print_exc()
 
@@ -239,12 +238,12 @@ class Shard:
                         await self._ready(data)
 
                         try:
-                            self.dis.dispatch('READY')
+                            await self.dis.dispatch('READY')
                         except Exception as exc:
                             traceback.print_exc()
                     else:
                         try:
-                            catalog.Cataloger(data, self.dis, self.state)
+                            await catalog.Cataloger.run(data, self.dis, self.state)
                         except Exception as exc:
                             traceback.print_exc()
                 elif data['op'] == 9:
@@ -256,7 +255,7 @@ class Shard:
                     self.last_ack = perf_counter()
                     _log.debug('> %s', data)
                 else:
-                    self.dis.dispatch(data['op'], data)
+                    await self.dis.dispatch(data['op'], data)
 
             else:
                 raise RuntimeError
@@ -328,7 +327,7 @@ class Shard:
         if not self.ws.closed:
             await self.send({'op': 1, 'd': self._seq})
             await asyncio.sleep(interval)
-            self.state.loop.create_task(self.heartbeat(interval))
+            self.loop.create_task(self.heartbeat(interval))
 
     async def close(self, code: int = 4000) -> None:
         if self.ws:
@@ -339,7 +338,7 @@ class Shard:
         interval = data['d']['heartbeat_interval'] / 1000
         init = interval * random()
         await asyncio.sleep(init)
-        self.state.loop.create_task(self.heartbeat(interval))
+        self.loop.create_task(self.heartbeat(interval))
 
     async def _ready(self, data: Dict) -> None:
         self._session_id = data['d']['session_id']
@@ -417,17 +416,6 @@ class Gateway:
             shds = self.count
 
         for shard in range(shds):
-            stream = ShardStream(
-                {
-                    'intents': self._s._bot_intents,
-                    'active': [shard.id for shard in self.shards if shard.ready.is_set()],
-                    'pending': shard - 1,
-                    'session_ids': [shard._session_id for shard in self.shards],
-                    'ready': [shard.id for shard in self.shards if shard.ready.is_set()],
-                }
-            )
-            _log.debug(f'Created Stream for Shard {shard}, {stream}')
-            self._s.shard_streams.append(stream)
             s = Shard(
                 self._s,
                 self._d,
@@ -435,7 +423,8 @@ class Gateway:
                 mobile=self.mobile,
                 url=r['url'] + url_extension,
             )
-            self._s.loop.create_task(s.connect(token))
+            await s.enter()
+            await s.connect(token)
             while not s.ready.is_set():
                 await s.ready.wait()
             self.shards.append(s)

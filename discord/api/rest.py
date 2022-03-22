@@ -173,12 +173,12 @@ class RESTClient:
         self.url = f'https://discord.com/api/v{version}'
         self.locks = {}
         self.specific_limits: typing.Dict[str, int] = {'/channels': 500}
+        self.enterance_opened = False
 
         if version < 8:
             raise DeprecationWarning(
                 'The API Version you are running has been decommissioned, please bump the version.'
             )
-        self.state.loop.create_task(self.enter())
 
     async def enter(self):
         self._session = aiohttp.ClientSession()
@@ -194,6 +194,10 @@ class RESTClient:
 
         .. versionadded:: 0.3.0
         """
+        if not self.enterance_opened:
+            await self.enter()
+            self.enterance_opened = True
+
         method = route.method
         url = self.url + route.endpoint.format_map(
             {k: quote(v) if isinstance(v, str) else v for k, v in route.params.items()}

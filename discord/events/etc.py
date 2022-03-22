@@ -36,11 +36,11 @@ class OnStageInstanceCreate(Event):
     Stage: :class:`StageInstance`
     """
 
-    def process(self):
+    async def process(self):
         ret = StageInstance(self.data)
         self.state.stage_instances.new(self.data['id'], self.data)
 
-        self.dispatch('stage_instance_create', ret)
+        await self.dispatch('stage_instance_create', ret)
 
 
 class OnStageInstanceEdit(Event):
@@ -52,12 +52,12 @@ class OnStageInstanceEdit(Event):
     after: :class:`StageInstance`
     """
 
-    def process(self):
+    async def process(self):
         before = StageInstance(self.state.stage_instances.get(self.data['id']))
         after = StageInstance(self.data)
         self.state.stage_instances.edit()
 
-        self.dispatch('stage_instance_edit', before, after)
+        await self.dispatch('stage_instance_edit', before, after)
 
 
 class OnStageInstanceDelete(Event):
@@ -68,11 +68,11 @@ class OnStageInstanceDelete(Event):
     Stage: :class:`StageInstance`
     """
 
-    def process(self):
+    async def process(self):
         ret = StageInstance(self.data)
         self.state.stage_instances.pop(self.data['id'])
 
-        self.dispatch('stage_instance_delete', ret)
+        await self.dispatch('stage_instance_delete', ret)
 
 
 class OnTyping(Event):
@@ -86,7 +86,7 @@ class OnTyping(Event):
     timestamp: :class:`str`
     """
 
-    def process(self):
+    async def process(self):
         channel = TextChannel(self.state.channels.get(self.data['channel_id']), self.state)
 
         try:
@@ -101,7 +101,7 @@ class OnTyping(Event):
         except KeyError:
             member = None
 
-        self.dispatch('typing', member, user, channel, timestamp)
+        await self.dispatch('typing', member, user, channel, timestamp)
 
 
 class OnInviteCreate(Event):
@@ -123,7 +123,7 @@ class OnInviteCreate(Event):
     uses: :class:`int`
     """
 
-    def process(self):
+    async def process(self):
         channel = TextChannel(self.state.channels.get(self.data.get('channel_id')), self.state)
         code: str = self.data.get('code')
         created_at: str = self.data.get('created_at')
@@ -137,7 +137,7 @@ class OnInviteCreate(Event):
         tempoary: bool = self.data.get('tempoary')
         uses: int = self.data.get('uses')
 
-        self.dispatch(
+        await self.dispatch(
             'invite_create',
             channel,
             code,
@@ -164,12 +164,12 @@ class OnInviteDelete(Event):
     Code: :class:`str`
     """
 
-    def process(self):
+    async def process(self):
         channel = TextChannel(self.state.channels.get(self.data.get('channel_id')), self.state)
         guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
         code: str = self.data.get('code')
 
-        self.dispatch('invite_delete', channel, guild, code)
+        await self.dispatch('invite_delete', channel, guild, code)
 
 
 class OnUserUpdate(Event):
@@ -180,10 +180,10 @@ class OnUserUpdate(Event):
     User: :class:`User`
     """
 
-    def process(self):
+    async def process(self):
         user = User(self.data)
 
-        self.dispatch('user_update', user)
+        await self.dispatch('user_update', user)
 
 
 class OnWebhooksUpdate(Event):
@@ -195,8 +195,8 @@ class OnWebhooksUpdate(Event):
     Channel: :class:`TextChannel`
     """
 
-    def process(self):
+    async def process(self):
         guild = Guild(self.state.guilds.get(self.data['guild_id']), self.state.app.factory)
         channel = TextChannel(self.state.channels.get(self.data['channel_id']), self.state)
 
-        self.dispatch('webhooks_update', guild, channel)
+        await self.dispatch('webhooks_update', guild, channel)

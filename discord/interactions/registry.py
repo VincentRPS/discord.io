@@ -39,8 +39,8 @@ class ApplicationCommandRegistry:
         self.factory = rest_factory
         self.state = state
         self.dispatcher = Dispatcher(state=self.state)
-        self.state.loop.create_task(self.on_ready())
         self.unregistered_commands: asyncio.Event = asyncio.Event()
+        self.state.app.dispatcher.add_listener(self.on_ready, cog=self)
 
     async def run(self, coro: Callable[..., Coroutine[Any, Any, Any]], data, state, cog=None) -> None:
         try:

@@ -20,117 +20,40 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-import inspect
-from collections import OrderedDict
-from typing import Any, Callable, Dict, List, Optional
+from typing import TYPE_CHECKING, Callable
 
-from .option_converter import Choice, Option
-from .registry import ApplicationCommandRegistry
-from ..state import ConnectionState
+if TYPE_CHECKING:
+    from ..client import Client
 
+class ApplicationCommandGroup:
+    def __init__(self, client: Client):
+        self.client = client
 
-class ApplicationCommand:
-    def __init__(
-        self,
-        func: Callable,
-        state: ConnectionState,
-        name: Optional[str] = None,
-        description: Optional[str] = None,
-        registry: ApplicationCommandRegistry = None,
-    ):
-        self.registry = registry
-        self.coro = func
-        self.name = func.__name__ if name is None else name
-        self.desc = description or func.__doc__ or 'No description provided'
-        self._options = []
-        self.obj: Dict[str, Any] = {
+    def _to_dict(self, name, description, func, ):
+        return {
             'self': self,
-            'options': [option for option in self._options],
+            'name': name,
+            'description': description,
+            'func': func,
         }
-        state.application_commands[name] = self.obj
-        self.state = state
 
-    @property
-    def options(self):
-        dict = OrderedDict(inspect.signature(self._callback).parameters)
-        dict.popitem(last=False)
-        return dict
-
-    def _parse_options(self):
-        for name, param in self.options.items():
-            if param.annotation == Option:
-                self._options.append(param)
+    def command(self, name: str = None, description: str = None) -> 'ApplicationCommandGroup':
+        def inner(func: Callable):
+            if name is None:
+                _name = func.__name__
             else:
-                raise RuntimeError("%s is not using the Option class!", name)
+                _name = name
+            if description is None:
+                if func.__doc__ is not None:
+                    doc = func.__doc__
+                else:
+                    raise RuntimeError(f'Command {_name} does not have a description')
+                _description = doc
+            else:
+                _description = description
 
-    @property
-    def _callback(self):
-        return self.coro
+            self.client.state.application_commands[name] = self._to_dict(_name, _description, func)
 
-    @_callback.setter
-    def _callback(self, func: Callable[..., Any]):
-        self.coro = func
-
-    def sub_command(
-        self,
-        name: Optional[str] = None,
-        description: Optional[str] = None,
-        options: List[Option] = None,
-        choices: List[Choice] = None,
-    ):
-        def decorator(func: Callable) -> ApplicationSubcommand:
-            _name = name or func.__name__
-            _description = description or func.__doc__ or 'No description provided'
-            sub_command = {
-                "name": _name,
-                "description": _description,
-                "choices": choices,
-                "type": 1,
-                'options': options,
-            }
-            self.state.application_commands[self.name]['options'].append(sub_command)
-            appended_as = len(self.state.application_commands[self.name]['options'])
-
-            cmd = ApplicationSubcommand(self.name, appended_as, sub_command, self.state)
-            return cmd
-
-        return decorator
-
-
-class ApplicationSubcommand:
-    def __init__(self, parent_name: str, append: int, data: dict, state: ConnectionState):
-        self.obj = {'options': []}
-        self.state = state
-        self.data = data
-        self._name = parent_name
-        self._append = append
-
-    def sub_command(
-        self,
-        name: Optional[str] = None,
-        description: Optional[str] = None,
-        options: Optional[List[Option]] = None,
-        choices: Optional[List[Choice]] = None,
-    ):
-        def inner(func: Callable) -> ApplicationFinalSubcommand:
-            _name = name or func.__name__
-            _description = description or func.__doc__ or 'No description provided'
-            sub_command = {
-                'name': _name,
-                'description': _description,
-                'choices': choices,
-                'type': 1,
-                'options': options,
-            }
-            self.state.application_commands[self._name]['options'][self._append].append(sub_command)
-            final = ApplicationFinalSubcommand(sub_command, self.state)
-            return final
+            return self
 
         return inner
-
-
-class ApplicationFinalSubcommand:
-    def __init__(self, data: dict, state: ConnectionState):
-        self.obj = {'options': []}
-        self.data = data
-        self.state = state

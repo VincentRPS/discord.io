@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import Optional
+from typing import Optional, List
 
 from ...client import Callable, Client
 from .core import Command, Flag
@@ -32,7 +32,7 @@ class Bot(Client):
         self.command_prefix = command_prefix
         self._cmd_cls = Command
 
-    def command(self, name: Optional[str] = None, flags: list[Flag] = []):
+    def command(self, name: Optional[str] = None, flags: List[Flag] = []):
         def decorator(func: Callable) -> Command:
             _name = name or func.__name__
             _description = func.__doc__

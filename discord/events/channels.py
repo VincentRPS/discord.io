@@ -34,10 +34,10 @@ class OnChannelCreate(Event):
     A channel type
     """
 
-    def process(self):
+    async def process(self):
         channel = channel_parse(self.data['type'], self.data, self.state)
         self.state.channels.new(channel.id, self.data)
-        self.dispatch('channel_create', channel)
+        await self.dispatch('channel_create', channel)
 
 
 class OnChannelUpdate(Event):
@@ -48,11 +48,11 @@ class OnChannelUpdate(Event):
     A channel type
     """
 
-    def process(self):
+    async def process(self):
         before_raw = self.state.channels.get(self.data['id'])
         before = channel_parse(before_raw['type'], self.data, self.state)
         after = channel_parse(self.data['type'], self.data, self.state)
-        self.dispatch('channel_edit', before, after)
+        await self.dispatch('channel_edit', before, after)
         self.state.channels.edit(before.id, self.data)
 
 
@@ -64,13 +64,13 @@ class OnChannelDelete(Event):
     A channel type, can be :class:`None`
     """
 
-    def process(self):
+    async def process(self):
         raw = self.state.channels.get(self.data['id'])
         if raw:
             channel = channel_parse(raw['type'], self.data, self.state)
         else:
             channel = None
-        self.dispatch('channel_delete', channel)
+        await self.dispatch('channel_delete', channel)
         self.state.channels.pop(self.data['id'])
 
 
@@ -84,14 +84,14 @@ class OnChannelPinsUpdate(Event):
     last_pin: :class:`str`
     """
 
-    def process(self):
+    async def process(self):
         raw = self.state.channels.get(self.data['channel_id'])
         raw_guild = self.state.guilds.get(self.data['guild_id'])
         last_pin = self.data.get('last_pin_timestamp')
         channel = TextChannel(raw, self.state)
         guild = Guild(raw_guild, self.state.app.factory)
 
-        self.dispatch('CHANNEL_PINS_UPDATE', channel, guild, last_pin)
+        await self.dispatch('CHANNEL_PINS_UPDATE', channel, guild, last_pin)
 
 
 class OnThreadCreate(Event):
@@ -102,9 +102,9 @@ class OnThreadCreate(Event):
     Thread: :class:`Thread`
     """
 
-    def process(self):
+    async def process(self):
         thread = Thread(self.data, self.state)
-        self.dispatch('thread_create', thread)
+        await self.dispatch('thread_create', thread)
 
 
 class OnThreadUpdate(Event):
@@ -116,11 +116,11 @@ class OnThreadUpdate(Event):
     after: :class:`Thread`
     """
 
-    def process(self):
+    async def process(self):
         before_raw = self.state.channels.get(self.data['id'])
         before = Thread(before_raw)
         after = Thread(self.data, self.state)
-        self.dispatch('thread_edit', before, after)
+        await self.dispatch('thread_edit', before, after)
         self.state.channels.edit(before.id, self.data)
 
 
@@ -136,10 +136,10 @@ class OnThreadDelete(Event):
     Thread: :class:`Thread`, can be :class:`None`
     """
 
-    def process(self):
+    async def process(self):
         thread_raw = self.state.channels.get(self.data['id'])
         thread = Thread(thread_raw)
-        self.dispatch('thread_delete', thread)
+        await self.dispatch('thread_delete', thread)
         self.state.channels.pop(self.data['id'])
 
 
@@ -153,12 +153,12 @@ class OnThreadListSync(Event):
     members: List[:class:`Member`]
     """
 
-    def process(self):
+    async def process(self):
         guild = Guild(self.state.guilds.get(self.data.get('guild_id')), self.state.app.factory)
         channels = [TextChannel(channel, self.state) for channel in self.data.get('channel_ids')]
         threads = [Thread(thread, self.state) for thread in self.data.get('threads')]
         members = [Member(member, guild.id, self.state.app.factory) for member in self.data.get('members')]
-        self.dispatch('thread_list_sync', channels, threads, members)
+        await self.dispatch('thread_list_sync', channels, threads, members)
 
 
 class OnThreadMemberUpdate(Event):
@@ -170,11 +170,11 @@ class OnThreadMemberUpdate(Event):
     Guild: :class:`Guild`
     """
 
-    def process(self):
+    async def process(self):
         member = ThreadMember(self.data)
         guild = Guild(self.data['guild_id'], self.state.app.factory)
 
-        self.dispatch('thread_member_update', member, guild)
+        await self.dispatch('thread_member_update', member, guild)
 
 
 class OnThreadMembersUpdate(Event):
@@ -189,14 +189,14 @@ class OnThreadMembersUpdate(Event):
     member_count: :class:`int`
     """
 
-    def process(self):
+    async def process(self):
         added_members = [ThreadMember(member) for member in self.data['added_members']]
         guild = Guild(self.data['guild_id'], self.state.app.factory)
         thread = Thread(self.state.channels.get(self.data['id']), self.state)
         member_count: int = self.data['member_count']
         removed_members = self.data.get('removed_member_ids')
 
-        self.dispatch(
+        await self.dispatch(
             'thread_members_update',
             thread,
             guild,

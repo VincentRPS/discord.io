@@ -24,7 +24,7 @@ import argparse
 import asyncio
 import inspect
 from collections import OrderedDict
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Optional, Union, List
 
 from ...channels import TextChannel, VoiceChannel
 from ...internal import run_storage
@@ -93,7 +93,7 @@ class Command:
         state: ConnectionState,
         *,
         cog=None,
-        flags: list[Flag] = [],
+        flags: List[Flag] = [],
         description: Optional[str] = None
     ):
         if not asyncio.iscoroutinefunction(func):
@@ -103,8 +103,7 @@ class Command:
         self.coro = func
         self.cog = cog
         self._desc = description or func.__doc__ or "No description provided"
-        self.loop = self.state.loop
-        self._storage = run_storage.InternalRunner(loop=self.loop)
+        self._storage = run_storage.InternalRunner()
         self._parser = FlagParser(*flags)
         self._injector = Injector()
 
@@ -124,14 +123,14 @@ class Command:
 
     def _run(self, context, injections, *args, **kwargs):
         if injections:
-            self.loop.create_task(
+            asyncio.create_task(
                 self._injector.inject_callback(self.coro, context, *args, **injections, **kwargs)
             )
             return
         if self.cog:
-            self.loop.create_task(self._storage._run_process(self.coro, self.cog, context, *args, **kwargs))
+            asyncio.create_task(self._storage._run_process(self.coro, self.cog, context, *args, **kwargs))
         else:
-            self.loop.create_task(self._storage._run_process(self.coro, context, *args, **kwargs))
+            asyncio.create_task(self._storage._run_process(self.coro, context, *args, **kwargs))
 
     def _run_with_options_detected(self, context: Context):
         order = 0
