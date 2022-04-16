@@ -19,7 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from typing import TYPE_CHECKING, Any, List, Optional
+from typing import TYPE_CHECKING, Any, List, Optional, Union
 
 from discord.types import allowed_mentions
 from discord.user import User
@@ -81,8 +81,8 @@ class Interaction:
         # collects the data
         self.token: str = data['token']
         self.type: int = data['type']
-        self.guild_id: int = data['guild_id']
-        self.channel_id: int = data['channel_id']
+        self.guild_id: int = data.get('guild_id')
+        self.channel_id: int = data.get('channel_id')
         self.data: Dict = data['data']
         self.id: int = data['id']
 
@@ -220,14 +220,17 @@ class Interaction:
         return self.respond(type=5, invisible=invisible)
 
     @property
-    def member(self):
+    def member(self) -> Union[Member, None]:
         """Returns the member object of the invoker.
 
         Returns
         -------
         :class:`Member`
         """
-        return Member(self.data['member'], self.state.app.factory)
+        try:
+           return Member(self.data['member'], self.state.app.factory)
+        except:
+            return None
 
     def send(self, content: Optional[str] = None, **kwargs):
         """Shorthand for :meth:`Interaction.respond`
