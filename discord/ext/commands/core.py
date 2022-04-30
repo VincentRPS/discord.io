@@ -102,6 +102,8 @@ class Command:
         self.name = name
         self.coro = func
         self.cog = cog
+        # fail safe for on_message
+        self.prefix = state.app.command_prefix
         self._desc = description or func.__doc__ or "No description provided"
         self._storage = run_storage.InternalRunner()
         self._parser = FlagParser(*flags)

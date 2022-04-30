@@ -38,7 +38,6 @@ class Bot(Client):
             _description = func.__doc__
             cmd = self._cmd_cls(
                 func=func,
-                prefix=self.command_prefix,
                 state=self.state,
                 description=_description,
                 name=_name,

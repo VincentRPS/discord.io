@@ -83,7 +83,7 @@ from .messages import (
 class Cataloger:
 
     @classmethod
-    async def run(cls, data, state, dis) -> None:
+    async def run(cls, data, dis, state) -> None:
 
         # guilds
         if data['t'] == 'GUILD_CREATE':
