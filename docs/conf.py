@@ -24,7 +24,7 @@ copyright = '2021-present, VincentRPS'
 author = 'VincentRPS'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0.0'
+release = '2.0.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -68,9 +68,8 @@ html_static_path = ['_static']
 
 # -- Extension configuration -------------------------------------------------
 
-extlinks = {
-    "issue": (f"https://github.com/VincentRPS/discord.io/issues/%s", "#"),
-}
+extlinks = {'issue': ("https://github.com/VincentRPS/discord.io/issues/%s", "#")}
+
 
 rst_prolog = """
 .. |coro| replace:: This function is a |coroutine_link|_.

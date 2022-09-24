@@ -11,36 +11,11 @@ __title__: str = 'discord.io'
 __author__: str = 'VincentRPS'
 __license__: str = 'MIT'
 __copyright__: str = 'Copyright 2021-present VincentRPS'
-__version__: str = '1.0.0'
+__version__: str = '2.0.0'
 __git_sha1__: str = 'HEAD'
 
 import logging
 import typing
-
-from .api import *
-from .assets import *
-from .channels import *
-from .client import *
-from .color import *
-from .colour import *
-from .ui import *
-from .embed import *
-from .enums import *
-from .events import *
-from .file import *
-from .flags import *
-from .guild import *
-from .http import *
-from .interactions import *
-from .internal import *
-from .member import *
-from .message import *
-from .snowflake import *
-from .state import *
-from .types import *
-from .user import *
-from .utils import *
-from .webhooks import *
 
 
 class VersionInfo(typing.NamedTuple):
@@ -51,7 +26,7 @@ class VersionInfo(typing.NamedTuple):
     serial: int
 
 
-version_info: VersionInfo = VersionInfo(major=1, minor=0, micro=0, releaselevel='final', serial=0)
+version_info: VersionInfo = VersionInfo(major=2, minor=0, micro=0, releaselevel='alpha', serial=0)
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
