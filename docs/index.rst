@@ -13,8 +13,9 @@
     <br />
    </div>
 
-Welcome to the documentation of discord.io
-discord.io is a Python based discord library, using aiohttp and asyncio.
+Welcome to the documentation of discord.io.
+
+Discord.io is a Python based discord library, using aiohttp and asyncio.
 
 Getting Started
 ---------------
