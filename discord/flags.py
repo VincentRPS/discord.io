@@ -59,6 +59,10 @@ class Flags:
     def _overwrite_flag(self, flag: int, value: bool) -> None:
         self._flag_overwrites.append((flag, value))
 
+    @property
+    def as_bit(self) -> int:
+        return sum(overwrite[0] for overwrite in self._flag_overwrites if overwrite[1] is True)
+
 
 class Intents(Flags):
     @flag
