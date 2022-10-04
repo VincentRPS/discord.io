@@ -21,7 +21,7 @@
 # SOFTWARE.
 import setuptools
 
-__version__ = str('1.0.0')
+__version__ = '2.0.0'
 
 requirements = []
 with open('requirements.txt') as f:
@@ -29,15 +29,6 @@ with open('requirements.txt') as f:
 
 packages = [
     'discord',
-    'discord.events',
-    'discord.api',
-    'discord.internal',
-    'discord.components',
-    'discord.interactions',
-    'discord.types',
-    'discord.ext.cogs',
-    'discord.ext.commands',
-    'discord.http',
 ]
 
 extra_requires = {
@@ -48,7 +39,7 @@ extra_requires = {
         'cchardet~=2.1.7',  # included in aiohttp speed.
         'ciso8601~=2.2.0',  # Faster datetime parsing.
     ],
-    'voice': ['PyNaCl~=1.5.0'],
+    # 'voice': ['PyNaCl~=1.5.0'],
     'docs': [
         'sphinx~=4.4.0',
         'furo~=2022.2.14',
@@ -78,7 +69,7 @@ setuptools.setup(
     description='Asynchronous Discord API Wrapper For Python',
     python_requires='>=3.9',
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 2 - Pre-Alpha',
         'License :: OSI Approved :: MIT License',
         'Intended Audience :: Developers',
         'Natural Language :: English',

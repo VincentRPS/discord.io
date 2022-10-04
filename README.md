@@ -17,9 +17,7 @@ Asynchronous Discord API Wrapper for Python
 
 ## Features
 
-- Sane Handling of 429s
-- User friendly interface
-- Most Gateway events
+**Discord.io is currrently facing a rewrite, we'll make sure to beautify this when we have time.**
 
 ## Installing
 
@@ -35,46 +33,7 @@ To install our speed requirements just run the following command:
 pip install discord.io[speed]
 ```
 
-For voice support run the following command:
-
-```py
-pip install discord.io[voice]
-```
-
-## Examples
-This is a quick usecase example for the library!
-
-```py
-import discord
-
-client = discord.Client()
-
-@client.event
-async def on_ready():
-    print('ready!')
-
-@client.slash_command()
-async def ping(interaction):
-    await interaction.respond('pong!')
-
-client.run('my_bot_token')
-```
-
-This is another example but with a prefixed command
-
-```py
-from discord.ext import commands
-
-bot = commands.Bot(command_prefix='!')
-
-@bot.command()
-async def ping(ctx):
-    await ctx.send('pong!')
-
-bot.run('my_bot_token')
-```
-
 ## Useful Links
 
-The d.io [discord server](https://discord.gg/cvCAwntVhm)
-The d.io [docs](https://discordio.readthedocs.io/)
+- [Discord server](https://discord.gg/cvCAwntVhm)
+- [Documentation](https://discord.readthedocs.io/)
