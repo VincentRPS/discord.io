@@ -26,6 +26,7 @@ F = TypeVar('F', bound='Flags')
 
 __all__ = ['Intents']
 
+
 class flag:
     def __init__(self, func: Callable):
         self.value: int = func(None)
@@ -53,9 +54,7 @@ class Flags:
             self._overwrite_flag(flag_value, value)
 
     def _has_flag(self, flag: int) -> bool:
-        return next(
-            (overwrite[1] for overwrite in self._flag_overwrites if overwrite[0] == flag), False
-        )
+        return next((overwrite[1] for overwrite in self._flag_overwrites if overwrite[0] == flag), False)
 
     def _overwrite_flag(self, flag: int, value: bool) -> None:
         self._flag_overwrites.append((flag, value))

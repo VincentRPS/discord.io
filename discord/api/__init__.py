@@ -15,6 +15,7 @@ from .route import BaseRoute, Route
 
 __all__ = ['Route', 'BaseRoute', 'HTTPClient']
 
+
 class HTTPClient:
     def __init__(self, token: str, base_url: str = 'https://discord.com/api/v10') -> None:
         self.base_url = base_url

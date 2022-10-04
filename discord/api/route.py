@@ -25,6 +25,7 @@ from discord.types import Snowflake
 
 __all__ = ['Route', 'BaseRoute']
 
+
 class BaseRoute:
     guild_id = Optional[int]
     channel_id = Optional[int]
