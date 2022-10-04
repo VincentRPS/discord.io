@@ -17,17 +17,17 @@ Asynchronous Discord API Wrapper for Python
 
 ## Features
 
-**Discord.io is currrently facing a rewrite, we'll make sure to beautify this when we have time.**
+**Discord.io is currrently facing a rewrite, we'll make sure to beautify this when we have time and features are partially stable.**
 
 ## Installing
 
-To Install discord.io Just run the following command:
+To Install discord.io, just run the following command:
 
 ```py
 pip install discord.io
 ```
 
-To install our speed requirements just run the following command:
+To install our speed requirements, just run the following command:
 
 ```py
 pip install discord.io[speed]
