@@ -8,10 +8,11 @@ from typing import Any, Optional
 
 from aiohttp import ClientSession
 
-from discord.__init__ import __version__, utils
+from discord.__init__ import __version__
 
 from .execution import Executer
 from .route import BaseRoute, Route
+from .. import utils
 
 __all__ = ['Route', 'BaseRoute', 'HTTPClient']
 

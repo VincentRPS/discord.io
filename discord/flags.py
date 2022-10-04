@@ -57,6 +57,9 @@ class Flags:
         return next((overwrite[1] for overwrite in self._flag_overwrites if overwrite[0] == flag), False)
 
     def _overwrite_flag(self, flag: int, value: bool) -> None:
+        if self._has_flag(flag=flag):
+            self._flag_overwrites.remove((flag, value))
+
         self._flag_overwrites.append((flag, value))
 
     @property
