@@ -1,4 +1,4 @@
 # used to communicate to Discord's REST and Gateway API via HTTP & WebSockets
 aiohttp~=3.8
 # used for colored logging and the colored banner
-colorlog~=6.6
+colorlog~=6.7
