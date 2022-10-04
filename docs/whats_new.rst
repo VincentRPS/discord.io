@@ -22,7 +22,7 @@ This is the discord.io rewrite and stablization.
 Features
 ~~~~~~~~
 
-- Events Had a overhaul, most of the api events are now supported
+- Events had a overhaul, most of the api events are now supported
 - There are many more model types now just to count some;
 
 ScheduledEvent
