@@ -13,8 +13,18 @@ Getting Started
 For people starting out, we recommend looking at the 
 examples available in the :resource:`repository <examples>`
 
+Meta
+----
+Extra pages, used for tracking or to inform.
+
+.. toctree::
+   :maxdepth: 1
+
+   whats_new
+
 Manuals
 -------
+These pages are used as manuals for developers who wants to see what something does when given something, etc.
 
 .. toctree::
    :maxdepth: 1

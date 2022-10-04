@@ -20,6 +20,7 @@ sys.path.append(os.path.abspath('extensions'))
 # -- Project information -----------------------------------------------------
 
 project = 'discord.io'
+html_title = 'discord.io'
 copyright = '2021-present, VincentRPS'
 author = 'VincentRPS'
 
@@ -41,6 +42,7 @@ extensions = [
     'exception_hierarchy',
     'resourcelinks',
     'hoverxref.extension',
+    'sphinxawesome_theme'
     # 'sphinx.ext.githubpages', putting this off until we have a domain.
 ]
 
@@ -58,7 +60,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'furo'
+html_theme = 'sphinxawesome_theme'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

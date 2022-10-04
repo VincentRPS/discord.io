@@ -42,7 +42,7 @@ extra_requires = {
     # 'voice': ['PyNaCl~=1.5.0'],
     'docs': [
         'sphinx~=4.4.0',
-        'furo~=2022.2.14',
+        'sphinxawesome-theme~=3.3.7',
         'sphinx-hoverxref~=1.0.1',
     ],
 }

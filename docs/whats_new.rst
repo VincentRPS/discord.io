@@ -23,15 +23,15 @@ Features
 ~~~~~~~~
 
 - Events had a overhaul, most of the api events are now supported
-- There are many more model types now just to count some;
+- There are many more model types now, just to count some;
 
-ScheduledEvent
-Thread
-TextChannel
-ScheduledEventMetadata
-ThreadMetadata
+    - ScheduledEvent
+    - Thread
+    - TextChannel
+    - ScheduledEventMetadata
+    - ThreadMetadata
 
-and many more!
+    and many more!
 
 Fixes
 ~~~~~
