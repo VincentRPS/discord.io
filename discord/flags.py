@@ -27,19 +27,28 @@ F = TypeVar('F', bound='Flags')
 
 class flag:
     def __init__(self, func: Callable):
-        self.value = func(None)
+        self.value: int = func(None)
         self.__doc__ = func.__doc__
 
     def __get__(self, instance: F | None, _: Type[F]) -> int | bool:
         return instance._has_flag(self.value) if instance else self.value
 
+    def __set__(self, instance: F, value: bool) -> None:
+        instance._overwrite_flag(flag=self.value, value=value)
+
 
 class Flags:
     def __init__(self, flags_value: int, /) -> None:
         self._flags_value: int = flags_value
+        self._flag_overwrites: list[tuple[int, bool]] = []
 
     def _has_flag(self, flag: int) -> bool:
-        return bool(self._flags_value & flag)
+        return next(
+            (overwrite[1] for overwrite in self._flag_overwrites if overwrite[0] == flag), bool(self._flags_value & flag)
+        )
+
+    def _overwrite_flag(self, flag: str, value: bool) -> None:
+        self._flag_overwrites.append((flag, value))
 
 
 class Intents(Flags):
