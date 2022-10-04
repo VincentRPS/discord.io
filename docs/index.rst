@@ -3,8 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to discord.io
-=====================
+.. raw:: html
+
+   <div align='left'>
+    <br />
+    <p>
+        <a href="https://github.com/VincentRPS/discord.io"><img src="https://raw.githubusercontent.com/VincentRPS/discord.io/master/docs/assets/discord.io.png" width="546" alt="discord.io" /></a>
+    </p>
+    <br />
+   </div>
+
 Welcome to the documentation of discord.io
 discord.io is a Python based discord library, using aiohttp and asyncio.
 
