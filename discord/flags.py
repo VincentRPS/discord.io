@@ -38,16 +38,25 @@ class flag:
 
 
 class Flags:
-    def __init__(self, flags_value: int, /) -> None:
-        self._flags_value: int = flags_value
+    def __init__(self, **flags_named: bool) -> None:
         self._flag_overwrites: list[tuple[int, bool]] = []
+
+        for name, value in flags_named.items():
+            if name.startswith('_'):
+                raise AttributeError('Flags cannot be private')
+
+            if not hasattr(self, name):
+                raise AttributeError(f'Flag {repr(name)} does not exist')
+
+            flag_value = getattr(self.__class__, name)
+            self._overwrite_flag(flag_value, value)
 
     def _has_flag(self, flag: int) -> bool:
         return next(
-            (overwrite[1] for overwrite in self._flag_overwrites if overwrite[0] == flag), bool(self._flags_value & flag)
+            (overwrite[1] for overwrite in self._flag_overwrites if overwrite[0] == flag), False
         )
 
-    def _overwrite_flag(self, flag: str, value: bool) -> None:
+    def _overwrite_flag(self, flag: int, value: bool) -> None:
         self._flag_overwrites.append((flag, value))
 
 
