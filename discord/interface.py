@@ -34,6 +34,7 @@ import colorlog
 
 from discord import __copyright__, __git_sha1__, __license__, __version__
 
+__all__ = ['start_logging', 'print_banner']
 
 def start_logging(flavor: Union[None, int, str, dict], debug: bool = False):
     if len(logging.root.handlers) != 0:

@@ -23,6 +23,7 @@ from typing import Optional, Union
 
 from discord.types import Snowflake
 
+__all__ = ['Route', 'BaseRoute']
 
 class BaseRoute:
     guild_id = Optional[int]

@@ -21,6 +21,7 @@
 # SOFTWARE
 from typing import Any
 
+__all__ = ['State']
 
 class State:
     def __init__(self, **options: Any) -> None:

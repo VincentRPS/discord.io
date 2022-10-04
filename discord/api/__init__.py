@@ -11,8 +11,9 @@ from aiohttp import ClientSession
 from discord.__init__ import __version__, utils
 
 from .execution import Executer
-from .route import BaseRoute
+from .route import BaseRoute, Route
 
+__all__ = ['Route', 'BaseRoute', 'HTTPClient']
 
 class HTTPClient:
     def __init__(self, token: str, base_url: str = 'https://discord.com/api/v10') -> None:

@@ -24,6 +24,7 @@ from typing import Callable, Type, TypeVar
 
 F = TypeVar('F', bound='Flags')
 
+__all__ = ['Intents']
 
 class flag:
     def __init__(self, func: Callable):
