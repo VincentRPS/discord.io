@@ -69,6 +69,7 @@ class HTTPClient:
                     is_global=r.headers.get('X-RateLimit-Scope') == 'global',
                 )
                 self._executers.remove(executer)
+                continue
 
             # TODO: Handle normal errors
 
