@@ -17,7 +17,7 @@ Asynchronous Discord API Wrapper for Python
 
 ## Features
 
-**Discord.io is currrently facing a rewrite, we'll make sure to beautify this when we have time and features are partially stable.**
+**Discord.io is currently facing a rewrite, we'll make sure to beautify this when we have time and features are partially stable.**
 
 ## Installing
 
