@@ -6,11 +6,11 @@ The discord.io version changelog
 
     This only covers changes after release 0.8.0
 
-.. _vp2p0p0:
+.. _vp0p9p0:
 
-2.0.0
+0.9.0
 -----
-This is the discord.io rewrite and stablization.
+This is the discord.io rewrite and is built upon reworking and speeding up the previous versions.
 
 .. todo:: Work on this part.
 

@@ -11,7 +11,7 @@ __title__: str = 'discord.io'
 __author__: str = 'VincentRPS'
 __license__: str = 'MIT'
 __copyright__: str = 'Copyright 2021-present VincentRPS'
-__version__: str = '2.0.0'
+__version__: str = '0.9.0'
 __git_sha1__: str = 'HEAD'
 
 import logging
