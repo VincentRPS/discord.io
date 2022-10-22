@@ -10,9 +10,9 @@ from aiohttp import ClientSession
 
 from discord.__init__ import __version__
 
+from .. import utils
 from .execution import Executer
 from .route import BaseRoute, Route
-from .. import utils
 
 __all__ = ['Route', 'BaseRoute', 'HTTPClient']
 
@@ -67,6 +67,7 @@ class HTTPClient:
                 await executer.executed(
                     reset_after=float(r.headers.get('X-RateLimit-Reset-After', 30)),
                     is_global=r.headers.get('X-RateLimit-Scope') == 'global',
+                    limit=int(r.headers.get('X-RateLimit-Limit', 5)),
                 )
                 self._executers.remove(executer)
                 continue

@@ -27,23 +27,39 @@ from ..route import BaseRoute
 
 class Executer:
     def __init__(self, route: BaseRoute) -> None:
-        self.event: Optional[asyncio.Event] = None
         self.route = route
         self.is_global: Optional[bool] = None
+        self.holding_queue: Optional[asyncio.Queue[asyncio.Event]] = None
+        self.rate_limited: bool = False
 
-    async def executed(self, reset_after: int | float, is_global: bool) -> None:
+    async def executed(self, reset_after: int | float, limit: int, is_global: bool) -> None:
+        self.rate_limited = True
         self.is_global = is_global
-
-        self.event = asyncio.Event()
+        self._reset_after = reset_after
+        self.holding_queue = asyncio.Queue()
 
         await asyncio.sleep(reset_after)
 
-        self.event.set()
+        self.is_global = False
+
+        # NOTE: This could break if someone did a second global rate limit somehow
+        requests_passed: int = 0
+        for _ in range(self.holding_queue.qsize() - 1):
+            if requests_passed == limit:
+                if not is_global:
+                    await asyncio.sleep(reset_after)
+                else:
+                    await asyncio.sleep(5)
+
+            requests_passed + 1
+            e = await self.holding_queue.get()
+            e.set()
 
     async def wait(self) -> None:
-        if not self.event:
+        if not self.rate_limited:
             return
 
-        # TODO: Implement a system to
-        # reconnect in a supplemental way
-        await self.event.wait()
+        event = asyncio.Event()
+
+        self.holding_queue.put(event)
+        await event.wait()
