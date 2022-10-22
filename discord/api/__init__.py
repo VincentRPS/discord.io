@@ -4,6 +4,7 @@ discord.api
 Implementation of the Discord API.
 """
 import json
+import logging
 from typing import Any, Optional
 
 from aiohttp import ClientSession
@@ -15,6 +16,8 @@ from .execution import Executer
 from .route import BaseRoute, Route
 
 __all__ = ['Route', 'BaseRoute', 'HTTPClient']
+
+_log = logging.getLogger(__name__)
 
 
 class HTTPClient:
@@ -53,21 +56,26 @@ class HTTPClient:
             data: str = json.dumps(data)
             headers.update({'Content-Type': 'application/json'})
 
+        _log.debug(f'Requesting to {endpoint} with {data}, {headers}')
+
         for executer in self._executers:
             if executer.is_global or executer.route == route:
+                _log.debug(f'Pausing request to {endpoint}: Found rate limit executer')
                 await executer.wait()
 
         for _ in range(5):
             r = await self._session.request(method, endpoint, data=data, headers=headers)
 
             if r.status == 429:
+                _log.debug(f'Request to {endpoint} failed: Request returned rate limit')
                 executer = Executer(route=route)
 
                 self._executers.append(executer)
+                _json = await r.json()
                 await executer.executed(
-                    reset_after=float(r.headers.get('X-RateLimit-Reset-After', 30)),
+                    reset_after=_json['retry_after'],
                     is_global=r.headers.get('X-RateLimit-Scope') == 'global',
-                    limit=int(r.headers.get('X-RateLimit-Limit', 5)),
+                    limit=int(r.headers.get('X-RateLimit-Limit', 10)),
                 )
                 self._executers.remove(executer)
                 continue
