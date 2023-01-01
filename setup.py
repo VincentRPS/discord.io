@@ -19,9 +19,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+import os
 import setuptools
 
-__version__ = '0.9.0'
+__version__ = '1.0.0'
 
 requirements = []
 with open('requirements.txt') as f:
@@ -29,33 +30,28 @@ with open('requirements.txt') as f:
 
 packages = [
     'discord',
+    'discord.api',
+    'discord.types'
 ]
 
-extra_requires = {
-    'speed': [
-        'orjson~=3.6.5',  # Faster alternative to the normal json module.
-        'aiodns~=3.0',  # included in aiohttp speed.
-        'Brotli~=1.0.9',  # included in aiohttp speed.
-        'cchardet~=2.1.7',  # included in aiohttp speed.
-        'ciso8601~=2.2.0',  # Faster datetime parsing.
-    ],
-    # 'voice': ['PyNaCl~=1.5.0'],
-    'docs': [
-        'sphinx~=4.4.0',
-        'sphinxawesome-theme~=3.3.7',
-        'sphinx-hoverxref~=1.0.1',
-    ],
-}
+
+def get_extra_requirements() -> dict[str, list[str]]:
+    extra_requirements = {}
+    for fn in os.scandir('extras'):
+        if fn.is_file():
+            with open(fn) as f:
+                extra_requirements[fn.name] = f.read().splitlines()
+    return extra_requirements
 
 setuptools.setup(
     name='discord.io',
     version=__version__,
     packages=packages,
     package_data={
-        'discord': ['banner.txt', 'bin/*.dll'],
+        'discord': ['banner2.txt', 'bin/*.dll'],
     },
     project_urls={
-        'Documentation': 'https://discordio.rtfd.io',
+        'Documentation': 'https://discord.rtfd.io',
         'Issue Tracker': 'https://github.com/VincentRPS/discord.io/issues',
         'Pull Request Tracker': 'https://github.com/VincentRPS/discord.io/pulls',
     },
@@ -65,17 +61,17 @@ setuptools.setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     install_requires=requirements,
-    extras_require=extra_requires,
+    extras_require=get_extra_requirements(),
     description='Asynchronous Discord API Wrapper For Python',
-    python_requires='>=3.9',
+    python_requires='>=3.10',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'License :: OSI Approved :: MIT License',
         'Intended Audience :: Developers',
         'Natural Language :: English',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: Implementation :: CPython',
         'Framework :: AsyncIO',
         'Framework :: aiohttp',

@@ -32,7 +32,7 @@ from typing import Optional, Union
 
 import colorlog
 
-from discord import __copyright__, __git_sha1__, __license__, __version__
+from discord._about import __copyright__, __git_sha1__, __license__, __version__
 
 __all__ = ['start_logging', 'print_banner']
 
@@ -73,8 +73,9 @@ def start_logging(flavor: Union[None, int, str, dict], debug: bool = False):
     logging.captureWarnings(True)
 
 
-def print_banner(module: Optional[str] = 'discord'):
+def print_banner(module: Optional[str] = 'discord.panels'):
     banner = importlib.resources.read_text(module, 'banner.txt')
+    info = importlib.resources.read_text(module, 'info.txt')
     today = datetime.date.today()
 
     args = {
@@ -88,5 +89,6 @@ def print_banner(module: Optional[str] = 'discord'):
     args |= colorlog.escape_codes.escape_codes
 
     sys.stdout.write(string.Template(banner).safe_substitute(args))
+    sys.stdout.write(string.Template(info).safe_substitute(args))
     sys.stdout.flush()
     time.sleep(0.162)  # sleep for a bit.

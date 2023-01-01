@@ -22,7 +22,7 @@
 import asyncio
 from typing import Optional
 
-from ..route import BaseRoute
+from .route import BaseRoute
 
 
 class Executer:

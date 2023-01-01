@@ -21,7 +21,7 @@
 # SOFTWARE
 from typing import Optional, Union
 
-from discord.types import Snowflake
+from discord.traits import Snowflake
 
 __all__ = ['Route', 'BaseRoute']
 

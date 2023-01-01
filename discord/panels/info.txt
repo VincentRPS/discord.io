@@ -1,0 +1,9 @@
+                                        ${bold_white}Welcome to discord.io v{version}!
+
+                                    Copyright: ${copyright}
+                                    License: ${license}
+                                    Time: ${current_time}
+                                    Python: ${py_version}
+                                    Git Sha: ${git_sha}
+                                    Discord: https://discord.gg/H3jY8snYXN${reset}
+

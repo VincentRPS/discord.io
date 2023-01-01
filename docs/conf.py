@@ -25,7 +25,7 @@ copyright = '2021-present, VincentRPS'
 author = 'VincentRPS'
 
 # The full version, including alpha/beta/rc tags
-release = '0.9.0'
+release = '1.0.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -41,9 +41,7 @@ extensions = [
     'sphinx.ext.extlinks',
     'exception_hierarchy',
     'resourcelinks',
-    'hoverxref.extension',
-    'sphinxawesome_theme'
-    # 'sphinx.ext.githubpages', putting this off until we have a domain.
+    # 'sphinx.ext.githubpages', putting this off for later
 ]
 
 # Add any paths that contain templates here, relative to this directory.

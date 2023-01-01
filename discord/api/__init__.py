@@ -9,10 +9,10 @@ from typing import Any, Optional
 
 from aiohttp import ClientSession
 
-from discord.__init__ import __version__
+from discord._about import __version__
 
 from .. import utils
-from .execution import Executer
+from .rate_limiter import Executer
 from .route import BaseRoute, Route
 
 __all__ = ['Route', 'BaseRoute', 'HTTPClient']
