@@ -22,7 +22,7 @@
 import os
 import setuptools
 
-__version__ = '1.0.0'
+__version__ = '2.0.0'
 
 requirements = []
 with open('requirements.txt') as f:

@@ -23,31 +23,10 @@ from typing import Optional, Union
 
 from discord.traits import Snowflake
 
-__all__ = ['Route', 'BaseRoute']
+__all__ = ['Route']
 
 
-class BaseRoute:
-    guild_id = Optional[int]
-    channel_id = Optional[int]
-    webhook_id: Optional[int]
-    webhook_token: Optional[str]
-
-    def __init__(
-        self,
-        path: str,
-        guild_id: Optional[Snowflake] = None,
-        channel_id: Optional[Snowflake] = None,
-        webhook_id: Optional[Snowflake] = None,
-        webhook_token: Optional[str] = None,
-        **parameters: Union[str, int],
-    ) -> None:
-        ...
-
-    def merge(self, url: str) -> str:
-        pass
-
-
-class Route(BaseRoute):
+class Route:
     def __init__(
         self,
         path: str,

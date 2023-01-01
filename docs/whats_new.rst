@@ -8,7 +8,7 @@ The discord.io version changelog
 
 .. _vp0p9p0:
 
-1.0.0
+2.0.0
 -----
 This is the discord.io rewrite and is built upon reworking and speeding up the previous versions.
 

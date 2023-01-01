@@ -13,9 +13,9 @@ from discord._about import __version__
 
 from .. import utils
 from .rate_limiter import Executer
-from .route import BaseRoute, Route
+from .route import Route
 
-__all__ = ['Route', 'BaseRoute', 'HTTPClient']
+__all__ = ['Route', 'HTTPClient']
 
 _log = logging.getLogger(__name__)
 
@@ -31,20 +31,26 @@ class HTTPClient:
         self._session: None | ClientSession = None
         self._executers: list[Executer] = []
 
-    async def create_session(self) -> None:
-        self._session = ClientSession()
+    async def create_session(self) -> ClientSession:
+        return ClientSession()
 
     async def close_session(self) -> None:
-        await self._session.close()
-        self._session = None
+        if self._session:
+            await self._session.close()
+            self._session = None
 
     async def request(
-        self, method: str, route: BaseRoute, data: Optional[dict[str, Any]] = None, *, reason: Optional[str] = None
-    ) -> None:
+        self,
+        method: str,
+        route: Route,
+        data: Optional[dict[str, Any]] = None,
+        *,
+        reason: Optional[str] = None
+    ) -> str | dict[str, Any] | None:
         endpoint = route.merge(self.base_url)
 
         if self._session is None:
-            await self.create_session()
+            self._session = await self.create_session()
 
         headers = self._headers.copy()
 
@@ -53,8 +59,10 @@ class HTTPClient:
 
         if data:
             # TODO: Support msgspec
-            data: str = json.dumps(data)
+            encoded_data = json.dumps(data)
             headers.update({'Content-Type': 'application/json'})
+        else:
+            encoded_data = None
 
         _log.debug(f'Requesting to {endpoint} with {data}, {headers}')
 
@@ -64,7 +72,7 @@ class HTTPClient:
                 await executer.wait()
 
         for _ in range(5):
-            r = await self._session.request(method, endpoint, data=data, headers=headers)
+            r = await self._session.request(method, endpoint, data=encoded_data, headers=headers)
 
             if r.status == 429:
                 _log.debug(f'Request to {endpoint} failed: Request returned rate limit')

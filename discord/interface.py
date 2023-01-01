@@ -28,9 +28,10 @@ import string
 import sys
 import time
 import warnings
-from typing import Optional, Union
+from typing import Union
 
 import colorlog
+import colorlog.escape_codes
 
 from discord._about import __copyright__, __git_sha1__, __license__, __version__
 
@@ -73,7 +74,7 @@ def start_logging(flavor: Union[None, int, str, dict], debug: bool = False):
     logging.captureWarnings(True)
 
 
-def print_banner(module: Optional[str] = 'discord.panels'):
+def print_banner(module: str = 'discord.panels'):
     banner = importlib.resources.read_text(module, 'banner.txt')
     info = importlib.resources.read_text(module, 'info.txt')
     today = datetime.date.today()

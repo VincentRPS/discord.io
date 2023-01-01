@@ -22,11 +22,11 @@
 import asyncio
 from typing import Optional
 
-from .route import BaseRoute
+from .route import Route
 
 
 class Executer:
-    def __init__(self, route: BaseRoute) -> None:
+    def __init__(self, route: Route) -> None:
         self.route = route
         self.is_global: Optional[bool] = None
         self.holding_queue: Optional[asyncio.Queue[asyncio.Event]] = None
@@ -51,7 +51,7 @@ class Executer:
                 else:
                     await asyncio.sleep(5)
 
-            requests_passed + 1
+            requests_passed += 1
             e = await self.holding_queue.get()
             e.set()
 
@@ -59,7 +59,8 @@ class Executer:
         if not self.rate_limited:
             return
 
-        event = asyncio.Event()
+        if self.holding_queue:
+            event = asyncio.Event()
 
-        self.holding_queue.put(event)
-        await event.wait()
+            await self.holding_queue.put(event)
+            await event.wait()

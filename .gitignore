@@ -15,3 +15,4 @@ test.py
 .nox/
 *.inv
 ci.py
+.vscode
