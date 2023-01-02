@@ -2,3 +2,5 @@
 aiohttp~=3.8
 # used for colored logging and the colored banner
 colorlog~=6.7
+# classes without boilerplate
+attrs==22.2.0

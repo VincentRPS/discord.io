@@ -19,14 +19,23 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-from typing import Any
 
-__all__ = ['State']
+from typing import TYPE_CHECKING, TypeVar, Callable
 
 
-class State:
-    def __init__(self, **options: Any) -> None:
-        self.max_messages = options.get('max_messages')
+if TYPE_CHECKING:
+    from ..internal import subscriptor
+    from ..events.base import BaseEvent
 
-    def reset(self) -> None:
-        pass
+
+AF = TypeVar('AF', bound="subscriptor.AsyncFunc")
+
+class BaseApp:
+    async def start(self, token: str, asyncio_debug: bool = False) -> None:
+        ...
+
+    def run(self, token: str, asyncio_debug: bool = False) -> None:
+        ...
+
+    def subscribe(self, event: "BaseEvent") -> Callable[..., AF]:
+        ...

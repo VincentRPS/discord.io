@@ -19,14 +19,38 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
+
+from types import SimpleNamespace
 from typing import Any
+import typing_extensions
 
-__all__ = ['State']
+from discord import traits
 
 
-class State:
-    def __init__(self, **options: Any) -> None:
-        self.max_messages = options.get('max_messages')
+class BaseEvent(SimpleNamespace):
+    _type: str | None = None
+    _app: traits.BaseApp
 
-    def reset(self) -> None:
-        pass
+    @classmethod
+    def construct(cls, *args, **kwargs) -> None:
+        ...
+
+    @property
+    def app(self) -> traits.BaseApp:
+        return self._app
+
+
+class UnknownEvent(BaseEvent):
+    """
+    An event which is either unknown or not subscribed to
+    """
+
+    _type: str = 'UNKNOWN'
+    unknown_data: dict[str, Any]
+
+    @classmethod
+    def construct(cls, app: traits.BaseApp, data: dict[str, Any]) -> typing_extensions.Self:
+        self = cls()
+        self.unknown_data = data
+        self._app = app
+        return self

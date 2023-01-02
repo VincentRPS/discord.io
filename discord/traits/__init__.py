@@ -1,6 +1,7 @@
 """
 discord.types
 ~~~~~~~~~~~~~
-Typing's for the Discord API.
+Typings for the Discord API.
 """
 from .snowflake import *
+from .app import *

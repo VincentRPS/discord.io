@@ -22,7 +22,7 @@
 import os
 import setuptools
 
-__version__ = '2.0.0'
+version = '2.0.0'
 
 requirements = []
 with open('requirements.txt') as f:
@@ -31,7 +31,8 @@ with open('requirements.txt') as f:
 packages = [
     'discord',
     'discord.api',
-    'discord.types'
+    'discord.traits',
+    'discord.internal',
 ]
 
 
@@ -45,10 +46,10 @@ def get_extra_requirements() -> dict[str, list[str]]:
 
 setuptools.setup(
     name='discord.io',
-    version=__version__,
+    version=version,
     packages=packages,
     package_data={
-        'discord': ['banner2.txt', 'bin/*.dll'],
+        'discord': ['panels/banner.txt', 'panels/info.txt', 'bin/*.dll'],
     },
     project_urls={
         'Documentation': 'https://discord.rtfd.io',
