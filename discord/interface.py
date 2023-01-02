@@ -76,7 +76,6 @@ def start_logging(flavor: Union[None, int, str, dict], debug: bool = False):
 
 def print_banner(module: str = 'discord.panels'):
     banner = importlib.resources.read_text(module, 'banner.txt')
-    info = importlib.resources.read_text(module, 'info.txt')
     today = datetime.date.today()
 
     args = {
@@ -90,6 +89,5 @@ def print_banner(module: str = 'discord.panels'):
     args |= colorlog.escape_codes.escape_codes
 
     sys.stdout.write(string.Template(banner).safe_substitute(args))
-    sys.stdout.write(string.Template(info).safe_substitute(args))
     sys.stdout.flush()
     time.sleep(0.162)  # sleep for a bit.

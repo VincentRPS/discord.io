@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 import os
+
 import setuptools
 
 version = '2.0.0'
@@ -32,6 +33,7 @@ packages = [
     'discord',
     'discord.api',
     'discord.traits',
+    'discord.gateway',
     'discord.internal',
 ]
 
@@ -43,6 +45,7 @@ def get_extra_requirements() -> dict[str, list[str]]:
             with open(fn) as f:
                 extra_requirements[fn.name] = f.read().splitlines()
     return extra_requirements
+
 
 setuptools.setup(
     name='discord.io',

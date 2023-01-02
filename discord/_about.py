@@ -8,6 +8,7 @@ __copyright__: str = 'Copyright 2021-present VincentRPS'
 __version__: str = '2.0.0'
 __git_sha1__: str = 'HEAD'
 
+
 class VersionInfo(typing.NamedTuple):
     major: int
     minor: int

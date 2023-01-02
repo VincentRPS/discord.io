@@ -20,18 +20,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import TYPE_CHECKING, Any, Callable
 
-if TYPE_CHECKING:
-    from ..events.base import BaseEvent
+from discord import traits
 
+from ..internal import Subscriptor
+from .concurrer import Concurrer
 
-class BaseApp:
-    async def start(self, token: str, asyncio_debug: bool = False) -> None:
-        ...
+__all__ = ['GatewayState']
 
-    def run(self, token: str, asyncio_debug: bool = False) -> None:
-        ...
-
-    def subscribe(self, event: "BaseEvent") -> Callable[..., Any]:
-        ...
+class GatewayState:
+    def __init__(self, app: traits.BaseApp, shard_concurrency: tuple[int, int], intents: int) -> None:
+        self.concurrency = Concurrer(shard_concurrency[0], shard_concurrency[1])
+        self.intents = intents
+        self.user_ready = None
+        self.subscriptor = Subscriptor(app)

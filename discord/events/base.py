@@ -22,6 +22,7 @@
 
 from types import SimpleNamespace
 from typing import Any
+
 import typing_extensions
 
 from discord import traits
@@ -38,6 +39,25 @@ class BaseEvent(SimpleNamespace):
     @property
     def app(self) -> traits.BaseApp:
         return self._app
+
+
+class ReadyEvent(BaseEvent):
+    _type = 'on_ready'
+    version: int
+    guild_ids: int
+    shard: tuple[int, int]
+    session_id: str
+    resume_url: str
+
+    @classmethod
+    def construct(cls, app: traits.BaseApp, data: dict[str, Any]) -> None:
+        self = cls()
+        self._app = app
+        self.version = data['v']
+        self.guild_ids = data['guilds']
+        self.session_id = data['session_id']
+        self.resume_url = data['resume_gateway_url']
+        self.shard = data['shard']
 
 
 class UnknownEvent(BaseEvent):

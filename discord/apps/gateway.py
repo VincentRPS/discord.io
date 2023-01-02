@@ -20,18 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import TYPE_CHECKING, Any, Callable
-
-if TYPE_CHECKING:
-    from ..events.base import BaseEvent
+from .api import APIApp
 
 
-class BaseApp:
-    async def start(self, token: str, asyncio_debug: bool = False) -> None:
-        ...
+class GatewayApp(APIApp):
+    ...
 
-    def run(self, token: str, asyncio_debug: bool = False) -> None:
-        ...
-
-    def subscribe(self, event: "BaseEvent") -> Callable[..., Any]:
-        ...

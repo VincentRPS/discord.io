@@ -20,7 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-from typing import Any, Coroutine, Callable, Type
+from typing import Any, Callable, Coroutine, Type
+
 from attrs import define
 
 from discord import traits
@@ -28,6 +29,7 @@ from discord import traits
 from ..events.base import BaseEvent
 
 AsyncFunc = Callable[..., Coroutine[Any, Any, Any]]
+
 
 @define(weakref_slot=False)
 class Subscription:
@@ -45,6 +47,7 @@ class Subscription:
     """
     The function to call when this subscription is activated
     """
+
 
 class Subscriptor:
     def __init__(self, app: traits.BaseApp) -> None:
@@ -66,4 +69,3 @@ class Subscriptor:
         for sub in self.subscriptions:
             if sub.type == name:
                 await sub.callback(sub.event_class.construct(app=self.app, data=event_data))
- 
