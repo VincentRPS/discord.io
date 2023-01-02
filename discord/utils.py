@@ -25,7 +25,7 @@ from typing import Any
 from aiohttp import ClientResponse
 
 
-async def _text_or_json(cr: ClientResponse) -> str | dict[str, Any]:
+async def _text_or_json(cr: ClientResponse) -> None | dict[str, Any]:
     if cr.content_type == 'application/json':
         return await cr.json(encoding='utf-8')
-    return await cr.text('utf-8')
+    return None

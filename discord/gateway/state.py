@@ -28,6 +28,7 @@ from .concurrer import Concurrer
 
 __all__ = ['GatewayState']
 
+
 class GatewayState:
     def __init__(self, app: traits.BaseApp, shard_concurrency: tuple[int, int], intents: int) -> None:
         self.concurrency = Concurrer(shard_concurrency[0], shard_concurrency[1])

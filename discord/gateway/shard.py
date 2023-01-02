@@ -82,10 +82,12 @@ class Shard:
         self._hello_received: asyncio.Future[None] | None = None
         self._hb_task: asyncio.Task[None] | None = None
         self._session_id: str | None = None
+        self._buffer: bytearray | None = None
 
     async def start(self, resume: bool = False) -> None:
         self._hello_received = asyncio.Future()
         self._inflator = zlib.decompressobj()
+        self._buffer = bytearray()
 
         try:
             _log.debug(f'shard:{self.id}: attempting to establish a connection to the Gateway')
@@ -118,13 +120,15 @@ class Shard:
             await self._ws.send_str(d)
 
     async def _receive(self) -> None:
-        if self._ws is None or self._inflator is None:
+        if self._ws is None or self._inflator is None or self._buffer is None:
             return
 
         async for message in self._ws:
             if message.type == WSMsgType.CLOSED:
                 break
             elif message.type == WSMsgType.BINARY:
+                self._buffer.extend(message.data)
+
                 if len(message.data) < 4 or message.data[-4:] != ZLIB_SUFFIX:
                     continue
 
@@ -132,7 +136,10 @@ class Shard:
                     text = self._inflator.decompress(message.data).decode()
                 except (UnicodeDecodeError, zlib.error):
                     _log.error(f'shard:{self.id}: failed to decode gateway message')
+                    self._buffer.clear()
                     continue
+
+                self._buffer.clear()
 
                 _log.debug(f'shard:{self.id}: received message {text}')
 
@@ -210,6 +217,9 @@ class Shard:
             self._session_id = data['session_id']
             self._resume_gateway_url = data['resume_gateway_url']
             self._state.user_ready = data['user']
+            _log.info(
+                f'shard {self.id} is ready: {len(data["guilds"])} guilds on {data["user"]["username"]}#{data["user"]["discriminator"]} (sid: {self._session_id})'
+            )
 
         asyncio.create_task(self._state.subscriptor.dispatch(type, data))
 

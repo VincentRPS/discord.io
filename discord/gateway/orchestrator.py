@@ -22,6 +22,7 @@
 
 
 import asyncio
+import logging
 
 import aiohttp
 
@@ -29,6 +30,9 @@ from .shard import Shard
 from .state import GatewayState
 
 __all__ = ['Orchestrator']
+
+_log = logging.getLogger(__name__)
+
 
 class Orchestrator:
     def __init__(
@@ -74,7 +78,11 @@ class Orchestrator:
             if not shard._receive_task or not shard._hb_task or not shard._ws:
                 return
 
+            _log.info(f'shutting down shard {shard.id}')
+
             shard._receive_task.cancel()
             shard._hb_task.cancel()
             await shard._ws.close()
             self.shards.remove(shard)
+
+            _log.info(f'successfully shutdown shard {shard.id}')

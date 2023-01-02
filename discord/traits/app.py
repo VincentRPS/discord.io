@@ -27,7 +27,7 @@ if TYPE_CHECKING:
 
 
 class BaseApp:
-    async def start(self, token: str, asyncio_debug: bool = False) -> None:
+    async def start(self, token: str) -> None:
         ...
 
     def run(self, token: str, asyncio_debug: bool = False) -> None:

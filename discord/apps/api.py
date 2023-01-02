@@ -20,6 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-class APIApp:
-    ...
+from ..api import HTTPClient
 
+
+class APIApp:
+    def __init__(self, token: str) -> None:
+        self._http = HTTPClient(token)

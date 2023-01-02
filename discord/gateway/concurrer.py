@@ -27,6 +27,7 @@ import typing_extensions
 
 __all__ = ['Concurrer']
 
+
 class Concurrer:
     def __init__(self, concurrency: int, per: float | int) -> None:
         self.concurrency: int = concurrency
