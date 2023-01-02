@@ -31,7 +31,10 @@ __all__ = ['GatewayState']
 
 class GatewayState:
     def __init__(self, app: traits.BaseApp, shard_concurrency: tuple[int, int], intents: int) -> None:
-        self.concurrency = Concurrer(shard_concurrency[0], shard_concurrency[1])
         self.intents = intents
         self.user_ready = None
         self.subscriptor = Subscriptor(app)
+        self.shard_concurrency = shard_concurrency
+
+    def loop_activated(self) -> None:
+        self.concurrency = Concurrer(self.shard_concurrency[0], self.shard_concurrency[1])

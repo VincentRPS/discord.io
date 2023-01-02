@@ -12,7 +12,7 @@
 </div>
 
 <p align='center'>
-Asynchronous Discord API Wrapper for Python
+Discord's Bot Framework
 </p>
 
 ## Features

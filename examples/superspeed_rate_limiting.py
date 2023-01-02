@@ -12,7 +12,7 @@ GUILD_ID = 0
 async def spam_channels() -> None:
     channels: list[dict[str, Any]] = []
 
-    tasks: list[asyncio.Task] = [
+    tasks = [
         api.request('POST', discord.Route('/guilds/{guild_id}/channels', guild_id=GUILD_ID), {'name': 'rate-limit-test'})
         for _ in range(50)
     ]

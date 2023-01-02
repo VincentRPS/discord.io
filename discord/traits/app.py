@@ -23,10 +23,13 @@
 from typing import TYPE_CHECKING, Any, Callable
 
 if TYPE_CHECKING:
+    from ..api import HTTPClient
     from ..events.base import BaseEvent
 
 
 class BaseApp:
+    _http: "HTTPClient"
+
     async def start(self, token: str) -> None:
         ...
 

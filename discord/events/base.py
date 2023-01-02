@@ -21,11 +21,14 @@
 # SOFTWARE
 
 from types import SimpleNamespace
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import typing_extensions
 
 from discord import traits
+
+if TYPE_CHECKING:
+    from ..apps import GatewayApp
 
 
 class BaseEvent(SimpleNamespace):
@@ -41,7 +44,15 @@ class BaseEvent(SimpleNamespace):
         return self._app
 
 
-class ReadyEvent(BaseEvent):
+class GatewayEvent(BaseEvent):
+    _app: "GatewayApp"
+
+    @property
+    def app(self) -> "GatewayApp":
+        return self._app
+
+
+class Ready(GatewayEvent):
     _type = 'on_ready'
     version: int
     guild_ids: int
@@ -50,7 +61,7 @@ class ReadyEvent(BaseEvent):
     resume_url: str
 
     @classmethod
-    def construct(cls, app: traits.BaseApp, data: dict[str, Any]) -> None:
+    def construct(cls, app: "GatewayApp", data: dict[str, Any]) -> typing_extensions.Self:
         self = cls()
         self._app = app
         self.version = data['v']
@@ -58,6 +69,7 @@ class ReadyEvent(BaseEvent):
         self.session_id = data['session_id']
         self.resume_url = data['resume_gateway_url']
         self.shard = data['shard']
+        return self
 
 
 class UnknownEvent(BaseEvent):

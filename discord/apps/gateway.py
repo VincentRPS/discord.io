@@ -21,26 +21,35 @@
 # SOFTWARE
 
 import asyncio
+import inspect
 import logging
 from datetime import datetime, timedelta
+from typing import Callable, Coroutine, Type, TypeVar
 
 from aiohttp import BasicAuth
 
 from ..api import HTTPClient
 from ..api.route import Route
+from ..events.base import BaseEvent, GatewayEvent
 from ..gateway import GatewayState, Orchestrator, concurrer
 from ..interface import print_banner, start_logging
+from ..internal.subscriptor import AsyncFunc, Subscription
 from ..traits import BaseApp
 from .api import APIApp
 
 _log = logging.getLogger(__name__)
+
+__all__ = ['GatewayApp']
+
+
+T = TypeVar('T')
 
 
 class GatewayApp(BaseApp, APIApp):
     def __init__(
         self,
         intents: int,
-        log_config: dict | int | str | None =logging.INFO,
+        log_config: dict | int | str | None = logging.INFO,
         shards: int | list[int] = 1,
         active_shards: int = 1,
         proxy: str | None = None,
@@ -48,6 +57,7 @@ class GatewayApp(BaseApp, APIApp):
     ) -> None:
         self._log_config = log_config
         self._intents = intents
+        self._state = GatewayState(self, (0, 0), self._intents)
 
         if isinstance(shards, int):
             shards = list(range(shards))
@@ -72,7 +82,7 @@ class GatewayApp(BaseApp, APIApp):
 
     async def start(self, token: str) -> None:
         self._http = HTTPClient(token)
-        self._state = GatewayState(self, (0, 0), self._intents)
+        self._state.loop_activated()
         await self._fill_concurrer()
 
         print_banner()
@@ -111,3 +121,31 @@ class GatewayApp(BaseApp, APIApp):
 
     def run(self, token: str, asyncio_debug: bool = False) -> None:
         asyncio.run(self.start(token), debug=asyncio_debug)
+
+    def subscribe(self, event: Type[BaseEvent] | None = None) -> Callable[..., AsyncFunc]:
+        def wrapper(func: AsyncFunc) -> AsyncFunc:
+            if event is None:
+                sig = inspect.signature(func)
+                try:
+                    event_param = sig.parameters['event']
+                except KeyError:
+                    raise RuntimeError('event field is required for unspecified subscribings')
+
+                if event_param.annotation == inspect.Parameter.empty:
+                    raise RuntimeError('annotation must be provided to subscribe to an event')
+
+                if event_param.annotation.__base__ != BaseEvent and event_param.annotation.__base__ != GatewayEvent:
+                    raise RuntimeError('annotation must be a BaseEvent')
+
+                sub_event: Type[BaseEvent] = event_param.annotation
+            else:
+                sub_event = event
+
+            if sub_event._type is None:
+                raise RuntimeError('Event must have a type')
+
+            self._state.subscriptor.add_subscription(Subscription(sub_event, type=sub_event._type, callback=func))
+
+            return func
+
+        return wrapper

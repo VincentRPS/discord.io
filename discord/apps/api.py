@@ -22,6 +22,8 @@
 
 from ..api import HTTPClient
 
+__all__ = ['APIApp']
+
 
 class APIApp:
     def __init__(self, token: str) -> None:

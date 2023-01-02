@@ -32,6 +32,7 @@ with open('requirements.txt') as f:
 packages = [
     'discord',
     'discord.api',
+    'discord.apps',
     'discord.traits',
     'discord.gateway',
     'discord.internal',
