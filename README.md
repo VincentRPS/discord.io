@@ -33,6 +33,22 @@ To install our speed requirements, just run the following command:
 pip install discord.io[speed]
 ```
 
+## Basic Example
+
+This is a basic example of a Discord bot which prints its `session_id` when it becomes ready:
+
+```py
+import discord
+
+app = discord.GatewayApp(intents=0)
+
+@app.subscribe()
+async def on_ready(event: discord.Ready) -> None:
+    print(f'Ready! Session ID: {event.session_id}')
+
+app.run('token')
+```
+
 ## Useful Links
 
 - [Discord server](https://discord.gg/cvCAwntVhm)
