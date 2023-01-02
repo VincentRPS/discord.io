@@ -12,7 +12,7 @@
 </div>
 
 <p align='center'>
-Discord's **Bot Framework**
+Discord's <b>Bot Framework</b>
 </p>
 
 ## Features
