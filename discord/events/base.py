@@ -29,6 +29,7 @@ from discord import traits
 
 if TYPE_CHECKING:
     from ..apps import GatewayApp
+    from ..user import User
 
 
 class BaseEvent(SimpleNamespace):
@@ -59,6 +60,7 @@ class Ready(GatewayEvent):
     shard: tuple[int, int]
     session_id: str
     resume_url: str
+    user: "User"
 
     @classmethod
     def construct(cls, app: "GatewayApp", data: dict[str, Any]) -> typing_extensions.Self:
@@ -69,6 +71,7 @@ class Ready(GatewayEvent):
         self.session_id = data['session_id']
         self.resume_url = data['resume_gateway_url']
         self.shard = data['shard']
+        self.user = data['user']
         return self
 
 

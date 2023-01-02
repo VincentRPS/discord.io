@@ -21,20 +21,30 @@
 # SOFTWARE
 
 
+from typing import Any
+
 from discord import traits
 
+from ..cache.core import Cache
 from ..internal import Subscriptor
+from ..user import User
 from .concurrer import Concurrer
 
 __all__ = ['GatewayState']
 
 
 class GatewayState:
-    def __init__(self, app: traits.BaseApp, shard_concurrency: tuple[int, int], intents: int) -> None:
+    user: User
+
+    def __init__(
+        self, app: traits.BaseApp, shard_concurrency: tuple[int, int], intents: int, cache: Cache, impls: dict[str, Any]
+    ) -> None:
         self.intents = intents
         self.user_ready = None
         self.subscriptor = Subscriptor(app)
         self.shard_concurrency = shard_concurrency
+        self.cache = cache
+        self.impls = impls
 
     def loop_activated(self) -> None:
         self.concurrency = Concurrer(self.shard_concurrency[0], self.shard_concurrency[1])

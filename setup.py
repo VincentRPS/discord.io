@@ -33,6 +33,7 @@ packages = [
     'discord',
     'discord.api',
     'discord.apps',
+    'discord.events',
     'discord.traits',
     'discord.gateway',
     'discord.internal',

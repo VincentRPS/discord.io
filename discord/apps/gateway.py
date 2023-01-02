@@ -24,17 +24,19 @@ import asyncio
 import inspect
 import logging
 from datetime import datetime, timedelta
-from typing import Callable, Coroutine, Type, TypeVar
+from typing import Any, Callable, Coroutine, Type, TypeVar
 
 from aiohttp import BasicAuth
 
 from ..api import HTTPClient
 from ..api.route import Route
+from ..cache.core import Cache
 from ..events.base import BaseEvent, GatewayEvent
 from ..gateway import GatewayState, Orchestrator, concurrer
 from ..interface import print_banner, start_logging
 from ..internal.subscriptor import AsyncFunc, Subscription
 from ..traits import BaseApp
+from ..user import User
 from .api import APIApp
 
 _log = logging.getLogger(__name__)
@@ -43,6 +45,9 @@ __all__ = ['GatewayApp']
 
 
 T = TypeVar('T')
+
+
+impls = {'cache': Cache, 'user': User}
 
 
 class GatewayApp(BaseApp, APIApp):
@@ -54,10 +59,11 @@ class GatewayApp(BaseApp, APIApp):
         active_shards: int = 1,
         proxy: str | None = None,
         proxy_auth: BasicAuth | None = None,
+        impls: dict[str, Any] = impls,
     ) -> None:
         self._log_config = log_config
         self._intents = intents
-        self._state = GatewayState(self, (0, 0), self._intents)
+        self._state = GatewayState(self, (0, 0), self._intents, impls['cache'](impls), impls)
 
         if isinstance(shards, int):
             shards = list(range(shards))
@@ -68,6 +74,10 @@ class GatewayApp(BaseApp, APIApp):
         self._proxy_auth = proxy_auth
         self._left: datetime | None = None
         self._num: int | None = None
+
+    @property
+    def user(self) -> User:
+        return self._state.user
 
     async def _fill_concurrer(self) -> None:
         concurrency = await self._http.request('GET', Route('/gateway/bot'))

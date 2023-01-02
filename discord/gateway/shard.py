@@ -31,6 +31,7 @@ from typing import Any
 import aiohttp
 from aiohttp import ClientSession, WSMsgType
 
+from ..user import User
 from .concurrer import Concurrer
 from .state import GatewayState
 
@@ -217,8 +218,10 @@ class Shard:
             self._session_id = data['session_id']
             self._resume_gateway_url = data['resume_gateway_url']
             self._state.user_ready = data['user']
+            self._state.user = self._state.impls['user'](data['user'], self._state.cache)
+            data['user'] = self._state.user
             _log.info(
-                f'shard {self.id} is ready: {len(data["guilds"])} guilds on {data["user"]["username"]}#{data["user"]["discriminator"]} (sid: {self._session_id})'
+                f'shard {self.id} is ready: {len(data["guilds"])} guilds on {self._state.user_ready["username"]}#{self._state.user_ready["discriminator"]} (sid: {self._session_id})'
             )
 
         asyncio.create_task(self._state.subscriptor.dispatch(type, data))
