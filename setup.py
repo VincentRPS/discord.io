@@ -45,7 +45,7 @@ def get_extra_requirements() -> dict[str, list[str]]:
     for fn in os.scandir('extras'):
         if fn.is_file():
             with open(fn) as f:
-                extra_requirements[fn.name] = f.read().splitlines()
+                extra_requirements[fn.name.split('.')[0]] = f.read().splitlines()
     return extra_requirements
 
 
