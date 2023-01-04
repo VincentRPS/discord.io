@@ -44,7 +44,7 @@ app = discord.GatewayApp(intents=0)
 
 @app.subscribe()
 async def on_ready(event: discord.Ready) -> None:
-    print(f'Ready! Session ID: {event.session_id}')
+    print(f'Ready on {event.user.name}!')
 
 app.run('token')
 ```
