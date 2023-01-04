@@ -37,7 +37,7 @@ class BaseEvent(SimpleNamespace):
     _app: traits.BaseApp
 
     @classmethod
-    def construct(cls, *args, **kwargs) -> None:
+    def construct(cls, app: "GatewayApp" | traits.BaseApp, data: dict[str, Any]) -> None:
         ...
 
     @property

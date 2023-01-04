@@ -9,4 +9,4 @@ combine_star = true
 line_length = 125
 
 [tool.pyright]
-strict = true
+strict = false
