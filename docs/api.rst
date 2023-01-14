@@ -12,8 +12,7 @@ The easiest is via ``__version__``
 
 .. data:: __version__
 
-    A string representation of the version. e.g. ``'0.3.0'``. This is based
-    off of :pep:`440`.
+    A string representation of the version. e.g. ``'0.3.0'``.
 
 And second is by using ``version_info``
 
