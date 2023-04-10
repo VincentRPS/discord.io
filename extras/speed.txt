@@ -1,4 +1,4 @@
 aiodns~=3.0
-msgspec~=0.13.1
+msgspec~=0.14.1
 Brotli~=1.0.9
 faust-cchardet~=2.1.16
